@@ -33,6 +33,7 @@
 		B00000000000000000000025 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000026 /* PrivacyInfo.xcprivacy */; };
 		B00000000000000000000026 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000027 /* Assets.xcassets */; };
 		B00000000000000000000027 /* PrivacyInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000028 /* PrivacyInformationView.swift */; };
+		B00000000000000000000028 /* PrivateMomentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000029 /* PrivateMomentsUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,13 +65,16 @@
 		F00000000000000000000026 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		F00000000000000000000027 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F00000000000000000000028 /* PrivacyInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyInformationView.swift; sourceTree = "<group>"; };
+		F00000000000000000000029 /* PrivateMomentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateMomentsUITests.swift; sourceTree = "<group>"; };
 		900000000000000000000001 /* PrivateMoments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PrivateMoments.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		900000000000000000000002 /* PrivateMomentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PrivateMomentsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		900000000000000000000003 /* PrivateMomentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PrivateMomentsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		800000000000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 		800000000000000000000002 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		800000000000000000000003 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -81,6 +85,7 @@
 				A00000000000000000000018 /* Resources */,
 				A00000000000000000000003 /* Products */,
 				A00000000000000000000016 /* Tests */,
+				A00000000000000000000020 /* UITests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,7 +103,7 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		A00000000000000000000003 /* Products */ = {isa = PBXGroup; children = (900000000000000000000001 /* PrivateMoments.app */, 900000000000000000000002 /* PrivateMomentsTests.xctest */,); name = Products; sourceTree = "<group>"; };
+		A00000000000000000000003 /* Products */ = {isa = PBXGroup; children = (900000000000000000000001 /* PrivateMoments.app */, 900000000000000000000002 /* PrivateMomentsTests.xctest */, 900000000000000000000003 /* PrivateMomentsUITests.xctest */,); name = Products; sourceTree = "<group>"; };
 		A00000000000000000000004 /* App */ = {isa = PBXGroup; children = (F00000000000000000000001 /* PrivateMomentsApp.swift */, F00000000000000000000002 /* RootView.swift */,); path = App; sourceTree = "<group>"; };
 		A00000000000000000000005 /* Application */ = {isa = PBXGroup; children = (F00000000000000000000003 /* MomentStore.swift */, F00000000000000000000004 /* SessionClock.swift */, F00000000000000000000017 /* AppLockController.swift */,); path = Application; sourceTree = "<group>"; };
 		A00000000000000000000006 /* Data */ = {isa = PBXGroup; children = (F00000000000000000000005 /* MomentEntity.swift */, F00000000000000000000006 /* SwiftDataMomentRepository.swift */, F00000000000000000000018 /* MomentBackup.swift */, F00000000000000000000019 /* PrivateStoreFactory.swift */,); path = Data; sourceTree = "<group>"; };
@@ -115,6 +120,7 @@
 		A00000000000000000000017 /* Support */ = {isa = PBXGroup; children = (F00000000000000000000022 /* AppLocalization.swift */,); path = Support; sourceTree = "<group>"; };
 		A00000000000000000000018 /* Resources */ = {isa = PBXGroup; children = (F00000000000000000000025 /* Localizable.xcstrings */, A00000000000000000000019 /* InfoPlist.strings */, F00000000000000000000026 /* PrivacyInfo.xcprivacy */, F00000000000000000000027 /* Assets.xcassets */,); path = Resources; sourceTree = "<group>"; };
 		A00000000000000000000019 /* InfoPlist.strings */ = {isa = PBXVariantGroup; children = (F00000000000000000000023 /* en */, F00000000000000000000024 /* zh-Hans */,); name = InfoPlist.strings; sourceTree = "<group>"; };
+		A00000000000000000000020 /* UITests */ = {isa = PBXGroup; children = (F00000000000000000000029 /* PrivateMomentsUITests.swift */,); path = UITests; sourceTree = "<group>"; };
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -140,14 +146,27 @@
 			productReference = 900000000000000000000002 /* PrivateMomentsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		D00000000000000000000003 /* PrivateMomentsUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 500000000000000000000004 /* Build configuration list for PBXNativeTarget */;
+			buildPhases = (600000000000000000000003 /* Sources */, 800000000000000000000003 /* Frameworks */, 700000000000000000000003 /* Resources */,);
+			buildRules = ();
+			dependencies = (E00000000000000000000005 /* PBXTargetDependency */,);
+			name = PrivateMomentsUITests;
+			productName = PrivateMomentsUITests;
+			productReference = 900000000000000000000003 /* PrivateMomentsUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXContainerItemProxy section */
 		E00000000000000000000002 /* PBXContainerItemProxy */ = {isa = PBXContainerItemProxy; containerPortal = E00000000000000000000001 /* Project object */; proxyType = 1; remoteGlobalIDString = D00000000000000000000001; remoteInfo = PrivateMoments; };
+		E00000000000000000000004 /* PBXContainerItemProxy */ = {isa = PBXContainerItemProxy; containerPortal = E00000000000000000000001 /* Project object */; proxyType = 1; remoteGlobalIDString = D00000000000000000000001; remoteInfo = PrivateMoments; };
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXTargetDependency section */
 		E00000000000000000000003 /* PBXTargetDependency */ = {isa = PBXTargetDependency; target = D00000000000000000000001 /* PrivateMoments */; targetProxy = E00000000000000000000002 /* PBXContainerItemProxy */; };
+		E00000000000000000000005 /* PBXTargetDependency */ = {isa = PBXTargetDependency; target = D00000000000000000000001 /* PrivateMoments */; targetProxy = E00000000000000000000004 /* PBXContainerItemProxy */; };
 /* End PBXTargetDependency section */
 
 /* Begin PBXProject section */
@@ -159,6 +178,7 @@
 				TargetAttributes = {
 					D00000000000000000000001 = { CreatedOnToolsVersion = 16.0; };
 					D00000000000000000000002 = { CreatedOnToolsVersion = 16.0; TestTargetID = D00000000000000000000001; };
+					D00000000000000000000003 = { CreatedOnToolsVersion = 16.0; TestTargetID = D00000000000000000000001; };
 				};
 			};
 			buildConfigurationList = 500000000000000000000001 /* Build configuration list for PBXProject */;
@@ -168,13 +188,14 @@
 			knownRegions = (en, Base, "zh-Hans",);
 			mainGroup = A00000000000000000000001;
 			productRefGroup = A00000000000000000000003 /* Products */;
-			targets = (D00000000000000000000001 /* PrivateMoments */, D00000000000000000000002 /* PrivateMomentsTests */,);
+			targets = (D00000000000000000000001 /* PrivateMoments */, D00000000000000000000002 /* PrivateMomentsTests */, D00000000000000000000003 /* PrivateMomentsUITests */,);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		700000000000000000000001 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (B00000000000000000000023 /* Localizable.xcstrings in Resources */, B00000000000000000000024 /* InfoPlist.strings in Resources */, B00000000000000000000025 /* PrivacyInfo.xcprivacy in Resources */, B00000000000000000000026 /* Assets.xcassets in Resources */,); runOnlyForDeploymentPostprocessing = 0; };
 		700000000000000000000002 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		700000000000000000000003 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -211,6 +232,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (B00000000000000000000021 /* PrivateMomentsTests.swift in Sources */,);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		600000000000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (B00000000000000000000028 /* PrivateMomentsUITests.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
@@ -315,12 +342,45 @@
 			};
 			name = Release;
 		};
+		C00000000000000000000007 /* Debug UI tests */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.PrivateMomentsUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PrivateMoments;
+			};
+			name = Debug;
+		};
+		C00000000000000000000008 /* Release UI tests */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.PrivateMomentsUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PrivateMoments;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
 		500000000000000000000001 /* Build configuration list for PBXProject */ = {isa = XCConfigurationList; buildConfigurations = (C00000000000000000000001 /* Debug project */, C00000000000000000000002 /* Release project */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
 		500000000000000000000002 /* Build configuration list for PBXNativeTarget */ = {isa = XCConfigurationList; buildConfigurations = (C00000000000000000000003 /* Debug target */, C00000000000000000000004 /* Release target */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
 		500000000000000000000003 /* Build configuration list for PBXNativeTarget */ = {isa = XCConfigurationList; buildConfigurations = (C00000000000000000000005 /* Debug tests */, C00000000000000000000006 /* Release tests */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		500000000000000000000004 /* Build configuration list for PBXNativeTarget */ = {isa = XCConfigurationList; buildConfigurations = (C00000000000000000000007 /* Debug UI tests */, C00000000000000000000008 /* Release UI tests */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
 /* End XCConfigurationList section */
 
 	};

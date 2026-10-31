@@ -180,20 +180,26 @@ assert(projectObject?.isa === "PBXProject", "The project rootObject does not res
 const targets = (projectObject?.targets ?? []).map((id) => objects[id]).filter(Boolean);
 const appTarget = targets.find((target) => target.name === "PrivateMoments");
 const testTarget = targets.find((target) => target.name === "PrivateMomentsTests");
+const uiTestTarget = targets.find((target) => target.name === "PrivateMomentsUITests");
 const appTargetID = appTarget ? Object.keys(objects).find((id) => objects[id] === appTarget) : "";
 const testTargetID = testTarget ? Object.keys(objects).find((id) => objects[id] === testTarget) : "";
+const uiTestTargetID = uiTestTarget ? Object.keys(objects).find((id) => objects[id] === uiTestTarget) : "";
 assert(Boolean(appTarget), "The PrivateMoments app target is missing.");
 assert(Boolean(testTarget), "The PrivateMomentsTests target is missing.");
+assert(Boolean(uiTestTarget), "The PrivateMomentsUITests target is missing.");
 assert(appTarget?.productType === "com.apple.product-type.application", "PrivateMoments must be an application target.");
 assert(testTarget?.productType === "com.apple.product-type.bundle.unit-test", "PrivateMomentsTests must be a unit-test bundle target.");
+assert(uiTestTarget?.productType === "com.apple.product-type.bundle.ui-testing", "PrivateMomentsUITests must be a UI-testing bundle target.");
 
 const phaseByID = Object.fromEntries(Object.entries(objects).filter(([, object]) => object?.isa?.endsWith("BuildPhase")));
 const phaseFor = (target, isa) => (target?.buildPhases ?? []).map((id) => phaseByID[id]).find((phase) => phase?.isa === isa);
 const appSourcesPhase = phaseFor(appTarget, "PBXSourcesBuildPhase");
 const testSourcesPhase = phaseFor(testTarget, "PBXSourcesBuildPhase");
+const uiTestSourcesPhase = phaseFor(uiTestTarget, "PBXSourcesBuildPhase");
 const appResourcesPhase = phaseFor(appTarget, "PBXResourcesBuildPhase");
 assert(Boolean(appSourcesPhase), "The app target has no Sources build phase.");
 assert(Boolean(testSourcesPhase), "The test target has no Sources build phase.");
+assert(Boolean(uiTestSourcesPhase), "The UI test target has no Sources build phase.");
 assert(Boolean(appResourcesPhase), "The app target has no Resources build phase.");
 
 const filePaths = new Map();
@@ -222,11 +228,15 @@ walkGroup(projectObject?.mainGroup);
 
 const appSourcePaths = filesForPhase(appSourcesPhase, objects).map((file) => filePaths.get(Object.keys(objects).find((id) => objects[id] === file)) ?? "");
 const testSourcePaths = filesForPhase(testSourcesPhase, objects).map((file) => filePaths.get(Object.keys(objects).find((id) => objects[id] === file)) ?? "");
+const uiTestSourcePaths = filesForPhase(uiTestSourcesPhase, objects).map((file) => filePaths.get(Object.keys(objects).find((id) => objects[id] === file)) ?? "");
 compareFileSets("App Sources build phase", listSwiftFiles(join(appRoot, "Sources")), appSourcePaths);
 compareFileSets("Test Sources build phase", listSwiftFiles(join(appRoot, "Tests")), testSourcePaths);
+compareFileSets("UI Test Sources build phase", listSwiftFiles(join(appRoot, "UITests")), uiTestSourcePaths);
 
 const appDependencies = (testTarget?.dependencies ?? []).map((id) => objects[id]).filter(Boolean);
 assert(appDependencies.some((dependency) => dependency.target === appTargetID && dependency.targetProxy), "The test target does not depend on the app target.");
+const uiTestDependencies = (uiTestTarget?.dependencies ?? []).map((id) => objects[id]).filter(Boolean);
+assert(uiTestDependencies.some((dependency) => dependency.target === appTargetID && dependency.targetProxy), "The UI test target does not depend on the app target.");
 
 for (const config of configurationSettings(appTarget, objects)) {
     if (!["Debug", "Release"].includes(config.name)) continue;
@@ -249,6 +259,12 @@ for (const config of configurationSettings(testTarget ?? {}, objects)) {
     if (!["Debug", "Release"].includes(config.name)) continue;
     const settings = config.buildSettings ?? {};
     assert(String(settings.TEST_HOST ?? "").includes("PrivateMoments.app/PrivateMoments"), `Tests ${config.name} configuration has an unexpected TEST_HOST.`);
+}
+
+for (const config of configurationSettings(uiTestTarget ?? {}, objects)) {
+    if (!["Debug", "Release"].includes(config.name)) continue;
+    const settings = config.buildSettings ?? {};
+    assert(settings.TEST_TARGET_NAME === "PrivateMoments", `UI tests ${config.name} configuration must target the PrivateMoments app.`);
 }
 
 const projectRegions = projectObject?.knownRegions ?? [];
@@ -330,6 +346,7 @@ try {
 const schemeIDs = [...scheme.matchAll(/BlueprintIdentifier\s*=\s*"([A-Z0-9]{24})"/g)].map((match) => match[1]);
 assert(schemeIDs.includes(appTargetID), "The shared scheme does not reference the app target.");
 assert(schemeIDs.includes(testTargetID), "The shared scheme does not reference the test target.");
+assert(schemeIDs.includes(uiTestTargetID), "The shared scheme does not reference the UI test target.");
 assert(/<TestAction\b/.test(scheme) && /<Testables>/.test(scheme), "The shared scheme does not expose a test action.");
 assert(/<LaunchAction\b/.test(scheme), "The shared scheme does not expose a launch action.");
 

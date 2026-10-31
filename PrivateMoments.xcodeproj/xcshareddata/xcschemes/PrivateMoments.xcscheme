@@ -8,12 +8,20 @@
             <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "D00000000000000000000001" BuildableName = "PrivateMoments.app" BlueprintName = "PrivateMoments" ReferencedContainer = "container:PrivateMoments.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry buildForTesting = "YES" buildForRunning = "NO" buildForProfiling = "NO" buildForArchiving = "NO" buildForAnalyzing = "NO">
+            <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "D00000000000000000000003" BuildableName = "PrivateMomentsUITests.xctest" BlueprintName = "PrivateMomentsUITests" ReferencedContainer = "container:PrivateMoments.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction buildConfiguration = "Debug" selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB" shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference skipped = "NO" parallelizable = "NO">
             <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "D00000000000000000000002" BuildableName = "PrivateMomentsTests.xctest" BlueprintName = "PrivateMomentsTests" ReferencedContainer = "container:PrivateMoments.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference skipped = "NO" parallelizable = "NO">
+            <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "D00000000000000000000003" BuildableName = "PrivateMomentsUITests.xctest" BlueprintName = "PrivateMomentsUITests" ReferencedContainer = "container:PrivateMoments.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

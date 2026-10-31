@@ -180,6 +180,7 @@ struct RecapView: View {
                 }
                 .buttonStyle(PrimaryActionButtonStyle())
                 .disabled(noteValidationMessage != nil || !store.isStorageAvailable)
+                .accessibilityIdentifier("recap.save")
                 .accessibilityHint(
                     noteValidationMessage != nil
                         ? "Shorten the private note to 10,000 characters and 60 KB or less to save."

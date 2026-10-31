@@ -109,7 +109,18 @@ No schema or backup-format migration was needed. A single invalid row currently 
 
 Planned order: (1) inspect project root, scripts, credentials, Git tooling, and the supplied remote; (2) add generated-file ignore rules and a macOS GitHub Actions workflow for static audits, Debug/Release simulator builds, XCTest, and a short-lived result artifact; (3) validate configuration locally; (4) initialize and commit the iOS project, attach the supplied GitHub remote, push `main`, and inspect the first cloud run.
 
-Completed: added `.gitignore`, `.gitattributes`, GitHub Actions workflow, and README instructions; initialized the app folder as a Git repository and pushed initial commit `d5c3b31` to `origin/main`. The first cloud run ([Actions run 41168231819](https://github.com/betterfxb/private-moments-ios/actions/runs/41168231819)) reached Swift compilation and failed on a missing one-string `AppLocalization.format` overload. The overload is now implemented locally and all three Windows static audits pass. Commit/push of the fix and the next cloud run are still pending. No signing or distribution secrets are required for simulator builds.
+Completed: added `.gitignore`, `.gitattributes`, GitHub Actions workflow, and README instructions; initialized the app folder as a Git repository and pushed initial commit `d5c3b31` to `origin/main`. The first cloud run ([Actions run 41168231819](https://github.com/betterfxb/private-moments-ios/actions/runs/41168231819)) reached Swift compilation and failed on a missing one-string `AppLocalization.format` overload. The overload was added and pushed in `0aa5bd1`; all 13 existing domain XCTest passed in [Actions run 41168794346](https://github.com/betterfxb/private-moments-ios/actions/runs/41168794346). Debug/Release simulator builds and all static audits also passed. No signing or distribution secrets are required for simulator builds.
+
+### Simulator UI smoke coverage follow-up (2026-10-31)
+
+| Order | Goal and scope | Dependency | Outcome |
+|---|---|---|---|
+| 1 | Inspect app navigation, accessibility hooks, test target wiring, and simulator CI boundaries | Green domain-test workflow | Complete: XCTest previously exercised domain/storage/backup logic only; it did not launch SwiftUI screens |
+| 2 | Add an XCUITest target for the English create-to-detail path and Simplified Chinese home screen; attach review screenshots | Task 1 | Complete locally: stable identifiers added to primary controls and record rows; test target and shared scheme wired |
+| 3 | Extend project audits and document the automated/manual acceptance boundary | Task 2 | Complete locally: Xcode project, localization, and release-material audits pass; `release/UI-ACCEPTANCE.md` records coverage |
+| 4 | Commit, push, and confirm simulator UI tests on the macOS runner | Task 3 | Pending: run after this follow-up is pushed |
+
+Manual VoiceOver, Dynamic Type, multi-device layout, privacy lifecycle, and storage-failure acceptance remain necessary. The UI smoke tests do not claim to replace those checks.
 
 - **Languages:** English (`en`, source language) and Simplified Chinese (`zh-Hans`). Additional languages can be added as catalog translations without changing stored records or enum cases.
 - **Language selection:** follow iOS system and per-app language settings. Do not force a locale or add a separate in-app language preference; system authentication follows the same language choice.

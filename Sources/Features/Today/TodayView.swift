@@ -60,6 +60,7 @@ struct TodayView: View {
                 }
                 .buttonStyle(PrimaryActionButtonStyle())
                 .disabled(!store.isStorageAvailable)
+                .accessibilityIdentifier("today.startMoment")
                 .accessibilityHint(
                     store.isStorageAvailable
                         ? "Starts a private session timer. Health data is optional and is not connected in this MVP."
@@ -98,6 +99,7 @@ struct TodayView: View {
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityHint("Opens the private details for this moment")
+                                .accessibilityIdentifier("moment.row")
                             }
                         }
                     }

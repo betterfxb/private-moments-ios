@@ -74,6 +74,7 @@ struct MomentTimelineView: View {
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityHint("Opens the private details for this moment")
+                                .accessibilityIdentifier("moment.row")
                             }
                         }
                     }

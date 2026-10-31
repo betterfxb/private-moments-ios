@@ -55,6 +55,7 @@ struct LiveSessionView: View {
                 }
                 .buttonStyle(.bordered)
                 .tint(AppColors.paper)
+                .accessibilityIdentifier("session.pauseResume")
 
                 Button {
                     hasFinished = true
@@ -67,6 +68,7 @@ struct LiveSessionView: View {
                 .buttonStyle(.borderedProminent)
                 .tint(AppColors.terracotta)
                 .disabled(hasFinished)
+                .accessibilityIdentifier("session.finish")
             }
             .font(.system(.subheadline, design: .rounded).weight(.semibold))
 
