@@ -8,6 +8,13 @@
 - [x] App privacy manifest and opaque 1024×1024 AppIcon are part of the Xcode project.
 - [x] Windows localization, Xcode-project, and metadata audits pass.
 
+## Cloud-verified
+
+- [x] GitHub macOS run [41169968664](https://github.com/betterfxb/private-moments-ios/actions/runs/41169968664) passes Debug and Release iOS Simulator builds, all 13 domain tests, and both UI smoke tests on Xcode 16.4.
+- [x] English start → finish → save → timeline → detail path and Simplified Chinese primary action pass in XCUITest; screenshots are in the Actions `private-moments-xcresult` artifact (available for seven days after the run).
+- [ ] Verify the separate `private-moments-ui-screenshots` PNG artifact after the workflow export step is added and passes.
+- [ ] Review the attached screenshots in Xcode or download the `.xcresult`; CI success does not establish visual quality across devices or accessibility sizes.
+
 ## Developer and policy setup
 
 - [ ] Fill legal publisher name, privacy contact email, and policy effective date.
@@ -26,13 +33,13 @@
 - [ ] Complete `STORAGE-FAILURE-ACCEPTANCE.md`, including first-load failure, read-only cached data, retry recovery, and blocked mutation paths.
 
 - [ ] Run `node tools/audit-localization.mjs` and `node tools/audit-xcode-project.mjs` from `ios/PrivateMoments`.
-- [ ] Run `xcodebuild -showdestinations -project PrivateMoments.xcodeproj -scheme PrivateMoments` and choose a supported simulator.
-- [ ] Run `IOS_SIMULATOR_DESTINATION="platform=iOS Simulator,id=<UDID>" bash scripts/verify-mac.sh`; review and retain the `.xcresult` report.
+- [ ] On a Mac, run `xcodebuild -showdestinations -project PrivateMoments.xcodeproj -scheme PrivateMoments` and select the device/OS combinations needed for manual acceptance.
+- [ ] Review and retain the cloud `.xcresult`; repeat `IOS_SIMULATOR_DESTINATION="platform=iOS Simulator,id=<UDID>" bash scripts/verify-mac.sh` locally when a Mac is available.
 - [ ] Replace `com.example.PrivateMoments` with the publisher's final unique Bundle ID; configure the signing team.
 - [ ] Confirm the built app contains `PrivacyInfo.xcprivacy` and AppIcon; inspect the icon in light/dark/tinted appearances.
 - [ ] Test first launch, create/save/edit/delete, search/filter, app lock, backup export/import, relaunch persistence, both languages, Dynamic Type, VoiceOver, and privacy/failure states on iPhone and iPad.
 - [ ] Complete `RECAP-ACCEPTANCE.md`, including discard confirmation, unchanged edits, character/UTF-8 limits, and VoiceOver escape; run the added note-boundary XCTest cases.
-- [ ] Capture genuine App Store screenshots from the verified build in English and Simplified Chinese. Suggested sequence: Today, timer, recap, timeline, privacy/settings. Do not mock controls or show real personal records.
+- [ ] Capture genuine App Store screenshots from the verified build in English and Simplified Chinese. Because this app supports iPad, include at least one 13-inch iPad screenshot and at least one iPhone with Dynamic Island (medium display) screenshot; confirm the exact accepted pixel sizes in Apple's current [screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications) when preparing the assets. Suggested sequence: Today, timer, recap, timeline, privacy/settings. Do not mock controls or show real personal records.
 - [ ] Recheck every store description and screenshot against the submitted build; submit through TestFlight before App Review.
 
 The app name and subtitle must each be at most 30 characters; promotional text at most 170; description at most 4,000; keywords at most 100. This draft is checked by `node tools/audit-release-materials.mjs`. See Apple's [App information reference](https://developer.apple.com/help/app-store-connect/reference/app-information/app-information), [product page guidance](https://developer.apple.com/app-store/product-page/), [privacy requirements](https://developer.apple.com/help/app-store-connect/manage-app-information/manage-app-privacy/), and [age-rating process](https://developer.apple.com/help/app-store-connect/manage-app-information/set-an-app-age-rating).

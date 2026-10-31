@@ -118,9 +118,17 @@ Completed: added `.gitignore`, `.gitattributes`, GitHub Actions workflow, and RE
 | 1 | Inspect app navigation, accessibility hooks, test target wiring, and simulator CI boundaries | Green domain-test workflow | Complete: XCTest previously exercised domain/storage/backup logic only; it did not launch SwiftUI screens |
 | 2 | Add an XCUITest target for the English create-to-detail path and Simplified Chinese home screen; attach review screenshots | Task 1 | Complete locally: stable identifiers added to primary controls and record rows; test target and shared scheme wired |
 | 3 | Extend project audits and document the automated/manual acceptance boundary | Task 2 | Complete locally: Xcode project, localization, and release-material audits pass; `release/UI-ACCEPTANCE.md` records coverage |
-| 4 | Commit, push, and confirm simulator UI tests on the macOS runner | Task 3 | First run [41169419016](https://github.com/betterfxb/private-moments-ios/actions/runs/41169419016): English create-to-detail passed; Chinese primary action localized, but an unsupported navigation-bar accessibility query failed. The test now asserts the translated primary-action label directly; rerun pending. |
+| 4 | Commit, push, and confirm simulator UI tests on the macOS runner | Task 3 | Complete: first run [41169419016](https://github.com/betterfxb/private-moments-ios/actions/runs/41169419016) exposed an unsupported navigation-bar accessibility query; after changing the test to assert the translated primary-action label, run [41169968664](https://github.com/betterfxb/private-moments-ios/actions/runs/41169968664) passed Debug/Release simulator builds, 13 domain tests, and both UI tests. The `.xcresult` screenshot artifact was uploaded. |
 
 Manual VoiceOver, Dynamic Type, multi-device layout, privacy lifecycle, and storage-failure acceptance remain necessary. The UI smoke tests do not claim to replace those checks.
+
+### Windows-accessible screenshot export follow-up (2026-10-31)
+
+| Order | Goal and scope | Dependency | Outcome |
+|---|---|---|---|
+| 1 | Confirm Apple/Xcode supports extracting XCTest attachments from an `.xcresult` | Green UI-test run | Complete: the cloud runner uses Xcode 16.4, which includes `xcresulttool export attachments` |
+| 2 | Export XCTest screenshots as PNG files and upload a separate short-lived artifact | Task 1 | Implemented locally: the workflow exports PNG attachments and uploads them for seven days |
+| 3 | Push the workflow/documentation update and verify artifact export on the macOS runner | Task 2 | Pending: run after this update is pushed |
 
 - **Languages:** English (`en`, source language) and Simplified Chinese (`zh-Hans`). Additional languages can be added as catalog translations without changing stored records or enum cases.
 - **Language selection:** follow iOS system and per-app language settings. Do not force a locale or add a separate in-app language preference; system authentication follows the same language choice.

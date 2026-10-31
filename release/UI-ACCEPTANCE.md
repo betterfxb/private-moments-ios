@@ -6,8 +6,8 @@ The `PrivateMomentsUITests` target runs as part of `scripts/verify-mac.sh` and t
 
 | Flow | Automated checks | Evidence |
 |---|---|---|
-| English primary flow | Today action is enabled → start session → pause/resume control is present → finish → recap is saveable → return to Today → open Timeline → open saved entry → detail empty-note state appears | XCTest assertions and screenshots attached to `.xcresult` |
-| Simplified Chinese | Primary action label is Simplified Chinese and retains a stable accessibility identifier | XCTest assertion and screenshot attached to `.xcresult` |
+| English primary flow | Today action is enabled → start session → pause/resume control is present → finish → recap is saveable → return to Today → open Timeline → open saved entry → detail empty-note state appears | XCTest assertions; screenshots are attached to `.xcresult` and exported as PNG artifact |
+| Simplified Chinese | Primary action label is Simplified Chinese and retains a stable accessibility identifier | XCTest assertion; screenshot is attached to `.xcresult` and exported as PNG artifact |
 
 The UI test creates one local journal entry. GitHub-hosted runners are ephemeral; on a developer Mac, run it in a disposable Simulator if a test record in the local simulator would be confusing.
 
@@ -26,4 +26,5 @@ Automated smoke checks do not establish that every screen looks correct or that 
 
 | Date | Environment | Result |
 |---|---|---|
-| 2026-10-31 | GitHub macOS simulator, run [41169419016](https://github.com/betterfxb/private-moments-ios/actions/runs/41169419016) | English create-to-detail flow passed. Chinese primary action was correctly localized, but a navigation-bar query failed because SwiftUI did not expose that title as an `XCUIElementTypeNavigationBar`; the brittle title query has been removed before rerun. |
+| 2026-10-31 | GitHub macOS simulator, run [41169419016](https://github.com/betterfxb/private-moments-ios/actions/runs/41169419016) | First run: English create-to-detail flow passed. Chinese primary action was correctly localized, but a navigation-bar query failed because SwiftUI did not expose that title as an `XCUIElementTypeNavigationBar`; the brittle title query was removed before rerun. |
+| 2026-10-31 | GitHub macOS simulator, run [41169968664](https://github.com/betterfxb/private-moments-ios/actions/runs/41169968664), Xcode 16.4 | Passed: Debug/Release simulator builds, 13 domain tests, and 2 UI tests (English primary flow and Simplified Chinese primary action). Screenshots are attached to `private-moments-xcresult` (0.74 MB, retained by Actions for seven days). A separate PNG download artifact is being added so the screenshots can be reviewed on Windows. |

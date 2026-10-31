@@ -52,6 +52,32 @@ jobs:
           PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments.xcresult
         run: bash scripts/verify-mac.sh
 
+      - name: Export XCTest UI screenshots
+        if: always()
+        shell: bash
+        run: |
+          result_bundle="${RUNNER_TEMP}/PrivateMoments.xcresult"
+          screenshot_directory="${RUNNER_TEMP}/PrivateMomentsUIScreenshots"
+          if [[ ! -d "$result_bundle" ]]; then
+            printf 'No XCTest result bundle was produced; skipping screenshot export.\n'
+            exit 0
+          fi
+          mkdir -p "$screenshot_directory"
+          xcrun xcresulttool export attachments \
+            --path "$result_bundle" \
+            --output-path "$screenshot_directory"
+          screenshot_count="$(find "$screenshot_directory" -type f -iname '*.png' | wc -l | tr -d ' ')"
+          printf 'Exported %s PNG attachment(s).\n' "$screenshot_count"
+
+      - name: Upload XCTest UI screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: private-moments-ui-screenshots
+          path: ${{ runner.temp }}/PrivateMomentsUIScreenshots
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Upload XCTest result bundle
         if: always()
         uses: actions/upload-artifact@v7
