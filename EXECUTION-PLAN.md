@@ -118,7 +118,7 @@ Completed: added `.gitignore`, `.gitattributes`, GitHub Actions workflow, and RE
 | 1 | Inspect app navigation, accessibility hooks, test target wiring, and simulator CI boundaries | Green domain-test workflow | Complete: XCTest previously exercised domain/storage/backup logic only; it did not launch SwiftUI screens |
 | 2 | Add an XCUITest target for the English create-to-detail path and Simplified Chinese home screen; attach review screenshots | Task 1 | Complete locally: stable identifiers added to primary controls and record rows; test target and shared scheme wired |
 | 3 | Extend project audits and document the automated/manual acceptance boundary | Task 2 | Complete locally: Xcode project, localization, and release-material audits pass; `release/UI-ACCEPTANCE.md` records coverage |
-| 4 | Commit, push, and confirm simulator UI tests on the macOS runner | Task 3 | Pending: run after this follow-up is pushed |
+| 4 | Commit, push, and confirm simulator UI tests on the macOS runner | Task 3 | First run [41169419016](https://github.com/betterfxb/private-moments-ios/actions/runs/41169419016): English create-to-detail passed; Chinese primary action localized, but an unsupported navigation-bar accessibility query failed. The test now asserts the translated primary-action label directly; rerun pending. |
 
 Manual VoiceOver, Dynamic Type, multi-device layout, privacy lifecycle, and storage-failure acceptance remain necessary. The UI smoke tests do not claim to replace those checks.
 

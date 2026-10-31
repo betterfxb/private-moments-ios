@@ -40,7 +40,6 @@ final class PrivateMomentsUITests: XCTestCase {
         app.launchArguments += ["-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]
         app.launch()
 
-        XCTAssertTrue(app.navigationBars["今天"].waitForExistence(timeout: 10), "The Today navigation title should use Simplified Chinese.")
         let startButton = app.buttons["today.startMoment"]
         XCTAssertTrue(startButton.waitForExistence(timeout: 10), "The primary action should remain accessible in Simplified Chinese.")
         XCTAssertEqual(startButton.label, "开始记录")

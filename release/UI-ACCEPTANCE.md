@@ -7,7 +7,7 @@ The `PrivateMomentsUITests` target runs as part of `scripts/verify-mac.sh` and t
 | Flow | Automated checks | Evidence |
 |---|---|---|
 | English primary flow | Today action is enabled → start session → pause/resume control is present → finish → recap is saveable → return to Today → open Timeline → open saved entry → detail empty-note state appears | XCTest assertions and screenshots attached to `.xcresult` |
-| Simplified Chinese | Today navigation title and primary action use Simplified Chinese; primary action retains a stable accessibility identifier | XCTest assertions and screenshot attached to `.xcresult` |
+| Simplified Chinese | Primary action label is Simplified Chinese and retains a stable accessibility identifier | XCTest assertion and screenshot attached to `.xcresult` |
 
 The UI test creates one local journal entry. GitHub-hosted runners are ephemeral; on a developer Mac, run it in a disposable Simulator if a test record in the local simulator would be confusing.
 
@@ -26,4 +26,4 @@ Automated smoke checks do not establish that every screen looks correct or that 
 
 | Date | Environment | Result |
 |---|---|---|
-| 2026-10-31 | Windows static checks | Project/localization/release audits pass; simulator UI tests are awaiting the GitHub macOS run. |
+| 2026-10-31 | GitHub macOS simulator, run [41169419016](https://github.com/betterfxb/private-moments-ios/actions/runs/41169419016) | English create-to-detail flow passed. Chinese primary action was correctly localized, but a navigation-bar query failed because SwiftUI did not expose that title as an `XCUIElementTypeNavigationBar`; the brittle title query has been removed before rerun. |
