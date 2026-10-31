@@ -9,6 +9,10 @@ enum AppLocalization {
         String.localizedStringWithFormat(string(key), Int64(value))
     }
 
+    static func format(_ key: String, _ value: String) -> String {
+        String.localizedStringWithFormat(string(key), value)
+    }
+
     static func format(_ key: String, _ first: Int, _ second: Int) -> String {
         String.localizedStringWithFormat(string(key), Int64(first), Int64(second))
     }
