@@ -1,0 +1,328 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B00000000000000000000001 /* PrivateMomentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000001 /* PrivateMomentsApp.swift */; };
+		B00000000000000000000002 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000002 /* RootView.swift */; };
+		B00000000000000000000003 /* MomentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000003 /* MomentStore.swift */; };
+		B00000000000000000000004 /* SessionClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000004 /* SessionClock.swift */; };
+		B00000000000000000000005 /* MomentEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000005 /* MomentEntity.swift */; };
+		B00000000000000000000006 /* SwiftDataMomentRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000006 /* SwiftDataMomentRepository.swift */; };
+		B00000000000000000000007 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000007 /* DesignTokens.swift */; };
+		B00000000000000000000008 /* MomentComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000008 /* MomentComponents.swift */; };
+		B00000000000000000000009 /* Moment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000009 /* Moment.swift */; };
+		B00000000000000000000010 /* MomentRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000010 /* MomentRepository.swift */; };
+		B00000000000000000000011 /* MomentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000011 /* MomentDetailView.swift */; };
+		B00000000000000000000012 /* RecapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000012 /* RecapView.swift */; };
+		B00000000000000000000013 /* LiveSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000013 /* LiveSessionView.swift */; };
+		B00000000000000000000014 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000014 /* SettingsView.swift */; };
+		B00000000000000000000015 /* MomentTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000015 /* MomentTimelineView.swift */; };
+		B00000000000000000000016 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000016 /* TodayView.swift */; };
+		B00000000000000000000017 /* AppLockController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000017 /* AppLockController.swift */; };
+		B00000000000000000000018 /* MomentBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000018 /* MomentBackup.swift */; };
+		B00000000000000000000019 /* PrivateStoreFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000019 /* PrivateStoreFactory.swift */; };
+		B00000000000000000000020 /* PrivacyLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000020 /* PrivacyLockView.swift */; };
+		B00000000000000000000021 /* PrivateMomentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000021 /* PrivateMomentsTests.swift */; };
+		B00000000000000000000022 /* AppLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000022 /* AppLocalization.swift */; };
+		B00000000000000000000023 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000025 /* Localizable.xcstrings */; };
+		B00000000000000000000024 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000019 /* InfoPlist.strings */; };
+		B00000000000000000000025 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000026 /* PrivacyInfo.xcprivacy */; };
+		B00000000000000000000026 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000027 /* Assets.xcassets */; };
+		B00000000000000000000027 /* PrivacyInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000028 /* PrivacyInformationView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F00000000000000000000001 /* PrivateMomentsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateMomentsApp.swift; sourceTree = "<group>"; };
+		F00000000000000000000002 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		F00000000000000000000003 /* MomentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentStore.swift; sourceTree = "<group>"; };
+		F00000000000000000000004 /* SessionClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionClock.swift; sourceTree = "<group>"; };
+		F00000000000000000000005 /* MomentEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentEntity.swift; sourceTree = "<group>"; };
+		F00000000000000000000006 /* SwiftDataMomentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataMomentRepository.swift; sourceTree = "<group>"; };
+		F00000000000000000000007 /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
+		F00000000000000000000008 /* MomentComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentComponents.swift; sourceTree = "<group>"; };
+		F00000000000000000000009 /* Moment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moment.swift; sourceTree = "<group>"; };
+		F00000000000000000000010 /* MomentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentRepository.swift; sourceTree = "<group>"; };
+		F00000000000000000000011 /* MomentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentDetailView.swift; sourceTree = "<group>"; };
+		F00000000000000000000012 /* RecapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecapView.swift; sourceTree = "<group>"; };
+		F00000000000000000000013 /* LiveSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSessionView.swift; sourceTree = "<group>"; };
+		F00000000000000000000014 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F00000000000000000000015 /* MomentTimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentTimelineView.swift; sourceTree = "<group>"; };
+		F00000000000000000000016 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		F00000000000000000000017 /* AppLockController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockController.swift; sourceTree = "<group>"; };
+		F00000000000000000000018 /* MomentBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentBackup.swift; sourceTree = "<group>"; };
+		F00000000000000000000019 /* PrivateStoreFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateStoreFactory.swift; sourceTree = "<group>"; };
+		F00000000000000000000020 /* PrivacyLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyLockView.swift; sourceTree = "<group>"; };
+		F00000000000000000000021 /* PrivateMomentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateMomentsTests.swift; sourceTree = "<group>"; };
+		F00000000000000000000022 /* AppLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLocalization.swift; sourceTree = "<group>"; };
+		F00000000000000000000023 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F00000000000000000000024 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		F00000000000000000000025 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		F00000000000000000000026 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		F00000000000000000000027 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F00000000000000000000028 /* PrivacyInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyInformationView.swift; sourceTree = "<group>"; };
+		900000000000000000000001 /* PrivateMoments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PrivateMoments.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		900000000000000000000002 /* PrivateMomentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PrivateMomentsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		800000000000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		800000000000000000000002 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A00000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000002 /* Sources */,
+				A00000000000000000000018 /* Resources */,
+				A00000000000000000000003 /* Products */,
+				A00000000000000000000016 /* Tests */,
+			);
+			sourceTree = "<group>";
+		};
+		A00000000000000000000002 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000004 /* App */,
+				A00000000000000000000005 /* Application */,
+				A00000000000000000000006 /* Data */,
+				A00000000000000000000007 /* DesignSystem */,
+				A00000000000000000000008 /* Domain */,
+				A00000000000000000000009 /* Features */,
+				A00000000000000000000017 /* Support */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000003 /* Products */ = {isa = PBXGroup; children = (900000000000000000000001 /* PrivateMoments.app */, 900000000000000000000002 /* PrivateMomentsTests.xctest */,); name = Products; sourceTree = "<group>"; };
+		A00000000000000000000004 /* App */ = {isa = PBXGroup; children = (F00000000000000000000001 /* PrivateMomentsApp.swift */, F00000000000000000000002 /* RootView.swift */,); path = App; sourceTree = "<group>"; };
+		A00000000000000000000005 /* Application */ = {isa = PBXGroup; children = (F00000000000000000000003 /* MomentStore.swift */, F00000000000000000000004 /* SessionClock.swift */, F00000000000000000000017 /* AppLockController.swift */,); path = Application; sourceTree = "<group>"; };
+		A00000000000000000000006 /* Data */ = {isa = PBXGroup; children = (F00000000000000000000005 /* MomentEntity.swift */, F00000000000000000000006 /* SwiftDataMomentRepository.swift */, F00000000000000000000018 /* MomentBackup.swift */, F00000000000000000000019 /* PrivateStoreFactory.swift */,); path = Data; sourceTree = "<group>"; };
+		A00000000000000000000007 /* DesignSystem */ = {isa = PBXGroup; children = (F00000000000000000000007 /* DesignTokens.swift */, F00000000000000000000008 /* MomentComponents.swift */,); path = DesignSystem; sourceTree = "<group>"; };
+		A00000000000000000000008 /* Domain */ = {isa = PBXGroup; children = (F00000000000000000000009 /* Moment.swift */, F00000000000000000000010 /* MomentRepository.swift */,); path = Domain; sourceTree = "<group>"; };
+		A00000000000000000000009 /* Features */ = {isa = PBXGroup; children = (A00000000000000000000010 /* Detail */, A00000000000000000000011 /* Recap */, A00000000000000000000012 /* Session */, A00000000000000000000013 /* Settings */, A00000000000000000000014 /* Timeline */, A00000000000000000000015 /* Today */,); path = Features; sourceTree = "<group>"; };
+		A00000000000000000000010 /* Detail */ = {isa = PBXGroup; children = (F00000000000000000000011 /* MomentDetailView.swift */,); path = Detail; sourceTree = "<group>"; };
+		A00000000000000000000011 /* Recap */ = {isa = PBXGroup; children = (F00000000000000000000012 /* RecapView.swift */,); path = Recap; sourceTree = "<group>"; };
+		A00000000000000000000012 /* Session */ = {isa = PBXGroup; children = (F00000000000000000000013 /* LiveSessionView.swift */,); path = Session; sourceTree = "<group>"; };
+		A00000000000000000000013 /* Settings */ = {isa = PBXGroup; children = (F00000000000000000000014 /* SettingsView.swift */, F00000000000000000000020 /* PrivacyLockView.swift */, F00000000000000000000028 /* PrivacyInformationView.swift */,); path = Settings; sourceTree = "<group>"; };
+		A00000000000000000000014 /* Timeline */ = {isa = PBXGroup; children = (F00000000000000000000015 /* MomentTimelineView.swift */,); path = Timeline; sourceTree = "<group>"; };
+		A00000000000000000000015 /* Today */ = {isa = PBXGroup; children = (F00000000000000000000016 /* TodayView.swift */,); path = Today; sourceTree = "<group>"; };
+		A00000000000000000000016 /* Tests */ = {isa = PBXGroup; children = (F00000000000000000000021 /* PrivateMomentsTests.swift */,); path = Tests; sourceTree = "<group>"; };
+		A00000000000000000000017 /* Support */ = {isa = PBXGroup; children = (F00000000000000000000022 /* AppLocalization.swift */,); path = Support; sourceTree = "<group>"; };
+		A00000000000000000000018 /* Resources */ = {isa = PBXGroup; children = (F00000000000000000000025 /* Localizable.xcstrings */, A00000000000000000000019 /* InfoPlist.strings */, F00000000000000000000026 /* PrivacyInfo.xcprivacy */, F00000000000000000000027 /* Assets.xcassets */,); path = Resources; sourceTree = "<group>"; };
+		A00000000000000000000019 /* InfoPlist.strings */ = {isa = PBXVariantGroup; children = (F00000000000000000000023 /* en */, F00000000000000000000024 /* zh-Hans */,); name = InfoPlist.strings; sourceTree = "<group>"; };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D00000000000000000000001 /* PrivateMoments */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 500000000000000000000002 /* Build configuration list for PBXNativeTarget */;
+			buildPhases = (600000000000000000000001 /* Sources */, 800000000000000000000001 /* Frameworks */, 700000000000000000000001 /* Resources */,);
+			buildRules = ();
+			dependencies = ();
+			name = PrivateMoments;
+			productName = PrivateMoments;
+			productReference = 900000000000000000000001 /* PrivateMoments.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D00000000000000000000002 /* PrivateMomentsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 500000000000000000000003 /* Build configuration list for PBXNativeTarget */;
+			buildPhases = (600000000000000000000002 /* Sources */, 800000000000000000000002 /* Frameworks */, 700000000000000000000002 /* Resources */,);
+			buildRules = ();
+			dependencies = (E00000000000000000000003 /* PBXTargetDependency */,);
+			name = PrivateMomentsTests;
+			productName = PrivateMomentsTests;
+			productReference = 900000000000000000000002 /* PrivateMomentsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		E00000000000000000000002 /* PBXContainerItemProxy */ = {isa = PBXContainerItemProxy; containerPortal = E00000000000000000000001 /* Project object */; proxyType = 1; remoteGlobalIDString = D00000000000000000000001; remoteInfo = PrivateMoments; };
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		E00000000000000000000003 /* PBXTargetDependency */ = {isa = PBXTargetDependency; target = D00000000000000000000001 /* PrivateMoments */; targetProxy = E00000000000000000000002 /* PBXContainerItemProxy */; };
+/* End PBXTargetDependency section */
+
+/* Begin PBXProject section */
+		E00000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					D00000000000000000000001 = { CreatedOnToolsVersion = 16.0; };
+					D00000000000000000000002 = { CreatedOnToolsVersion = 16.0; TestTargetID = D00000000000000000000001; };
+				};
+			};
+			buildConfigurationList = 500000000000000000000001 /* Build configuration list for PBXProject */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (en, Base, "zh-Hans",);
+			mainGroup = A00000000000000000000001;
+			productRefGroup = A00000000000000000000003 /* Products */;
+			targets = (D00000000000000000000001 /* PrivateMoments */, D00000000000000000000002 /* PrivateMomentsTests */,);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		700000000000000000000001 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (B00000000000000000000023 /* Localizable.xcstrings in Resources */, B00000000000000000000024 /* InfoPlist.strings in Resources */, B00000000000000000000025 /* PrivacyInfo.xcprivacy in Resources */, B00000000000000000000026 /* Assets.xcassets in Resources */,); runOnlyForDeploymentPostprocessing = 0; };
+		700000000000000000000002 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		600000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B00000000000000000000001 /* PrivateMomentsApp.swift in Sources */,
+				B00000000000000000000002 /* RootView.swift in Sources */,
+				B00000000000000000000003 /* MomentStore.swift in Sources */,
+				B00000000000000000000004 /* SessionClock.swift in Sources */,
+				B00000000000000000000005 /* MomentEntity.swift in Sources */,
+				B00000000000000000000006 /* SwiftDataMomentRepository.swift in Sources */,
+				B00000000000000000000007 /* DesignTokens.swift in Sources */,
+				B00000000000000000000008 /* MomentComponents.swift in Sources */,
+				B00000000000000000000009 /* Moment.swift in Sources */,
+				B00000000000000000000010 /* MomentRepository.swift in Sources */,
+				B00000000000000000000011 /* MomentDetailView.swift in Sources */,
+				B00000000000000000000012 /* RecapView.swift in Sources */,
+				B00000000000000000000013 /* LiveSessionView.swift in Sources */,
+				B00000000000000000000014 /* SettingsView.swift in Sources */,
+				B00000000000000000000015 /* MomentTimelineView.swift in Sources */,
+				B00000000000000000000016 /* TodayView.swift in Sources */,
+				B00000000000000000000017 /* AppLockController.swift in Sources */,
+				B00000000000000000000018 /* MomentBackup.swift in Sources */,
+				B00000000000000000000019 /* PrivateStoreFactory.swift in Sources */,
+				B00000000000000000000020 /* PrivacyLockView.swift in Sources */,
+				B00000000000000000000022 /* AppLocalization.swift in Sources */,
+				B00000000000000000000027 /* PrivacyInformationView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		600000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (B00000000000000000000021 /* PrivateMomentsTests.swift in Sources */,);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C00000000000000000000001 /* Debug project */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C00000000000000000000002 /* Release project */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C00000000000000000000003 /* Debug target */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_TESTABILITY = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Private Moments";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use device authentication to unlock your private journal.";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.PrivateMoments;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C00000000000000000000004 /* Release target */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Private Moments";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use device authentication to unlock your private journal.";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.PrivateMoments;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C00000000000000000000005 /* Debug tests */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.PrivateMomentsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PrivateMoments.app/PrivateMoments";
+			};
+			name = Debug;
+		};
+		C00000000000000000000006 /* Release tests */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.PrivateMomentsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PrivateMoments.app/PrivateMoments";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		500000000000000000000001 /* Build configuration list for PBXProject */ = {isa = XCConfigurationList; buildConfigurations = (C00000000000000000000001 /* Debug project */, C00000000000000000000002 /* Release project */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		500000000000000000000002 /* Build configuration list for PBXNativeTarget */ = {isa = XCConfigurationList; buildConfigurations = (C00000000000000000000003 /* Debug target */, C00000000000000000000004 /* Release target */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		500000000000000000000003 /* Build configuration list for PBXNativeTarget */ = {isa = XCConfigurationList; buildConfigurations = (C00000000000000000000005 /* Debug tests */, C00000000000000000000006 /* Release tests */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+
+	};
+	rootObject = E00000000000000000000001 /* Project object */;
+}

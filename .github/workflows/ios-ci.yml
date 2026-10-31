@@ -1,0 +1,62 @@
+name: iOS validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Static audits, simulator builds, and XCTest
+    runs-on: macos-15
+    timeout-minutes: 60
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Run project audits
+        run: |
+          node tools/audit-localization.mjs
+          node tools/audit-xcode-project.mjs
+          node tools/audit-release-materials.mjs
+
+      - name: Select an available iPhone simulator
+        shell: bash
+        run: |
+          destination="$(xcrun simctl list devices available --json | python3 -c '
+          import json
+          import sys
+
+          devices_by_runtime = json.load(sys.stdin).get("devices", {})
+          for runtime in sorted(devices_by_runtime, reverse=True):
+              if ".iOS-" not in runtime:
+                  continue
+              for device in devices_by_runtime[runtime]:
+                  if device.get("isAvailable") and device.get("name", "").startswith("iPhone"):
+                      print("platform=iOS Simulator,id={}".format(device["udid"]))
+                      raise SystemExit(0)
+          raise SystemExit("No available iPhone Simulator was found on this runner.")
+          ')"
+          echo "IOS_SIMULATOR_DESTINATION=$destination" >> "$GITHUB_ENV"
+          printf 'Selected simulator: %s\n' "$destination"
+
+      - name: Build Debug and Release, then run XCTest
+        env:
+          PRIVATE_MOMENTS_DERIVED_DATA: ${{ runner.temp }}/PrivateMomentsDerivedData
+          PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments.xcresult
+        run: bash scripts/verify-mac.sh
+
+      - name: Upload XCTest result bundle
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: private-moments-xcresult
+          path: ${{ runner.temp }}/PrivateMoments.xcresult
+          if-no-files-found: ignore
+          retention-days: 7
