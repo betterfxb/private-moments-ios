@@ -128,7 +128,7 @@ Manual VoiceOver, Dynamic Type, multi-device layout, privacy lifecycle, and stor
 |---|---|---|---|
 | 1 | Confirm Apple/Xcode supports extracting XCTest attachments from an `.xcresult` | Green UI-test run | Complete: the cloud runner uses Xcode 16.4, which includes `xcresulttool export attachments` |
 | 2 | Export XCTest screenshots as PNG files and upload a separate short-lived artifact | Task 1 | Implemented locally: the workflow exports PNG attachments and uploads them for seven days |
-| 3 | Push the workflow/documentation update and verify artifact export on the macOS runner | Task 2 | Pending: run after this update is pushed |
+| 3 | Push the workflow/documentation update and verify artifact export on the macOS runner | Task 2 | Complete: run [41170621499](https://github.com/betterfxb/private-moments-ios/actions/runs/41170621499) passed all builds, 13 domain tests, 2 UI tests, screenshot export, and both artifact uploads; three iPhone 17 Pro PNGs were downloaded and opened on Windows. |
 
 - **Languages:** English (`en`, source language) and Simplified Chinese (`zh-Hans`). Additional languages can be added as catalog translations without changing stored records or enum cases.
 - **Language selection:** follow iOS system and per-app language settings. Do not force a locale or add a separate in-app language preference; system authentication follows the same language choice.

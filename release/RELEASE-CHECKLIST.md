@@ -12,7 +12,7 @@
 
 - [x] GitHub macOS run [41169968664](https://github.com/betterfxb/private-moments-ios/actions/runs/41169968664) passes Debug and Release iOS Simulator builds, all 13 domain tests, and both UI smoke tests on Xcode 16.4.
 - [x] English start → finish → save → timeline → detail path and Simplified Chinese primary action pass in XCUITest; screenshots are in the Actions `private-moments-xcresult` artifact (available for seven days after the run).
-- [ ] Verify the separate `private-moments-ui-screenshots` PNG artifact after the workflow export step is added and passes.
+- [x] Verify the separate `private-moments-ui-screenshots` PNG artifact: run [41170621499](https://github.com/betterfxb/private-moments-ios/actions/runs/41170621499) exported and uploaded three 1206×2622 screenshots from an iPhone 17 Pro; they were downloaded and opened successfully on Windows.
 - [ ] Review the attached screenshots in Xcode or download the `.xcresult`; CI success does not establish visual quality across devices or accessibility sizes.
 
 ## Developer and policy setup
