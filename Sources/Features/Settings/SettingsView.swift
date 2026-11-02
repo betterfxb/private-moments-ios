@@ -173,6 +173,7 @@ struct SettingsView: View {
                 }
 
                 Text("Verify file protection and backup behavior on an iPhone before release.")
+                    .accessibilityIdentifier("settings.footer")
                     .font(.system(.footnote, design: .rounded))
                     .foregroundStyle(AppColors.inkSoft)
             }

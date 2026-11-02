@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RecapView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(MomentStore.self) private var store
     let durationSeconds: Int
     let startedAt: Date
@@ -69,7 +70,7 @@ struct RecapView: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     sectionTitle("How are you feeling?")
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 9) {
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 1 : 2), spacing: 9) {
                         ForEach(MomentMood.allCases) { option in
                             Button {
                                 mood = option
@@ -78,7 +79,7 @@ struct RecapView: View {
                                     .font(.system(.subheadline, design: .rounded).weight(.medium))
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 12)
-                                    .foregroundStyle(mood == option ? AppColors.paper : AppColors.ink)
+                                    .foregroundStyle(mood == option ? AppColors.onAccent : AppColors.ink)
                                     .background(mood == option ? AppColors.terracotta : AppColors.paper, in: Capsule())
                                     .overlay(Capsule().stroke(mood == option ? AppColors.terracotta : AppColors.line, lineWidth: 1))
                             }
@@ -90,7 +91,7 @@ struct RecapView: View {
 
                 VStack(alignment: .leading, spacing: 10) {
                     sectionTitle("What kind of moment?")
-                    HStack(spacing: 9) {
+                    adaptiveLayout(spacing: 9) {
                         ForEach(MomentKind.allCases) { option in
                             Button {
                                 kind = option
@@ -99,11 +100,12 @@ struct RecapView: View {
                                     .font(.system(.subheadline, design: .rounded).weight(.medium))
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 12)
-                                    .foregroundStyle(kind == option ? AppColors.paper : AppColors.ink)
+                                    .foregroundStyle(kind == option ? AppColors.onAccent : AppColors.ink)
                                     .background(kind == option ? AppColors.terracotta : AppColors.paper, in: Capsule())
                                     .overlay(Capsule().stroke(kind == option ? AppColors.terracotta : AppColors.line, lineWidth: 1))
                             }
                             .buttonStyle(.plain)
+                            .accessibilityIdentifier("recap.kind.\(option.rawValue)")
                             .accessibilityAddTraits(kind == option ? .isSelected : [])
                         }
                     }
@@ -111,7 +113,7 @@ struct RecapView: View {
 
                 VStack(alignment: .leading, spacing: 9) {
                     sectionTitle("Your reflection")
-                    HStack(spacing: 8) {
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
                         ForEach(1...5, id: \.self) { value in
                             Button {
                                 rating = value
@@ -119,10 +121,11 @@ struct RecapView: View {
                                 Image(systemName: value <= rating ? "star.fill" : "star")
                                     .font(.title2)
                                     .foregroundStyle(value <= rating ? AppColors.terracotta : AppColors.sand)
-                                    .frame(width: 38, height: 42)
+                                    .frame(minWidth: 44, minHeight: 44)
                             }
                             .buttonStyle(.plain)
                             .accessibilityLabel(AppLocalization.format("Rate %lld out of 5", value))
+                            .accessibilityIdentifier("recap.rating.\(value)")
                             .accessibilityAddTraits(value == rating ? .isSelected : [])
                         }
                     }
@@ -134,7 +137,7 @@ struct RecapView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 9) {
-                    HStack {
+                    adaptiveLayout(spacing: 8) {
                         sectionTitle("Private note")
                         Spacer()
                         Text("Included in backups")
@@ -148,6 +151,7 @@ struct RecapView: View {
                         .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
                         .overlay(RoundedRectangle(cornerRadius: AppRadius.control).stroke(AppColors.line, lineWidth: 1))
                         .accessibilityLabel("Private note")
+                        .accessibilityIdentifier("recap.note")
                         .autocorrectionDisabled()
                         .privacySensitive()
                     HStack {
@@ -202,6 +206,7 @@ struct RecapView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Cancel", action: requestCancel)
+                    .accessibilityIdentifier("recap.cancel")
                     .foregroundStyle(AppColors.terracottaDark)
             }
         }
@@ -222,6 +227,12 @@ struct RecapView: View {
         Text(title)
             .font(.system(.title3, design: .serif).weight(.semibold))
             .foregroundStyle(AppColors.ink)
+    }
+
+    private func adaptiveLayout(spacing: CGFloat) -> AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: spacing))
+            : AnyLayout(HStackLayout(spacing: spacing))
     }
 
     private func saveMoment() {

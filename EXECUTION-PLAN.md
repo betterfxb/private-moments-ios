@@ -169,3 +169,20 @@ Each integration starts only after its prerequisites are written down and approv
 9. Run with English and Simplified Chinese selected in iOS per-app language settings. Confirm in-app text, errors, accessibility labels, Face ID purpose prompt, home-screen name, and exported backup filename follow the selected language; switch languages without losing records.
 10. Validate lock-screen/background privacy, file protection behavior, backup policy, Dynamic Type, VoiceOver, contrast, keyboard, and error recovery on iPhone and iPad in both languages. Check translated text at the largest accessibility sizes.
 11. Localize the App Store Connect name, subtitle, description, screenshots, and privacy disclosures for English and Simplified Chinese; then archive/sign and distribute a TestFlight build before any App Store submission.
+
+## UI quality and reliability batch (2026-11-02)
+
+Authorized scope: tasks 1–4 from the current backlog. Execute implementation in order, then validate the dependent work together on the macOS runner.
+
+| Order | Goal / scope | Dependency | Current result |
+|---|---|---|---|
+| 1 | Fix accent/session foregrounds in both appearances; adapt recap, rows, summary, filters and session scrolling for accessibility text | Inspect tokens and view ownership | Implemented; static audits and contrast calculations pass; native contrast XCTest added |
+| 2 | Capture both languages across six core screens, empty/saved states and controls; include compact phone, dark phone, iPad, and largest accessibility text | Task 1 | Gallery test and four CI profiles implemented; each locale gets an isolated persistent Debug-only UUID store |
+| 3 | Verify pause/resume, discard/keep, edit/save/discard, filtering/search, relaunch persistence and delete/cancel | Task 2 helpers and stable identifiers | UI assertions implemented; native runtime results pending |
+| 4 | Verify failed first/cached reads, mutation gating, successful/repeated retries, validation boundaries, corrupt rows and SwiftData rollback | Existing MomentStore/repository boundary | Five store-recovery tests and three real SwiftData tests implemented; native runtime results pending |
+
+Added two semantic-color contrast tests. The internal repository save closure defaults to ModelContext.save; injection lets tests trigger failure after real SwiftData changes and verify rollback from a fresh context. Production schema and backup format are unchanged. UI-test paths are compiled only in Debug; Release keeps the normal storage path.
+
+The localization scanner now excludes accessibility identifiers, which are automation metadata, from translation checks. All three local audits pass with existing publisher/Bundle ID warnings.
+
+Runtime gate: all four CI profiles must pass, all screenshots must be exported, and representative images must be opened before this batch is reported complete. Physical-device file protection, biometric authentication and manual VoiceOver review remain external acceptance work.

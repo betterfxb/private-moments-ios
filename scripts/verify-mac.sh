@@ -47,6 +47,10 @@ if grep -Fq 'PRODUCT_BUNDLE_IDENTIFIER = com.example.PrivateMoments;' \
     printf '\nWARNING: the app still uses the placeholder bundle identifier. Simulator checks can run, but device signing and distribution require a unique identifier.\n'
 fi
 
+TEST_SCOPE_ARGUMENTS=()
+if [[ "${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}" == "1" ]]; then
+    TEST_SCOPE_ARGUMENTS=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
+else
 printf '\nBuilding Debug for the generic iOS Simulator destination...\n'
 xcodebuild \
     -project "$PROJECT_PATH" \
@@ -67,6 +71,7 @@ xcodebuild \
     CODE_SIGNING_ALLOWED=NO \
     build
 
+fi
 printf '\nRunning XCTest on destination: %s\n' "$SIMULATOR_DESTINATION"
 xcodebuild \
     -project "$PROJECT_PATH" \
@@ -75,6 +80,7 @@ xcodebuild \
     -destination "$SIMULATOR_DESTINATION" \
     -derivedDataPath "$DERIVED_DATA_DIRECTORY" \
     -resultBundlePath "$RESULT_BUNDLE_PATH" \
+    "${TEST_SCOPE_ARGUMENTS[@]}" \
     CODE_SIGNING_ALLOWED=NO \
     test
 

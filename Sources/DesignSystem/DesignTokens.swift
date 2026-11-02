@@ -2,6 +2,12 @@ import SwiftUI
 import UIKit
 
 enum AppColors {
+    // Foregrounds on saturated buttons and the always-dark session surface stay light
+    // in both appearances. `paper` is an adaptive surface, not a foreground token.
+    static let onAccent = Color(red: 1.00, green: 0.992, blue: 0.973)
+    static let onDark = Color(red: 1.00, green: 0.973, blue: 0.945)
+    static let onDarkSecondary = Color(red: 0.84, green: 0.76, blue: 0.73)
+    static let onDarkAccent = Color(red: 0.96, green: 0.75, blue: 0.70)
     static let cream = adaptive(
         light: UIColor(red: 1.00, green: 0.973, blue: 0.945, alpha: 1),
         dark: UIColor(red: 0.090, green: 0.075, blue: 0.070, alpha: 1)
@@ -73,8 +79,9 @@ struct PrimaryActionButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.system(.headline, design: .rounded).weight(.semibold))
-            .foregroundStyle(AppColors.paper)
+            .foregroundStyle(AppColors.onAccent)
             .frame(maxWidth: .infinity)
+            .padding(.horizontal, 16)
             .padding(.vertical, 17)
             .background(AppColors.terracotta.opacity(isEnabled ? 1 : 0.55), in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
             .scaleEffect(isEnabled && configuration.isPressed ? 0.985 : 1)

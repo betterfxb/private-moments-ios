@@ -118,6 +118,8 @@ function scanSwiftFiles(directory) {
             const lineStart = text.lastIndexOf("\n", match.index) + 1;
             const lineEnd = text.indexOf("\n", match.index);
             const line = text.slice(lineStart, lineEnd < 0 ? text.length : lineEnd);
+            // Stable automation identifiers are never presented or translated.
+            if (/\.accessibilityIdentifier\s*\(\s*$/.test(prefix)) continue;
             if (/logger\.|Logger\(/.test(line) || /return\s+String\(format:/.test(line)) continue;
             if (key.length < 2 || key === "[]" || key.trim() === "·" || key === "99+" || key === "—") continue;
             if (/^\\\([^)]*\)$/.test(match[1])) continue;

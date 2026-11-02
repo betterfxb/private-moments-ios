@@ -20,7 +20,23 @@ enum PrivateStoreFactory {
             appropriateFor: nil,
             create: true
         )
-        let directory = applicationSupport.appendingPathComponent("PrivateMoments", isDirectory: true)
+        let directory: URL
+        #if DEBUG
+        // UI tests use their own persistent sandbox. Relaunch tests reuse the UUID;
+        // no test setup erases or opens the normal journal.
+        let arguments = ProcessInfo.processInfo.arguments
+        if let index = arguments.firstIndex(of: "-pm-ui-test-store"),
+           arguments.indices.contains(index + 1),
+           let identifier = UUID(uuidString: arguments[index + 1]) {
+            directory = applicationSupport
+                .appendingPathComponent("PrivateMoments-UITests", isDirectory: true)
+                .appendingPathComponent(identifier.uuidString, isDirectory: true)
+        } else {
+            directory = applicationSupport.appendingPathComponent("PrivateMoments", isDirectory: true)
+        }
+        #else
+        directory = applicationSupport.appendingPathComponent("PrivateMoments", isDirectory: true)
+        #endif
         try fileManager.createDirectory(
             at: directory,
             withIntermediateDirectories: true,

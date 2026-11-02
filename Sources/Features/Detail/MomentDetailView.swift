@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MomentDetailView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(MomentStore.self) private var store
     let momentID: UUID
     let onEdit: (Moment) -> Void
@@ -74,7 +75,7 @@ struct MomentDetailView: View {
                         .foregroundStyle(AppColors.terracottaDark)
                 }
 
-                HStack(spacing: 12) {
+                infoLayout {
                     infoCard(title: "Type", value: moment.kind.displayName, symbol: "circle.grid.2x2")
                     infoCard(title: "Feeling", value: moment.mood.displayName, symbol: "face.smiling")
                 }
@@ -114,6 +115,7 @@ struct MomentDetailView: View {
                         .padding(14)
                         .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
                         .textSelection(.enabled)
+                        .accessibilityIdentifier("detail.note")
                         .privacySensitive()
                     Text("Private notes are not part of sharing in this MVP.")
                         .font(.system(.footnote, design: .rounded))
@@ -134,6 +136,7 @@ struct MomentDetailView: View {
                 .buttonStyle(.bordered)
                 .tint(AppColors.terracottaDark)
                 .disabled(!store.isStorageAvailable)
+                .accessibilityIdentifier("detail.edit")
 
                 Button(role: .destructive) {
                     showingDeleteConfirmation = true
@@ -145,6 +148,7 @@ struct MomentDetailView: View {
                 .buttonStyle(.bordered)
                 .tint(AppColors.terracottaDark)
                 .disabled(!store.isStorageAvailable)
+                .accessibilityIdentifier("detail.delete")
             }
             .padding(.horizontal, AppSpacing.page)
             .padding(.top, 18)
@@ -152,6 +156,12 @@ struct MomentDetailView: View {
             .frame(maxWidth: 680)
             .frame(maxWidth: .infinity)
         }
+    }
+
+    private var infoLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
+            : AnyLayout(HStackLayout(spacing: 12))
     }
 
     private func infoCard(title: LocalizedStringKey, value: String, symbol: String) -> some View {

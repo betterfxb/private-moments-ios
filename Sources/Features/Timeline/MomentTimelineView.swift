@@ -10,6 +10,7 @@ private enum MomentFilter: String, CaseIterable, Identifiable {
 }
 
 struct MomentTimelineView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(MomentStore.self) private var store
     let onOpen: (UUID) -> Void
 
@@ -35,12 +36,13 @@ struct MomentTimelineView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                Picker("Filter moments", selection: $filter) {
-                    ForEach(MomentFilter.allCases) { option in
-                        Text(option.displayName).tag(option)
+                Group {
+                    if dynamicTypeSize.isAccessibilitySize {
+                        filterPicker.pickerStyle(.menu)
+                    } else {
+                        filterPicker.pickerStyle(.segmented)
                     }
                 }
-                .pickerStyle(.segmented)
                 .accessibilityHint("Filters your private records by moment type")
                 .disabled(!store.isStorageAvailable)
 
@@ -91,5 +93,14 @@ struct MomentTimelineView: View {
         .navigationBarTitleDisplayMode(.large)
         .searchable(text: $searchText, prompt: "Date, type, mood, or tag")
         .task { store.reload() }
+    }
+
+    private var filterPicker: some View {
+        Picker("Filter moments", selection: $filter) {
+            ForEach(MomentFilter.allCases) { option in
+                Text(option.displayName).tag(option)
+            }
+        }
+        .accessibilityIdentifier("timeline.filter")
     }
 }

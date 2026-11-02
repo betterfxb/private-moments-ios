@@ -13,6 +13,7 @@ struct PrivateBadge: View {
 }
 
 struct MomentRow: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let moment: Moment
 
     private var dateText: String {
@@ -20,7 +21,7 @@ struct MomentRow: View {
     }
 
     var body: some View {
-        HStack(spacing: 13) {
+        rowLayout {
             Circle()
                 .fill(AppColors.terracotta)
                 .frame(width: 10, height: 10)
@@ -42,7 +43,7 @@ struct MomentRow: View {
             Text(SessionClock.durationText(moment.durationSeconds))
                 .font(.system(.footnote, design: .rounded).weight(.medium))
                 .foregroundStyle(AppColors.inkSoft)
-                .lineLimit(1)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(14)
         .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
@@ -52,6 +53,12 @@ struct MomentRow: View {
         }
         .contentShape(RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
         .accessibilityElement(children: .combine)
+    }
+
+    private var rowLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 13))
     }
 }
 

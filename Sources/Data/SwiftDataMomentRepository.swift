@@ -4,9 +4,11 @@ import SwiftData
 @MainActor
 final class SwiftDataMomentRepository: MomentRepository {
     private let modelContext: ModelContext
+    private let saveChanges: @MainActor (ModelContext) throws -> Void
 
-    init(modelContext: ModelContext) {
+    init(modelContext: ModelContext, saveChanges: @escaping @MainActor (ModelContext) throws -> Void = { try $0.save() }) {
         self.modelContext = modelContext
+        self.saveChanges = saveChanges
     }
 
     func fetchAll() throws -> [Moment] {
@@ -97,7 +99,7 @@ final class SwiftDataMomentRepository: MomentRepository {
         do {
             try changes()
             if modelContext.hasChanges {
-                try modelContext.save()
+                try saveChanges(modelContext)
             }
         } catch {
             modelContext.rollback()

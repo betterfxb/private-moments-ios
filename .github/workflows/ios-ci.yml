@@ -12,9 +12,33 @@ permissions:
 
 jobs:
   build-and-test:
-    name: Static audits, simulator builds, and XCTest
+    name: ${{ matrix.profile }}
     runs-on: macos-15
-    timeout-minutes: 60
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - profile: compact-light
+            family: compact
+            appearance: light
+            text_size: large
+            gallery_only: '0'
+          - profile: phone-dark
+            family: phone
+            appearance: dark
+            text_size: large
+            gallery_only: '1'
+          - profile: ipad-light
+            family: ipad
+            appearance: light
+            text_size: large
+            gallery_only: '1'
+          - profile: compact-dark-accessibility
+            family: compact
+            appearance: dark
+            text_size: accessibility-extra-extra-extra-large
+            gallery_only: '1'
 
     steps:
       - name: Check out source
@@ -26,30 +50,50 @@ jobs:
           node tools/audit-xcode-project.mjs
           node tools/audit-release-materials.mjs
 
-      - name: Select an available iPhone simulator
+      - name: Select and configure simulator
         shell: bash
+        env:
+          SIMULATOR_FAMILY: ${{ matrix.family }}
+          SIMULATOR_APPEARANCE: ${{ matrix.appearance }}
+          SIMULATOR_TEXT_SIZE: ${{ matrix.text_size }}
         run: |
           destination="$(xcrun simctl list devices available --json | python3 -c '
           import json
+          import os
           import sys
 
           devices_by_runtime = json.load(sys.stdin).get("devices", {})
           for runtime in sorted(devices_by_runtime, reverse=True):
               if ".iOS-" not in runtime:
                   continue
-              for device in devices_by_runtime[runtime]:
-                  if device.get("isAvailable") and device.get("name", "").startswith("iPhone"):
-                      print("platform=iOS Simulator,id={}".format(device["udid"]))
-                      raise SystemExit(0)
-          raise SystemExit("No available iPhone Simulator was found on this runner.")
+              devices = [d for d in devices_by_runtime[runtime] if d.get("isAvailable")]
+              family = os.environ["SIMULATOR_FAMILY"]
+              if family == "compact":
+                  preferences = ["iPhone SE (3rd generation)", "iPhone 16e", "iPhone 17e", "iPhone 16", "iPhone 17"]
+                  devices = [d for name in preferences for d in devices if d["name"] == name]
+              elif family == "ipad":
+                  devices = [d for d in devices if d["name"].startswith("iPad")]
+              else:
+                  devices = [d for d in devices if d["name"].startswith("iPhone")]
+              if devices:
+                  device = devices[0]
+                  print("Selected: {} ({})".format(device["name"], runtime), file=sys.stderr)
+                  print("platform=iOS Simulator,id={}".format(device["udid"]))
+                  raise SystemExit(0)
+          raise SystemExit("No simulator matched the required device profile.")
           ')"
           echo "IOS_SIMULATOR_DESTINATION=$destination" >> "$GITHUB_ENV"
           printf 'Selected simulator: %s\n' "$destination"
+          simulator_id="${destination##*id=}"
+          xcrun simctl bootstatus "$simulator_id" -b
+          xcrun simctl ui "$simulator_id" appearance "$SIMULATOR_APPEARANCE"
+          xcrun simctl ui "$simulator_id" content_size "$SIMULATOR_TEXT_SIZE"
 
       - name: Build Debug and Release, then run XCTest
         env:
           PRIVATE_MOMENTS_DERIVED_DATA: ${{ runner.temp }}/PrivateMomentsDerivedData
           PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments.xcresult
+          PRIVATE_MOMENTS_UI_GALLERY_ONLY: ${{ matrix.gallery_only }}
         run: bash scripts/verify-mac.sh
 
       - name: Export XCTest UI screenshots
@@ -73,7 +117,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: private-moments-ui-screenshots
+          name: private-moments-ui-screenshots-${{ matrix.profile }}
           path: ${{ runner.temp }}/PrivateMomentsUIScreenshots
           if-no-files-found: ignore
           retention-days: 7
@@ -82,7 +126,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: private-moments-xcresult
+          name: private-moments-xcresult-${{ matrix.profile }}
           path: ${{ runner.temp }}/PrivateMoments.xcresult
           if-no-files-found: ignore
           retention-days: 7

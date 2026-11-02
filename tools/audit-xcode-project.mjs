@@ -238,6 +238,12 @@ assert(appDependencies.some((dependency) => dependency.target === appTargetID &&
 const uiTestDependencies = (uiTestTarget?.dependencies ?? []).map((id) => objects[id]).filter(Boolean);
 assert(uiTestDependencies.some((dependency) => dependency.target === appTargetID && dependency.targetProxy), "The UI test target does not depend on the app target.");
 
+for (const config of configurationSettings(projectObject, objects)) {
+    const conditions = String(config.buildSettings?.SWIFT_ACTIVE_COMPILATION_CONDITIONS ?? "").split(/\s+/);
+    if (config.name === "Debug") assert(conditions.includes("DEBUG"), "Debug must enable the isolated UI-test store support.");
+    if (config.name === "Release") assert(!conditions.includes("DEBUG"), "Release must exclude Debug-only UI-test store support.");
+}
+
 for (const config of configurationSettings(appTarget, objects)) {
     if (!["Debug", "Release"].includes(config.name)) continue;
     const settings = config.buildSettings ?? {};

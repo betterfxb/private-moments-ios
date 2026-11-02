@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct TodayView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(MomentStore.self) private var store
     let onStart: () -> Void
     let onOpen: (UUID) -> Void
@@ -26,7 +27,7 @@ struct TodayView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
-                HStack {
+                adaptiveLayout {
                     PrivateBadge()
                     Spacer()
                     Text(todayLabel)
@@ -54,9 +55,9 @@ struct TodayView: View {
                         Image(systemName: "arrow.up.right")
                             .font(.system(size: 14, weight: .semibold))
                             .frame(width: 34, height: 34)
-                            .background(AppColors.paper.opacity(0.2), in: Circle())
+                            .background(AppColors.onAccent.opacity(0.2), in: Circle())
                     }
-                    .padding(.horizontal, 18)
+                    .padding(.horizontal, 2)
                 }
                 .buttonStyle(PrimaryActionButtonStyle())
                 .disabled(!store.isStorageAvailable)
@@ -75,7 +76,7 @@ struct TodayView: View {
                 }
 
                 if store.isStorageAvailable {
-                    HStack(alignment: .firstTextBaseline) {
+                    adaptiveLayout {
                         Text("Recent moments")
                             .font(.system(.title3, design: .serif).weight(.semibold))
                             .foregroundStyle(AppColors.ink)
@@ -105,7 +106,7 @@ struct TodayView: View {
                     }
 
                     VStack(alignment: .leading, spacing: 14) {
-                        HStack(alignment: .firstTextBaseline) {
+                        adaptiveLayout {
                             Text("This week")
                                 .font(.system(.title3, design: .serif).weight(.semibold))
                                 .foregroundStyle(AppColors.ink)
@@ -116,13 +117,13 @@ struct TodayView: View {
                                 .foregroundStyle(AppColors.inkSoft)
                         }
 
-                        HStack(spacing: 2) {
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 3 : 7), spacing: 8) {
                             ForEach(weekSummary) { day in
                                 VStack(spacing: 7) {
                                     Text(day.count == 0 ? "·" : (day.count > 99 ? "99+" : "\(day.count)"))
                                         .font(.system(.caption, design: .rounded).weight(.semibold).monospacedDigit())
-                                        .foregroundStyle(day.count == 0 ? AppColors.inkSoft : AppColors.paper)
-                                        .frame(width: 34, height: 34)
+                                        .foregroundStyle(day.count == 0 ? AppColors.inkSoft : AppColors.onAccent)
+                                        .frame(minWidth: 28, minHeight: 34)
                                         .background(day.count == 0 ? AppColors.cream : AppColors.terracotta, in: Circle())
                                     Text(day.date.formatted(.dateTime.weekday(.narrow)))
                                         .font(.system(.caption2, design: .rounded).weight(.medium))
@@ -137,7 +138,7 @@ struct TodayView: View {
                     .padding(16)
                     .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
 
-                    HStack(spacing: 10) {
+                    adaptiveLayout {
                         summaryTile(
                             value: store.averageDurationMinutes.map { AppLocalization.format("%lld min", $0) } ?? "—",
                             title: "Average"
@@ -166,8 +167,7 @@ struct TodayView: View {
             Text(value)
                 .font(.system(.headline, design: .rounded).weight(.semibold))
                 .foregroundStyle(AppColors.ink)
-                .lineLimit(1)
-                .minimumScaleFactor(0.75)
+                .fixedSize(horizontal: false, vertical: true)
             Text(title)
                 .font(.system(.caption, design: .rounded).weight(.medium))
                 .foregroundStyle(AppColors.inkSoft)
@@ -175,6 +175,12 @@ struct TodayView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
         .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
+    }
+
+    private var adaptiveLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+            : AnyLayout(HStackLayout(spacing: 10))
     }
 }
 
