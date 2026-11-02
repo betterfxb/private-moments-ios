@@ -22,6 +22,10 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Session-controls-\(language)", app)
             tap(app.buttons["session.finish"], in: app)
             capture("Recap-top-\(language)", app)
+            reveal(app.buttons["recap.kind.Solo"], in: app)
+            capture("Recap-kind-\(language)", app)
+            reveal(app.buttons["recap.rating.5"], in: app)
+            capture("Recap-rating-\(language)", app)
             reveal(app.buttons["recap.save"], in: app)
             capture("Recap-controls-\(language)", app)
             tap(app.buttons["recap.save"], in: app)
@@ -82,6 +86,7 @@ final class PrivateMomentsUITests: XCTestCase {
         let note = app.textViews["recap.note"]
         tap(note, in: app)
         note.typeText("Synthetic private reflection")
+        tap(app.buttons["recap.dismissKeyboard"], in: app)
         tap(app.buttons["recap.save"], in: app)
         XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
         tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
@@ -167,6 +172,22 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func capture(_ name: String, _ app: XCUIApplication) {
+        // A screenshot can be taken while a SwiftUI push or scroll is still
+        // animating. Require a stable scroll-surface frame across polling ticks.
+        let surface = app.scrollViews.firstMatch
+        var lastFrame = CGRect.null
+        var stableSince = Date()
+        let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard surface.exists else { return false }
+            let frame = surface.frame
+            if frame != lastFrame {
+                lastFrame = frame
+                stableSince = Date()
+                return false
+            }
+            return Date().timeIntervalSince(stableSince) >= 0.75
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 10), .completed, "Screen never settled: \(name)")
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = name
         attachment.lifetime = .keepAlways

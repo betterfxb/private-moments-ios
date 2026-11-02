@@ -48,14 +48,19 @@ struct TodayView: View {
 
                 Button(action: onStart) {
                     HStack(spacing: 14) {
-                        Image(systemName: "waveform.path")
-                            .font(.system(size: 22, weight: .medium))
+                        if !dynamicTypeSize.isAccessibilitySize {
+                            Image(systemName: "waveform.path")
+                                .font(.system(size: 22, weight: .medium))
+                        }
                         Text("Start a moment")
-                        Spacer()
-                        Image(systemName: "arrow.up.right")
-                            .font(.system(size: 14, weight: .semibold))
-                            .frame(width: 34, height: 34)
-                            .background(AppColors.onAccent.opacity(0.2), in: Circle())
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        if !dynamicTypeSize.isAccessibilitySize {
+                            Image(systemName: "arrow.up.right")
+                                .font(.system(size: 14, weight: .semibold))
+                                .frame(width: 34, height: 34)
+                                .background(AppColors.onAccent.opacity(0.2), in: Circle())
+                        }
                     }
                     .padding(.horizontal, 2)
                 }

@@ -16,6 +16,7 @@ struct RecapView: View {
     @State private var privateNote: String
     @State private var showingSaveError = false
     @State private var showingDiscardConfirmation = false
+    @FocusState private var isNoteFocused: Bool
 
     private var noteValidationMessage: String? {
         do {
@@ -73,6 +74,7 @@ struct RecapView: View {
             .frame(maxWidth: 680)
             .frame(maxWidth: .infinity)
         }
+        .scrollDismissesKeyboard(.interactively)
         .background(AppColors.cream.ignoresSafeArea())
         .navigationTitle("Quick recap")
         .navigationBarTitleDisplayMode(.inline)
@@ -82,6 +84,11 @@ struct RecapView: View {
                 Button("Cancel", action: requestCancel)
                     .accessibilityIdentifier("recap.cancel")
                     .foregroundStyle(AppColors.terracottaDark)
+            }
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") { isNoteFocused = false }
+                    .accessibilityIdentifier("recap.dismissKeyboard")
             }
         }
         .accessibilityAction(.escape) { requestCancel() }
@@ -194,6 +201,7 @@ struct RecapView: View {
                     .foregroundStyle(AppColors.terracottaDark)
             }
             TextEditor(text: $privateNote)
+                .focused($isNoteFocused)
                 .scrollContentBackground(.hidden)
                 .padding(8)
                 .frame(minHeight: 112)
