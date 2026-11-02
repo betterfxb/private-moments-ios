@@ -120,7 +120,7 @@ struct RecapView: View {
                             } label: {
                                 Image(systemName: value <= rating ? "star.fill" : "star")
                                     .font(.title2)
-                                    .foregroundStyle(value <= rating ? AppColors.terracotta : AppColors.sand)
+                                    .foregroundStyle(value <= rating ? AppColors.terracottaDark : AppColors.inkSoft)
                                     .frame(minWidth: 44, minHeight: 44)
                             }
                             .buttonStyle(.plain)
@@ -289,6 +289,7 @@ private struct FlowTags: View {
                 .font(.system(.caption, design: .rounded).weight(.medium))
                 .padding(.horizontal, 12)
                 .padding(.vertical, 9)
+                .frame(minHeight: 44)
                 .foregroundStyle(isSelected ? AppColors.terracottaDark : AppColors.inkSoft)
                 .background(isSelected ? AppColors.blush.opacity(0.22) : AppColors.paper, in: Capsule())
                 .overlay(Capsule().stroke(isSelected ? AppColors.blush : AppColors.line, lineWidth: 1))

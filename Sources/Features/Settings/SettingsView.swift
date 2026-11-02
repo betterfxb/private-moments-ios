@@ -122,6 +122,7 @@ struct SettingsView: View {
                                 .foregroundStyle(AppColors.terracottaDark)
                         }
                         .frame(maxWidth: .infinity)
+                        .frame(minHeight: 44)
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
