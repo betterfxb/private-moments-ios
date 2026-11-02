@@ -59,139 +59,13 @@ struct RecapView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(existingMoment == nil ? "A moment to remember" : "Edit your reflection")
-                        .font(.system(.largeTitle, design: .serif))
-                        .foregroundStyle(AppColors.ink)
-                    Text(AppLocalization.format("%@ · %@", startedAt.formatted(date: .abbreviated, time: .shortened), SessionClock.durationText(durationSeconds)))
-                        .font(.system(.subheadline, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
-                }
-
-                VStack(alignment: .leading, spacing: 12) {
-                    sectionTitle("How are you feeling?")
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 1 : 2), spacing: 9) {
-                        ForEach(MomentMood.allCases) { option in
-                            Button {
-                                mood = option
-                            } label: {
-                                Text(option.displayName)
-                                    .font(.system(.subheadline, design: .rounded).weight(.medium))
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 12)
-                                    .foregroundStyle(mood == option ? AppColors.onAccent : AppColors.ink)
-                                    .background(mood == option ? AppColors.terracotta : AppColors.paper, in: Capsule())
-                                    .overlay(Capsule().stroke(mood == option ? AppColors.terracotta : AppColors.line, lineWidth: 1))
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityAddTraits(mood == option ? .isSelected : [])
-                        }
-                    }
-                }
-
-                VStack(alignment: .leading, spacing: 10) {
-                    sectionTitle("What kind of moment?")
-                    adaptiveLayout(spacing: 9) {
-                        ForEach(MomentKind.allCases) { option in
-                            Button {
-                                kind = option
-                            } label: {
-                                Text(option.displayName)
-                                    .font(.system(.subheadline, design: .rounded).weight(.medium))
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 12)
-                                    .foregroundStyle(kind == option ? AppColors.onAccent : AppColors.ink)
-                                    .background(kind == option ? AppColors.terracotta : AppColors.paper, in: Capsule())
-                                    .overlay(Capsule().stroke(kind == option ? AppColors.terracotta : AppColors.line, lineWidth: 1))
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityIdentifier("recap.kind.\(option.rawValue)")
-                            .accessibilityAddTraits(kind == option ? .isSelected : [])
-                        }
-                    }
-                }
-
-                VStack(alignment: .leading, spacing: 9) {
-                    sectionTitle("Your reflection")
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
-                        ForEach(1...5, id: \.self) { value in
-                            Button {
-                                rating = value
-                            } label: {
-                                Image(systemName: value <= rating ? "star.fill" : "star")
-                                    .font(.title2)
-                                    .foregroundStyle(value <= rating ? AppColors.terracottaDark : AppColors.inkSoft)
-                                    .frame(minWidth: 44, minHeight: 44)
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityLabel(AppLocalization.format("Rate %lld out of 5", value))
-                            .accessibilityIdentifier("recap.rating.\(value)")
-                            .accessibilityAddTraits(value == rating ? .isSelected : [])
-                        }
-                    }
-                }
-
-                VStack(alignment: .leading, spacing: 10) {
-                    sectionTitle("A few tags")
-                    FlowTags(tags: availableTags, selection: $selectedTags)
-                }
-
-                VStack(alignment: .leading, spacing: 9) {
-                    adaptiveLayout(spacing: 8) {
-                        sectionTitle("Private note")
-                        Spacer()
-                        Text("Included in backups")
-                            .font(.system(.caption, design: .rounded).weight(.semibold))
-                            .foregroundStyle(AppColors.terracottaDark)
-                    }
-                    TextEditor(text: $privateNote)
-                        .scrollContentBackground(.hidden)
-                        .padding(8)
-                        .frame(minHeight: 112)
-                        .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: AppRadius.control).stroke(AppColors.line, lineWidth: 1))
-                        .accessibilityLabel("Private note")
-                        .accessibilityIdentifier("recap.note")
-                        .autocorrectionDisabled()
-                        .privacySensitive()
-                    HStack {
-                        Spacer()
-                        Text(AppLocalization.format("%lld / %lld", privateNote.count, MomentValidator.maximumNoteLength))
-                            .font(.system(.caption, design: .rounded).monospacedDigit())
-                            .foregroundStyle(
-                                noteValidationMessage != nil
-                                    ? AppColors.terracottaDark
-                                    : AppColors.inkSoft
-                            )
-                            .accessibilityLabel(AppLocalization.format("Private note, %lld of %lld characters", privateNote.count, MomentValidator.maximumNoteLength))
-                    }
-                    if let noteValidationMessage {
-                        ErrorNotice(message: noteValidationMessage)
-                    }
-                }
-
-                if !store.isStorageAvailable {
-                    StorageRecoveryCard(
-                        message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
-                        onRetry: store.reload
-                    )
-                } else if showingSaveError, let errorMessage = store.errorMessage {
-                    ErrorNotice(message: errorMessage)
-                }
-
-                Button(action: saveMoment) {
-                    Label(existingMoment == nil ? "Save privately" : "Save changes", systemImage: "checkmark")
-                }
-                .buttonStyle(PrimaryActionButtonStyle())
-                .disabled(noteValidationMessage != nil || !store.isStorageAvailable)
-                .accessibilityIdentifier("recap.save")
-                .accessibilityHint(
-                    noteValidationMessage != nil
-                        ? "Shorten the private note to 10,000 characters and 60 KB or less to save."
-                        : (store.isStorageAvailable
-                            ? "Saves this record on this device."
-                            : "Load your journal before saving a record.")
-                )
+                headerSection
+                moodSection
+                kindSection
+                ratingSection
+                tagsSection
+                noteSection
+                saveSection
             }
             .padding(.horizontal, AppSpacing.page)
             .padding(.top, 18)
@@ -221,6 +95,155 @@ struct RecapView: View {
         } message: {
             Text("Your unsaved reflection will be lost. Saved journal entries will not change.")
         }
+    }
+
+    private var headerSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(existingMoment == nil ? "A moment to remember" : "Edit your reflection")
+                .font(.system(.largeTitle, design: .serif))
+                .foregroundStyle(AppColors.ink)
+            Text(AppLocalization.format("%@ · %@", startedAt.formatted(date: .abbreviated, time: .shortened), SessionClock.durationText(durationSeconds)))
+                .font(.system(.subheadline, design: .rounded))
+                .foregroundStyle(AppColors.inkSoft)
+        }
+    }
+
+    private var moodSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionTitle("How are you feeling?")
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 1 : 2), spacing: 9) {
+                ForEach(MomentMood.allCases) { option in
+                    Button {
+                        mood = option
+                    } label: {
+                        Text(option.displayName)
+                            .font(.system(.subheadline, design: .rounded).weight(.medium))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .foregroundStyle(mood == option ? AppColors.onAccent : AppColors.ink)
+                            .background(mood == option ? AppColors.terracotta : AppColors.paper, in: Capsule())
+                            .overlay(Capsule().stroke(mood == option ? AppColors.terracotta : AppColors.line, lineWidth: 1))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(mood == option ? .isSelected : [])
+                }
+            }
+        }
+    }
+
+    private var kindSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionTitle("What kind of moment?")
+            adaptiveLayout(spacing: 9).callAsFunction {
+                ForEach(MomentKind.allCases) { option in
+                    Button {
+                        kind = option
+                    } label: {
+                        Text(option.displayName)
+                            .font(.system(.subheadline, design: .rounded).weight(.medium))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .foregroundStyle(kind == option ? AppColors.onAccent : AppColors.ink)
+                            .background(kind == option ? AppColors.terracotta : AppColors.paper, in: Capsule())
+                            .overlay(Capsule().stroke(kind == option ? AppColors.terracotta : AppColors.line, lineWidth: 1))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("recap.kind.\(option.rawValue)")
+                    .accessibilityAddTraits(kind == option ? .isSelected : [])
+                }
+            }
+        }
+    }
+
+    private var ratingSection: some View {
+        VStack(alignment: .leading, spacing: 9) {
+            sectionTitle("Your reflection")
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
+                ForEach(1...5, id: \.self) { value in
+                    Button {
+                        rating = value
+                    } label: {
+                        Image(systemName: value <= rating ? "star.fill" : "star")
+                            .font(.title2)
+                            .foregroundStyle(value <= rating ? AppColors.terracottaDark : AppColors.inkSoft)
+                            .frame(minWidth: 44, minHeight: 44)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(AppLocalization.format("Rate %lld out of 5", value))
+                    .accessibilityIdentifier("recap.rating.\(value)")
+                    .accessibilityAddTraits(value == rating ? .isSelected : [])
+                }
+            }
+        }
+    }
+
+    private var tagsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionTitle("A few tags")
+            FlowTags(tags: availableTags, selection: $selectedTags)
+        }
+    }
+
+    private var noteSection: some View {
+        VStack(alignment: .leading, spacing: 9) {
+            adaptiveLayout(spacing: 8).callAsFunction {
+                sectionTitle("Private note")
+                Spacer()
+                Text("Included in backups")
+                    .font(.system(.caption, design: .rounded).weight(.semibold))
+                    .foregroundStyle(AppColors.terracottaDark)
+            }
+            TextEditor(text: $privateNote)
+                .scrollContentBackground(.hidden)
+                .padding(8)
+                .frame(minHeight: 112)
+                .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: AppRadius.control).stroke(AppColors.line, lineWidth: 1))
+                .accessibilityLabel("Private note")
+                .accessibilityIdentifier("recap.note")
+                .autocorrectionDisabled()
+                .privacySensitive()
+            HStack {
+                Spacer()
+                Text(AppLocalization.format("%lld / %lld", privateNote.count, MomentValidator.maximumNoteLength))
+                    .font(.system(.caption, design: .rounded).monospacedDigit())
+                    .foregroundStyle(
+                        noteValidationMessage != nil
+                            ? AppColors.terracottaDark
+                            : AppColors.inkSoft
+                    )
+                    .accessibilityLabel(AppLocalization.format("Private note, %lld of %lld characters", privateNote.count, MomentValidator.maximumNoteLength))
+            }
+            if let noteValidationMessage {
+                ErrorNotice(message: noteValidationMessage)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var saveSection: some View {
+        if !store.isStorageAvailable {
+            StorageRecoveryCard(
+                message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
+                onRetry: store.reload
+            )
+        } else if showingSaveError, let errorMessage = store.errorMessage {
+            ErrorNotice(message: errorMessage)
+        }
+
+        Button(action: saveMoment) {
+            Label(existingMoment == nil ? "Save privately" : "Save changes", systemImage: "checkmark")
+        }
+        .buttonStyle(PrimaryActionButtonStyle())
+        .disabled(noteValidationMessage != nil || !store.isStorageAvailable)
+        .accessibilityIdentifier("recap.save")
+        .accessibilityHint(
+            noteValidationMessage != nil
+                ? "Shorten the private note to 10,000 characters and 60 KB or less to save."
+                : (store.isStorageAvailable
+                    ? "Saves this record on this device."
+                    : "Load your journal before saving a record.")
+        )
     }
 
     private func sectionTitle(_ title: LocalizedStringKey) -> some View {

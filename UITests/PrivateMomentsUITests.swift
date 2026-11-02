@@ -111,6 +111,9 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
         search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: query.count))
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
+        search.typeText("Calm")
+        XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
+        search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 4))
         // Dismiss search so the keyboard cannot cover the entry row.
         if app.buttons["Cancel"].exists { app.buttons["Cancel"].tap() }
         tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
