@@ -17,7 +17,8 @@ private enum AppTab: Hashable {
 struct RootView: View {
     @State private var store: MomentStore
     @State private var sessionClock = SessionClock()
-    @State private var path: [AppRoute] = []
+    @State private var todayPath: [AppRoute] = []
+    @State private var timelinePath: [AppRoute] = []
     @State private var selectedTab: AppTab = .today
     @Environment(AppLockController.self) private var privacyLock
     @Environment(\.scenePhase) private var scenePhase
@@ -30,76 +31,28 @@ struct RootView: View {
 
     var body: some View {
         ZStack {
-            NavigationStack(path: $path) {
-                TabView(selection: $selectedTab) {
+            TabView(selection: $selectedTab) {
+                navigationStack(path: $todayPath) {
                     TodayView(
                         onStart: {
                             sessionClock.startFresh()
-                            path.append(.session)
+                            todayPath.append(.session)
                         },
-                        onOpen: { id in path.append(.detail(id: id)) }
+                        onOpen: { id in todayPath.append(.detail(id: id)) }
                     )
-                    .tabItem { Label("Today", systemImage: "heart.text.square") }
-                    .tag(AppTab.today)
-
-                    MomentTimelineView(onOpen: { id in path.append(.detail(id: id)) })
-                        .tabItem { Label("Timeline", systemImage: "calendar") }
-                        .tag(AppTab.timeline)
-
-                    SettingsView()
-                        .tabItem { Label("Settings", systemImage: "slider.horizontal.3") }
-                        .tag(AppTab.settings)
                 }
-                .tint(AppColors.terracottaDark)
-                .navigationDestination(for: AppRoute.self) { route in
-                    switch route {
-                    case .session:
-                        LiveSessionView { completedSession in
-                            path.append(.recap(
-                                startedAt: completedSession.startedAt,
-                                durationSeconds: completedSession.durationSeconds,
-                                editingID: nil
-                            ))
-                        }
-                    case .recap(let startedAt, let durationSeconds, let editingID):
-                        let existingMoment = editingID.flatMap { id in store.moments.first { $0.id == id } }
-                        RecapView(
-                            durationSeconds: durationSeconds,
-                            startedAt: startedAt,
-                            existingMoment: existingMoment,
-                            onCancel: {
-                                if editingID != nil {
-                                    if !path.isEmpty { path.removeLast() }
-                                } else {
-                                    selectedTab = .today
-                                    path.removeAll()
-                                }
-                            },
-                            onSaved: {
-                                if editingID != nil {
-                                    if !path.isEmpty { path.removeLast() }
-                                } else {
-                                    selectedTab = .today
-                                    path.removeAll()
-                                }
-                            }
-                        )
-                    case .detail(let id):
-                        MomentDetailView(
-                            momentID: id,
-                            onEdit: { moment in
-                                path.append(.recap(
-                                    startedAt: moment.occurredAt,
-                                    durationSeconds: moment.durationSeconds,
-                                    editingID: moment.id
-                                ))
-                            },
-                            onDeleted: {
-                                if !path.isEmpty { path.removeLast() }
-                            }
-                        )
-                    }
+                .tabItem { Label("Today", systemImage: "heart.text.square") }
+                .tag(AppTab.today)
+
+                navigationStack(path: $timelinePath) {
+                    MomentTimelineView(onOpen: { id in timelinePath.append(.detail(id: id)) })
                 }
+                .tabItem { Label("Timeline", systemImage: "calendar") }
+                .tag(AppTab.timeline)
+
+                NavigationStack { SettingsView() }
+                    .tabItem { Label("Settings", systemImage: "slider.horizontal.3") }
+                    .tag(AppTab.settings)
             }
             .environment(store)
             .environment(sessionClock)
@@ -116,5 +69,66 @@ struct RootView: View {
             isSceneShielded = newPhase != .active
             if newPhase != .active { privacyLock.lockForBackground() }
         }
+    }
+
+    private func navigationStack<Content: View>(
+        path: Binding<[AppRoute]>,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        NavigationStack(path: path) {
+            content()
+                .navigationDestination(for: AppRoute.self) { route in
+                    destination(for: route, path: path)
+                        .toolbar(.hidden, for: .tabBar)
+                }
+        }
+    }
+
+    @ViewBuilder
+    private func destination(for route: AppRoute, path: Binding<[AppRoute]>) -> some View {
+        switch route {
+        case .session:
+            LiveSessionView { completed in
+                path.wrappedValue.append(.recap(
+                    startedAt: completed.startedAt,
+                    durationSeconds: completed.durationSeconds,
+                    editingID: nil
+                ))
+            }
+        case .recap(let startedAt, let durationSeconds, let editingID):
+            let existing = editingID.flatMap { id in store.moments.first { $0.id == id } }
+            RecapView(
+                durationSeconds: durationSeconds,
+                startedAt: startedAt,
+                existingMoment: existing,
+                onCancel: { finishRecap(editingID: editingID, path: path) },
+                onSaved: { finishRecap(editingID: editingID, path: path) }
+            )
+        case .detail(let id):
+            MomentDetailView(
+                momentID: id,
+                onEdit: { moment in
+                    path.wrappedValue.append(.recap(
+                        startedAt: moment.occurredAt,
+                        durationSeconds: moment.durationSeconds,
+                        editingID: moment.id
+                    ))
+                },
+                onDeleted: { pop(path) }
+            )
+        }
+    }
+
+    private func finishRecap(editingID: UUID?, path: Binding<[AppRoute]>) {
+        if editingID != nil {
+            pop(path)
+        } else {
+            selectedTab = .today
+            path.wrappedValue.removeAll()
+        }
+    }
+
+    private func pop(_ path: Binding<[AppRoute]>) {
+        if !path.wrappedValue.isEmpty { path.wrappedValue.removeLast() }
     }
 }
