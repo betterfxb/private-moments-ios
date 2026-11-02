@@ -1,6 +1,6 @@
 # Local storage failure acceptance
 
-Status: source safeguards and Windows static audits complete. Runtime behavior still needs a Mac/Xcode and iOS Simulator or device.
+Status: source safeguards and Windows static audits complete. Five MomentStore recovery tests and three real in-memory SwiftData tests passed in cloud run [41456362003](https://github.com/betterfxb/private-moments-ios/actions/runs/41456362003), source `af4c81a`. This verifies application-state gating, retry/recovery, rollback and selected invalid persisted fields. Rendering of the failure/retry UI, container startup, physical disk failures and device file protection remain unverified; the table below is the manual acceptance record.
 
 | Scenario | Expected result | Runtime result |
 |---|---|---|
@@ -20,3 +20,15 @@ Status: source safeguards and Windows static audits complete. Runtime behavior s
 | English/Simplified Chinese, Dynamic Type, VoiceOver | Error, retry action, disabled-state hints, and unknown count are localized, readable, and announced clearly | Pending Mac |
 
 Also verify that a failed first fetch followed by a successful retry shows existing persisted records. Use a disposable simulator store; do not simulate failures against a personal journal. This checklist covers application-level gating only; SwiftData rollback and file protection still require the existing Mac release checks. Repeated container initialization failures may still require diagnosing the underlying store or device issue; retry does not repair corrupted data.
+
+## Automated evidence (2026-11-02)
+
+| Test boundary | Verified result | Remaining boundary |
+|---|---|---|
+| First/cached read failure | Save, merge, replace, delete and delete-all are rejected without repository mutation; cached entries are preserved; repeated failed retry stays read-only | Failure-card appearance, count/disabled-control presentation and VoiceOver |
+| Successful retry | Reload restores persisted entries and writable state; validation/duplicate-import errors do not incorrectly disable storage | Physical container initialization retry |
+| Mutation failure | Each of the five mutations preserves the store snapshot and requires a successful reload | Actual disk-full/file-permission behavior |
+| Real SwiftData transaction rollback | Injected save failure after each mutation leaves no context changes; a fresh ModelContext reads the original entry; failed insertion leaves no phantom record | Durable on-disk rollback under OS/storage failures |
+| Invalid persisted fields | Unknown mood/kind and out-of-range rating/duration block reads and writes without changing the row; explicit test repair restores access | Malformed stored tag JSON, other field bounds and an actually corrupt database file |
+
+The repository save hook defaults to `ModelContext.save()` in production. Tests throw from that hook after real context changes; they use an in-memory ModelContainer and synthetic records. No automatic data repair is introduced.

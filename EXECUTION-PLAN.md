@@ -176,13 +176,23 @@ Authorized scope: tasks 1–4 from the current backlog. Execute implementation i
 
 | Order | Goal / scope | Dependency | Current result |
 |---|---|---|---|
-| 1 | Fix accent/session foregrounds in both appearances; adapt recap, rows, summary, filters and session scrolling for accessibility text | Inspect tokens and view ownership | Implemented; static audits and contrast calculations pass; native contrast XCTest added |
-| 2 | Capture both languages across six core screens, empty/saved states and controls; include compact phone, dark phone, iPad, and largest accessibility text | Task 1 | Gallery test and four CI profiles implemented; each locale gets an isolated persistent Debug-only UUID store |
-| 3 | Verify pause/resume, discard/keep, edit/save/discard, filtering/search, relaunch persistence and delete/cancel | Task 2 helpers and stable identifiers | UI assertions implemented; native runtime results pending |
-| 4 | Verify failed first/cached reads, mutation gating, successful/repeated retries, validation boundaries, corrupt rows and SwiftData rollback | Existing MomentStore/repository boundary | Five store-recovery tests and three real SwiftData tests implemented; native runtime results pending |
+| 1 | Fix accent/session foregrounds in both appearances; adapt recap, rows, summary, filters and session scrolling for accessibility text | Inspect tokens and view ownership | Implemented. Native contrast tests passed; first screenshots reviewed. Follow-up CTA wrapping, keyboard dismissal and per-tab navigation fixes need a final cloud pass |
+| 2 | Capture both languages across six core screens, empty/saved states and controls; include compact phone, dark phone, iPad, and largest accessibility text | Task 1 | Four-profile gallery implemented; each locale uses an isolated persistent Debug-only UUID store. First-pass galleries succeeded on all profiles; latest 14-capture-per-language gallery is not yet confirmed |
+| 3 | Verify pause/resume, discard/keep, edit/save/discard, filtering/search, relaunch persistence and delete/cancel | Task 2 helpers and stable identifiers | Discard/keep test passed. Full editing test exposed a keyboard-covered save action; localized keyboard Done action added. Per-tab navigation also corrected after screenshot review. Final end-to-end rerun remains blocked |
+| 4 | Verify failed first/cached reads, mutation gating, successful/repeated retries, validation boundaries, corrupt rows and SwiftData rollback | Existing MomentStore/repository boundary | Complete at unit/repository level: all five store-recovery and three real in-memory SwiftData tests passed in run 41456362003. Failure-screen rendering, physical files and container startup remain manual acceptance |
 
 Added two semantic-color contrast tests. The internal repository save closure defaults to ModelContext.save; injection lets tests trigger failure after real SwiftData changes and verify rollback from a fresh context. Production schema and backup format are unchanged. UI-test paths are compiled only in Debug; Release keeps the normal storage path.
 
 The localization scanner now excludes accessibility identifiers, which are automation metadata, from translation checks. All three local audits pass with existing publisher/Bundle ID warnings.
 
 Runtime gate: all four CI profiles must pass, all screenshots must be exported, and representative images must be opened before this batch is reported complete. Physical-device file protection, biometric authentication and manual VoiceOver review remain external acceptance work.
+
+### Execution evidence and interruption
+
+- Run [41456362003](https://github.com/betterfxb/private-moments-ios/actions/runs/41456362003), source `af4c81a`: all 23 unit tests passed. The bilingual gallery and session/recap discard UI test passed; the editing UI test failed when the software keyboard covered Save. The dark-phone, iPad-light and compact-dark-accessibility gallery jobs succeeded. This run is **not** an overall pass.
+- Source `8dadd99` adds the keyboard dismissal action and waits for stable screen geometry before screenshot capture; run [41460567621](https://github.com/betterfxb/private-moments-ios/actions/runs/41460567621) was started, but its final result could not be read after the interruption below.
+- Source `7ebfb79` gives Today, Timeline and Settings independent navigation stacks, addressing the missing native Timeline title/search presentation observed in first-pass screenshots. It is committed locally and has not been pushed or compiled in the cloud.
+- Windows localization (201 source keys), Xcode-project and release-material audits pass. Existing Bundle ID and publisher-information warnings remain.
+- **External blocker, 2026-11-02:** automatic approval review returned HTTP 403 on two read-only GitHub status requests and the subsequent authorized `git push origin main`. These commands were not executed. This is an approval-service failure, not a reported unsafe-code determination. No alternate route was used to bypass it.
+
+Resume in this order: (1) restore normal approved network execution; (2) push the local commits to the existing `origin/main`; (3) inspect all four jobs for the pushed source revision; (4) fix any compiler/test failures and rerun only as needed; (5) download the final PNG artifacts and inspect all four contact sheets plus key full-size screens; (6) record the actual results here and in `release/UI-ACCEPTANCE.md`. Do not claim the batch complete until those gates pass.

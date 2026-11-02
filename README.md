@@ -60,11 +60,20 @@ xcodebuild -showdestinations -project PrivateMoments.xcodeproj -scheme PrivateMo
 IOS_SIMULATOR_DESTINATION="platform=iOS Simulator,id=REPLACE_WITH_SIMULATOR_UDID" bash scripts/verify-mac.sh
 ```
 
-The script checks the active Xcode, builds Debug and Release for the generic iOS Simulator, then runs the domain tests and UI smoke tests on the selected simulator. The UI tests exercise the English create-to-detail flow and Simplified Chinese home screen, and attach screenshots to the `.xcresult` bundle. Open that result in Xcode and review the failures, screenshots, and logs; Apple documents command-line test result bundles in its [test report guide](https://developer.apple.com/documentation/xcode/running-tests-and-interpreting-results). Automated smoke tests do not replace broader visual review, VoiceOver, Dynamic Type, physical-device, signing, or App Store checks.
+The script checks the active Xcode, builds Debug and Release for the generic iOS Simulator, then runs 23 unit tests and three UI tests on the selected simulator. The unit suite covers validation, backup/import, semantic color contrast, storage recovery, and real in-memory SwiftData rollback. The UI suite covers the bilingual screen gallery, session/recap discard confirmations, and editing/filtering/search/relaunch/deletion. UI tests use a UUID-specific persistent store in Debug; they never reset the normal journal, and Release does not accept this test-store argument. Open the `.xcresult` in Xcode and review failures, screenshots, and logs; Apple documents command-line test result bundles in its [test report guide](https://developer.apple.com/documentation/xcode/running-tests-and-interpreting-results). Automated checks do not replace VoiceOver, physical-device, signing, or App Store acceptance. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for the latest verified revision and pending checks.
 
 ### GitHub Actions cloud verification
 
-`.github/workflows/ios-ci.yml` runs on pushes and pull requests targeting `main`, plus manual dispatch. A GitHub-hosted macOS runner runs the localization, project, and release-material audits, selects an available iPhone Simulator, then calls `scripts/verify-mac.sh` to build Debug and Release and run domain plus UI XCTest. It uploads the `.xcresult` and exports the XCTest screenshots as ordinary PNG files for seven days, so they can be reviewed on Windows without Xcode. This workflow disables code signing and does not archive or distribute the app; it requires no signing secrets. View runs and download artifacts from the repository's **Actions** tab. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for automated and manual coverage.
+`.github/workflows/ios-ci.yml` runs on pushes and pull requests targeting `main`, plus manual dispatch. It runs four GitHub-hosted macOS simulator profiles:
+
+| Profile | Device selection | Appearance / text size | Scope |
+|---|---|---|---|
+| `compact-light` | Compact iPhone, preferring iPhone SE (3rd generation) when available | Light / standard Large | Static audits, Debug and Release builds, all unit and UI tests |
+| `phone-dark` | Available iPhone | Dark / standard Large | Static audits, Debug UI-test build and bilingual gallery |
+| `ipad-light` | Available iPad | Light / standard Large | Static audits, Debug UI-test build and bilingual gallery |
+| `compact-dark-accessibility` | Compact iPhone | Dark / largest accessibility size | Static audits, Debug UI-test build and bilingual gallery |
+
+The gallery requests 14 captures per language on each profile, including six core screens, saved/empty states and controls reached by scrolling. The current target is 112 captures across the matrix; this is a coverage target, not a claim that every revision has passed. The runner exports PNG files and uploads `private-moments-ui-screenshots-<profile>` and `private-moments-xcresult-<profile>` for seven days. The actual selected simulator/runtime is recorded in each job log. This workflow disables code signing and does not archive or distribute the app; it requires no signing secrets. View runs and download artifacts from the repository's **Actions** tab. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for execution records and manual coverage.
 
 The project targets iOS 17 because this implementation uses SwiftData and Observation, which Apple documents for iOS 17 and later. SwiftData's `.none` CloudKit configuration explicitly disables managed iCloud sync. Native compilation and XCTest cannot run directly in this Windows workspace; the GitHub Actions workflow above performs them in the cloud. Interactive simulator review, physical-device validation, signing, and App Store archiving still require the relevant Mac environment and developer-account configuration. Check the **Actions** tab for the latest cloud build result.
 
@@ -84,7 +93,7 @@ Apple references: [SwiftData model container](https://developer.apple.com/docume
 
 ## Data and release gates
 
-Recap now confirms cancellation when a timed record or edits are unsaved. The note editor and persistence validator share both the 10,000-character and 60 KB UTF-8 limits, and the editor explicitly states that backups include notes. Follow [RECAP-ACCEPTANCE.md](release/RECAP-ACCEPTANCE.md) for runtime checks; its XCTest and device results are still pending Mac execution.
+Recap confirms cancellation when a timed record or edits are unsaved. The note editor and persistence validator share both the 10,000-character and 60 KB UTF-8 limits, and the editor explicitly states that backups include notes. The note-boundary unit tests passed in cloud run [41456362003](https://github.com/betterfxb/private-moments-ios/actions/runs/41456362003). Follow [RECAP-ACCEPTANCE.md](release/RECAP-ACCEPTANCE.md) and [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for remaining runtime and device checks.
 
 - `privateNote` remains local and is not included in any share payload; partner sharing has not been implemented.
 - The initial store is explicitly versioned as schema V1. Add a new schema and migration stage before changing persisted fields after users have stored data.
