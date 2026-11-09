@@ -15,7 +15,7 @@ from unittest import mock
 
 from distribution.archive import archive_application, inspect_archive, validate_app_info, validate_exported_ipa
 from distribution.configuration import DistributionError, decode_secret, load_policy, validate_bundle_id, validate_profile, validate_upload_configuration, validate_versions
-from distribution.native import choose_simulator, run
+from distribution.native import choose_simulator, prepare_simulator, run
 from distribution.signing import signing_material
 
 
@@ -73,6 +73,16 @@ class DistributionGuardTests(unittest.TestCase):
         inventory = {"com.apple.CoreSimulator.SimRuntime.iOS-18-5": [{"name": "iPhone 16", "isAvailable": True}]}
         with self.assertRaises(DistributionError):
             choose_simulator(inventory, "26.2")
+
+    def test_prepare_simulator_retains_xcode_destination_identifier(self):
+        identifier = "ABCDEF12-1234-1234-1234-ABCDEF123456"
+        inventory = {"devices": {"com.apple.CoreSimulator.SimRuntime.iOS-26-2": [{"name": "iPhone SE (3rd generation)", "isAvailable": True, "udid": identifier}]}}
+        with tempfile.TemporaryDirectory() as temporary:
+            environment_file = Path(temporary) / "github-env"
+            with mock.patch("distribution.native.run", side_effect=[json.dumps(inventory).encode(), b"", b"", b""]) as native:
+                prepare_simulator({"GITHUB_ENV": str(environment_file)}, {"iphoneOSSDK": "26.2"})
+            self.assertIn(f"id={identifier}\n", environment_file.read_text(encoding="utf-8"))
+            self.assertEqual(native.call_args_list[1].args[0], ["xcrun", "simctl", "bootstatus", identifier, "-b"])
 
     def test_versions_reject_injection_and_invalid_build_shapes(self):
         for version, build in [("0.1.0", "7.2"), ("1.0.1", "9999.99.99")]:

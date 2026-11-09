@@ -70,7 +70,8 @@ def prepare_simulator(environment, toolchain_info):
         raise DistributionError("prepare-simulator requires GITHUB_ENV in a GitHub macOS job.")
     inventory = json.loads(run(["xcrun", "simctl", "list", "devices", "available", "--json"], "Inspect available test simulators", capture=True, environment=environment))
     device, runtime = choose_simulator(inventory.get("devices", {}), toolchain_info["iphoneOSSDK"])
-    identifier = str(uuid.UUID(device["udid"]))
+    # xcodebuild matches the uppercase IDs exposed in its destination list.
+    identifier = str(uuid.UUID(device["udid"])).upper()
     run(["xcrun", "simctl", "bootstatus", identifier, "-b"], "Boot selected test simulator", environment=environment)
     run(["xcrun", "simctl", "ui", identifier, "appearance", "light"], "Set test appearance", environment=environment)
     run(["xcrun", "simctl", "ui", identifier, "content_size", "large"], "Set test text size", environment=environment)
