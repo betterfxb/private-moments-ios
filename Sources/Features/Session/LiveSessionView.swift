@@ -94,6 +94,7 @@ struct LiveSessionView: View {
         .background(AppColors.espresso.ignoresSafeArea())
         .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbarBackground(AppColors.espresso, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .navigationTitle("Live session")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)

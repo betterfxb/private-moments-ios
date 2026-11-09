@@ -22,9 +22,9 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Session-controls-\(language)", app)
             tap(app.buttons["session.finish"], in: app)
             capture("Recap-top-\(language)", app)
-            reveal(app.buttons["recap.kind.Solo"], in: app)
+            revealSection(title: app.staticTexts["recap.kind.title"], last: app.buttons["recap.kind.Solo"], in: app)
             capture("Recap-kind-\(language)", app)
-            reveal(app.buttons["recap.rating.5"], in: app)
+            revealSection(title: app.staticTexts["recap.rating.title"], last: app.buttons["recap.rating.5"], in: app)
             capture("Recap-rating-\(language)", app)
             reveal(app.buttons["recap.save"], in: app)
             capture("Recap-controls-\(language)", app)
@@ -164,6 +164,32 @@ final class PrivateMomentsUITests: XCTestCase {
     private func tap(_ element: XCUIElement, in app: XCUIApplication) {
         reveal(element, in: app)
         element.tap()
+    }
+
+    private func revealSection(title: XCUIElement, last: XCUIElement, in app: XCUIApplication) {
+        reveal(last, in: app)
+        let scroll = app.scrollViews.firstMatch
+        // A hittable button may be only partly visible. Fit the entire section,
+        // including its heading and last row, below the navigation bar.
+        for _ in 0..<6 {
+            XCTAssertTrue(title.exists)
+            let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
+            let bottom = min(scroll.frame.maxY, app.frame.maxY) - 12
+            let section = title.frame.union(last.frame)
+            let delta: CGFloat
+            if section.minY < top {
+                delta = top - section.minY
+            } else if section.maxY > bottom {
+                delta = bottom - section.maxY
+            } else {
+                return
+            }
+            let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            let distance = max(24, min(200, abs(delta))) * (delta < 0 ? -1 : 1)
+            let end = start.withOffset(CGVector(dx: 0, dy: distance))
+            start.press(forDuration: 0.05, thenDragTo: end)
+        }
+        XCTFail("Section is not fully visible: \(title), \(last)")
     }
 
     private func goBack(_ app: XCUIApplication) {

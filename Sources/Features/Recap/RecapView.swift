@@ -141,6 +141,7 @@ struct RecapView: View {
     private var kindSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             sectionTitle("What kind of moment?")
+                .accessibilityIdentifier("recap.kind.title")
             adaptiveLayout(spacing: 9).callAsFunction {
                 ForEach(MomentKind.allCases) { option in
                     Button {
@@ -165,6 +166,7 @@ struct RecapView: View {
     private var ratingSection: some View {
         VStack(alignment: .leading, spacing: 9) {
             sectionTitle("Your reflection")
+                .accessibilityIdentifier("recap.rating.title")
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
                 ForEach(1...5, id: \.self) { value in
                     Button {

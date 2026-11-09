@@ -90,7 +90,7 @@ struct MomentTimelineView: View {
         }
         .background(AppColors.cream.ignoresSafeArea())
         .navigationTitle("Your moments")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(dynamicTypeSize.isAccessibilitySize ? .inline : .large)
         .searchable(text: $searchText, prompt: "Date, type, mood, or tag")
         .task { store.reload() }
     }
