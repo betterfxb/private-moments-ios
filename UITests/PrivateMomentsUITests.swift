@@ -22,11 +22,11 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Session-controls-\(language)", app)
             tap(app.buttons["session.finish"], in: app)
             capture("Recap-top-\(language)", app)
-            revealSection(title: app.staticTexts["recap.kind.title"], last: app.buttons["recap.kind.Solo"], in: app)
+            revealFully(from: app.staticTexts["recap.kind.title"], through: app.buttons["recap.kind.Solo"], in: app)
             capture("Recap-kind-\(language)", app)
-            revealSection(title: app.staticTexts["recap.rating.title"], last: app.buttons["recap.rating.5"], in: app)
+            revealFully(from: app.staticTexts["recap.rating.title"], through: app.buttons["recap.rating.5"], in: app)
             capture("Recap-rating-\(language)", app)
-            reveal(app.buttons["recap.save"], in: app)
+            revealFully(from: app.buttons["recap.save"], through: app.buttons["recap.save"], in: app)
             capture("Recap-controls-\(language)", app)
             tap(app.buttons["recap.save"], in: app)
             XCTAssertTrue(start.waitForExistence(timeout: 10))
@@ -38,12 +38,12 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Timeline-\(language)", app)
             tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
             capture("Detail-top-\(language)", app)
-            reveal(app.buttons["detail.edit"], in: app)
+            revealFully(from: app.buttons["detail.edit"], through: app.buttons["detail.delete"], in: app)
             capture("Detail-controls-\(language)", app)
             goBack(app)
             selectTab("Settings", "设置", language: language, app: app)
             capture("Settings-top-\(language)", app)
-            reveal(app.staticTexts["settings.footer"], in: app)
+            revealFully(from: app.staticTexts["settings.footer"], through: app.staticTexts["settings.footer"], in: app)
             capture("Settings-bottom-\(language)", app)
             app.terminate()
         }
@@ -166,16 +166,16 @@ final class PrivateMomentsUITests: XCTestCase {
         element.tap()
     }
 
-    private func revealSection(title: XCUIElement, last: XCUIElement, in app: XCUIApplication) {
+    private func revealFully(from first: XCUIElement, through last: XCUIElement, in app: XCUIApplication) {
         reveal(last, in: app)
         let scroll = app.scrollViews.firstMatch
-        // A hittable button may be only partly visible. Fit the entire section,
-        // including its heading and last row, below the navigation bar.
+        // A hittable element may be only partly visible. Fit the complete range
+        // of controls or text below the navigation bar before taking a capture.
         for _ in 0..<6 {
-            XCTAssertTrue(title.exists)
+            XCTAssertTrue(first.exists)
             let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
             let bottom = min(scroll.frame.maxY, app.frame.maxY) - 12
-            let section = title.frame.union(last.frame)
+            let section = first.frame.union(last.frame)
             let delta: CGFloat
             if section.minY < top {
                 delta = top - section.minY
@@ -189,7 +189,7 @@ final class PrivateMomentsUITests: XCTestCase {
             let end = start.withOffset(CGVector(dx: 0, dy: distance))
             start.press(forDuration: 0.05, thenDragTo: end)
         }
-        XCTFail("Section is not fully visible: \(title), \(last)")
+        XCTFail("Content is not fully visible: \(first), \(last)")
     }
 
     private func goBack(_ app: XCUIApplication) {
