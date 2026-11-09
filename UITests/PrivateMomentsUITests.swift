@@ -152,9 +152,10 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
-        XCTAssertTrue(element.waitForExistence(timeout: 10))
+        // Lazy grids may not create off-screen children until scrolling brings
+        // them into view. Search while scrolling before asserting existence.
         for _ in 0..<16 {
-            if element.isHittable { return }
+            if element.waitForExistence(timeout: 0.5), element.isHittable { return }
             app.swipeUp()
         }
         XCTFail("Control is unreachable after scrolling: \(element)")
