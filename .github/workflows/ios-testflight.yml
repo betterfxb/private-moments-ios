@@ -57,7 +57,6 @@ jobs:
     env:
       PM_VERSION: ${{ inputs.version }}
       PM_BUILD_NUMBER: ${{ inputs.build_number || format('{0}.{1}', github.run_number, github.run_attempt) }}
-      PM_DISTRIBUTION_OUTPUT: ${{ runner.temp }}/PrivateMomentsSignedDistribution
       PM_TESTFLIGHT_UPLOAD_ENABLED: ${{ vars.PM_TESTFLIGHT_UPLOAD_ENABLED }}
       PM_BUNDLE_ID: ${{ vars.PM_BUNDLE_ID }}
       PM_APPLE_TEAM_ID: ${{ vars.PM_APPLE_TEAM_ID }}
@@ -72,6 +71,8 @@ jobs:
       - name: Verify pinned toolchain
         run: python3 tools/distribute.py select-toolchain
       - name: Archive, sign, validate and upload with temporary credentials
+        env:
+          PM_DISTRIBUTION_OUTPUT: ${{ runner.temp }}/PrivateMomentsSignedDistribution
         run: python3 tools/distribute.py testflight --version "$PM_VERSION" --build "$PM_BUILD_NUMBER" --output "$PM_DISTRIBUTION_OUTPUT"
       - name: Preserve IPA, symbols and upload report only
         if: always()

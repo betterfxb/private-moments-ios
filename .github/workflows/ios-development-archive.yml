@@ -37,12 +37,14 @@ jobs:
     env:
       PM_VERSION: ${{ inputs.version }}
       PM_BUILD_NUMBER: ${{ inputs.build_number || format('{0}.{1}', github.run_number, github.run_attempt) }}
-      PM_DISTRIBUTION_OUTPUT: ${{ runner.temp }}/PrivateMomentsDistribution
-      PRIVATE_MOMENTS_DERIVED_DATA: ${{ runner.temp }}/DistributionDerivedData
-      PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/Distribution.xcresult
       PRIVATE_MOMENTS_UI_GALLERY_ONLY: '0'
     steps:
       - uses: actions/checkout@v7
+      - name: Configure isolated build paths
+        run: |
+          printf 'PM_DISTRIBUTION_OUTPUT=%s/PrivateMomentsDistribution\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          printf 'PRIVATE_MOMENTS_DERIVED_DATA=%s/DistributionDerivedData\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          printf 'PRIVATE_MOMENTS_RESULT_BUNDLE=%s/Distribution.xcresult\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
       - name: Select and verify pinned distribution toolchain
         run: python3 tools/distribute.py select-toolchain
       - name: Prepare matching iOS simulator
