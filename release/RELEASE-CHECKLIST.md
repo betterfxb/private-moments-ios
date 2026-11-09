@@ -13,16 +13,16 @@
 - [x] GitHub macOS run [41169968664](https://github.com/betterfxb/private-moments-ios/actions/runs/41169968664) passes Debug and Release iOS Simulator builds, all 13 domain tests, and both UI smoke tests on Xcode 16.4.
 - [x] English start → finish → save → timeline → detail path and Simplified Chinese primary action pass in XCUITest; screenshots are in the Actions `private-moments-xcresult` artifact (available for seven days after the run).
 - [x] Verify the separate `private-moments-ui-screenshots` PNG artifact: run [41170621499](https://github.com/betterfxb/private-moments-ios/actions/runs/41170621499) exported and uploaded three 1206×2622 screenshots from an iPhone 17 Pro; they were downloaded and opened successfully on Windows.
-- [ ] Review the attached screenshots in Xcode or download the `.xcresult`; CI success does not establish visual quality across devices or accessibility sizes.
+- [x] Review exported screenshots for the configured phone/iPad, appearance and text-size profiles: all 112 final gallery captures were checked on 2026-11-10. Manual VoiceOver and physical-device acceptance remain separate.
 
 ### UI quality batch, 2026-11-02
 
 - [x] Run 23 unit tests, including semantic contrast, storage-state recovery and real in-memory SwiftData rollback: all passed in run [41456362003](https://github.com/betterfxb/private-moments-ios/actions/runs/41456362003), source `af4c81a`.
 - [x] Run the first bilingual gallery on compact-light, phone-dark, ipad-light and compact-dark-accessibility; all gallery tests passed. The overall run failed in the separate full editing test.
 - [x] Download and inspect first-pass phone-dark and compact-dark-accessibility screenshots; record and address observed CTA wrapping, transition captures, keyboard reachability and navigation/search presentation.
-- [ ] Push local per-tab navigation fix `7ebfb79`; automatic approval review returned HTTP 403 before `git push` could execute.
-- [ ] Verify all four profiles on the final source revision, including the full editing/search/relaunch/deletion UI test. The result of keyboard-fix run [41460567621](https://github.com/betterfxb/private-moments-ios/actions/runs/41460567621) is currently unknown because approved status reads were blocked by the same service error.
-- [ ] Download and visually inspect the final 14-capture-per-language gallery for all four profiles. Current target is 112 captures; first-pass images are not final acceptance or App Store assets.
+- [x] Push local per-tab navigation fix `7ebfb79`: approved execution recovered on 2026-11-10 and the pending commits were pushed successfully.
+- [x] Verify all four profiles on final source `5fdd3cf`, run [42665863317](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317): Debug/Release builds, all 23 unit tests and the full editing/search/relaunch/deletion and discard UI suite pass. Phone-dark succeeded in targeted attempt 2 after the first job could not acquire a macOS runner; other results were retained.
+- [x] Download and inspect the final 14-capture-per-language gallery for all four profiles: 112 original PNGs checked by name/dimensions, four contact sheets and critical original images opened. Source fixes include session-title contrast, native Timeline/search, keyboard dismissal and accessibility layouts. These are test evidence, not final App Store marketing assets.
 
 See `UI-ACCEPTANCE.md`, `STORAGE-FAILURE-ACCEPTANCE.md` and `EXECUTION-PLAN.md` for the exact automated/manual boundaries and resume order.
 

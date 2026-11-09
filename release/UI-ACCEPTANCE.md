@@ -1,5 +1,31 @@
 # Simulator UI acceptance
 
+## Latest verification (2026-11-10)
+
+Complete: source `5fdd3cf`, run [42665863317](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), overall success on attempt 2. The full compact-light suite passes Debug/Release builds, 23 unit tests and all three UI tests; the other three profiles each pass the bilingual gallery. This is six UI-test executions in total. All profiles used Xcode 16.4 and the iOS 26.2 Simulator runtime.
+
+| Profile | Actual simulator / pixels | Result | Final PNG review |
+|---|---|---|---|
+| compact-light | iPhone SE (3rd generation), 750×1334 | Passed, attempt 1 | 28 captures checked; contact sheet and session title opened |
+| compact-dark-accessibility | iPhone SE (3rd generation), 750×1334; largest accessibility text | Passed, attempt 1 | 28 captures checked; kind/rating, full English Save, Chinese edit/delete, footer and Timeline title reviewed |
+| ipad-light | iPad Pro 13-inch (M5), 2064×2752 | Passed, attempt 1 | 28 captures checked; contact sheet and dark session navigation title opened |
+| phone-dark | iPhone 17 Pro, 1206×2622 | Passed, targeted attempt 2 | 28 captures checked; contact sheet, full edit/delete controls and Timeline navigation/search opened |
+
+All captures use synthetic, isolated journal data. Review checks cover the six core screens in both languages, normal scroll behavior, native navigation/search, dark-surface text, and complete control framing. Long accessibility-size pages remain scrollable; the gallery captures selected sections rather than every possible state or one stitched full-page image.
+
+The first phone-dark job was cancelled after 15 minutes in the queue. Its annotations report that a hosted runner could not be acquired and macOS arm64 capacity was constrained. The other three jobs succeeded. The targeted phone-dark rerun passed in attempt 2; other passed results and artifacts were retained. This was an infrastructure scheduling failure, with no phone-dark test execution on attempt 1.
+
+All 112 original gallery PNGs were checked against the expected capture names and pixel dimensions. All four contact sheets were opened. Critical original images were also opened for light-system session titles, accessibility-size Save, edit/delete controls, Settings footer and Timeline navigation/search. Local evidence is under the attached visualization workspace's `private-moments-quality-2026-11-10/run-42665863317` directory. `QA-EVIDENCE.json` records the actual source, successful job IDs/attempts, devices, dimensions and archive hashes. The uploaded `private-moments-ui-screenshots-<profile>` and `private-moments-xcresult-<profile>` artifacts have seven-day retention; local downloaded copies remain available after that expiry.
+
+| Observed issue | Change | Final evidence |
+|---|---|---|
+| Timeline native title/search missing | Separate NavigationStack and route path for each tab | Full search/filter UI test and gallery pass |
+| Keyboard covers Save after entering a note | Localized keyboard Done action clears focus; interactive keyboard dismissal retained | Typed note → Done → Save → edit → relaunch preserves the note/rating |
+| Dark foregrounds on accent/session surfaces; crowded accessibility layouts | Dedicated light foreground tokens, adaptive stacks/grids, scrolling and full-word CTA wrapping | Two semantic contrast tests and four-profile gallery pass |
+| Native session title dark on the always-dark surface under light appearance | Force visible navigation-bar background with preferred dark bar scheme | Light compact-phone and iPad original screenshots show a clear light title |
+| English Timeline title truncated at largest accessibility text | Use native inline title at accessibility sizes | Full title and search entry visible in accessibility gallery |
+| Off-screen lazy controls or partly visible gallery actions | Scroll before requiring lazy controls; fit complete capture ranges below the navigation bar; wait for stable geometry | Full kind/rating, Save, edit/delete and footer captures accepted in both languages |
+
 ## Automated coverage
 
 The `PrivateMomentsUITests` target runs as part of `scripts/verify-mac.sh` and the GitHub macOS workflow. Coverage below describes the implemented assertions; the execution record identifies which source revisions have passed.
@@ -37,7 +63,12 @@ Automated smoke checks do not establish that every screen looks correct or that 
 | 2026-11-02 | First-pass phone-dark and compact-dark-accessibility PNG artifacts from run 41456362003, downloaded and opened on Windows | Review found CTA word wrapping at the largest text size, captures taken during navigation transitions, and missing native Timeline title/search presentation. Normal dark text contrast was improved, but this is not final visual acceptance. |
 | 2026-11-02 | Source `8dadd99`, run [41460567621](https://github.com/betterfxb/private-moments-ios/actions/runs/41460567621) | Keyboard Done action, clearer large-text CTA and stable-frame screenshot waits implemented. Final run status could not be read because automatic approval review returned HTTP 403 before the status requests executed. |
 | 2026-11-02 | Local source `7ebfb79` | Independent per-tab navigation stacks implemented to restore native Timeline title/search. Local static audits pass; push was not executed because the same approval-service error blocked it. Swift compilation, full UI rerun and final screenshot review remain pending. |
+| 2026-11-10 | Network approval restored; historical run 41460567621 inspected | Keyboard dismissal and editing progressed successfully; full editing test failed at the missing Timeline search field. Accessibility gallery failed at a lazy rating button queried before scrolling. All 23 unit tests, phone-dark gallery and ipad-light gallery passed. |
+| 2026-11-10 | Source `267f4b5`, run [42659232768](https://github.com/betterfxb/private-moments-ios/actions/runs/42659232768) | Pending commits pushed; lazy-control lookup corrected to scroll before requiring existence. This run validates the combined navigation, keyboard and gallery fixes. |
+| 2026-11-10 | Run 42659232768 completed successfully | All four jobs passed: Debug/Release builds, 23 unit tests, all three full-suite UI tests and three additional bilingual gallery executions. All 112 gallery captures were downloaded, checked against expected names and dimensions, and opened in four contact sheets. Visual review found a dark session navigation title under light system appearance, an ellipsized accessibility-size Timeline title, and partly visible kind/rating sections in some gallery captures. |
+| 2026-11-10 | Source `47ea5e3`, run [42663178514](https://github.com/betterfxb/private-moments-ios/actions/runs/42663178514) | All four jobs passed. Session navigation-title contrast and accessibility-size Timeline title verified; kind/rating sections captured fully. Review identified remaining framing improvements for Save, detail actions and Settings footer. |
+| 2026-11-10 | Final source `5fdd3cf`, run 42665863317 | All four profiles passed; phone-dark succeeded after a targeted capacity-related retry. Debug/Release builds, 23 unit tests, three full-suite UI tests and three additional galleries pass. All 112 PNG captures downloaded, names/dimensions checked, four contact sheets and critical original images reviewed. Current batch complete. |
 
 ## Completion gate for the current batch
 
-Restore normal approved network execution, push the local fixes, and inspect the resulting four-profile run. Confirm the full compact suite passes, gallery artifacts are exported for every profile, and review the final screenshots before changing this batch to complete. Keep the publisher, signing, manual VoiceOver, app-lock lifecycle, physical file protection and backup/restore acceptance gates separate.
+Met on 2026-11-10: approved network execution and pushing recovered; the final full suite and all gallery jobs passed; all screenshot artifacts were exported, downloaded and reviewed. Publisher setup, signing, manual VoiceOver, app-lock lifecycle, physical file protection, startup/failure-screen rendering and full backup/restore UI acceptance remain separate release gates.

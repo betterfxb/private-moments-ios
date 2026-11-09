@@ -1,6 +1,6 @@
 # Local storage failure acceptance
 
-Status: source safeguards and Windows static audits complete. Five MomentStore recovery tests and three real in-memory SwiftData tests passed in cloud run [41456362003](https://github.com/betterfxb/private-moments-ios/actions/runs/41456362003), source `af4c81a`. This verifies application-state gating, retry/recovery, rollback and selected invalid persisted fields. Rendering of the failure/retry UI, container startup, physical disk failures and device file protection remain unverified; the table below is the manual acceptance record.
+Status: source safeguards and Windows static audits complete. Five MomentStore recovery tests and three real in-memory SwiftData tests passed in final cloud run [42665863317](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), source `5fdd3cf`. This verifies application-state gating, retry/recovery, rollback and selected invalid persisted fields. Rendering of the failure/retry UI, container startup, physical disk failures and device file protection remain unverified; the table below is the manual acceptance record.
 
 | Scenario | Expected result | Runtime result |
 |---|---|---|
@@ -19,9 +19,9 @@ Status: source safeguards and Windows static audits complete. Five MomentStore r
 | Retry fails repeatedly | The app remains read-only and continues to state that the journal could not be loaded | Pending Mac |
 | English/Simplified Chinese, Dynamic Type, VoiceOver | Error, retry action, disabled-state hints, and unknown count are localized, readable, and announced clearly | Pending Mac |
 
-Also verify that a failed first fetch followed by a successful retry shows existing persisted records. Use a disposable simulator store; do not simulate failures against a personal journal. This checklist covers application-level gating only; SwiftData rollback and file protection still require the existing Mac release checks. Repeated container initialization failures may still require diagnosing the underlying store or device issue; retry does not repair corrupted data.
+Also verify that a failed first fetch followed by a successful retry shows existing persisted records. Use a disposable simulator store; do not simulate failures against a personal journal. The automated evidence below establishes application-state gating and in-memory SwiftData transaction rollback. Failure-screen rendering, on-disk behavior and device file protection still require manual checks. Repeated container initialization failures may still require diagnosing the underlying store or device issue; retry does not repair corrupted data.
 
-## Automated evidence (2026-11-02)
+## Automated evidence (last verified 2026-11-10)
 
 | Test boundary | Verified result | Remaining boundary |
 |---|---|---|

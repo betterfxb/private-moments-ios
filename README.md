@@ -1,5 +1,7 @@
 # Private Moments — Native iOS MVP
 
+Latest verification (2026-11-10): source `5fdd3cf` passed the [four-profile cloud run](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), including Debug/Release Simulator builds, 23 unit tests and all three core UI tests. All 112 English/Simplified Chinese gallery captures were downloaded and reviewed. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for evidence and remaining manual/release gates.
+
 ## Current scope
 
 This is the first native SwiftUI implementation slice for iPhone and iPad. It contains an offline journal flow:
@@ -26,6 +28,8 @@ Versioned SwiftData MomentEntity (local-only)
 
 The UI depends on `MomentStore`; the store depends on the repository protocol; only the data adapter knows about `ModelContext`. The domain model does not import SwiftUI or SwiftData. Persisted enum values, tags, and record fields are validated on read; invalid rows fail the load rather than being silently changed to defaults. Repository mutations save explicitly and roll back the model context on failure. Backup imports validate version, size, record count, IDs, and field bounds before mutation; merge updates matching IDs, while replacement is a separate destructive action.
 
+Each tab owns a NavigationStack. Today and Timeline keep independent route paths so their titles, search presentation and back navigation belong to the active tab. Session, recap and detail destinations hide the tab bar during their focused flows.
+
 The store also tracks whether its journal can be read safely. If a read or persistence operation fails, write, delete, import, and export actions stay unavailable until a retry succeeds. Previously loaded entries can remain visible as a read-only snapshot; the app does not present an unknown record count as zero. If SwiftData container creation fails at launch, the startup screen offers an in-app retry. See [STORAGE-FAILURE-ACCEPTANCE.md](release/STORAGE-FAILURE-ACCEPTANCE.md) for pending iOS runtime checks.
 
 ## Open and run
@@ -45,7 +49,7 @@ node tools/audit-xcode-project.mjs
 node tools/audit-release-materials.mjs
 ```
 
-The project audit checks that the hand-managed `.pbxproj` parses, object references resolve, app, unit-test, and UI-test targets are wired to the expected Swift files, build settings include the intended platforms, and the shared scheme references each target. It also checks the privacy manifest's declared API reasons and the app icon's asset reference, 1024×1024 dimensions, and opaque RGB encoding. The release audit checks English/Simplified Chinese store-field limits and keeps the in-app privacy summary and publication placeholders visible. It warns while the app bundle identifier is still the `com.example` placeholder. These checks do not compile Swift, build an app, run XCTest, or validate simulator/device behavior; complete the Mac acceptance steps below before treating the app as runnable.
+The project audit checks that the hand-managed `.pbxproj` parses, object references resolve, app, unit-test, and UI-test targets are wired to the expected Swift files, build settings include the intended platforms, and the shared scheme references each target. It also checks the privacy manifest's declared API reasons and the app icon's asset reference, 1024×1024 dimensions, and opaque RGB encoding. The release audit checks English/Simplified Chinese store-field limits and keeps the in-app privacy summary and publication placeholders visible. It warns while the app bundle identifier is still the `com.example` placeholder. These static checks complement the cloud builds and XCTest; consult the verified source revision in [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) and finish the remaining physical-device/release gates before distribution.
 
 The iOS app icon is in `Resources/Assets.xcassets/AppIcon.appiconset`. To regenerate its 1024×1024 source image on Windows, run `.\tools\generate-app-icon.ps1` from PowerShell in this directory. The current icon uses the app's warm paper and terracotta palette; inspect the rendered icon in Xcode Simulator before release.
 
