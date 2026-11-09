@@ -1,0 +1,43 @@
+name: Distribution tooling checks
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Marketing version for validation
+        default: '0.1.0'
+        type: string
+      build_number:
+        description: Numeric build identity for validation
+        default: '1.1'
+        type: string
+  workflow_call:
+    inputs:
+      version:
+        default: '0.1.0'
+        type: string
+      build_number:
+        default: '1.1'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  tooling:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Run project audits
+        run: |
+          node tools/audit-localization.mjs
+          node tools/audit-xcode-project.mjs
+          node tools/audit-release-materials.mjs
+      - name: Test distribution guards and cleanup behavior
+        run: python3 -m unittest discover -s tools -p 'test_distribution.py' -v
+      - name: Validate selected version and build
+        env:
+          PM_VERSION: ${{ inputs.version }}
+          PM_BUILD_NUMBER: ${{ inputs.build_number }}
+        run: python3 tools/distribute.py check-policy --version "$PM_VERSION" --build "$PM_BUILD_NUMBER"

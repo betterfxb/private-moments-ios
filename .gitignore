@@ -6,6 +6,7 @@ build/
 *.xcuserdatad/
 xcuserdata/
 *.xcresult/
+*.xcarchive/
 *.dSYM
 *.dSYM.zip
 *.ipa
@@ -21,3 +22,7 @@ xcuserdata/
 *.p12
 *.mobileprovision
 *.provisionprofile
+
+# Python tooling caches
+__pycache__/
+*.pyc
