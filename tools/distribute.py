@@ -10,13 +10,13 @@ from pathlib import Path
 
 from distribution.archive import package_testflight, package_unsigned
 from distribution.configuration import DistributionError, load_policy, validate_upload_configuration, validate_versions
-from distribution.native import toolchain
+from distribution.native import prepare_simulator, toolchain
 from distribution.signing import signing_material
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("operation", choices=["check-policy", "select-toolchain", "check-upload", "unsigned", "testflight"])
+    parser.add_argument("operation", choices=["check-policy", "select-toolchain", "prepare-simulator", "check-upload", "unsigned", "testflight"])
     parser.add_argument("--version", default="0.1.0")
     parser.add_argument("--build", default="1.1")
     parser.add_argument("--output", type=Path)
@@ -37,6 +37,9 @@ def main():
         environment, toolchain_info = toolchain(policy, select=arguments.operation == "select-toolchain")
         if arguments.operation == "select-toolchain":
             print(json.dumps(toolchain_info))
+            return 0
+        if arguments.operation == "prepare-simulator":
+            print(json.dumps(prepare_simulator(environment, toolchain_info)))
             return 0
         if arguments.output is None:
             raise DistributionError("--output must name a new archive output directory.")

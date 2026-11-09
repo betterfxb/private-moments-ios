@@ -1,0 +1,77 @@
+name: iOS development archive
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Development marketing version
+        type: string
+        default: '0.1.0'
+      build_number:
+        description: Optional build number; defaults to run_number.run_attempt
+        type: string
+        default: ''
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        default: '0.1.0'
+      build_number:
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    uses: ./.github/workflows/distribution-checks.yml
+    with:
+      version: ${{ inputs.version }}
+      build_number: ${{ inputs.build_number || format('{0}.{1}', github.run_number, github.run_attempt) }}
+
+  archive:
+    needs: checks
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      PM_VERSION: ${{ inputs.version }}
+      PM_BUILD_NUMBER: ${{ inputs.build_number || format('{0}.{1}', github.run_number, github.run_attempt) }}
+      PM_DISTRIBUTION_OUTPUT: ${{ runner.temp }}/PrivateMomentsDistribution
+      PRIVATE_MOMENTS_DERIVED_DATA: ${{ runner.temp }}/DistributionDerivedData
+      PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/Distribution.xcresult
+      PRIVATE_MOMENTS_UI_GALLERY_ONLY: '0'
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select and verify pinned distribution toolchain
+        run: python3 tools/distribute.py select-toolchain
+      - name: Prepare matching iOS simulator
+        run: python3 tools/distribute.py prepare-simulator
+      - name: Build Debug and Release, then run core unit and UI tests
+        run: bash scripts/verify-mac.sh
+      - name: Create and inspect unsigned iOS-device archive
+        run: python3 tools/distribute.py unsigned --version "$PM_VERSION" --build "$PM_BUILD_NUMBER" --output "$PM_DISTRIBUTION_OUTPUT"
+      - name: Export test screenshots
+        if: always()
+        run: |
+          if [[ -d "$PRIVATE_MOMENTS_RESULT_BUNDLE" ]]; then
+            xcrun xcresulttool export attachments --path "$PRIVATE_MOMENTS_RESULT_BUNDLE" --output-path "$RUNNER_TEMP/DistributionScreenshots"
+          fi
+      - name: Upload unsigned development artifact and report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: private-moments-unsigned-development-${{ github.run_number }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/PrivateMomentsDistribution/artifacts
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Upload SDK-specific test evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: private-moments-distribution-tests-${{ github.run_number }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/Distribution.xcresult
+            ${{ runner.temp }}/DistributionScreenshots
+          if-no-files-found: ignore
+          retention-days: 7

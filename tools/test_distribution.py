@@ -15,7 +15,7 @@ from unittest import mock
 
 from distribution.archive import archive_application, inspect_archive, validate_app_info, validate_exported_ipa
 from distribution.configuration import DistributionError, decode_secret, load_policy, validate_bundle_id, validate_profile, validate_upload_configuration, validate_versions
-from distribution.native import run
+from distribution.native import choose_simulator, run
 from distribution.signing import signing_material
 
 
@@ -57,6 +57,23 @@ def app_info():
 
 
 class DistributionGuardTests(unittest.TestCase):
+    def test_simulator_selection_matches_sdk_and_prefers_compact_phone(self):
+        inventory = {
+            "com.apple.CoreSimulator.SimRuntime.iOS-26-2": [
+                {"name": "iPhone 17 Pro", "isAvailable": True},
+                {"name": "iPhone SE (3rd generation)", "isAvailable": True},
+            ],
+            "com.apple.CoreSimulator.SimRuntime.iOS-27-0": [{"name": "iPhone 17", "isAvailable": True}],
+        }
+        device, runtime = choose_simulator(inventory, "26.2")
+        self.assertEqual(device["name"], "iPhone SE (3rd generation)")
+        self.assertTrue(runtime.endswith("26-2"))
+
+    def test_missing_sdk_runtime_never_silently_uses_another_runtime(self):
+        inventory = {"com.apple.CoreSimulator.SimRuntime.iOS-18-5": [{"name": "iPhone 16", "isAvailable": True}]}
+        with self.assertRaises(DistributionError):
+            choose_simulator(inventory, "26.2")
+
     def test_versions_reject_injection_and_invalid_build_shapes(self):
         for version, build in [("0.1.0", "7.2"), ("1.0.1", "9999.99.99")]:
             self.assertEqual(validate_versions(version, build), (version, build))

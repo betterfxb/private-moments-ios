@@ -1,9 +1,11 @@
 """Native command execution and toolchain selection, without logging credentials."""
 
 import os
+import json
 import platform
 import re
 import subprocess
+import uuid
 from pathlib import Path
 
 from .configuration import DistributionError, SIGNING_SECRETS
@@ -49,3 +51,29 @@ def toolchain(policy, select=False):
         with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as destination:
             destination.write(f"DEVELOPER_DIR={developer_directory}\n")
     return environment, {"xcode": match.group(1), "iphoneOSSDK": sdk, "developerDirectory": str(developer_directory)}
+
+
+def choose_simulator(devices, sdk):
+    runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + "-".join(sdk.split(".")[:2])
+    available = [item for item in devices.get(runtime, []) if item.get("isAvailable") and item.get("name", "").startswith("iPhone")]
+    for preferred in ["iPhone SE (3rd generation)", "iPhone 16e", "iPhone 17e", "iPhone 16", "iPhone 17"]:
+        for device in available:
+            if device["name"] == preferred:
+                return device, runtime
+    if available:
+        return available[0], runtime
+    raise DistributionError("No available iPhone Simulator matches the selected SDK runtime; install it or update the distribution policy explicitly.")
+
+
+def prepare_simulator(environment, toolchain_info):
+    if not environment.get("GITHUB_ENV"):
+        raise DistributionError("prepare-simulator requires GITHUB_ENV in a GitHub macOS job.")
+    inventory = json.loads(run(["xcrun", "simctl", "list", "devices", "available", "--json"], "Inspect available test simulators", capture=True, environment=environment))
+    device, runtime = choose_simulator(inventory.get("devices", {}), toolchain_info["iphoneOSSDK"])
+    identifier = str(uuid.UUID(device["udid"]))
+    run(["xcrun", "simctl", "bootstatus", identifier, "-b"], "Boot selected test simulator", environment=environment)
+    run(["xcrun", "simctl", "ui", identifier, "appearance", "light"], "Set test appearance", environment=environment)
+    run(["xcrun", "simctl", "ui", identifier, "content_size", "large"], "Set test text size", environment=environment)
+    with open(environment["GITHUB_ENV"], "a", encoding="utf-8") as destination:
+        destination.write(f"IOS_SIMULATOR_DESTINATION=platform=iOS Simulator,id={identifier}\n")
+    return {"simulator": device["name"], "runtime": runtime}

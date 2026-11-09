@@ -1,0 +1,83 @@
+name: iOS TestFlight upload (future opt-in)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Registered app marketing version
+        type: string
+        default: '0.1.0'
+      build_number:
+        description: Optional unused build number; defaults to run_number.run_attempt
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: testflight-upload-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  configuration:
+    runs-on: ubuntu-latest
+    environment: testflight
+    timeout-minutes: 5
+    env:
+      PM_TESTFLIGHT_UPLOAD_ENABLED: ${{ vars.PM_TESTFLIGHT_UPLOAD_ENABLED }}
+      PM_BUNDLE_ID: ${{ vars.PM_BUNDLE_ID }}
+      PM_APPLE_TEAM_ID: ${{ vars.PM_APPLE_TEAM_ID }}
+      PM_ASC_KEY_ID: ${{ vars.PM_ASC_KEY_ID }}
+      PM_ASC_ISSUER_ID: ${{ vars.PM_ASC_ISSUER_ID }}
+      PM_SIGNING_SECRETS_PRESENT: ${{ secrets.PM_DISTRIBUTION_P12_BASE64 != '' && secrets.PM_DISTRIBUTION_P12_PASSWORD != '' && secrets.PM_APPSTORE_PROFILE_BASE64 != '' && secrets.PM_ASC_PRIVATE_KEY_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Require explicit upload opt-in and complete public configuration
+        run: python3 tools/distribute.py check-upload
+      - name: Require credential presence before allocating macOS runners
+        run: |
+          if [[ "$PM_SIGNING_SECRETS_PRESENT" != "true" ]]; then
+            printf 'Configure all four signing secrets in the testflight environment before running this workflow.\n' >&2
+            exit 1
+          fi
+
+  validation:
+    needs: configuration
+    uses: ./.github/workflows/ios-development-archive.yml
+    with:
+      version: ${{ inputs.version }}
+      build_number: ${{ inputs.build_number || format('{0}.{1}', github.run_number, github.run_attempt) }}
+
+  upload:
+    needs: validation
+    runs-on: macos-15
+    environment: testflight
+    timeout-minutes: 45
+    env:
+      PM_VERSION: ${{ inputs.version }}
+      PM_BUILD_NUMBER: ${{ inputs.build_number || format('{0}.{1}', github.run_number, github.run_attempt) }}
+      PM_DISTRIBUTION_OUTPUT: ${{ runner.temp }}/PrivateMomentsSignedDistribution
+      PM_TESTFLIGHT_UPLOAD_ENABLED: ${{ vars.PM_TESTFLIGHT_UPLOAD_ENABLED }}
+      PM_BUNDLE_ID: ${{ vars.PM_BUNDLE_ID }}
+      PM_APPLE_TEAM_ID: ${{ vars.PM_APPLE_TEAM_ID }}
+      PM_ASC_KEY_ID: ${{ vars.PM_ASC_KEY_ID }}
+      PM_ASC_ISSUER_ID: ${{ vars.PM_ASC_ISSUER_ID }}
+      PM_DISTRIBUTION_P12_BASE64: ${{ secrets.PM_DISTRIBUTION_P12_BASE64 }}
+      PM_DISTRIBUTION_P12_PASSWORD: ${{ secrets.PM_DISTRIBUTION_P12_PASSWORD }}
+      PM_APPSTORE_PROFILE_BASE64: ${{ secrets.PM_APPSTORE_PROFILE_BASE64 }}
+      PM_ASC_PRIVATE_KEY_BASE64: ${{ secrets.PM_ASC_PRIVATE_KEY_BASE64 }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Verify pinned toolchain
+        run: python3 tools/distribute.py select-toolchain
+      - name: Archive, sign, validate and upload with temporary credentials
+        run: python3 tools/distribute.py testflight --version "$PM_VERSION" --build "$PM_BUILD_NUMBER" --output "$PM_DISTRIBUTION_OUTPUT"
+      - name: Preserve IPA, symbols and upload report only
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: private-moments-testflight-${{ github.run_number }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/PrivateMomentsSignedDistribution/artifacts
+          if-no-files-found: ignore
+          retention-days: 7
