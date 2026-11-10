@@ -198,8 +198,9 @@ struct RecapView: View {
                 .padding(.horizontal, timingContentInset)
             DatePicker("Start time", selection: $timing.occurredAt,
                        in: ...latestSelectableDate, displayedComponents: .hourAndMinute)
-                .datePickerStyle(.wheel)
+                .datePickerStyle(.compact)
                 .labelsHidden()
+                .padding(.horizontal, timingContentInset)
                 .accessibilityIdentifier("recap.time")
         } else {
             DatePicker("Start time", selection: $timing.occurredAt,
