@@ -1,5 +1,7 @@
 # 原生补记与日期查看验收
 
+这是第四批的历史功能验收；后续整体主题与最终源码见[视觉升级验收](VISUAL-UPGRADE-ACCEPTANCE.md)。
+
 ## 验证对象
 
 开发分支 `feat/native-manual-entry`，草稿 [PR #1](https://github.com/betterfxb/private-moments-ios/pull/1)。本批不合并主分支，也不视为全局UI方向认可。

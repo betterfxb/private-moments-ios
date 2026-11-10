@@ -1,6 +1,12 @@
 # Simulator UI acceptance
 
-## Latest native manual-entry verification (2026-11-10)
+## Latest native visual-system verification (2026-11-10)
+
+Source `dd8b6fe37274b707fadca13430bd9441eccd8c7f`, run [42828824461](https://github.com/betterfxb/private-moments-ios/actions/runs/42828824461), passed all four profiles using Xcode26.2, Simulator SDK26.2 and iOS26.2 runtime. Compact-light passes Debug/Release builds, 30 unit tests and four UI tests; the other profiles pass their bilingual gallery. All 150 PNGs were downloaded and expected capture names checked. 22 selected final-source originals were opened, including six core screens and maximum-text/date/control states. This is not manual review of every PNG or a physical-device accessibility certification.
+
+The Rose theme, grouped editor/detail, compact record anatomy, native system navigation, accessible week menu and readable calendar selection are implemented in SwiftUI. Earlier green screenshots were rejected for visible defects and corrected. [Visual acceptance](VISUAL-UPGRADE-ACCEPTANCE.md), [unmodified images and comparison](evidence/batch-05/index.html), and [verification receipt](evidence/batch-05/verification.json) identify exact evidence and limits. Historical counts below apply only to their own revisions. Signing, physical VoiceOver/privacy, and user aesthetic approval remain separate.
+
+## Historical native manual-entry verification (2026-11-10)
 
 Source `b1225b5e065e81a5847c969d68278363780de9bd`, run [42801899567](https://github.com/betterfxb/private-moments-ios/actions/runs/42801899567), passed all four profiles. Compact-light passes Debug/Release builds, 30 unit tests and all four UI tests; the other three profiles pass the bilingual gallery. The 148 exported PNGs comprise 38 compact-light, 38 compact-dark-accessibility, 36 phone-dark and 36 ipad-light captures. Logs identify Xcode 16.4, iPhoneSimulator 18.5 SDK and iOS 26.2 Simulator runtime. This is not a new-SDK matrix result.
 
@@ -34,7 +40,7 @@ All 112 original gallery PNGs were checked against the expected capture names an
 | English Timeline title truncated at largest accessibility text | Use native inline title at accessibility sizes | Full title and search entry visible in accessibility gallery |
 | Off-screen lazy controls or partly visible gallery actions | Scroll before requiring lazy controls; fit complete capture ranges below the navigation bar; wait for stable geometry | Full kind/rating, Save, edit/delete and footer captures accepted in both languages |
 
-## Automated coverage
+## Historical automated coverage (source 5fdd3cf)
 
 The `PrivateMomentsUITests` target runs as part of `scripts/verify-mac.sh` and the GitHub macOS workflow. Coverage below describes the implemented assertions; the execution record identifies which source revisions have passed.
 

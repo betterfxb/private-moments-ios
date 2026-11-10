@@ -1,8 +1,10 @@
 # Private Moments — Native iOS MVP
 
-Development archive verification (2026-11-10): source `0d24c3b` passed [run 42726665523](https://github.com/betterfxb/private-moments-ios/actions/runs/42726665523) on Xcode 26.2 / iOS 26.2: 25 packaging-tool tests, Debug/Release Simulator builds, 23 app unit tests, all three core UI tests and a validated arm64 iOS-device Release archive. The unsigned archive was downloaded and its SHA-256 matched the report. It is not installable or TestFlight-ready; no Apple upload occurred. See [DISTRIBUTION-PLAN.md](release/DISTRIBUTION-PLAN.md) for evidence and the owner's development-only boundary.
+Native visual upgrade (2026-11-10): source `dd8b6fe37274b707fadca13430bd9441eccd8c7f` passed [run 42828824461](https://github.com/betterfxb/private-moments-ios/actions/runs/42828824461) across all four profiles with Xcode26.2 / iOS26.2: Debug/Release builds, 30 unit tests, four main-profile UI tests and three additional bilingual galleries. All 150 PNGs were downloaded; 22 selected originals were opened. The implemented Rose system, core screens, corrections and limits are in [visual acceptance](release/VISUAL-UPGRADE-ACCEPTANCE.md); [originals and before/after gallery](release/evidence/batch-05/index.html) are retained in the repository. This does not establish user aesthetic approval, physical-device acceptance or release readiness.
 
-Four-profile visual baseline (2026-11-10): source `5fdd3cf` passed the [four-profile cloud run](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), including Debug/Release Simulator builds, 23 unit tests and all three core UI tests. All 112 English/Simplified Chinese gallery captures were downloaded and reviewed. That matrix used Xcode 16.4 with the iOS 26.2 runtime; it does not establish four-profile acceptance for the Xcode 26.2 UI. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for evidence and remaining manual/release gates.
+Historical development archive verification (2026-11-10): source `0d24c3b` passed [run 42726665523](https://github.com/betterfxb/private-moments-ios/actions/runs/42726665523) on Xcode 26.2 / iOS 26.2: 25 packaging-tool tests, Debug/Release Simulator builds, 23 app unit tests, all three core UI tests and a validated arm64 iOS-device Release archive. The unsigned archive was downloaded and its SHA-256 matched the report. It is not installable or TestFlight-ready; no Apple upload occurred. See [DISTRIBUTION-PLAN.md](release/DISTRIBUTION-PLAN.md) for evidence and the owner's development-only boundary.
+
+Historical four-profile visual baseline (2026-11-10): source `5fdd3cf` passed the [four-profile cloud run](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), including Debug/Release Simulator builds, 23 unit tests and all three core UI tests. All 112 English/Simplified Chinese gallery captures were downloaded and reviewed. That matrix used Xcode 16.4 with the iOS 26.2 runtime; it does not establish four-profile acceptance for the Xcode 26.2 UI. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for evidence and remaining manual/release gates.
 
 ## Current scope
 
@@ -10,7 +12,7 @@ This is the first native SwiftUI implementation slice for iPhone and iPad. It co
 
 `Today → Live session → Private recap → Timeline → Moment details`
 
-Included: a pausable monotonic session timer, Together/Solo selection, mood/rating/tag/private-note capture, validated SwiftData local records, timeline search and Together/Solo filtering, record editing and deletion, empty states, local-storage failure feedback, an optional device-authentication app lock, explicit file protection, schema version 1, and a warm design-token/component layer. Settings also supports an explicit JSON backup, validated merge restore, separately confirmed replacement restore, and a localized privacy information page.
+Included: direct manual entry, editable occurrence date and exact minute/second duration, local calendar-day filtering, a pausable monotonic session timer, Together/Solo selection, mood/rating/tag/private-note capture, validated SwiftData local records, timeline search and Together/Solo filtering, record editing and deletion, empty states, local-storage failure feedback, an optional device-authentication app lock, explicit file protection, schema version 1, and a warm design-token/component layer. Settings also supports an explicit JSON backup, validated merge restore, separately confirmed replacement restore, and a localized privacy information page.
 
 Not included: HealthKit, Apple Watch, partner accounts/sharing, photos, location permission, widgets, or Live Activities. The app does not seed sample records. SwiftData is configured with CloudKit sync explicitly disabled. The local store is placed in Application Support, configured with `NSFileProtectionComplete`, and requests exclusion from device backup; Apple documents this backup flag as guidance rather than a guarantee. OS file protection encrypts files at rest while the device is locked, but this is not end-to-end encryption. Manual JSON backups are not encrypted by this app and include private notes. An active session is not recovered after the process is force-quit.
 
@@ -36,8 +38,8 @@ The store also tracks whether its journal can be read safely. If a read or persi
 
 ## Open and run
 
-1. Open `PrivateMoments.xcodeproj` on a Mac with a compatible Xcode installation.
-2. Select the `PrivateMoments` scheme and an iOS 17 or newer simulator.
+1. Open `PrivateMoments.xcodeproj` on a Mac with Xcode 26.2. The UI matrix pins this version through `release/distribution-config.json`; the app deployment target remains iOS 17. New toolbar APIs have an iOS-availability fallback.
+2. Select the `PrivateMoments` scheme and an iOS 26.2 simulator for the verified toolchain baseline. iOS 17 remains the minimum deployment target; older-runtime acceptance is a separate check.
 3. Run the Mac acceptance script below, then walk the manual checklist in `EXECUTION-PLAN.md`.
 4. Set a real bundle identifier and signing team before installing on a device or archiving.
 
@@ -57,7 +59,7 @@ The iOS app icon is in `Resources/Assets.xcassets/AppIcon.appiconset`. To regene
 
 ## Mac build and test
 
-The automated acceptance script requires macOS and a full Xcode installation. Apple ships `xcodebuild` with Xcode; the standalone Command Line Tools package does not include it. [Apple Xcode command-line tool reference](https://developer.apple.com/documentation/xcode/xcode-command-line-tool-reference?changes=la)
+The automated acceptance script requires macOS and full Xcode 26.2 with the matching iOS Simulator runtime. Apple ships `xcodebuild` with Xcode; the standalone Command Line Tools package does not include it. [Apple Xcode command-line tool reference](https://developer.apple.com/documentation/xcode/xcode-command-line-tool-reference?changes=la)
 
 From this directory on the Mac:
 
@@ -66,7 +68,7 @@ xcodebuild -showdestinations -project PrivateMoments.xcodeproj -scheme PrivateMo
 IOS_SIMULATOR_DESTINATION="platform=iOS Simulator,id=REPLACE_WITH_SIMULATOR_UDID" bash scripts/verify-mac.sh
 ```
 
-The script checks the active Xcode, builds Debug and Release for the generic iOS Simulator, then runs 23 unit tests and three UI tests on the selected simulator. The unit suite covers validation, backup/import, semantic color contrast, storage recovery, and real in-memory SwiftData rollback. The UI suite covers the bilingual screen gallery, session/recap discard confirmations, and editing/filtering/search/relaunch/deletion. UI tests use a UUID-specific persistent store in Debug; they never reset the normal journal, and Release does not accept this test-store argument. Open the `.xcresult` in Xcode and review failures, screenshots, and logs; Apple documents command-line test result bundles in its [test report guide](https://developer.apple.com/documentation/xcode/running-tests-and-interpreting-results). Automated checks do not replace VoiceOver, physical-device, signing, or App Store acceptance. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for the latest verified revision and pending checks.
+The script checks the active Xcode, builds Debug and Release for the generic iOS Simulator, then runs 30 unit tests and four UI tests on the selected simulator. The unit suite covers validation, exact timing drafts, calendar-day/DST boundaries, backup/import, semantic color contrast, storage recovery, and real in-memory SwiftData rollback. The UI suite covers the bilingual screen gallery, session/recap discard confirmations, editing/filtering/search/relaunch/deletion, and manual-entry timing/date/persistence. UI tests use a UUID-specific persistent store in Debug; they never reset the normal journal, and Release does not accept this test-store argument. Open the `.xcresult` in Xcode and review failures, screenshots, and logs; Apple documents command-line test result bundles in its [test report guide](https://developer.apple.com/documentation/xcode/running-tests-and-interpreting-results). Automated checks do not replace VoiceOver, physical-device, signing, or App Store acceptance. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for the latest verified revision and pending checks.
 
 ### GitHub Actions cloud verification
 
@@ -79,7 +81,7 @@ The script checks the active Xcode, builds Debug and Release for the generic iOS
 | `ipad-light` | Available iPad | Light / standard Large | Static audits, Debug UI-test build and bilingual gallery |
 | `compact-dark-accessibility` | Compact iPhone | Dark / largest accessibility size | Static audits, Debug UI-test build and bilingual gallery |
 
-The gallery requests 14 captures per language on each profile, including six core screens, saved/empty states and controls reached by scrolling. The current target is 112 captures across the matrix; this is a coverage target, not a claim that every revision has passed. The runner exports PNG files and uploads `private-moments-ui-screenshots-<profile>` and `private-moments-xcresult-<profile>` for seven days. The actual selected simulator/runtime is recorded in each job log. This workflow disables code signing and does not archive or distribute the app; it requires no signing secrets. View runs and download artifacts from the repository's **Actions** tab. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for execution records and manual coverage.
+The gallery requests 18 captures per language at standard text sizes and 20 at accessibility sizes, including six core screens, manual entry, calendar/filter states and controls reached by scrolling. Two extra compact-light functional captures bring the matrix coverage target to 150 PNGs; this is a target, not a claim that every revision has passed. The workflow selects the pinned Xcode 26.2 and a matching SDK runtime, then exports PNG files and uploads `private-moments-ui-screenshots-<profile>` and `private-moments-xcresult-<profile>` for seven days. Actual devices/runtime are recorded in job logs. This workflow disables code signing and does not archive or distribute the app; it requires no signing secrets. View runs and download artifacts from the repository's **Actions** tab. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for execution records and manual coverage.
 
 The project targets iOS 17 because this implementation uses SwiftData and Observation, which Apple documents for iOS 17 and later. SwiftData's `.none` CloudKit configuration explicitly disables managed iCloud sync. Native compilation and XCTest cannot run directly in this Windows workspace; the GitHub Actions workflow above performs them in the cloud. Interactive simulator review, physical-device validation, signing, and App Store archiving still require the relevant Mac environment and developer-account configuration. Check the **Actions** tab for the latest cloud build result.
 
@@ -87,7 +89,7 @@ The project targets iOS 17 because this implementation uses SwiftData and Observ
 
 The project remains in development; the owner has deferred paid Apple enrollment and distribution. A separate manual **iOS development archive** workflow selects Xcode 26.2, runs the core tests, creates a Release iOS-device archive without signing, and checks its identity, SDK, arm64 Mach-O platform, resources, privacy manifest, localizations, dSYM and absence of Debug test hooks. It requires no Apple secrets and produces an explicitly **unsigned, non-installable development archive**, not a TestFlight-ready IPA.
 
-See [云端开发归档说明](release/CLOUD-DISTRIBUTION.md) for the Windows Actions UI steps and future opt-in TestFlight configuration, and [DISTRIBUTION-PLAN.md](release/DISTRIBUTION-PLAN.md) for this batch's scope/evidence. The future upload workflow is separate and disabled without explicit configuration. Real signing/upload, Apple processing and tester availability remain unverified until a paid account and matching credentials exist. Existing simulator-only CI remains a developer baseline; its Xcode 16.4 result does not meet the current Apple upload SDK minimum.
+See [云端开发归档说明](release/CLOUD-DISTRIBUTION.md) for the Windows Actions UI steps and future opt-in TestFlight configuration, and [DISTRIBUTION-PLAN.md](release/DISTRIBUTION-PLAN.md) for this batch's scope/evidence. The future upload workflow is separate and disabled without explicit configuration. Real signing/upload, Apple processing and tester availability remain unverified until a paid account and matching credentials exist. Current simulator-only CI also pins Xcode26.2, but it still does not create a signed uploadable build.
 
 ## Languages
 
