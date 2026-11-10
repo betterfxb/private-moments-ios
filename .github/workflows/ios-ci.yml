@@ -54,6 +54,9 @@ jobs:
           node tools/audit-xcode-project.mjs
           node tools/audit-release-materials.mjs
 
+      - name: Select and verify pinned UI toolchain
+        run: python3 tools/distribute.py select-toolchain
+
       - name: Select and configure simulator
         shell: bash
         env:
@@ -64,11 +67,14 @@ jobs:
           destination="$(xcrun simctl list devices available --json | python3 -c '
           import json
           import os
+          import subprocess
           import sys
 
           devices_by_runtime = json.load(sys.stdin).get("devices", {})
+          sdk = subprocess.check_output(["xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"], text=True).strip()
+          expected_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + "-".join(sdk.split(".")[:2])
           for runtime in sorted(devices_by_runtime, reverse=True):
-              if ".iOS-" not in runtime:
+              if runtime != expected_runtime:
                   continue
               devices = [d for d in devices_by_runtime[runtime] if d.get("isAvailable")]
               family = os.environ["SIMULATOR_FAMILY"]
@@ -84,7 +90,7 @@ jobs:
                   print("Selected: {} ({})".format(device["name"], runtime), file=sys.stderr)
                   print("platform=iOS Simulator,id={}".format(device["udid"]))
                   raise SystemExit(0)
-          raise SystemExit("No simulator matched the required device profile.")
+          raise SystemExit("No simulator matched the pinned SDK runtime and required device profile.")
           ')"
           echo "IOS_SIMULATOR_DESTINATION=$destination" >> "$GITHUB_ENV"
           printf 'Selected simulator: %s\n' "$destination"
