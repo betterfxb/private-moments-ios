@@ -21,8 +21,21 @@ struct RecapView: View {
     @State private var showingDiscardConfirmation = false
     @State private var showingOccurrencePicker = false
     @State private var pendingOccurrence = Date.now
+    private let initialReflection: ReflectionSnapshot
     private enum InputField: Hashable { case note, minutes, seconds }
     @FocusState private var focusedField: InputField?
+
+    private struct ReflectionSnapshot: Equatable {
+        let mood: MomentMood
+        let kind: MomentKind
+        let rating: Int
+        let tags: Set<String>
+        let note: String
+    }
+
+    private var canSave: Bool {
+        noteValidationMessage == nil && timingValidationMessage == nil && store.isStorageAvailable
+    }
 
     private var timingValidationMessage: String? {
         do {
@@ -41,13 +54,11 @@ struct RecapView: View {
     }
 
     private var hasUnsavedContent: Bool {
-        guard let existingMoment else { return true }
-        return timing.hasChanges
-            || mood != existingMoment.mood
-            || kind != existingMoment.kind
-            || rating != existingMoment.rating
-            || selectedTags != Set(existingMoment.tags)
-            || privateNote != existingMoment.privateNote
+        // A finished timer is valuable even before the reflection is changed.
+        let hasRecordedSession = existingMoment == nil && !isManualEntry
+        let reflection = ReflectionSnapshot(mood: mood, kind: kind, rating: rating,
+                                            tags: selectedTags, note: privateNote)
+        return hasRecordedSession || timing.hasChanges || reflection != initialReflection
     }
 
     private var availableTags: [String] {
@@ -65,11 +76,17 @@ struct RecapView: View {
         self.isManualEntry = isManualEntry
         self.onCancel = onCancel
         self.onSaved = onSaved
-        _mood = State(initialValue: existingMoment?.mood ?? .calm)
-        _kind = State(initialValue: existingMoment?.kind ?? .together)
-        _rating = State(initialValue: existingMoment?.rating ?? 4)
-        _selectedTags = State(initialValue: Set(existingMoment?.tags ?? ["Connected"]))
-        _privateNote = State(initialValue: existingMoment?.privateNote ?? "")
+        let reflection = ReflectionSnapshot(mood: existingMoment?.mood ?? .calm,
+                                            kind: existingMoment?.kind ?? .together,
+                                            rating: existingMoment?.rating ?? 4,
+                                            tags: Set(existingMoment?.tags ?? ["Connected"]),
+                                            note: existingMoment?.privateNote ?? "")
+        initialReflection = reflection
+        _mood = State(initialValue: reflection.mood)
+        _kind = State(initialValue: reflection.kind)
+        _rating = State(initialValue: reflection.rating)
+        _selectedTags = State(initialValue: reflection.tags)
+        _privateNote = State(initialValue: reflection.note)
         _timing = State(initialValue: MomentTimingDraft(startedAt: startedAt, durationSeconds: durationSeconds, existingMoment: existingMoment))
     }
 
@@ -106,10 +123,20 @@ struct RecapView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .topBarLeading) {
                 Button("Cancel", action: requestCancel)
                     .accessibilityIdentifier("recap.cancel")
                     .foregroundStyle(AppColors.accentText)
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: saveMoment) {
+                    Label(existingMoment == nil ? "Save privately" : "Save changes", systemImage: "checkmark")
+                        .labelStyle(.iconOnly)
+                        .frame(minWidth: 44, minHeight: 44)
+                }
+                .disabled(!canSave)
+                .accessibilityIdentifier("recap.saveToolbar")
+                .accessibilityHint("Saves this record on this device.")
             }
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
@@ -118,6 +145,11 @@ struct RecapView: View {
             }
         }
         .accessibilityAction(.escape) { requestCancel() }
+        .alert("Couldn't save this moment", isPresented: $showingSaveError) {
+            Button("Keep editing", role: .cancel) { }
+        } message: {
+            Text(store.errorMessage ?? AppLocalization.string("Couldn't save this moment. Your existing entries are unchanged."))
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase != .active { showingOccurrencePicker = false }
         }
@@ -380,7 +412,7 @@ struct RecapView: View {
             Label(existingMoment == nil ? "Save privately" : "Save changes", systemImage: "checkmark")
         }
         .buttonStyle(PrimaryActionButtonStyle())
-        .disabled(noteValidationMessage != nil || timingValidationMessage != nil || !store.isStorageAvailable)
+        .disabled(!canSave)
         .accessibilityIdentifier("recap.save")
         .accessibilityHint(
             noteValidationMessage != nil

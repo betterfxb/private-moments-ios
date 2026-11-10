@@ -39,6 +39,10 @@ final class PrivateMomentsUITests: XCTestCase {
                 tap(app.buttons["today.clearDateFilter"], in: app)
             }
             tap(app.buttons["today.addRecord"], in: app)
+            let quickSave = app.buttons["recap.saveToolbar"]
+            XCTAssertTrue(quickSave.isHittable, "Saving must be reachable without scrolling the form.")
+            XCTAssertEqual(quickSave.label, language == "en" ? "Save privately" : "私密保存")
+            XCTAssertGreaterThanOrEqual(quickSave.frame.height, 44)
             capture("Manual-top-\(language)", app)
             let datePanel = app.buttons["recap.date.open"]
             if datePanel.exists {
@@ -53,7 +57,7 @@ final class PrivateMomentsUITests: XCTestCase {
             }
             capture("Manual-duration-\(language)", app)
             tap(app.buttons["recap.cancel"], in: app)
-            tap(app.buttons[language == "en" ? "Discard reflection" : "放弃回顾"], in: app)
+            XCTAssertTrue(start.waitForExistence(timeout: 10), "Untouched manual entry should close directly.")
             tap(start, in: app)
             capture("Session-\(language)", app)
             reveal(app.buttons["session.finish"], in: app)
@@ -82,6 +86,14 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Today-summary-\(language)", app)
             selectTab("Timeline", "时间线", language: language, app: app)
             capture("Timeline-\(language)", app)
+            chooseMomentFilter(language == "en" ? "Solo" : "独自", in: app)
+            XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
+            let noMatches = app.staticTexts[language == "en" ? "No matching moments" : "没有找到匹配记录"]
+            reveal(noMatches, in: app)
+            capture("Timeline-filter-empty-\(language)", app)
+            tap(app.buttons["timeline.clearFilters"], in: app)
+            XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
+            XCTAssertFalse(app.buttons["timeline.clearFilters"].exists)
             tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
             capture("Detail-top-\(language)", app)
             revealFully(from: app.buttons["detail.edit"], through: app.buttons["detail.delete"], in: app)
@@ -152,6 +164,9 @@ final class PrivateMomentsUITests: XCTestCase {
         selectTab("Timeline", "时间线", app: app)
         tap(app.segmentedControls.buttons["Together"], in: app)
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
+        XCTAssertTrue(app.staticTexts["No matching moments"].exists)
+        tap(app.buttons["timeline.clearFilters"], in: app)
+        XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
         tap(app.segmentedControls.buttons["Solo"], in: app)
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
         app.swipeDown()
@@ -160,6 +175,11 @@ final class PrivateMomentsUITests: XCTestCase {
         let query = "no-matching-mood"
         search.typeText(query)
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
+        tap(app.buttons["timeline.clearFilters"], in: app)
+        XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
+        XCTAssertFalse(app.keyboards.firstMatch.exists, "Clearing filters should also dismiss search input.")
+        tap(search, in: app)
+        search.typeText(query)
         search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: query.count))
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
         search.typeText("Calm")
@@ -185,16 +205,27 @@ final class PrivateMomentsUITests: XCTestCase {
         app.launch()
         tap(app.buttons["today.addRecord"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
-        tap(app.buttons["Discard reflection"], in: app)
+        XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["Discard reflection"].exists)
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
+        tap(app.buttons["today.addRecord"], in: app)
+        tap(app.buttons["recap.kind.Solo"], in: app)
+        tap(app.buttons["recap.cancel"], in: app)
+        cancelConfirmation("Keep editing", destructiveAction: "Discard reflection", in: app)
+        XCTAssertTrue(app.buttons["recap.saveToolbar"].isHittable)
+        tap(app.buttons["recap.kind.Together"], in: app)
+        tap(app.buttons["recap.cancel"], in: app)
+        XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10), "Reverting all changes should restore a clean draft.")
         tap(app.buttons["today.addRecord"], in: app)
         XCTAssertFalse(app.buttons["session.finish"].exists, "Manual entry must not start the timer.")
         tap(app.buttons["recap.yesterday"], in: app)
         replaceNumber(app.textFields["recap.minutes"], with: "17", in: app)
+        replaceNumber(app.textFields["recap.seconds"], with: "60", in: app)
+        XCTAssertFalse(app.buttons["recap.saveToolbar"].isEnabled, "Toolbar saving must enforce the same timing validation.")
         replaceNumber(app.textFields["recap.seconds"], with: "9", in: app)
         tap(app.buttons["recap.dismissKeyboard"], in: app)
         capture("Manual-entered-en", app)
-        tap(app.buttons["recap.save"], in: app)
+        tap(app.buttons["recap.saveToolbar"], in: app)
         XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["today.clearDateFilter"].exists, "A saved past entry must be shown on its actual date, even outside the three recent entries.")
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
@@ -228,6 +259,16 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(field, in: app)
         let current = field.value as? String ?? ""
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count) + value)
+    }
+
+    private func chooseMomentFilter(_ label: String, in app: XCUIApplication) {
+        let segment = app.segmentedControls.buttons[label]
+        if segment.exists {
+            tap(segment, in: app)
+        } else {
+            tap(app.buttons["timeline.filter"], in: app)
+            tap(app.buttons[label].firstMatch, in: app)
+        }
     }
 
     private func makeApp(language: String = "en", storeID: UUID = UUID()) -> XCUIApplication {

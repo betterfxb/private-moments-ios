@@ -16,11 +16,14 @@ struct MomentTimelineView: View {
 
     @State private var searchText = ""
     @State private var filter: MomentFilter = .all
+    @State private var isSearchPresented = false
+
+    private var query: String { searchText.trimmingCharacters(in: .whitespacesAndNewlines) }
+    private var hasActiveFilters: Bool { filter != .all || !query.isEmpty }
 
     private var results: [Moment] {
         store.moments.filter { moment in
             let matchesKind = filter == .all || moment.kind.rawValue == filter.rawValue
-            let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
             guard matchesKind, !query.isEmpty else { return matchesKind }
             let searchable = [
                 moment.occurredAt.formatted(date: .abbreviated, time: .shortened),
@@ -67,12 +70,24 @@ struct MomentTimelineView: View {
                         .font(.system(.subheadline, design: .rounded).weight(.medium))
                         .foregroundStyle(AppColors.secondaryText)
 
+                    if hasActiveFilters {
+                        Button {
+                            searchText = ""
+                            filter = .all
+                            isSearchPresented = false
+                        } label: {
+                            Label("Clear filters", systemImage: "line.3.horizontal.decrease.circle")
+                        }
+                        .buttonStyle(SecondaryActionButtonStyle())
+                        .accessibilityIdentifier("timeline.clearFilters")
+                    }
+
                     if results.isEmpty {
                         EmptyStateCard(
-                            title: searchText.isEmpty ? "No moments here yet" : "No matching moments",
-                            message: searchText.isEmpty
-                                ? "Your timeline will appear here after you save a moment."
-                                : "Try another word or change the selected filter.",
+                            title: hasActiveFilters ? "No matching moments" : "No moments here yet",
+                            message: hasActiveFilters
+                                ? "Try another word or change the selected filter."
+                                : "Your timeline will appear here after you save a moment.",
                             symbol: "calendar"
                         )
                     } else {
@@ -106,7 +121,7 @@ struct MomentTimelineView: View {
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Your moments")
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $searchText, prompt: "Date, type, mood, or tag")
+        .searchable(text: $searchText, isPresented: $isSearchPresented, prompt: "Date, type, mood, or tag")
         .task { store.reload() }
     }
 

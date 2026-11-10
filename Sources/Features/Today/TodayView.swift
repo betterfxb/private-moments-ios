@@ -124,6 +124,11 @@ struct TodayView: View {
                         }
                     }
 
+                    Text("All-time overview")
+                        .font(.system(.headline, design: .rounded).weight(.semibold))
+                        .foregroundStyle(AppColors.text)
+                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityIdentifier("today.overviewScope")
                     adaptiveLayout {
                         summaryTile(
                             value: store.averageDurationMinutes.map { AppLocalization.format("%lld min", $0) } ?? "—",
@@ -203,11 +208,13 @@ struct TodayView: View {
                 ForEach(weekSummary) { day in
                     Button { selectedDate = day.date } label: {
                         if selectedDate.map({ Calendar.current.isDate($0, inSameDayAs: day.date) }) == true {
-                            Label(day.accessibilityDescription, systemImage: "checkmark")
+                            Label(day.menuTitle, systemImage: "checkmark")
                         } else {
-                            Text(day.accessibilityDescription)
+                            Text(day.menuTitle)
                         }
                     }
+                    .accessibilityLabel(day.accessibilityDescription)
+                    .accessibilityAddTraits(selectedDate.map({ Calendar.current.isDate($0, inSameDayAs: day.date) }) == true ? .isSelected : [])
                     .accessibilityIdentifier(Calendar.current.isDateInToday(day.date) ? "today.week.current" : "today.weekday")
                 }
             } label: {
@@ -312,6 +319,10 @@ private struct WeekdayCount: Identifiable {
     let count: Int
 
     var id: Date { date }
+
+    var menuTitle: String {
+        date.formatted(.dateTime.weekday(.abbreviated).day())
+    }
 
     var accessibilityDescription: String {
         AppLocalization.format("%@, %@", date.formatted(date: .complete, time: .omitted), AppLocalization.momentCount(count))
