@@ -34,3 +34,6 @@
 - 任务4本地静态审计通过：212本地化键、109项目对象、发行材料审计及diff检查；已有Bundle ID和发布者占位警告保留，不在本批越权填写。随后进行云端原生验证。
 - 搜索激活采用[Apple searchable(text:isPresented:placement:prompt:)](https://developer.apple.com/documentation/swiftui/view/searchable%28text%3AisPresented%3Aplacement%3Aprompt%3A%29)绑定，不使用全局键盘强制退出。
 - 首轮42883545142未通过：iPad工具栏默认按钮桥接后实际高度36pt，新增44pt断言捕获。改为明确44pt的plain按钮及语义背景，iOS26隐藏该项额外系统背景，避免重复胶囊；不降低断言。随后同一修正源码重新进行四配置验收。
+
+- 任务4完成：最终源码`02e4c07506ab8caa52cfb90210d9f5114ceeddd7`，运行[42885697214](https://github.com/betterfxb/private-moments-ios/actions/runs/42885697214)四配置全部通过；30项单元、4项主配置UI、其余三配置双语gallery通过。
+- 任务5完成：158张PNG下载并核对清单，实际打开17张重点最终原图；保留12张最终与两张上一批原图、哈希收据和静态画廊。完整结果及边界见[UX-ACCEPTANCE-06.md](UX-ACCEPTANCE-06.md)。

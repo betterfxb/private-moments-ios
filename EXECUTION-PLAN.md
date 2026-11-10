@@ -1,12 +1,16 @@
 # Private Moments — Project Execution Plan
 
+## Latest batch: core interaction experience
+
+The ordered [batch-six plan](release/BATCH-06-PLAN.md) is complete: architecture review → editor/save/discard improvements → browsing and recovery clarity → four-profile native regression → original-image review and retained evidence. [Acceptance](release/UX-ACCEPTANCE-06.md) identifies the exact tested source, corrected toolbar target issue, actual test counts and limits. Storage, backup schema, timer and privacy services were not changed. Work remains in draft PR #1; physical-device/older-runtime acceptance and distribution remain separate.
+
 ## Goal
 
 Deliver a polished, privacy-first iPhone app with an offline record flow, then add Apple ecosystem features only after their data and sharing rules are explicit. The current Windows checkout can produce and inspect source, web prototypes, and documents. A supported Mac/Xcode environment is required to compile, simulate, sign, test on Apple devices, and submit.
 
 Automated Mac verification runs in GitHub Actions. The latest native visual batch, source `dd8b6fe37274b707fadca13430bd9441eccd8c7f`, passed [run 42828824461](https://github.com/betterfxb/private-moments-ios/actions/runs/42828824461) on Xcode26.2 / SDK26.2 / iOS26.2 across four profiles: Debug/Release builds, 30 unit tests, four compact-light UI tests and three further bilingual gallery executions. All 150 PNGs were downloaded; 22 selected originals were opened. See [visual acceptance](release/VISUAL-UPGRADE-ACCEPTANCE.md) for final evidence and limits. Earlier counts below are historical.
 
-## Latest batch: native visual upgrade
+## Historical batch: native visual upgrade
 
 The ordered [five-task plan](release/BATCH-05-PLAN.md) is complete: official-reference study → UI foundations → native core-screen upgrade → cloud regression → original-image review, correction and evidence. The [UI system](release/UI-SYSTEM-05.md) defines semantic Rose colors, system typography, content/input/selection/record structures and interaction states. Six core pages and privacy surfaces now use that system. Storage, backup schema, domain and application services were not changed by this batch.
 

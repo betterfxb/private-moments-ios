@@ -1,5 +1,9 @@
 # Recap Acceptance Record
 
+## Current editor verification (2026-11-11)
+
+The [batch-six interaction report](UX-ACCEPTANCE-06.md) supersedes the historical status below for clean manual cancellation, changed/reverted manual drafts, toolbar Save and timing validation. Timed recap cancellation remains guarded. The latest four-profile evidence and exact source are linked there; per-field VoiceOver and injected save-failure UI acceptance remain open. The older table records its own revision only.
+
 Status: source review and Windows audits complete. Final cloud run [42665863317](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), source `5fdd3cf`, passed all 23 unit tests and all three core UI tests. The keyboard-covered Save issue is fixed: the test enters a synthetic note, dismisses the keyboard with Done, saves it, edits the rating, discards a later change, and verifies the original note/rating after relaunch. Basic new-reflection keep/discard confirmations also pass. The broader field-by-field and VoiceOver scenarios below still require manual acceptance.
 
 | Scenario | Steps | Expected result | Runtime result |

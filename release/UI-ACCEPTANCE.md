@@ -1,6 +1,12 @@
 # Simulator UI acceptance
 
-## Latest native visual-system verification (2026-11-10)
+## Latest core interaction verification (2026-11-11)
+
+Source `02e4c07506ab8caa52cfb90210d9f5114ceeddd7`, [run 42885697214](https://github.com/betterfxb/private-moments-ios/actions/runs/42885697214), passes four profiles with Xcode26.2 / SDK26.2 / iOS26.2: Debug/Release, 30 unit tests and four main-profile UI tests, plus three bilingual galleries. The editor adds a reachable toolbar Save with shared validation, clean manual-entry cancellation and preserved changed/timed draft protection. Timeline has truthful filtered-empty states and one-action query/type reset with keyboard dismissal; the week menu uses shorter visible dates and Today labels all-time statistics.
+
+All 158 PNGs were downloaded and expected names checked; 17 selected final originals were opened. See [interaction acceptance](UX-ACCEPTANCE-06.md), [unmodified originals](evidence/batch-06/index.html) and [receipt](evidence/batch-06/verification.json). Native code matches the tested source; physical accessibility/privacy/feel, older runtimes and UI fault injection remain separate. Historical results below apply only to their revisions.
+
+## Historical native visual-system verification (2026-11-10)
 
 Source `dd8b6fe37274b707fadca13430bd9441eccd8c7f`, run [42828824461](https://github.com/betterfxb/private-moments-ios/actions/runs/42828824461), passed all four profiles using Xcode26.2, Simulator SDK26.2 and iOS26.2 runtime. Compact-light passes Debug/Release builds, 30 unit tests and four UI tests; the other profiles pass their bilingual gallery. All 150 PNGs were downloaded and expected capture names checked. 22 selected final-source originals were opened, including six core screens and maximum-text/date/control states. This is not manual review of every PNG or a physical-device accessibility certification.
 
