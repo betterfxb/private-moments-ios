@@ -1,6 +1,8 @@
 # Private Moments — Native iOS MVP
 
-Latest verification (2026-11-10): source `5fdd3cf` passed the [four-profile cloud run](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), including Debug/Release Simulator builds, 23 unit tests and all three core UI tests. All 112 English/Simplified Chinese gallery captures were downloaded and reviewed. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for evidence and remaining manual/release gates.
+Development archive verification (2026-11-10): source `0d24c3b` passed [run 42726665523](https://github.com/betterfxb/private-moments-ios/actions/runs/42726665523) on Xcode 26.2 / iOS 26.2: 25 packaging-tool tests, Debug/Release Simulator builds, 23 app unit tests, all three core UI tests and a validated arm64 iOS-device Release archive. The unsigned archive was downloaded and its SHA-256 matched the report. It is not installable or TestFlight-ready; no Apple upload occurred. See [DISTRIBUTION-PLAN.md](release/DISTRIBUTION-PLAN.md) for evidence and the owner's development-only boundary.
+
+Four-profile visual baseline (2026-11-10): source `5fdd3cf` passed the [four-profile cloud run](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), including Debug/Release Simulator builds, 23 unit tests and all three core UI tests. All 112 English/Simplified Chinese gallery captures were downloaded and reviewed. That matrix used Xcode 16.4 with the iOS 26.2 runtime; it does not establish four-profile acceptance for the Xcode 26.2 UI. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for evidence and remaining manual/release gates.
 
 ## Current scope
 
@@ -80,6 +82,12 @@ The script checks the active Xcode, builds Debug and Release for the generic iOS
 The gallery requests 14 captures per language on each profile, including six core screens, saved/empty states and controls reached by scrolling. The current target is 112 captures across the matrix; this is a coverage target, not a claim that every revision has passed. The runner exports PNG files and uploads `private-moments-ui-screenshots-<profile>` and `private-moments-xcresult-<profile>` for seven days. The actual selected simulator/runtime is recorded in each job log. This workflow disables code signing and does not archive or distribute the app; it requires no signing secrets. View runs and download artifacts from the repository's **Actions** tab. See [UI-ACCEPTANCE.md](release/UI-ACCEPTANCE.md) for execution records and manual coverage.
 
 The project targets iOS 17 because this implementation uses SwiftData and Observation, which Apple documents for iOS 17 and later. SwiftData's `.none` CloudKit configuration explicitly disables managed iCloud sync. Native compilation and XCTest cannot run directly in this Windows workspace; the GitHub Actions workflow above performs them in the cloud. Interactive simulator review, physical-device validation, signing, and App Store archiving still require the relevant Mac environment and developer-account configuration. Check the **Actions** tab for the latest cloud build result.
+
+## Development archives from Windows
+
+The project remains in development; the owner has deferred paid Apple enrollment and distribution. A separate manual **iOS development archive** workflow selects Xcode 26.2, runs the core tests, creates a Release iOS-device archive without signing, and checks its identity, SDK, arm64 Mach-O platform, resources, privacy manifest, localizations, dSYM and absence of Debug test hooks. It requires no Apple secrets and produces an explicitly **unsigned, non-installable development archive**, not a TestFlight-ready IPA.
+
+See [云端开发归档说明](release/CLOUD-DISTRIBUTION.md) for the Windows Actions UI steps and future opt-in TestFlight configuration, and [DISTRIBUTION-PLAN.md](release/DISTRIBUTION-PLAN.md) for this batch's scope/evidence. The future upload workflow is separate and disabled without explicit configuration. Real signing/upload, Apple processing and tester availability remain unverified until a paid account and matching credentials exist. Existing simulator-only CI remains a developer baseline; its Xcode 16.4 result does not meet the current Apple upload SDK minimum.
 
 ## Languages
 

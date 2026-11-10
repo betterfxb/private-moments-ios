@@ -69,6 +69,14 @@ Automated smoke checks do not establish that every screen looks correct or that 
 | 2026-11-10 | Source `47ea5e3`, run [42663178514](https://github.com/betterfxb/private-moments-ios/actions/runs/42663178514) | All four jobs passed. Session navigation-title contrast and accessibility-size Timeline title verified; kind/rating sections captured fully. Review identified remaining framing improvements for Save, detail actions and Settings footer. |
 | 2026-11-10 | Final source `5fdd3cf`, run 42665863317 | All four profiles passed; phone-dark succeeded after a targeted capacity-related retry. Debug/Release builds, 23 unit tests, three full-suite UI tests and three additional galleries pass. All 112 PNG captures downloaded, names/dimensions checked, four contact sheets and critical original images reviewed. Current batch complete. |
 
-## Completion gate for the current batch
+## Completion gate for the UI quality batch
 
 Met on 2026-11-10: approved network execution and pushing recovered; the final full suite and all gallery jobs passed; all screenshot artifacts were exported, downloaded and reviewed. Publisher setup, signing, manual VoiceOver, app-lock lifecycle, physical file protection, startup/failure-screen rendering and full backup/restore UI acceptance remain separate release gates.
+
+## Xcode 26.2 development archive verification (2026-11-10)
+
+Source `0d24c3b`, [run 42726665523](https://github.com/betterfxb/private-moments-ios/actions/runs/42726665523), passed all 23 app unit tests and all three UI tests using Xcode 26.2 / iOS 26.2, iPhone SE (3rd generation), light appearance and standard Large text. Native SDK-26 confirmation popovers omit role-cancel buttons; the test now taps a visible cancel button when available or outside the actual popover frame, asserts dismissal and retains the original data-preservation checks. No app behavior was changed.
+
+The latest 28 gallery PNGs (14 per language, 750×1334) and `.xcresult` were downloaded from artifact `13722874893`. Expected names/dimensions were checked, the complete contact sheet was reviewed and four originals were opened: Session-en, Detail-controls-en, Recap-controls-zh-Hans, Settings-bottom-zh-Hans. The session title, full save button, edit/delete actions and settings footer are readable and reachable in these captures. Local originals and review files are in `build/distribution-evidence-2026-11-10/run-42726665523/tests/DistributionScreenshots`.
+
+This new-SDK result covers one compact-light iPhone profile. The earlier 112-capture four-profile matrix used Xcode 16.4 with the iOS 26.2 runtime, so iPad, dark and maximum accessibility text still need a new-SDK visual pass. Existing MVP/technical copy, backup/failure-screen UI and physical-device/VoiceOver checks remain development work. Packaging evidence and unsigned-distribution boundaries are in `DISTRIBUTION-PLAN.md`.

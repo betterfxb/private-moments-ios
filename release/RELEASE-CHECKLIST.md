@@ -26,6 +26,16 @@
 
 See `UI-ACCEPTANCE.md`, `STORAGE-FAILURE-ACCEPTANCE.md` and `EXECUTION-PLAN.md` for the exact automated/manual boundaries and resume order.
 
+## Development archive foundation (2026-11-10)
+
+The owner has deferred paid Apple enrollment and wants further product development. This batch validates packaging infrastructure and unsigned development artifacts; it does not mark the product ready for TestFlight or App Store release.
+
+- [x] Record the development-only decision and sequential plan in `DISTRIBUTION-PLAN.md`.
+- [x] Add a nonsecret pinned toolchain policy and behavioral checks for versions, archive identity/resources, signing guards and cleanup.
+- [x] Separate account-free development archiving from the future manual opt-in TestFlight upload workflow; document Windows usage in `CLOUD-DISTRIBUTION.md`.
+- [x] Verify Xcode 26.2 / iOS 26.2 in [run 42726665523](https://github.com/betterfxb/private-moments-ios/actions/runs/42726665523), source `0d24c3b`: 25 tooling tests, Debug/Release Simulator builds, 23 app unit tests, all three UI tests and an actual arm64 iOS-device Release archive. Downloaded archive SHA-256 matches its report; resources, privacy manifest, bilingual metadata, English source fallback / Chinese UI table, dSYM and absence of Debug test hooks passed inspection. It remains unsigned and non-installable; no upload occurred.
+- [ ] Before real distribution, enroll, register the final identity and app record, configure the `testflight` environment, then verify real signing/export/upload and Apple processing.
+
 ## Developer and policy setup
 
 - [ ] Fill legal publisher name, privacy contact email, and policy effective date.
@@ -35,6 +45,7 @@ See `UI-ACCEPTANCE.md`, `STORAGE-FAILURE-ACCEPTANCE.md` and `EXECUTION-PLAN.md` 
 - [ ] Provide a support URL and reviewer contact details.
 - [ ] Confirm the App Privacy questionnaire against the exact archived build and every third-party partner. The draft answer assumes no developer-accessible off-device data collection.
 - [ ] Complete App Store Connect's current age-rating questionnaire based on the actual UI and content.
+- [ ] Review export-compliance/encryption questions for the exact build; no automatic legal declaration is added by the development archive tooling.
 - [ ] Check the app name and trademark availability in the target storefronts.
 - [ ] If offering the app in mainland China, verify whether the app requires an ICP filing or other regional documentation.
 
