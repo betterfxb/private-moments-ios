@@ -33,3 +33,4 @@
 - 任务3实现完成：时间线复位同时关闭搜索键盘，类型筛选零结果使用匹配空态；辅助字号周菜单短日期并保留完整辅助标签；首页标明全部记录概览。既有双语四配置gallery加入空态与复位断言。
 - 任务4本地静态审计通过：212本地化键、109项目对象、发行材料审计及diff检查；已有Bundle ID和发布者占位警告保留，不在本批越权填写。随后进行云端原生验证。
 - 搜索激活采用[Apple searchable(text:isPresented:placement:prompt:)](https://developer.apple.com/documentation/swiftui/view/searchable%28text%3AisPresented%3Aplacement%3Aprompt%3A%29)绑定，不使用全局键盘强制退出。
+- 首轮42883545142未通过：iPad工具栏默认按钮桥接后实际高度36pt，新增44pt断言捕获。改为明确44pt的plain按钮及语义背景，iOS26隐藏该项额外系统背景，避免重复胶囊；不降低断言。随后同一修正源码重新进行四配置验收。

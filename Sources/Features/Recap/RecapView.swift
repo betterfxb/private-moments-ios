@@ -128,15 +128,11 @@ struct RecapView: View {
                     .accessibilityIdentifier("recap.cancel")
                     .foregroundStyle(AppColors.accentText)
             }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(action: saveMoment) {
-                    Label(existingMoment == nil ? "Save privately" : "Save changes", systemImage: "checkmark")
-                        .labelStyle(.iconOnly)
-                        .frame(minWidth: 44, minHeight: 44)
-                }
-                .disabled(!canSave)
-                .accessibilityIdentifier("recap.saveToolbar")
-                .accessibilityHint("Saves this record on this device.")
+            if #available(iOS 26.0, *) {
+                ToolbarItem(placement: .topBarTrailing) { toolbarSave }
+                    .sharedBackgroundVisibility(.hidden)
+            } else {
+                ToolbarItem(placement: .topBarTrailing) { toolbarSave }
             }
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
@@ -201,6 +197,22 @@ struct RecapView: View {
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(AppColors.secondaryText)
         }
+    }
+
+    private var toolbarSave: some View {
+        Button(action: saveMoment) {
+            Label(existingMoment == nil ? "Save privately" : "Save changes", systemImage: "checkmark")
+                .labelStyle(.iconOnly)
+                .font(.body.weight(.semibold))
+                .frame(minWidth: 44, minHeight: 44)
+                .background(AppColors.accentWash, in: Circle())
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(canSave ? AppColors.accentText : AppColors.secondaryText)
+        .disabled(!canSave)
+        .accessibilityIdentifier("recap.saveToolbar")
+        .accessibilityHint("Saves this record on this device.")
     }
 
     private var timingSection: some View {
