@@ -72,15 +72,27 @@ def inspect_resources(application, info, policy, metadata, environment=None):
     for category, reason in [("NSPrivacyAccessedAPICategoryFileTimestamp", "3B52.1"), ("NSPrivacyAccessedAPICategoryUserDefaults", "CA92.1")]:
         if reason not in reasons.get(category, set()):
             raise DistributionError(f"Archived privacy manifest is missing {category} reason {reason}.")
+    catalog = json.loads((ROOT / "Resources" / "Localizable.xcstrings").read_text(encoding="utf-8"))
+    ui_sources = {}
     for locale in policy["locales"]:
         directory = application / f"{locale}.lproj"
+        ui_sources[locale] = "compiled-localizable-table"
         if not (directory / "Localizable.strings").is_file():
-            raise DistributionError(f"Archived UI strings are missing for {locale}.")
+            # xcstringstool omits the source-language table when all its values
+            # are the keys themselves. The app then uses its development keys.
+            source_fallback = (
+                locale == catalog.get("sourceLanguage") == info.get("CFBundleDevelopmentRegion")
+                and not any(locale in entry.get("localizations", {}) for entry in catalog["strings"].values())
+            )
+            if not source_fallback:
+                raise DistributionError(f"Archived UI strings are missing for {locale}.")
+            ui_sources[locale] = "development-language-keys"
         localized = read_plist(directory / "InfoPlist.strings", environment)
         if localized.get("CFBundleDisplayName") != metadata[locale]["name"] or not localized.get("NSFaceIDUsageDescription"):
             raise DistributionError(f"Archived display name / Face ID purpose text is incomplete for {locale}.")
     if list(application.rglob("*.xctest")) or list(application.rglob("*.p8")) or list(application.rglob("*.p12")):
         raise DistributionError("Archive must not contain tests or private signing material.")
+    return ui_sources
 
 
 def inspect_archive(archive_path, policy, bundle_id, version, build, environment, signed=False):
@@ -88,7 +100,7 @@ def inspect_archive(archive_path, policy, bundle_id, version, build, environment
     info = read_plist(application / "Info.plist")
     validate_app_info(info, policy, bundle_id, version, build)
     store_metadata = json.loads((ROOT / "release" / "APP-STORE-METADATA.json").read_text(encoding="utf-8"))
-    inspect_resources(application, info, policy, store_metadata, environment)
+    ui_sources = inspect_resources(application, info, policy, store_metadata, environment)
     executable_name = info.get("CFBundleExecutable", "")
     if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]*", executable_name):
         raise DistributionError("Archived executable name is invalid.")
@@ -115,7 +127,7 @@ def inspect_archive(archive_path, policy, bundle_id, version, build, environment
         "bundleIdentifier": bundle_id, "version": version, "build": build,
         "devicePlatform": info["DTPlatformName"], "sdk": info["DTSDKName"],
         "minimumOSVersion": info["MinimumOSVersion"], "architectures": architectures,
-        "locales": policy["locales"], "privacyManifestVerified": True,
+        "locales": policy["locales"], "localizedUIResources": ui_sources, "privacyManifestVerified": True,
         "appIconVerified": True, "debugTestStoreHookAbsent": True,
         "dSYMPresent": True, "provisioningProfilePresent": profile_present,
     }

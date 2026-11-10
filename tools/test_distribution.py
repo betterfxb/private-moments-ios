@@ -52,6 +52,7 @@ def app_info():
         "CFBundlePackageType": "APPL", "DTPlatformName": "iphoneos", "DTSDKName": "iphoneos26.2",
         "DTXcode": "2620", "MinimumOSVersion": "17.0", "UIDeviceFamily": [1, 2],
         "CFBundleSupportedPlatforms": ["iPhoneOS"], "CFBundleExecutable": "PrivateMoments",
+        "CFBundleDevelopmentRegion": "en",
         "CFBundleIcons": {"CFBundlePrimaryIcon": {"CFBundleIconName": "AppIcon"}},
     }
 
@@ -195,6 +196,20 @@ class ArchiveValidationTests(unittest.TestCase):
 
     def test_missing_translation_blocks_archive(self):
         (self.app / "zh-Hans.lproj" / "Localizable.strings").unlink()
+        with self.assertRaises(DistributionError):
+            self.inspect()
+
+    def test_source_language_can_use_development_keys_without_redundant_table(self):
+        (self.app / "en.lproj" / "Localizable.strings").unlink()
+        report = self.inspect()
+        self.assertEqual(report["localizedUIResources"], {
+            "en": "development-language-keys", "zh-Hans": "compiled-localizable-table",
+        })
+
+    def test_source_fallback_requires_matching_archive_development_language(self):
+        (self.app / "en.lproj" / "Localizable.strings").unlink()
+        info = dict(app_info(), CFBundleDevelopmentRegion="fr")
+        (self.app / "Info.plist").write_bytes(plistlib.dumps(info))
         with self.assertRaises(DistributionError):
             self.inspect()
 
