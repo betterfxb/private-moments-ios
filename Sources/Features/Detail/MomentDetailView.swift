@@ -65,12 +65,14 @@ struct MomentDetailView: View {
 
                 VStack(alignment: .leading, spacing: 16) {
                     HStack(spacing: 12) {
-                        Image(systemName: moment.kind == .together ? "person.2.fill" : "person.fill")
-                            .font(.title2)
-                            .foregroundStyle(AppColors.accentText)
-                            .frame(width: 52, height: 52)
-                            .background(AppColors.accentWash, in: RoundedRectangle(cornerRadius: 16))
-                            .accessibilityHidden(true)
+                        if !dynamicTypeSize.isAccessibilitySize {
+                            Image(systemName: moment.kind == .together ? "person.2.fill" : "person.fill")
+                                .font(.system(size: 22, weight: .medium))
+                                .foregroundStyle(AppColors.accentText)
+                                .frame(width: 52, height: 52)
+                                .background(AppColors.accentWash, in: RoundedRectangle(cornerRadius: 16))
+                                .accessibilityHidden(true)
+                        }
                         VStack(alignment: .leading, spacing: 4) {
                             Text("A moment to remember")
                                 .font(.system(.caption, design: .rounded))
@@ -146,11 +148,12 @@ struct MomentDetailView: View {
                     showingDeleteConfirmation = true
                 } label: {
                     Label("Delete this moment", systemImage: "trash")
+                        .foregroundStyle(AppColors.destructive)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                 }
-                .buttonStyle(.bordered)
-                .tint(AppColors.accentText)
+                .buttonStyle(.plain)
+                .tint(AppColors.destructive)
                 .disabled(!store.isStorageAvailable)
                 .accessibilityIdentifier("detail.delete")
             }

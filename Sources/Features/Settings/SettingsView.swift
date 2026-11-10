@@ -57,15 +57,6 @@ struct SettingsView: View {
                     }
                 }
 
-                settingsCard(title: "NOT CONNECTED") {
-                    Label("HealthKit and Apple Watch", systemImage: "heart")
-                    Divider().overlay(AppColors.separator)
-                    Label("Partner sharing", systemImage: "person.2")
-                    Text("This starter keeps all entries on this device. No health readings or partner payloads are created.")
-                        .font(.system(.footnote, design: .rounded))
-                        .foregroundStyle(AppColors.secondaryText)
-                }
-
                 settingsCard(title: "DATA MANAGEMENT") {
                     Text("Create a portable JSON backup or restore one you made earlier.")
                         .font(.system(.footnote, design: .rounded))
@@ -159,11 +150,12 @@ struct SettingsView: View {
                     showingDeleteAllConfirmation = true
                 } label: {
                     Label("Delete all local moments", systemImage: "trash")
+                        .foregroundStyle(AppColors.destructive)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                 }
-                .buttonStyle(.bordered)
-                .tint(AppColors.accentText)
+                .buttonStyle(.plain)
+                .tint(AppColors.destructive)
                 .disabled(!store.isStorageAvailable)
 
                 if deletionCompleted {

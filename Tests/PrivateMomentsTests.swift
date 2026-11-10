@@ -333,7 +333,7 @@ final class SemanticColorTests: XCTestCase {
     func testBodyAndSecondaryTextContrastOnSurfaces() {
         for style in [UIUserInterfaceStyle.light, .dark] {
             for surface in [AppColors.background, AppColors.surface, AppColors.accentWash] {
-                for foreground in [AppColors.text, AppColors.secondaryText, AppColors.accentText] {
+                for foreground in [AppColors.text, AppColors.secondaryText, AppColors.accentText, AppColors.destructive] {
                     XCTAssertGreaterThanOrEqual(contrast(foreground, surface, style), 4.5)
                 }
             }

@@ -38,10 +38,11 @@ struct TodayView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Private Moments")
-                        .font(.system(.title, design: .rounded).weight(.bold))
-                        .foregroundStyle(AppColors.accentText)
-                        .fixedSize(horizontal: false, vertical: true)
+                    if dynamicTypeSize.isAccessibilitySize {
+                        brandTitle
+                            .font(.system(.title, design: .rounded).weight(.bold))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                     adaptiveLayout {
                         Text(todayLabel)
                             .font(.system(.caption, design: .rounded))
@@ -59,6 +60,7 @@ struct TodayView: View {
                     Button(action: onStart) {
                         Label("Start a moment", systemImage: "play.fill")
                             .fixedSize(horizontal: false, vertical: true)
+                            .frame(minHeight: 44)
                     }
                     .buttonStyle(PrimaryActionButtonStyle())
                     .disabled(!store.isStorageAvailable)
@@ -70,6 +72,7 @@ struct TodayView: View {
                     Button { onAddRecord(min(selectedDate ?? .now, .now)) } label: {
                         Label("Add past moment", systemImage: "square.and.pencil")
                             .fixedSize(horizontal: false, vertical: true)
+                            .frame(minHeight: 44)
                     }
                     .buttonStyle(SecondaryActionButtonStyle())
                     .disabled(!store.isStorageAvailable)
@@ -137,12 +140,17 @@ struct TodayView: View {
             .frame(maxWidth: .infinity)
         }
         .background(AppColors.background.ignoresSafeArea())
-        .navigationTitle("Today")
+        .navigationTitle(dynamicTypeSize.isAccessibilitySize ? LocalizedStringKey("Today") : LocalizedStringKey(""))
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: scenePhase) { _, phase in
             if phase != .active { showingDatePicker = false }
         }
         .toolbar {
+            if !dynamicTypeSize.isAccessibilitySize {
+                ToolbarItem(placement: .topBarLeading) {
+                    brandTitle.font(.system(.title2, design: .rounded).weight(.bold))
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     dateToView = selectedDate ?? .now
@@ -184,7 +192,45 @@ struct TodayView: View {
         .task { store.reload() }
     }
 
+    @ViewBuilder
     private var weekSelector: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            Menu {
+                ForEach(weekSummary) { day in
+                    Button { selectedDate = day.date } label: {
+                        if selectedDate.map({ Calendar.current.isDate($0, inSameDayAs: day.date) }) == true {
+                            Label(day.accessibilityDescription, systemImage: "checkmark")
+                        } else {
+                            Text(day.accessibilityDescription)
+                        }
+                    }
+                    .accessibilityIdentifier(Calendar.current.isDateInToday(day.date) ? "today.week.current" : "today.weekday")
+                }
+            } label: {
+                HStack {
+                    Text("This week")
+                    Spacer(minLength: 8)
+                    Image(systemName: "chevron.down").accessibilityHidden(true)
+                }
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(AppColors.accentText)
+                .frame(minHeight: 44)
+                .modifier(JournalPanel())
+            }
+            .accessibilityIdentifier("today.weekMenu")
+        } else {
+            weekGrid
+        }
+    }
+
+    private var brandTitle: some View {
+        Text("Private Moments")
+            .foregroundStyle(AppColors.accentText)
+            .accessibilityAddTraits(.isHeader)
+            .accessibilityIdentifier("today.brand")
+    }
+
+    private var weekGrid: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("This week")
@@ -195,14 +241,14 @@ struct TodayView: View {
             }
             .foregroundStyle(AppColors.secondaryText)
 
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 3 : 7), spacing: 3) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 3) {
                 ForEach(weekSummary) { day in
                     let selected = selectedDate.map { Calendar.current.isDate($0, inSameDayAs: day.date) } == true
                     Button { selectedDate = day.date } label: {
                         VStack(spacing: 6) {
                             Text(day.date.formatted(.dateTime.weekday(.narrow)))
                                 .font(.system(.caption2, design: .rounded))
-                            Text(day.date.formatted(.dateTime.day()))
+                            Text(Calendar.current.component(.day, from: day.date).formatted())
                                 .font(.system(.subheadline, design: .rounded).weight(.semibold).monospacedDigit())
                             Circle()
                                 .fill(day.count > 0 ? (selected ? AppColors.onAccent : AppColors.accentText) : .clear)

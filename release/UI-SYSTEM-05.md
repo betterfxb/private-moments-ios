@@ -22,18 +22,19 @@
 | text | #30262D | #F8EFF4 | 主信息 |
 | secondaryText | #75656F | #BEADB8 | 元数据 |
 | separator | #ECDDE4 | #493641 | 细分隔，不给每项都套厚边框 |
+| destructive | #B3263E | #FFB3BF | 删除文字与图标，保留二次确认，与主操作分层 |
 | session | #20151F | #20151F | 进行中独立暗环境 |
 
 主题与正文分工：数字、主要操作、选中日期和语义图标用主题色；正文用中性近黑，辅助灰保留温度。粉色不覆盖整页正文。错误仍以警示图标＋文案表达，破坏操作保留系统destructive语义。
 
 ## 字体与布局
 
-系统语义字体，品牌title/bold rounded；页面title2/semibold；分组headline/semibold；记录headline；正文body/subheadline；元数据caption。不使用超大衬线口号。数值使用monospacedDigit；不缩小辅助字号以通过截图。页边20，容器内16，分组间24。iPhone以内容自适应布局；iPad使用居中最大宽度700，避免横跨全屏。字号布局使用系统Dynamic Type，辅助字号行转纵向。
+系统语义字体，普通字号品牌使用工具栏title2/bold rounded；辅助字号品牌进入内容区，以title/bold自然换行。页面title2/semibold；分组headline/semibold；记录headline；正文body/subheadline；元数据caption。不使用超大衬线口号。数值使用monospacedDigit；不缩小辅助字号以通过截图。页边20，容器内16，分组间24。iPhone以内容自适应布局；iPad使用居中最大宽度700，避免横跨全屏。字号布局使用系统Dynamic Type，辅助字号行转纵向；固定图标容器使用明确装饰尺寸，大字号隐藏冗余类型图标。
 
 ## 组件与交互
 
 - MomentRow：真实类型的SF Symbol→类型／感受→时长与时间→评分与已有笔记锁定线索；不显示私密笔记正文。整行打开详情，组合辅助阅读。
-- WeekSelector：星期＋日期＋有记录的小点；选中实色、今天描边；最小44pt高，辅助字号转多行网格。
+- WeekSelector：星期＋日期＋有记录的小点；选中实色、今天描边；最小44pt高。辅助字号改为可展开的系统周日期菜单，避免大字体被压成纵向日期；菜单提供完整日期与真实记录数。
 - 操作：计时为主，补记为次；普通字号并列，辅助字号纵排。按钮保持44pt触控高度、完整换行标签，点击反馈遵守Reduce Motion。
 - 内容表面：实色白／深灰和极轻边线；不把普通白卡称为玻璃。导航材质由系统处理；不自绘假Liquid Glass。
 - 编辑：保留日期确认面板、分钟／秒、标签、取消确认与保存错误。感受选项增加SF Symbol和选中勾选语义；不使用虚构的健康／关系数据。

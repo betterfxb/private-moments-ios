@@ -189,6 +189,7 @@ struct RecapView: View {
                         .keyboardType(.numberPad)
                         .focused($focusedField, equals: .minutes)
                         .accessibilityIdentifier("recap.minutes")
+                        .modifier(JournalInput())
                 }
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Seconds")
@@ -196,9 +197,10 @@ struct RecapView: View {
                         .keyboardType(.numberPad)
                         .focused($focusedField, equals: .seconds)
                         .accessibilityIdentifier("recap.seconds")
+                        .modifier(JournalInput())
                 }
             }
-            .textFieldStyle(.roundedBorder)
+            .textFieldStyle(.plain)
             .font(.body.monospacedDigit())
             .padding(.horizontal, timingContentInset)
             if let timingValidationMessage {

@@ -20,12 +20,14 @@ struct MomentRow: View {
 
     var body: some View {
         rowLayout {
-            Image(systemName: moment.kind == .together ? "person.2.fill" : "person.fill")
-                .font(.system(.body, design: .rounded).weight(.medium))
-                .foregroundStyle(AppColors.accentText)
-                .frame(width: 42, height: 46)
-                .background(AppColors.accentWash, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .accessibilityHidden(true)
+            if !dynamicTypeSize.isAccessibilitySize {
+                Image(systemName: moment.kind == .together ? "person.2.fill" : "person.fill")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(AppColors.accentText)
+                    .frame(width: 42, height: 46)
+                    .background(AppColors.accentWash, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .accessibilityHidden(true)
+            }
 
             VStack(alignment: .leading, spacing: 5) {
                 HStack(spacing: 6) {
@@ -47,15 +49,20 @@ struct MomentRow: View {
                     .foregroundStyle(AppColors.secondaryText)
             }
 
-            Spacer(minLength: 8)
+            if !dynamicTypeSize.isAccessibilitySize { Spacer(minLength: 8) }
 
-            VStack(alignment: .trailing, spacing: 6) {
+            VStack(alignment: dynamicTypeSize.isAccessibilitySize ? .leading : .trailing, spacing: 6) {
                 Text(SessionClock.durationText(moment.durationSeconds))
                     .font(.system(.subheadline, design: .rounded).weight(.semibold).monospacedDigit())
                     .foregroundStyle(AppColors.accentText)
-                Label(AppLocalization.format("%lld of 5", moment.rating), systemImage: "star.fill")
+                Label {
+                    Text(moment.rating.formatted() + "/5")
+                } icon: {
+                    Image(systemName: "star.fill")
+                }
                     .font(.system(.caption2, design: .rounded))
                     .foregroundStyle(AppColors.secondaryText)
+                    .accessibilityLabel(AppLocalization.format("%lld of 5", moment.rating))
             }
             .fixedSize(horizontal: false, vertical: true)
         }

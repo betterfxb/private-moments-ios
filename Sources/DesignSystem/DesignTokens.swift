@@ -11,6 +11,7 @@ enum AppColors {
     static let secondaryText = adaptive(light: 0x75656F, dark: 0xBEADB8)
     static let separator = adaptive(light: 0xECDDE4, dark: 0x493641)
     static let success = adaptive(light: 0x42654D, dark: 0x9AC9AA)
+    static let destructive = adaptive(light: 0xB3263E, dark: 0xFFB3BF)
     // Session and saturated-action foregrounds do not adapt to the page surface.
     static let session = Color(uiColor: color(0x20151F))
     static let onAccent = Color.white
@@ -89,5 +90,20 @@ struct SecondaryActionButtonStyle: ButtonStyle {
             .frame(minHeight: 50)
             .background(AppColors.accentWash, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
             .opacity(!isEnabled ? 0.5 : (configuration.isPressed ? 0.72 : 1))
+    }
+}
+
+struct JournalInput: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundStyle(AppColors.text)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .frame(minHeight: 44)
+            .background(AppColors.background, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(AppColors.separator, lineWidth: 0.5)
+            }
     }
 }

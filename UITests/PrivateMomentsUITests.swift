@@ -21,6 +21,14 @@ final class PrivateMomentsUITests: XCTestCase {
                 XCTAssertGreaterThanOrEqual(action.frame.height, 44, "Home action needs an accessible target height.")
             }
             capture("Today-\(language)", app)
+            let weekMenu = app.buttons["today.weekMenu"]
+            if weekMenu.exists {
+                tap(weekMenu, in: app)
+                capture("Week-menu-\(language)", app)
+                tap(app.buttons["today.week.current"], in: app)
+                XCTAssertTrue(app.buttons["today.clearDateFilter"].exists)
+                tap(app.buttons["today.clearDateFilter"], in: app)
+            }
             tap(app.buttons["today.addRecord"], in: app)
             capture("Manual-top-\(language)", app)
             let datePanel = app.buttons["recap.date.open"]
@@ -51,6 +59,9 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Recap-controls-\(language)", app)
             tap(app.buttons["recap.save"], in: app)
             XCTAssertTrue(start.waitForExistence(timeout: 10))
+            if weekMenu.exists {
+                revealFully(from: app.staticTexts["today.brand"], through: app.staticTexts["today.brand"], in: app)
+            }
             capture("Today-saved-\(language)", app)
             tap(app.buttons["today.chooseDate"], in: app)
             capture("Calendar-\(language)", app)
