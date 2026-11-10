@@ -54,7 +54,7 @@ final class PrivateMomentsUITests: XCTestCase {
         app.launch()
         tap(app.buttons["today.startMoment"], in: app)
         tap(app.buttons["session.cancel"], in: app)
-        tap(app.buttons["Keep going"], in: app)
+        cancelConfirmation("Keep going", destructiveAction: "Discard session", in: app)
         XCTAssertTrue(app.buttons["session.finish"].exists)
         tap(app.buttons["session.cancel"], in: app)
         tap(app.buttons["Discard session"], in: app)
@@ -64,7 +64,7 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["today.startMoment"], in: app)
         tap(app.buttons["session.finish"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
-        tap(app.buttons["Keep editing"], in: app)
+        cancelConfirmation("Keep editing", destructiveAction: "Discard reflection", in: app)
         XCTAssertTrue(app.buttons["recap.save"].exists)
         tap(app.buttons["recap.cancel"], in: app)
         tap(app.buttons["Discard reflection"], in: app)
@@ -126,7 +126,7 @@ final class PrivateMomentsUITests: XCTestCase {
         let savedNote = app.staticTexts["Synthetic private reflection"]
         XCTAssertTrue(savedNote.exists)
         tap(app.buttons["detail.delete"], in: app)
-        tap(app.buttons["Cancel"], in: app)
+        cancelConfirmation("Cancel", destructiveAction: "Delete moment", in: app)
         XCTAssertTrue(app.buttons["detail.edit"].exists)
         tap(app.buttons["detail.delete"], in: app)
         tap(app.buttons["Delete moment"], in: app)
@@ -164,6 +164,31 @@ final class PrivateMomentsUITests: XCTestCase {
     private func tap(_ element: XCUIElement, in app: XCUIApplication) {
         reveal(element, in: app)
         element.tap()
+    }
+
+    private func cancelConfirmation(_ label: String, destructiveAction: String, in app: XCUIApplication) {
+        let action = app.buttons[destructiveAction].firstMatch
+        XCTAssertTrue(action.waitForExistence(timeout: 10), "Confirmation must appear before cancellation.")
+        let cancel = app.buttons[label].firstMatch
+        if cancel.exists && cancel.isHittable {
+            cancel.tap()
+        } else {
+            // SDK 26 presents a popover without the role-cancel button. Dismiss
+            // outside its actual frame, rather than scrolling the modal away.
+            let popover = app.popovers.firstMatch
+            XCTAssertTrue(popover.waitForExistence(timeout: 5), "Missing cancel action and popover.")
+            let outside = [CGVector(dx: 0.05, dy: 0.5), CGVector(dx: 0.95, dy: 0.5),
+                           CGVector(dx: 0.5, dy: 0.9), CGVector(dx: 0.5, dy: 0.1)]
+                .map { app.coordinate(withNormalizedOffset: $0) }
+                .first { !popover.frame.insetBy(dx: -8, dy: -8).contains($0.screenPoint) }
+            guard let outside else {
+                XCTFail("No point outside the confirmation popover.")
+                return
+            }
+            outside.tap()
+        }
+        let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: action)
+        XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 5), .completed, "Confirmation did not dismiss.")
     }
 
     private func revealFully(from first: XCUIElement, through last: XCUIElement, in app: XCUIApplication) {
