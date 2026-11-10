@@ -19,6 +19,10 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(app.buttons["today.addRecord"], in: app)
             capture("Manual-top-\(language)", app)
             revealFully(from: app.textFields["recap.minutes"], through: app.textFields["recap.seconds"], in: app)
+            for field in [app.textFields["recap.minutes"], app.textFields["recap.seconds"]] {
+                XCTAssertGreaterThanOrEqual(field.frame.minX, app.frame.minX, "Timing input is clipped on the left.")
+                XCTAssertLessThanOrEqual(field.frame.maxX, app.frame.maxX, "Timing input is clipped on the right.")
+            }
             capture("Manual-duration-\(language)", app)
             tap(app.buttons["recap.cancel"], in: app)
             tap(app.buttons[language == "en" ? "Discard reflection" : "放弃回顾"], in: app)

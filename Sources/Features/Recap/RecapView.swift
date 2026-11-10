@@ -132,16 +132,14 @@ struct RecapView: View {
     private var timingSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             sectionTitle("Date and duration")
-            DatePicker("Occurrence date", selection: $timing.occurredAt,
-                       in: ...max(Date.now, existingMoment?.occurredAt ?? .now), displayedComponents: .date)
-                .accessibilityIdentifier("recap.date")
-            DatePicker("Start time", selection: $timing.occurredAt,
-                       in: ...max(Date.now, existingMoment?.occurredAt ?? .now), displayedComponents: .hourAndMinute)
-                .accessibilityIdentifier("recap.time")
+                .padding(.horizontal, timingContentInset)
+            occurrenceDateControl
+            startTimeControl
             if isManualEntry, let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: .now) {
                 Button("Yesterday") { timing.occurredAt = yesterday }
                     .buttonStyle(.bordered)
                     .accessibilityIdentifier("recap.yesterday")
+                    .padding(.horizontal, timingContentInset)
             }
             adaptiveLayout(spacing: 12).callAsFunction {
                 VStack(alignment: .leading, spacing: 6) {
@@ -161,10 +159,53 @@ struct RecapView: View {
             }
             .textFieldStyle(.roundedBorder)
             .font(.body.monospacedDigit())
-            if let timingValidationMessage { ErrorNotice(message: timingValidationMessage) }
+            .padding(.horizontal, timingContentInset)
+            if let timingValidationMessage {
+                ErrorNotice(message: timingValidationMessage)
+                    .padding(.horizontal, timingContentInset)
+            }
         }
-        .padding(16)
+        .padding(.horizontal, dynamicTypeSize.isAccessibilitySize ? 0 : 16)
+        .padding(.vertical, 16)
         .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+    }
+
+    private var timingContentInset: CGFloat { dynamicTypeSize.isAccessibilitySize ? 16 : 0 }
+    private var latestSelectableDate: Date { max(.now, existingMoment?.occurredAt ?? .now) }
+
+    @ViewBuilder
+    private var occurrenceDateControl: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            Text("Occurrence date")
+                .padding(.horizontal, timingContentInset)
+            DatePicker("Occurrence date", selection: $timing.occurredAt,
+                       in: ...latestSelectableDate, displayedComponents: .date)
+                .datePickerStyle(.graphical)
+                .labelsHidden()
+                .padding(.horizontal, 4)
+                .accessibilityIdentifier("recap.date")
+        } else {
+            DatePicker("Occurrence date", selection: $timing.occurredAt,
+                       in: ...latestSelectableDate, displayedComponents: .date)
+                .accessibilityIdentifier("recap.date")
+        }
+    }
+
+    @ViewBuilder
+    private var startTimeControl: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            Text("Start time")
+                .padding(.horizontal, timingContentInset)
+            DatePicker("Start time", selection: $timing.occurredAt,
+                       in: ...latestSelectableDate, displayedComponents: .hourAndMinute)
+                .datePickerStyle(.wheel)
+                .labelsHidden()
+                .accessibilityIdentifier("recap.time")
+        } else {
+            DatePicker("Start time", selection: $timing.occurredAt,
+                       in: ...latestSelectableDate, displayedComponents: .hourAndMinute)
+                .accessibilityIdentifier("recap.time")
+        }
     }
 
     private var moodSection: some View {
