@@ -1,5 +1,9 @@
 # Recap Acceptance Record
 
+## Current failure-recovery verification (2026-11-11)
+
+The [batch-seven acceptance](UX-ACCEPTANCE-07.md) adds actual first-save failure through the real SwiftData rollback path, retained drafts, toolbar reload and explicit retry in four bilingual configurations. Full regression covers selection change/revert, note keep/discard and long-note plus exact-time persistence after retry/relaunch. A simulated pre-commit failure does not replace physical storage, VoiceOver, privacy lifecycle or process-recovery acceptance; earlier tables describe their own revisions.
+
 ## Current editor verification (2026-11-11)
 
 The [batch-six interaction report](UX-ACCEPTANCE-06.md) supersedes the historical status below for clean manual cancellation, changed/reverted manual drafts, toolbar Save and timing validation. Timed recap cancellation remains guarded. The latest four-profile evidence and exact source are linked there; per-field VoiceOver and injected save-failure UI acceptance remain open. The older table records its own revision only.

@@ -1,6 +1,12 @@
 # Simulator UI acceptance
 
-## Latest core interaction verification (2026-11-11)
+## Latest editing and recovery verification (2026-11-11)
+
+Source `9070f3d89def44a79ba169c9c963567caad10dbe`, [run 42900233189](https://github.com/betterfxb/private-moments-ios/actions/runs/42900233189), passes all four profiles on Xcode26.2 / SDK26.2 / iOS26.2. Compact-light includes Debug/Release builds, actual Release Simulator test-hook exclusion, 32 unit tests and four UI tests. Other profiles run a bilingual gallery including injected first-save failure, retained draft, toolbar reload and explicit retry. All 175 PNGs downloaded; 17 selected final originals opened.
+
+Details now have a reachable toolbar Edit, and the editor offers reload without losing the draft. New coverage exercises selection revert/discard, notes and exact timing through failure/relaunch. See [acceptance](UX-ACCEPTANCE-07.md), [raw evidence](evidence/batch-07/index.html) and [receipt](evidence/batch-07/verification.json). Debug UUID-only fault injection is not a physical disk-failure certification; device privacy/accessibility, older runtimes and system backup-picker flows remain separate. Historical revisions below retain their own limits.
+
+## Historical core interaction verification (2026-11-11)
 
 Source `02e4c07506ab8caa52cfb90210d9f5114ceeddd7`, [run 42885697214](https://github.com/betterfxb/private-moments-ios/actions/runs/42885697214), passes four profiles with Xcode26.2 / SDK26.2 / iOS26.2: Debug/Release, 30 unit tests and four main-profile UI tests, plus three bilingual galleries. The editor adds a reachable toolbar Save with shared validation, clean manual-entry cancellation and preserved changed/timed draft protection. Timeline has truthful filtered-empty states and one-action query/type reset with keyboard dismissal; the week menu uses shorter visible dates and Today labels all-time statistics.
 
