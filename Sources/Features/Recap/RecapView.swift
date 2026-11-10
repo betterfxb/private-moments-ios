@@ -6,6 +6,7 @@ struct RecapView: View {
     let durationSeconds: Int
     let startedAt: Date
     let existingMoment: Moment?
+    let isManualEntry: Bool
     let onCancel: () -> Void
     let onSaved: () -> Void
 
@@ -14,9 +15,18 @@ struct RecapView: View {
     @State private var rating: Int
     @State private var selectedTags: Set<String>
     @State private var privateNote: String
+    @State private var timing: MomentTimingDraft
     @State private var showingSaveError = false
     @State private var showingDiscardConfirmation = false
-    @FocusState private var isNoteFocused: Bool
+    private enum InputField: Hashable { case note, minutes, seconds }
+    @FocusState private var focusedField: InputField?
+
+    private var timingValidationMessage: String? {
+        do {
+            try timing.validate()
+            return nil
+        } catch { return error.localizedDescription }
+    }
 
     private var noteValidationMessage: String? {
         do {
@@ -29,7 +39,8 @@ struct RecapView: View {
 
     private var hasUnsavedContent: Bool {
         guard let existingMoment else { return true }
-        return mood != existingMoment.mood
+        return timing.hasChanges
+            || mood != existingMoment.mood
             || kind != existingMoment.kind
             || rating != existingMoment.rating
             || selectedTags != Set(existingMoment.tags)
@@ -44,10 +55,11 @@ struct RecapView: View {
         return result
     }
 
-    init(durationSeconds: Int, startedAt: Date = .now, existingMoment: Moment? = nil, onCancel: @escaping () -> Void, onSaved: @escaping () -> Void) {
+    init(durationSeconds: Int, startedAt: Date = .now, existingMoment: Moment? = nil, isManualEntry: Bool = false, onCancel: @escaping () -> Void, onSaved: @escaping () -> Void) {
         self.durationSeconds = durationSeconds
         self.startedAt = startedAt
         self.existingMoment = existingMoment
+        self.isManualEntry = isManualEntry
         self.onCancel = onCancel
         self.onSaved = onSaved
         _mood = State(initialValue: existingMoment?.mood ?? .calm)
@@ -55,12 +67,14 @@ struct RecapView: View {
         _rating = State(initialValue: existingMoment?.rating ?? 4)
         _selectedTags = State(initialValue: Set(existingMoment?.tags ?? ["Connected"]))
         _privateNote = State(initialValue: existingMoment?.privateNote ?? "")
+        _timing = State(initialValue: MomentTimingDraft(startedAt: startedAt, durationSeconds: durationSeconds, existingMoment: existingMoment))
     }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
                 headerSection
+                timingSection
                 moodSection
                 kindSection
                 ratingSection
@@ -76,7 +90,7 @@ struct RecapView: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .background(AppColors.cream.ignoresSafeArea())
-        .navigationTitle("Quick recap")
+        .navigationTitle(isManualEntry ? LocalizedStringKey("Add past moment") : LocalizedStringKey("Quick recap"))
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -87,7 +101,7 @@ struct RecapView: View {
             }
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
-                Button("Done") { isNoteFocused = false }
+                Button("Done") { focusedField = nil }
                     .accessibilityIdentifier("recap.dismissKeyboard")
             }
         }
@@ -109,10 +123,48 @@ struct RecapView: View {
             Text(existingMoment == nil ? "A moment to remember" : "Edit your reflection")
                 .font(.system(.largeTitle, design: .serif))
                 .foregroundStyle(AppColors.ink)
-            Text(AppLocalization.format("%@ · %@", startedAt.formatted(date: .abbreviated, time: .shortened), SessionClock.durationText(durationSeconds)))
+            Text(AppLocalization.format("%@ · %@", timing.occurredAt.formatted(date: .abbreviated, time: .shortened), SessionClock.durationText((try? timing.durationSeconds()) ?? durationSeconds)))
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(AppColors.inkSoft)
         }
+    }
+
+    private var timingSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionTitle("Date and duration")
+            DatePicker("Occurrence date", selection: $timing.occurredAt,
+                       in: ...max(Date.now, existingMoment?.occurredAt ?? .now), displayedComponents: .date)
+                .accessibilityIdentifier("recap.date")
+            DatePicker("Start time", selection: $timing.occurredAt,
+                       in: ...max(Date.now, existingMoment?.occurredAt ?? .now), displayedComponents: .hourAndMinute)
+                .accessibilityIdentifier("recap.time")
+            if isManualEntry, let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: .now) {
+                Button("Yesterday") { timing.occurredAt = yesterday }
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("recap.yesterday")
+            }
+            adaptiveLayout(spacing: 12).callAsFunction {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Minutes")
+                    TextField("Minutes", text: $timing.minutes)
+                        .keyboardType(.numberPad)
+                        .focused($focusedField, equals: .minutes)
+                        .accessibilityIdentifier("recap.minutes")
+                }
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Seconds")
+                    TextField("Seconds", text: $timing.seconds)
+                        .keyboardType(.numberPad)
+                        .focused($focusedField, equals: .seconds)
+                        .accessibilityIdentifier("recap.seconds")
+                }
+            }
+            .textFieldStyle(.roundedBorder)
+            .font(.body.monospacedDigit())
+            if let timingValidationMessage { ErrorNotice(message: timingValidationMessage) }
+        }
+        .padding(16)
+        .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
     }
 
     private var moodSection: some View {
@@ -203,7 +255,7 @@ struct RecapView: View {
                     .foregroundStyle(AppColors.terracottaDark)
             }
             TextEditor(text: $privateNote)
-                .focused($isNoteFocused)
+                .focused($focusedField, equals: .note)
                 .scrollContentBackground(.hidden)
                 .padding(8)
                 .frame(minHeight: 112)
@@ -245,7 +297,7 @@ struct RecapView: View {
             Label(existingMoment == nil ? "Save privately" : "Save changes", systemImage: "checkmark")
         }
         .buttonStyle(PrimaryActionButtonStyle())
-        .disabled(noteValidationMessage != nil || !store.isStorageAvailable)
+        .disabled(noteValidationMessage != nil || timingValidationMessage != nil || !store.isStorageAvailable)
         .accessibilityIdentifier("recap.save")
         .accessibilityHint(
             noteValidationMessage != nil
@@ -269,10 +321,19 @@ struct RecapView: View {
     }
 
     private func saveMoment() {
+        focusedField = nil
+        let seconds: Int
+        do {
+            try timing.validate()
+            seconds = try timing.durationSeconds()
+        } catch {
+            // Validation is also visible next to the timing fields; never coerce input.
+            return
+        }
         let moment = Moment(
             id: existingMoment?.id ?? UUID(),
-            occurredAt: existingMoment?.occurredAt ?? startedAt,
-            durationSeconds: durationSeconds,
+            occurredAt: timing.occurredAt,
+            durationSeconds: seconds,
             mood: mood,
             kind: kind,
             rating: rating,

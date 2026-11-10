@@ -16,6 +16,12 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(start.label, language == "en" ? "Start a moment" : "开始记录")
             XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0, "Each locale must use an isolated empty store.")
             capture("Today-\(language)", app)
+            tap(app.buttons["today.addRecord"], in: app)
+            capture("Manual-top-\(language)", app)
+            revealFully(from: app.textFields["recap.minutes"], through: app.textFields["recap.seconds"], in: app)
+            capture("Manual-duration-\(language)", app)
+            tap(app.buttons["recap.cancel"], in: app)
+            tap(app.buttons[language == "en" ? "Discard reflection" : "放弃回顾"], in: app)
             tap(start, in: app)
             capture("Session-\(language)", app)
             reveal(app.buttons["session.finish"], in: app)
@@ -31,6 +37,11 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(app.buttons["recap.save"], in: app)
             XCTAssertTrue(start.waitForExistence(timeout: 10))
             capture("Today-saved-\(language)", app)
+            tap(app.buttons["today.chooseDate"], in: app)
+            capture("Calendar-\(language)", app)
+            tap(app.buttons["today.applyDate"], in: app)
+            capture("Today-filtered-\(language)", app)
+            tap(app.buttons["today.clearDateFilter"], in: app)
             app.swipeUp()
             app.swipeUp()
             capture("Today-summary-\(language)", app)
@@ -132,6 +143,54 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["Delete moment"], in: app)
         XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 10))
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
+    }
+
+    func testManualEntryTimingDateFilterAndPersistence() throws {
+        let app = makeApp()
+        app.launch()
+        tap(app.buttons["today.addRecord"], in: app)
+        tap(app.buttons["recap.cancel"], in: app)
+        tap(app.buttons["Discard reflection"], in: app)
+        XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
+        tap(app.buttons["today.addRecord"], in: app)
+        XCTAssertFalse(app.buttons["session.finish"].exists, "Manual entry must not start the timer.")
+        tap(app.buttons["recap.yesterday"], in: app)
+        replaceNumber(app.textFields["recap.minutes"], with: "17", in: app)
+        replaceNumber(app.textFields["recap.seconds"], with: "9", in: app)
+        tap(app.buttons["recap.dismissKeyboard"], in: app)
+        capture("Manual-entered-en", app)
+        tap(app.buttons["recap.save"], in: app)
+        XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
+
+        tap(app.buttons["today.chooseDate"], in: app)
+        tap(app.buttons["today.applyDate"], in: app) // Sheet defaults to today; entry was yesterday.
+        XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
+        capture("Today-filter-empty-en", app)
+        tap(app.buttons["today.clearDateFilter"], in: app)
+        XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
+
+        app.terminate()
+        app.launch()
+        tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
+        tap(app.buttons["detail.edit"], in: app)
+        XCTAssertEqual(app.textFields["recap.minutes"].value as? String, "17")
+        XCTAssertEqual(app.textFields["recap.seconds"].value as? String, "9")
+        replaceNumber(app.textFields["recap.minutes"], with: "18", in: app)
+        tap(app.buttons["recap.dismissKeyboard"], in: app)
+        tap(app.buttons["recap.cancel"], in: app)
+        tap(app.buttons["Discard reflection"], in: app)
+        tap(app.buttons["detail.edit"], in: app)
+        XCTAssertEqual(app.textFields["recap.minutes"].value as? String, "17")
+        XCTAssertEqual(app.textFields["recap.seconds"].value as? String, "9")
+        tap(app.buttons["recap.cancel"], in: app) // Unchanged edit exits directly.
+        XCTAssertTrue(app.buttons["detail.edit"].waitForExistence(timeout: 10))
+    }
+
+    private func replaceNumber(_ field: XCUIElement, with value: String, in app: XCUIApplication) {
+        tap(field, in: app)
+        let current = field.value as? String ?? ""
+        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count) + value)
     }
 
     private func makeApp(language: String = "en", storeID: UUID = UUID()) -> XCUIApplication {

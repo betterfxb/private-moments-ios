@@ -1,0 +1,32 @@
+# 第四批：原生补记与日期查看
+
+日期：2026-11-10。用户授权继续规划并依次执行。上批原型已验证操作，但未获审美认可；本批推进可独立验证的原生功能，不将待评审原型静默设为全应用主题。
+
+## 架构与修改方案
+
+RootView负责导航，TodayView发出动作；SessionClock仅负责真实计时；RecapView持有编辑草稿，经MomentStore→Validator→Repository保存。直接补记必须绕过计时，复用同一编辑和保存链路。日期筛选使用Calendar日期区间，不能用固定秒数或原型的固定参考日。
+
+编辑器目前把日期和时长作为常量，编辑会保留旧日期。本批将其变成明确草稿状态，并将日期与时长变化计入未保存修改检测。保留原始秒数与历史记录元数据；未来日期校验只约束新输入，不更改备份兼容的全局Validator政策。
+
+## 顺序与依赖
+
+| 顺序 | 任务 | 目标与范围 | 依赖 | 验收 |
+|---|---|---|---|---|
+| 1 | 架构／方案 | 核对原生、模型、测试与云端能力 | 无 | 本计划和影响范围明确 |
+| 2 | 草稿与日期规则 | Moment.swift中的纯输入规则；测试同文件现有target | 1 | 秒数、日期、边界、夏令时测试 |
+| 3 | 原生闭环 | RootView、TodayView、RecapView；直接补记、日期筛选、可编辑日期时长 | 2 | 保存／取消／重启后读取；读取失败保持禁用 |
+| 4 | 双语与回归 | Localizable.xcstrings、Tests、UITests；静态审计与云端运行 | 3 | 构建、测试、截图与结果可追溯 |
+| 5 | 复核与汇总 | 云端截图检查、问题修复、更新验收记录 | 4 | 明确完成、异常和外部未验证项 |
+
+## 影响与风险
+
+不修改SwiftData实体、备份schema、锁定与隐私遮罩；不替换全局色板。新建记录不触发SessionClock；旧记录不改变ID、笔记、标签或预留地点字段。取消不写入；保存失败保留草稿。新增日期／时长校验不隐式钳制无效值。
+
+正式文件范围：Sources/Domain/Moment.swift、Sources/App/RootView.swift、Sources/Features/Today/TodayView.swift、Sources/Features/Recap/RecapView.swift、Resources/Localizable.xcstrings、Tests/PrivateMomentsTests.swift、UITests/PrivateMomentsUITests.swift。本批不新增依赖或Xcode源文件成员。
+
+## 执行记录
+
+- 任务1：完成。进入规则实现。
+- 任务2：完成源码与7项新增单元测试；包括秒数、无效输入、未来日期兼容、午夜边界与夏令时23/25小时日。待云端实际执行。
+- 任务3：完成源码。直接补记、日期／分钟／秒编辑、未保存确认、日期查询与最近记录复位已接入，未修改存储格式。
+- 任务4：进行中。215键双语审计、Xcode项目与发布材料审计通过；开始开发分支云端验证。审计发现两条已不再使用的旧首页文案，已移除后重验通过。

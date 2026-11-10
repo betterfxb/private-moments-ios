@@ -127,3 +127,72 @@ enum MomentValidator {
         }
     }
 }
+
+/// A form draft, separate from the persisted Moment and its backup contract.
+struct MomentTimingDraft {
+    var occurredAt: Date
+    var minutes: String
+    var seconds: String
+    private let initialDate: Date
+    private let initialSeconds: Int
+    private let existingDate: Date?
+
+    init(startedAt: Date, durationSeconds: Int, existingMoment: Moment? = nil) {
+        let date = existingMoment?.occurredAt ?? startedAt
+        let duration = existingMoment?.durationSeconds ?? durationSeconds
+        occurredAt = date
+        minutes = String(duration / 60)
+        seconds = String(duration % 60)
+        initialDate = date
+        initialSeconds = duration
+        existingDate = existingMoment?.occurredAt
+    }
+
+    var hasChanges: Bool {
+        occurredAt != initialDate || (try? durationSeconds()) != initialSeconds
+    }
+
+    func durationSeconds() throws -> Int {
+        func integer(_ text: String) -> Int? {
+            let clean = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !clean.isEmpty, clean.allSatisfy({ "0123456789".contains($0) }) else { return nil }
+            return Int(clean)
+        }
+        guard let minuteValue = integer(minutes), let secondValue = integer(seconds),
+              (0...MomentValidator.maximumDurationSeconds / 60).contains(minuteValue),
+              (0..<60).contains(secondValue) else { throw MomentTimingError.invalidDuration }
+        let total = minuteValue * 60 + secondValue
+        guard total <= MomentValidator.maximumDurationSeconds else { throw MomentTimingError.invalidDuration }
+        return total
+    }
+
+    func validate(now: Date = .now) throws {
+        guard occurredAt.timeIntervalSince1970.isFinite else { throw MomentValidationError.invalidDate }
+        // A previously imported future date can be kept while editing other fields.
+        // New dates and changes to that date must not be in the future.
+        guard occurredAt <= now || occurredAt == existingDate else { throw MomentTimingError.futureDate }
+        _ = try durationSeconds()
+    }
+}
+
+enum MomentTimingError: LocalizedError, Equatable {
+    case invalidDuration
+    case futureDate
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidDuration:
+            AppLocalization.string("Enter whole minutes and 0–59 seconds, up to 30 days in total.")
+        case .futureDate:
+            AppLocalization.string("Choose a date and time that is not in the future.")
+        }
+    }
+}
+
+enum MomentDateQuery {
+    static func onDay(_ moments: [Moment], date: Date, calendar: Calendar = .current) -> [Moment] {
+        guard let interval = calendar.dateInterval(of: .day, for: date) else { return [] }
+        // DateInterval.contains includes its upper bound; a calendar day must not.
+        return moments.filter { $0.occurredAt >= interval.start && $0.occurredAt < interval.end }
+    }
+}

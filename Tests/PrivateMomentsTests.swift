@@ -4,6 +4,88 @@ import UIKit
 import SwiftData
 @testable import PrivateMoments
 
+final class MomentTimingDraftTests: XCTestCase {
+    func testUntouchedShortAndLongDurationsPreserveExactSeconds() throws {
+        for seconds in [0, 47, 61, 1029, MomentValidator.maximumDurationSeconds] {
+            let draft = MomentTimingDraft(startedAt: Date(timeIntervalSince1970: 1000), durationSeconds: seconds)
+            XCTAssertEqual(try draft.durationSeconds(), seconds)
+            XCTAssertFalse(draft.hasChanges)
+        }
+    }
+
+    func testChangedTimingParticipatesInDiscardDetection() throws {
+        var draft = MomentTimingDraft(startedAt: Date(timeIntervalSince1970: 1000), durationSeconds: 47)
+        draft.minutes = "1"
+        XCTAssertEqual(try draft.durationSeconds(), 107)
+        XCTAssertTrue(draft.hasChanges)
+        draft.minutes = "0"
+        draft.occurredAt = Date(timeIntervalSince1970: 500)
+        XCTAssertTrue(draft.hasChanges)
+    }
+
+    func testMalformedOverflowAndOverLimitDurationsAreRejected() {
+        for (minutes, seconds) in [("", "0"), ("-1", "0"), ("1.5", "0"), ("1", "60"), ("43200", "1"), (String(repeating: "9", count: 100), "0")] {
+            var draft = MomentTimingDraft(startedAt: .now, durationSeconds: 0)
+            draft.minutes = minutes
+            draft.seconds = seconds
+            XCTAssertThrowsError(try draft.durationSeconds()) { XCTAssertEqual($0 as? MomentTimingError, .invalidDuration) }
+            XCTAssertTrue(draft.hasChanges)
+        }
+    }
+
+    func testFutureNewDateRejectedWithoutChangingBackupValidation() throws {
+        let now = Date(timeIntervalSince1970: 1000)
+        let future = now.addingTimeInterval(1)
+        let draft = MomentTimingDraft(startedAt: future, durationSeconds: 60)
+        XCTAssertThrowsError(try draft.validate(now: now)) { XCTAssertEqual($0 as? MomentTimingError, .futureDate) }
+        let imported = Moment(occurredAt: future, durationSeconds: 60, mood: .calm, rating: 4)
+        try MomentValidator.validate(imported)
+        var edit = MomentTimingDraft(startedAt: future, durationSeconds: 60, existingMoment: imported)
+        try edit.validate(now: now)
+        edit.occurredAt = future.addingTimeInterval(10)
+        XCTAssertThrowsError(try edit.validate(now: now))
+    }
+
+    func testNonFiniteDateRejectedAndExistingValuesTakePrecedence() throws {
+        var draft = MomentTimingDraft(startedAt: .now, durationSeconds: 0, existingMoment: makeRecoveryMoment())
+        XCTAssertEqual(draft.occurredAt, Date(timeIntervalSince1970: 1000))
+        XCTAssertEqual(try draft.durationSeconds(), 600)
+        draft.occurredAt = Date(timeIntervalSince1970: .infinity)
+        XCTAssertThrowsError(try draft.validate()) { XCTAssertEqual($0 as? MomentValidationError, .invalidDate) }
+    }
+}
+
+final class MomentDateQueryTests: XCTestCase {
+    private func calendar(_ zone: String) throws -> Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = try XCTUnwrap(TimeZone(identifier: zone))
+        return calendar
+    }
+
+    func testMidnightBelongsOnlyToTheFollowingDay() throws {
+        let calendar = try calendar("Asia/Tokyo")
+        let day = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 11, day: 10)))
+        let interval = try XCTUnwrap(calendar.dateInterval(of: .day, for: day))
+        let first = Moment(occurredAt: interval.start, durationSeconds: 47, mood: .calm, rating: 4)
+        let last = Moment(occurredAt: interval.end.addingTimeInterval(-1), durationSeconds: 47, mood: .calm, rating: 4)
+        let following = Moment(occurredAt: interval.end, durationSeconds: 47, mood: .calm, rating: 4)
+        XCTAssertEqual(MomentDateQuery.onDay([following, last, first], date: day, calendar: calendar), [last, first])
+        XCTAssertEqual(MomentDateQuery.onDay([following, last, first], date: interval.end, calendar: calendar), [following])
+    }
+
+    func testDaylightSavingDaysUseCalendarBoundaries() throws {
+        let calendar = try calendar("America/Los_Angeles")
+        for (month, day, expectedHours) in [(3, 8, 23), (11, 1, 25)] {
+            let date = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: month, day: day)))
+            let interval = try XCTUnwrap(calendar.dateInterval(of: .day, for: date))
+            XCTAssertEqual(interval.duration, Double(expectedHours * 3600))
+            let inside = Moment(occurredAt: interval.end.addingTimeInterval(-1), durationSeconds: 0, mood: .calm, rating: 4)
+            let outside = Moment(occurredAt: interval.end, durationSeconds: 0, mood: .calm, rating: 4)
+            XCTAssertEqual(MomentDateQuery.onDay([inside, outside], date: date, calendar: calendar), [inside])
+        }
+    }
+}
+
 final class MomentValidationTests: XCTestCase {
     func testPrivateNoteAllowsEmptyAndExactCharacterLimit() throws {
         try MomentValidator.validatePrivateNote("")

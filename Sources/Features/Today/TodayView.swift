@@ -3,8 +3,17 @@ import SwiftUI
 struct TodayView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(MomentStore.self) private var store
+    @Binding var selectedDate: Date?
     let onStart: () -> Void
     let onOpen: (UUID) -> Void
+    let onAddRecord: (Date) -> Void
+    @State private var showingDatePicker = false
+    @State private var dateToView = Date.now
+
+    private var visibleMoments: [Moment] {
+        guard let selectedDate else { return store.recentMoments }
+        return MomentDateQuery.onDay(store.moments, date: selectedDate)
+    }
 
     private var todayLabel: String {
         Date.now.formatted(.dateTime.weekday(.wide).month(.wide).day())
@@ -14,7 +23,7 @@ struct TodayView: View {
         let calendar = Calendar.current
         guard let interval = calendar.dateInterval(of: .weekOfYear, for: .now) else { return [] }
         var countsByDay: [Date: Int] = [:]
-        for moment in store.moments where interval.contains(moment.occurredAt) {
+        for moment in store.moments where moment.occurredAt >= interval.start && moment.occurredAt < interval.end {
             let day = calendar.startOfDay(for: moment.occurredAt)
             countsByDay[day, default: 0] += 1
         }
@@ -36,14 +45,10 @@ struct TodayView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("A private place\nfor your moments.")
-                        .font(.system(.largeTitle, design: .serif))
-                        .tracking(-1.3)
+                    Text("Your moments")
+                        .font(.system(.largeTitle).weight(.bold))
                         .foregroundStyle(AppColors.ink)
                         .fixedSize(horizontal: false, vertical: true)
-                    Text("Keep a gentle record, at your own pace.")
-                        .font(.system(.body, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
                 }
 
                 Button(action: onStart) {
@@ -73,6 +78,17 @@ struct TodayView: View {
                         : "Load your local journal before starting a session."
                 )
 
+                Button { onAddRecord(min(selectedDate ?? .now, .now)) } label: {
+                    Label("Add past moment", systemImage: "square.and.pencil")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                }
+                .buttonStyle(.bordered)
+                .tint(AppColors.terracottaDark)
+                .disabled(!store.isStorageAvailable)
+                .accessibilityIdentifier("today.addRecord")
+                .accessibilityHint("Adds a record without starting the timer")
+
                 if !store.isStorageAvailable {
                     StorageRecoveryCard(
                         message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
@@ -82,24 +98,38 @@ struct TodayView: View {
 
                 if store.isStorageAvailable {
                     adaptiveLayout {
-                        Text("Recent moments")
-                            .font(.system(.title3, design: .serif).weight(.semibold))
-                            .foregroundStyle(AppColors.ink)
+                        if let selectedDate {
+                            Text(selectedDate.formatted(date: .abbreviated, time: .omitted))
+                                .font(.headline)
+                                .foregroundStyle(AppColors.ink)
+                        } else {
+                            Text("Recent moments")
+                                .font(.headline)
+                                .foregroundStyle(AppColors.ink)
+                        }
                         Spacer()
-                        Text(AppLocalization.format("%lld saved", store.moments.count))
+                        Text(AppLocalization.format("%lld saved", selectedDate == nil ? store.moments.count : visibleMoments.count))
                             .font(.system(.caption, design: .rounded).weight(.medium))
                             .foregroundStyle(AppColors.inkSoft)
                     }
 
-                    if store.recentMoments.isEmpty {
+                    if selectedDate != nil {
+                        Button("Show recent moments") { selectedDate = nil }
+                            .accessibilityIdentifier("today.clearDateFilter")
+                            .frame(minHeight: 44)
+                    }
+
+                    if visibleMoments.isEmpty {
                         EmptyStateCard(
-                            title: "Nothing to look back on yet",
-                            message: "When you're ready, save a moment. It stays in this app on this device.",
+                            title: selectedDate == nil ? "Nothing to look back on yet" : "No moments on this day",
+                            message: selectedDate == nil
+                                ? "When you're ready, save a moment. It stays in this app on this device."
+                                : "Choose another day or add a past moment.",
                             symbol: "heart"
                         )
                     } else {
                         VStack(spacing: 9) {
-                            ForEach(store.recentMoments) { moment in
+                            ForEach(visibleMoments) { moment in
                                 Button { onOpen(moment.id) } label: {
                                     MomentRow(moment: moment)
                                 }
@@ -124,19 +154,27 @@ struct TodayView: View {
 
                         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 3 : 7), spacing: 8) {
                             ForEach(weekSummary) { day in
-                                VStack(spacing: 7) {
-                                    Text(day.count == 0 ? "·" : (day.count > 99 ? "99+" : "\(day.count)"))
-                                        .font(.system(.caption, design: .rounded).weight(.semibold).monospacedDigit())
-                                        .foregroundStyle(day.count == 0 ? AppColors.inkSoft : AppColors.onAccent)
-                                        .frame(minWidth: 28, minHeight: 34)
-                                        .background(day.count == 0 ? AppColors.cream : AppColors.terracotta, in: Circle())
-                                    Text(day.date.formatted(.dateTime.weekday(.narrow)))
-                                        .font(.system(.caption2, design: .rounded).weight(.medium))
-                                        .foregroundStyle(AppColors.inkSoft)
+                                Button { selectedDate = day.date } label: {
+                                    VStack(spacing: 7) {
+                                        Text(day.count == 0 ? "·" : (day.count > 99 ? "99+" : "\(day.count)"))
+                                            .font(.system(.caption, design: .rounded).weight(.semibold).monospacedDigit())
+                                            .foregroundStyle(day.count == 0 ? AppColors.inkSoft : AppColors.onAccent)
+                                            .frame(minWidth: 28, minHeight: 34)
+                                            .background(day.count == 0 ? AppColors.cream : AppColors.terracotta, in: Circle())
+                                        Text(day.date.formatted(.dateTime.weekday(.narrow)))
+                                            .font(.system(.caption2, design: .rounded).weight(.medium))
+                                            .foregroundStyle(AppColors.inkSoft)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .accessibilityElement(children: .ignore)
+                                    .accessibilityLabel(day.accessibilityDescription)
                                 }
-                                .frame(maxWidth: .infinity)
-                                .accessibilityElement(children: .ignore)
-                                .accessibilityLabel(day.accessibilityDescription)
+                                .buttonStyle(.plain)
+                                .frame(minHeight: 44)
+                                .background(selectedDate.map { Calendar.current.isDate($0, inSameDayAs: day.date) } == true ? AppColors.blush.opacity(0.22) : .clear, in: RoundedRectangle(cornerRadius: 10))
+                                .accessibilityAddTraits(selectedDate.map { Calendar.current.isDate($0, inSameDayAs: day.date) } == true ? .isSelected : [])
+                                .accessibilityIdentifier("today.weekday")
+                                .accessibilityHint("Shows moments from this day")
                             }
                         }
                     }
@@ -164,6 +202,41 @@ struct TodayView: View {
         .background(AppColors.cream.ignoresSafeArea())
         .navigationTitle("Today")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    dateToView = selectedDate ?? .now
+                    showingDatePicker = true
+                } label: { Label("View a day", systemImage: "calendar") }
+                .disabled(!store.isStorageAvailable)
+                .accessibilityIdentifier("today.chooseDate")
+            }
+        }
+        .sheet(isPresented: $showingDatePicker) {
+            NavigationStack {
+                ScrollView {
+                    DatePicker("View a day", selection: $dateToView, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .padding()
+                        .frame(maxWidth: 520)
+                        .frame(maxWidth: .infinity)
+                }
+                .navigationTitle("View a day")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { showingDatePicker = false }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Show day") {
+                            selectedDate = dateToView
+                            showingDatePicker = false
+                        }
+                        .accessibilityIdentifier("today.applyDate")
+                    }
+                }
+            }
+        }
         .task { store.reload() }
     }
 
