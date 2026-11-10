@@ -36,6 +36,16 @@ struct MomentDetailView: View {
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Moment details")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if let moment {
+                if #available(iOS 26.0, *) {
+                    ToolbarItem(placement: .topBarTrailing) { toolbarEdit(moment) }
+                        .sharedBackgroundVisibility(.hidden)
+                } else {
+                    ToolbarItem(placement: .topBarTrailing) { toolbarEdit(moment) }
+                }
+            }
+        }
         .confirmationDialog(
             "Delete this moment?",
             isPresented: $showingDeleteConfirmation,
@@ -48,6 +58,21 @@ struct MomentDetailView: View {
         } message: {
             Text("This removes the entry from this app's local journal. Any JSON backup you created remains unchanged.")
         }
+    }
+
+    private func toolbarEdit(_ moment: Moment) -> some View {
+        Button { onEdit(moment) } label: {
+            Label("Edit reflection", systemImage: "pencil")
+                .labelStyle(.iconOnly)
+                .font(.body.weight(.semibold))
+                .frame(minWidth: 44, minHeight: 44)
+                .background(AppColors.accentWash, in: Circle())
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(store.isStorageAvailable ? AppColors.accentText : AppColors.secondaryText)
+        .disabled(!store.isStorageAvailable)
+        .accessibilityIdentifier("detail.editToolbar")
     }
 
     @ViewBuilder

@@ -4,6 +4,24 @@ import UIKit
 import SwiftData
 @testable import PrivateMoments
 
+final class UITestIsolationTests: XCTestCase {
+    func testTestStoreRequiresAValidUUID() {
+        for arguments in [[], ["-pm-ui-test-store"], ["-pm-ui-test-store", "invalid"], ["-pm-ui-test-store", "-pm-ui-test-fail-save-once"]] {
+            XCTAssertNil(PrivateStoreFactory.uiTestStoreIdentifier(arguments: arguments))
+        }
+        let identifier = UUID()
+        XCTAssertEqual(PrivateStoreFactory.uiTestStoreIdentifier(arguments: ["-pm-ui-test-store", identifier.uuidString]), identifier)
+    }
+
+    func testSaveFailureRequiresBothAnIsolatedStoreAndExplicitFlag() {
+        let store = ["-pm-ui-test-store", UUID().uuidString]
+        XCTAssertFalse(PrivateStoreFactory.uiTestSaveFailureEnabled(arguments: store))
+        XCTAssertFalse(PrivateStoreFactory.uiTestSaveFailureEnabled(arguments: ["-pm-ui-test-fail-save-once"]))
+        XCTAssertFalse(PrivateStoreFactory.uiTestSaveFailureEnabled(arguments: ["-pm-ui-test-store", "invalid", "-pm-ui-test-fail-save-once"]))
+        XCTAssertTrue(PrivateStoreFactory.uiTestSaveFailureEnabled(arguments: store + ["-pm-ui-test-fail-save-once"]))
+    }
+}
+
 final class MomentTimingDraftTests: XCTestCase {
     func testUntouchedShortAndLongDurationsPreserveExactSeconds() throws {
         for seconds in [0, 47, 61, 1029, MomentValidator.maximumDurationSeconds] {

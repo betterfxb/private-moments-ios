@@ -17,6 +17,7 @@ struct RecapView: View {
     @State private var selectedTags: Set<String>
     @State private var privateNote: String
     @State private var timing: MomentTimingDraft
+    @State private var newMomentID = UUID()
     @State private var showingSaveError = false
     @State private var showingDiscardConfirmation = false
     @State private var showingOccurrencePicker = false
@@ -142,9 +143,15 @@ struct RecapView: View {
         }
         .accessibilityAction(.escape) { requestCancel() }
         .alert("Couldn't save this moment", isPresented: $showingSaveError) {
+            if !store.isStorageAvailable {
+                Button("Reload journal") { store.reload() }
+            }
             Button("Keep editing", role: .cancel) { }
         } message: {
-            Text(store.errorMessage ?? AppLocalization.string("Couldn't save this moment. Your existing entries are unchanged."))
+            Text(AppLocalization.format("%@\n\n%@",
+                store.errorMessage ?? AppLocalization.string("Couldn't save this moment. Your existing entries are unchanged."),
+                AppLocalization.string("Your draft is still here. Reload your journal, then save again.")
+            ))
         }
         .onChange(of: scenePhase) { _, phase in
             if phase != .active { showingOccurrencePicker = false }
@@ -200,8 +207,16 @@ struct RecapView: View {
     }
 
     private var toolbarSave: some View {
-        Button(action: saveMoment) {
-            Label(existingMoment == nil ? "Save privately" : "Save changes", systemImage: "checkmark")
+        let isReloading = !store.isStorageAvailable
+        let isEnabled = isReloading || canSave
+        let title = isReloading
+            ? AppLocalization.string("Reload journal")
+            : AppLocalization.string(existingMoment == nil ? "Save privately" : "Save changes")
+        return Button {
+            if isReloading { store.reload() }
+            else { saveMoment() }
+        } label: {
+            Label(title, systemImage: isReloading ? "arrow.clockwise" : "checkmark")
                 .labelStyle(.iconOnly)
                 .font(.body.weight(.semibold))
                 .frame(minWidth: 44, minHeight: 44)
@@ -209,10 +224,12 @@ struct RecapView: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .foregroundStyle(canSave ? AppColors.accentText : AppColors.secondaryText)
-        .disabled(!canSave)
-        .accessibilityIdentifier("recap.saveToolbar")
-        .accessibilityHint("Saves this record on this device.")
+        .foregroundStyle(isEnabled ? AppColors.accentText : AppColors.secondaryText)
+        .disabled(!isEnabled)
+        .accessibilityIdentifier(isReloading ? "recap.reloadToolbar" : "recap.saveToolbar")
+        .accessibilityHint(isReloading
+            ? "Reloads your journal without discarding this draft."
+            : "Saves this record on this device.")
     }
 
     private var timingSection: some View {
@@ -316,6 +333,7 @@ struct RecapView: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityAddTraits(mood == option ? .isSelected : [])
+                    .accessibilityIdentifier("recap.mood.\(option.rawValue)")
                 }
             }
         }
@@ -448,6 +466,7 @@ struct RecapView: View {
     }
 
     private func saveMoment() {
+        guard canSave else { return }
         focusedField = nil
         let seconds: Int
         do {
@@ -458,7 +477,7 @@ struct RecapView: View {
             return
         }
         let moment = Moment(
-            id: existingMoment?.id ?? UUID(),
+            id: existingMoment?.id ?? newMomentID,
             occurredAt: timing.occurredAt,
             durationSeconds: seconds,
             mood: mood,
@@ -517,5 +536,6 @@ private struct FlowTags: View {
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityIdentifier("recap.tag.\(tag)")
     }
 }

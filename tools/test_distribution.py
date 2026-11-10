@@ -214,9 +214,11 @@ class ArchiveValidationTests(unittest.TestCase):
             self.inspect()
 
     def test_debug_store_hook_cannot_ship_in_release(self):
-        (self.app / "PrivateMoments").write_bytes(b"synthetic -pm-ui-test-store binary")
-        with self.assertRaises(DistributionError):
-            self.inspect()
+        for marker in [b"-pm-ui-test-store", b"PrivateMoments-UITests", b"-pm-ui-test-fail-save-once"]:
+            with self.subTest(marker=marker):
+                (self.app / "PrivateMoments").write_bytes(b"synthetic " + marker + b" binary")
+                with self.assertRaises(DistributionError):
+                    self.inspect()
 
     def test_private_signing_key_cannot_enter_app_bundle(self):
         (self.app / "private.p8").write_text("Synthetic fixture", encoding="utf-8")

@@ -9,7 +9,7 @@ final class PrivateMomentsUITests: XCTestCase {
     // Each locale gets a separate persistent test store; no normal journal is reset.
     func testScreenGallery() throws {
         for language in ["en", "zh-Hans"] {
-            let app = makeApp(language: language)
+            let app = makeApp(language: language, failFirstSave: true)
             app.launch()
             let start = app.buttons["today.startMoment"]
             XCTAssertTrue(start.waitForExistence(timeout: 15))
@@ -71,7 +71,10 @@ final class PrivateMomentsUITests: XCTestCase {
             revealFully(from: app.buttons["recap.save"], through: app.buttons["recap.save"], in: app)
             capture("Recap-controls-\(language)", app)
             tap(app.buttons["recap.save"], in: app)
+            recoverFailedSave(language: language, captureScenes: true, app: app)
+            tap(app.buttons["recap.saveToolbar"], in: app)
             XCTAssertTrue(start.waitForExistence(timeout: 10))
+            XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1, "Failure and retry must not create duplicate entries.")
             if weekMenu.exists {
                 revealFully(from: app.staticTexts["today.brand"], through: app.staticTexts["today.brand"], in: app)
             }
@@ -95,6 +98,10 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
             XCTAssertFalse(app.buttons["timeline.clearFilters"].exists)
             tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
+            let edit = app.buttons["detail.editToolbar"]
+            XCTAssertTrue(edit.isHittable, "Details must offer editing without scrolling past the note.")
+            XCTAssertGreaterThanOrEqual(edit.frame.height, 44)
+            XCTAssertEqual(edit.label, language == "en" ? "Edit reflection" : "编辑感受")
             capture("Detail-top-\(language)", app)
             revealFully(from: app.buttons["detail.edit"], through: app.buttons["detail.delete"], in: app)
             capture("Detail-controls-\(language)", app)
@@ -201,7 +208,7 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     func testManualEntryTimingDateFilterAndPersistence() throws {
-        let app = makeApp()
+        let app = makeApp(failFirstSave: true)
         app.launch()
         tap(app.buttons["today.addRecord"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
@@ -217,6 +224,32 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["recap.cancel"], in: app)
         XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10), "Reverting all changes should restore a clean draft.")
         tap(app.buttons["today.addRecord"], in: app)
+        for (changed, original) in [
+            ("recap.mood.Happy", "recap.mood.Calm"),
+            ("recap.rating.5", "recap.rating.4"),
+            ("recap.tag.Relaxed", "recap.tag.Relaxed")
+        ] {
+            tap(app.buttons[changed], in: app)
+            tap(app.buttons["recap.cancel"], in: app)
+            cancelConfirmation("Keep editing", destructiveAction: "Discard reflection", in: app)
+            XCTAssertTrue(app.buttons[changed].isSelected, "Keeping the draft must preserve the selection.")
+            tap(app.buttons[original], in: app)
+            tap(app.buttons["recap.cancel"], in: app)
+            XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
+            tap(app.buttons["today.addRecord"], in: app)
+        }
+        let shortNote = "Synthetic kept draft"
+        tap(app.textViews["recap.note"], in: app)
+        app.textViews["recap.note"].typeText(shortNote)
+        tap(app.buttons["recap.dismissKeyboard"], in: app)
+        tap(app.buttons["recap.cancel"], in: app)
+        cancelConfirmation("Keep editing", destructiveAction: "Discard reflection", in: app)
+        XCTAssertEqual(app.textViews["recap.note"].value as? String, shortNote)
+        tap(app.buttons["recap.cancel"], in: app)
+        tap(app.buttons["Discard reflection"], in: app)
+        XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
+        tap(app.buttons["today.addRecord"], in: app)
         XCTAssertFalse(app.buttons["session.finish"].exists, "Manual entry must not start the timer.")
         tap(app.buttons["recap.yesterday"], in: app)
         replaceNumber(app.textFields["recap.minutes"], with: "17", in: app)
@@ -224,7 +257,18 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertFalse(app.buttons["recap.saveToolbar"].isEnabled, "Toolbar saving must enforce the same timing validation.")
         replaceNumber(app.textFields["recap.seconds"], with: "9", in: app)
         tap(app.buttons["recap.dismissKeyboard"], in: app)
+        let longNote = Array(repeating: "Synthetic recovery note.", count: 18).joined(separator: "\n")
+        tap(app.textViews["recap.note"], in: app)
+        app.textViews["recap.note"].typeText(longNote)
+        tap(app.buttons["recap.dismissKeyboard"], in: app)
+        revealFully(from: app.textFields["recap.minutes"], through: app.textFields["recap.seconds"], in: app)
         capture("Manual-entered-en", app)
+        tap(app.buttons["recap.saveToolbar"], in: app)
+        recoverFailedSave(app: app)
+        XCTAssertEqual(app.textFields["recap.minutes"].value as? String, "17")
+        XCTAssertEqual(app.textFields["recap.seconds"].value as? String, "9")
+        reveal(app.textViews["recap.note"], in: app)
+        XCTAssertEqual(app.textViews["recap.note"].value as? String, longNote)
         tap(app.buttons["recap.saveToolbar"], in: app)
         XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["today.clearDateFilter"].exists, "A saved past entry must be shown on its actual date, even outside the three recent entries.")
@@ -241,18 +285,22 @@ final class PrivateMomentsUITests: XCTestCase {
         app.terminate()
         app.launch()
         tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
-        tap(app.buttons["detail.edit"], in: app)
+        XCTAssertTrue(app.buttons["detail.editToolbar"].isHittable)
+        capture("Long-detail-top-en", app)
+        tap(app.buttons["detail.editToolbar"], in: app)
         XCTAssertEqual(app.textFields["recap.minutes"].value as? String, "17")
         XCTAssertEqual(app.textFields["recap.seconds"].value as? String, "9")
+        reveal(app.textViews["recap.note"], in: app)
+        XCTAssertEqual(app.textViews["recap.note"].value as? String, longNote)
         replaceNumber(app.textFields["recap.minutes"], with: "18", in: app)
         tap(app.buttons["recap.dismissKeyboard"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
         tap(app.buttons["Discard reflection"], in: app)
-        tap(app.buttons["detail.edit"], in: app)
+        tap(app.buttons["detail.editToolbar"], in: app)
         XCTAssertEqual(app.textFields["recap.minutes"].value as? String, "17")
         XCTAssertEqual(app.textFields["recap.seconds"].value as? String, "9")
         tap(app.buttons["recap.cancel"], in: app) // Unchanged edit exits directly.
-        XCTAssertTrue(app.buttons["detail.edit"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["detail.editToolbar"].waitForExistence(timeout: 10))
     }
 
     private func replaceNumber(_ field: XCUIElement, with value: String, in app: XCUIApplication) {
@@ -271,14 +319,35 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
-    private func makeApp(language: String = "en", storeID: UUID = UUID()) -> XCUIApplication {
+    private func makeApp(language: String = "en", storeID: UUID = UUID(), failFirstSave: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [
             "-AppleLanguages", "(\(language))",
             "-AppleLocale", language == "en" ? "en_US" : "zh_CN",
             "-pm-ui-test-store", storeID.uuidString
         ]
+        if failFirstSave { app.launchArguments.append("-pm-ui-test-fail-save-once") }
         return app
+    }
+
+    private func recoverFailedSave(language: String = "en", captureScenes: Bool = false, app: XCUIApplication) {
+        let alert = app.alerts.firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 10))
+        XCTAssertTrue(alert.staticTexts[language == "en" ? "Couldn't save this moment" : "暂时无法保存"].exists)
+        if captureScenes { capture("Save-error-\(language)", app) }
+        tap(alert.buttons[language == "en" ? "Keep editing" : "继续编辑"], in: app)
+        let reload = app.buttons["recap.reloadToolbar"]
+        XCTAssertTrue(reload.waitForExistence(timeout: 5))
+        XCTAssertTrue(reload.isHittable)
+        XCTAssertTrue(reload.isEnabled)
+        XCTAssertEqual(reload.label, language == "en" ? "Reload journal" : "重新读取记录")
+        XCTAssertGreaterThanOrEqual(reload.frame.height, 44)
+        XCTAssertFalse(app.buttons["recap.save"].isEnabled)
+        if captureScenes { capture("Save-recovery-\(language)", app) }
+        tap(reload, in: app)
+        let save = app.buttons["recap.saveToolbar"]
+        XCTAssertTrue(save.waitForExistence(timeout: 5))
+        XCTAssertTrue(save.isEnabled, "Reload must preserve a valid draft and require an explicit save.")
     }
 
     private func selectTab(_ english: String, _ chinese: String, language: String = "en", app: XCUIApplication) {
@@ -369,7 +438,7 @@ final class PrivateMomentsUITests: XCTestCase {
     private func capture(_ name: String, _ app: XCUIApplication) {
         // A screenshot can be taken while a SwiftUI push or scroll is still
         // animating. Require a stable scroll-surface frame across polling ticks.
-        let surface = app.scrollViews.firstMatch
+        let surface = app.alerts.firstMatch.exists ? app.alerts.firstMatch : app.scrollViews.firstMatch
         var lastFrame = CGRect.null
         var stableSince = Date()
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in

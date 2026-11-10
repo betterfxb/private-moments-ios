@@ -27,7 +27,20 @@ struct RootView: View {
     @State private var isSceneShielded = true
 
     init(modelContext: ModelContext) {
-        let repository = SwiftDataMomentRepository(modelContext: modelContext)
+        var saveChanges: @MainActor (ModelContext) throws -> Void = { try $0.save() }
+        #if DEBUG
+        if PrivateStoreFactory.uiTestSaveFailureEnabled() {
+            var shouldFail = true
+            saveChanges = { context in
+                if shouldFail {
+                    shouldFail = false
+                    throw CocoaError(.fileWriteUnknown)
+                }
+                try context.save()
+            }
+        }
+        #endif
+        let repository = SwiftDataMomentRepository(modelContext: modelContext, saveChanges: saveChanges)
         _store = State(initialValue: MomentStore(repository: repository))
     }
 

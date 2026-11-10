@@ -13,6 +13,11 @@ from .configuration import DistributionError, ROOT, validate_versions
 from .native import run
 
 
+def validate_release_test_hooks(contents):
+    if any(marker in contents for marker in (b"-pm-ui-test-store", b"PrivateMoments-UITests", b"-pm-ui-test-fail-save-once")):
+        raise DistributionError("A Debug-only UI-test hook leaked into the Release executable.")
+
+
 def read_plist(path, environment=None):
     try:
         return plistlib.loads(Path(path).read_bytes())
@@ -106,8 +111,7 @@ def inspect_archive(archive_path, policy, bundle_id, version, build, environment
         raise DistributionError("Archived executable name is invalid.")
     executable = application / executable_name
     contents = executable.read_bytes()
-    if any(marker in contents for marker in (b"-pm-ui-test-store", b"PrivateMoments-UITests")):
-        raise DistributionError("A Debug-only UI-test store hook leaked into the Release executable.")
+    validate_release_test_hooks(contents)
     architectures = run(["xcrun", "lipo", "-archs", str(executable)], "Inspect device architectures", capture=True, environment=environment).decode().split()
     platform = run(["xcrun", "vtool", "-show-build", str(executable)], "Inspect Mach-O platform", capture=True, environment=environment).decode()
     if "arm64" not in architectures or any(item in architectures for item in ("x86_64", "i386")) or not re.search(r"platform\s+IOS\s", platform):

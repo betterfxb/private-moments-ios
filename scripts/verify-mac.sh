@@ -18,7 +18,7 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
     fail "Run this script on macOS with a full Xcode installation."
 fi
 
-for required_tool in xcodebuild xcode-select xcrun; do
+for required_tool in xcodebuild xcode-select xcrun python3; do
     command -v "$required_tool" >/dev/null 2>&1 || fail "Required Xcode tool not found: ${required_tool}"
 done
 
@@ -72,6 +72,16 @@ xcodebuild \
     -derivedDataPath "$DERIVED_DATA_DIRECTORY" \
     CODE_SIGNING_ALLOWED=NO \
     build
+
+printf '\nChecking the Release Simulator executable for Debug-only test hooks...\n'
+python3 - "${APP_PROJECT_DIRECTORY}/tools" "${DERIVED_DATA_DIRECTORY}/Build/Products/Release-iphonesimulator/PrivateMoments.app/PrivateMoments" <<'PY'
+from pathlib import Path
+import sys
+sys.path.insert(0, sys.argv[1])
+from distribution.archive import validate_release_test_hooks
+validate_release_test_hooks(Path(sys.argv[2]).read_bytes())
+print("Release Simulator executable excludes Debug-only UI-test hooks.")
+PY
 
 fi
 printf '\nRunning XCTest on destination: %s\n' "$SIMULATOR_DESTINATION"

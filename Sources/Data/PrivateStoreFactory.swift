@@ -12,6 +12,19 @@ enum PrivateMomentsMigrationPlan: SchemaMigrationPlan {
 }
 
 enum PrivateStoreFactory {
+    #if DEBUG
+    static func uiTestStoreIdentifier(arguments: [String] = ProcessInfo.processInfo.arguments) -> UUID? {
+        guard let index = arguments.firstIndex(of: "-pm-ui-test-store"),
+              arguments.indices.contains(index + 1) else { return nil }
+        return UUID(uuidString: arguments[index + 1])
+    }
+
+    static func uiTestSaveFailureEnabled(arguments: [String] = ProcessInfo.processInfo.arguments) -> Bool {
+        uiTestStoreIdentifier(arguments: arguments) != nil
+            && arguments.contains("-pm-ui-test-fail-save-once")
+    }
+    #endif
+
     static func makeContainer() throws -> ModelContainer {
         let fileManager = FileManager.default
         let applicationSupport = try fileManager.url(
@@ -24,10 +37,7 @@ enum PrivateStoreFactory {
         #if DEBUG
         // UI tests use their own persistent sandbox. Relaunch tests reuse the UUID;
         // no test setup erases or opens the normal journal.
-        let arguments = ProcessInfo.processInfo.arguments
-        if let index = arguments.firstIndex(of: "-pm-ui-test-store"),
-           arguments.indices.contains(index + 1),
-           let identifier = UUID(uuidString: arguments[index + 1]) {
+        if let identifier = uiTestStoreIdentifier() {
             directory = applicationSupport
                 .appendingPathComponent("PrivateMoments-UITests", isDirectory: true)
                 .appendingPathComponent(identifier.uuidString, isDirectory: true)
