@@ -97,6 +97,7 @@ struct MomentDetailView: View {
                     infoCard(title: "Feeling", value: moment.mood.displayName, symbol: moment.mood.symbol)
                     infoCard(title: "Rating", value: AppLocalization.format("%lld of 5", moment.rating), symbol: "star.fill")
                 }
+                .fixedSize(horizontal: false, vertical: true)
 
                 VStack(alignment: .leading, spacing: 10) {
                     Label("Tags", systemImage: "tag")
@@ -182,7 +183,7 @@ struct MomentDetailView: View {
                 .font(.system(.headline, design: .rounded))
                 .foregroundStyle(AppColors.text)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .modifier(JournalPanel())
     }
 }
