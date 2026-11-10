@@ -3,6 +3,7 @@ import SwiftUI
 struct TodayView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(MomentStore.self) private var store
+    @Environment(\.scenePhase) private var scenePhase
     @Binding var selectedDate: Date?
     let onStart: () -> Void
     let onOpen: (UUID) -> Void
@@ -202,6 +203,9 @@ struct TodayView: View {
         .background(AppColors.cream.ignoresSafeArea())
         .navigationTitle("Today")
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active { showingDatePicker = false }
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {

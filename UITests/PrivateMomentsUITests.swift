@@ -18,6 +18,12 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Today-\(language)", app)
             tap(app.buttons["today.addRecord"], in: app)
             capture("Manual-top-\(language)", app)
+            let datePanel = app.buttons["recap.date.open"]
+            if datePanel.exists {
+                tap(datePanel, in: app)
+                capture("Manual-date-picker-\(language)", app)
+                tap(app.buttons["recap.date.done"], in: app)
+            }
             revealFully(from: app.textFields["recap.minutes"], through: app.textFields["recap.seconds"], in: app)
             for field in [app.textFields["recap.minutes"], app.textFields["recap.seconds"]] {
                 XCTAssertGreaterThanOrEqual(field.frame.minX, app.frame.minX, "Timing input is clipped on the left.")

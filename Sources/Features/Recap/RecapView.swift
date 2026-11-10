@@ -3,6 +3,7 @@ import SwiftUI
 struct RecapView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(MomentStore.self) private var store
+    @Environment(\.scenePhase) private var scenePhase
     let durationSeconds: Int
     let startedAt: Date
     let existingMoment: Moment?
@@ -18,6 +19,8 @@ struct RecapView: View {
     @State private var timing: MomentTimingDraft
     @State private var showingSaveError = false
     @State private var showingDiscardConfirmation = false
+    @State private var showingOccurrencePicker = false
+    @State private var pendingOccurrence = Date.now
     private enum InputField: Hashable { case note, minutes, seconds }
     @FocusState private var focusedField: InputField?
 
@@ -106,6 +109,35 @@ struct RecapView: View {
             }
         }
         .accessibilityAction(.escape) { requestCancel() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active { showingOccurrencePicker = false }
+        }
+        .sheet(isPresented: $showingOccurrencePicker) {
+            NavigationStack {
+                ScrollView {
+                    DatePicker("Occurrence date", selection: $pendingOccurrence,
+                               in: ...latestSelectableDate, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .padding()
+                        .frame(maxWidth: 520)
+                        .frame(maxWidth: .infinity)
+                }
+                .navigationTitle("Occurrence date")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { showingOccurrencePicker = false }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") {
+                            timing.occurredAt = pendingOccurrence
+                            showingOccurrencePicker = false
+                        }
+                        .accessibilityIdentifier("recap.date.done")
+                    }
+                }
+            }
+        }
         .confirmationDialog(
             "Discard this reflection?",
             isPresented: $showingDiscardConfirmation,
@@ -176,14 +208,21 @@ struct RecapView: View {
     @ViewBuilder
     private var occurrenceDateControl: some View {
         if dynamicTypeSize.isAccessibilitySize {
-            Text("Occurrence date")
-                .padding(.horizontal, timingContentInset)
-            DatePicker("Occurrence date", selection: $timing.occurredAt,
-                       in: ...latestSelectableDate, displayedComponents: .date)
-                .datePickerStyle(.graphical)
-                .labelsHidden()
-                .padding(.horizontal, 4)
-                .accessibilityIdentifier("recap.date")
+            Button {
+                focusedField = nil
+                pendingOccurrence = timing.occurredAt
+                showingOccurrencePicker = true
+            } label: {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Occurrence date")
+                    Text(timing.occurredAt.formatted(date: .long, time: .omitted))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .buttonStyle(.bordered)
+            .accessibilityIdentifier("recap.date.open")
+            .padding(.horizontal, timingContentInset)
         } else {
             DatePicker("Occurrence date", selection: $timing.occurredAt,
                        in: ...latestSelectableDate, displayedComponents: .date)
