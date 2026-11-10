@@ -8,7 +8,7 @@ struct RecapView: View {
     let existingMoment: Moment?
     let isManualEntry: Bool
     let onCancel: () -> Void
-    let onSaved: () -> Void
+    let onSaved: (Moment) -> Void
 
     @State private var mood: MomentMood
     @State private var kind: MomentKind
@@ -55,7 +55,7 @@ struct RecapView: View {
         return result
     }
 
-    init(durationSeconds: Int, startedAt: Date = .now, existingMoment: Moment? = nil, isManualEntry: Bool = false, onCancel: @escaping () -> Void, onSaved: @escaping () -> Void) {
+    init(durationSeconds: Int, startedAt: Date = .now, existingMoment: Moment? = nil, isManualEntry: Bool = false, onCancel: @escaping () -> Void, onSaved: @escaping (Moment) -> Void) {
         self.durationSeconds = durationSeconds
         self.startedAt = startedAt
         self.existingMoment = existingMoment
@@ -342,7 +342,7 @@ struct RecapView: View {
             approximatePlace: existingMoment?.approximatePlace
         )
         showingSaveError = !store.add(moment)
-        if !showingSaveError { onSaved() }
+        if !showingSaveError { onSaved(moment) }
     }
 
     private func requestCancel() {

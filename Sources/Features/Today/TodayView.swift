@@ -215,6 +215,10 @@ struct TodayView: View {
         .sheet(isPresented: $showingDatePicker) {
             NavigationStack {
                 ScrollView {
+                    Button("Today") { dateToView = .now }
+                        .buttonStyle(.bordered)
+                        .accessibilityIdentifier("today.selectToday")
+                        .padding(.top)
                     DatePicker("View a day", selection: $dateToView, displayedComponents: .date)
                         .datePickerStyle(.graphical)
                         .padding()

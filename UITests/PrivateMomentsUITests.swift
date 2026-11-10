@@ -161,10 +161,12 @@ final class PrivateMomentsUITests: XCTestCase {
         capture("Manual-entered-en", app)
         tap(app.buttons["recap.save"], in: app)
         XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["today.clearDateFilter"].exists, "A saved past entry must be shown on its actual date, even outside the three recent entries.")
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
 
         tap(app.buttons["today.chooseDate"], in: app)
-        tap(app.buttons["today.applyDate"], in: app) // Sheet defaults to today; entry was yesterday.
+        tap(app.buttons["today.selectToday"], in: app)
+        tap(app.buttons["today.applyDate"], in: app)
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
         capture("Today-filter-empty-en", app)
         tap(app.buttons["today.clearDateFilter"], in: app)
@@ -211,11 +213,17 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
-        // Lazy grids may not create off-screen children until scrolling brings
-        // them into view. Search while scrolling before asserting existence.
+        // A returned screen retains its scroll position. Existing controls can
+        // be above it; lazy controls not yet created are searched below it.
         for _ in 0..<16 {
             if element.waitForExistence(timeout: 0.5), element.isHittable { return }
-            app.swipeUp()
+            let scroll = app.scrollViews.firstMatch
+            if element.exists, !element.frame.isEmpty,
+               element.frame.minY < scroll.frame.minY {
+                app.swipeDown()
+            } else {
+                app.swipeUp()
+            }
         }
         XCTFail("Control is unreachable after scrolling: \(element)")
     }

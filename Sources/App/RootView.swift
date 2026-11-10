@@ -97,7 +97,10 @@ struct RootView: View {
                 startedAt: startedAt,
                 isManualEntry: true,
                 onCancel: { finishRecap(editingID: nil, path: path) },
-                onSaved: { finishRecap(editingID: nil, path: path, didSave: true) }
+                onSaved: { moment in
+                    finishRecap(editingID: nil, path: path)
+                    selectedTodayDate = moment.occurredAt
+                }
             )
         case .session:
             LiveSessionView { completed in
@@ -114,7 +117,7 @@ struct RootView: View {
                 startedAt: startedAt,
                 existingMoment: existing,
                 onCancel: { finishRecap(editingID: editingID, path: path) },
-                onSaved: { finishRecap(editingID: editingID, path: path, didSave: true) }
+                onSaved: { _ in finishRecap(editingID: editingID, path: path, didSave: true) }
             )
         case .detail(let id):
             MomentDetailView(
