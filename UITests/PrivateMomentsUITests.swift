@@ -14,6 +14,15 @@ final class PrivateMomentsUITests: XCTestCase {
             let start = app.buttons["today.startMoment"]
             XCTAssertTrue(start.waitForExistence(timeout: 15))
             XCTAssertEqual(start.label, language == "en" ? "Start a moment" : "开始记录")
+            let brand = app.staticTexts["today.brand"]
+            XCTAssertTrue(brand.waitForExistence(timeout: 5))
+            XCTAssertEqual(brand.label, language == "en" ? "Private Moments" : "私密时刻")
+            XCTAssertGreaterThanOrEqual(brand.frame.minX, app.frame.minX)
+            XCTAssertLessThanOrEqual(brand.frame.maxX, app.frame.maxX)
+            if !app.buttons["today.weekMenu"].exists {
+                XCTAssertGreaterThanOrEqual(brand.frame.width, language == "en" ? 115 : 60,
+                    "The brand must not collapse into an icon-sized toolbar item.")
+            }
             XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0, "Each locale must use an isolated empty store.")
             for action in [start, app.buttons["today.addRecord"]] {
                 XCTAssertGreaterThanOrEqual(action.frame.minX, app.frame.minX, "Home action is clipped on the left.")

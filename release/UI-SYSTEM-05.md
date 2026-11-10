@@ -18,6 +18,7 @@
 | surface | #FFFFFF | #241E24 | 内容容器 |
 | accent | #B34165 | #B34165 | 实色CTA与选中填色，浅文字前景 |
 | accentText | #A5375B | #F3A5BE | 小字／图标／日期主题 |
+| controlTint | #B34165 | #C04C75 | 系统日历选中填色，避免深色浅粉底上的白字对比不足 |
 | accentWash | #F7E5ED | #3C2733 | 强调背景；不承担正文颜色 |
 | text | #30262D | #F8EFF4 | 主信息 |
 | secondaryText | #75656F | #BEADB8 | 元数据 |

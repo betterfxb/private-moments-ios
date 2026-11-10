@@ -6,6 +6,9 @@ enum AppColors {
     static let surface = adaptive(light: 0xFFFFFF, dark: 0x241E24)
     static let accent = Color(uiColor: color(0xB34165))
     static let accentText = adaptive(light: 0xA5375B, dark: 0xF3A5BE)
+    // Native calendar cells put white numerals on their tint in both appearances.
+    // Keep that fill separate from the lighter dark-mode text/link accent.
+    static let controlTint = adaptive(light: 0xB34165, dark: 0xC04C75)
     static let accentWash = adaptive(light: 0xF7E5ED, dark: 0x3C2733)
     static let text = adaptive(light: 0x30262D, dark: 0xF8EFF4)
     static let secondaryText = adaptive(light: 0x75656F, dark: 0xBEADB8)

@@ -127,6 +127,7 @@ struct RecapView: View {
                     DatePicker("Occurrence date", selection: $pendingOccurrence,
                                in: ...latestSelectableDate, displayedComponents: .date)
                         .datePickerStyle(.graphical)
+                        .tint(AppColors.controlTint)
                         .padding()
                         .frame(maxWidth: 520)
                         .frame(maxWidth: .infinity)

@@ -147,8 +147,11 @@ struct TodayView: View {
         }
         .toolbar {
             if !dynamicTypeSize.isAccessibilitySize {
-                ToolbarItem(placement: .topBarLeading) {
-                    brandTitle.font(.system(.title2, design: .rounded).weight(.bold))
+                if #available(iOS 26.0, *) {
+                    ToolbarItem(placement: .topBarLeading) { toolbarBrand }
+                        .sharedBackgroundVisibility(.hidden)
+                } else {
+                    ToolbarItem(placement: .topBarLeading) { toolbarBrand }
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
@@ -169,6 +172,7 @@ struct TodayView: View {
                         .padding(.top)
                     DatePicker("View a day", selection: $dateToView, displayedComponents: .date)
                         .datePickerStyle(.graphical)
+                        .tint(AppColors.controlTint)
                         .padding()
                         .frame(maxWidth: 520)
                         .frame(maxWidth: .infinity)
@@ -228,6 +232,12 @@ struct TodayView: View {
             .foregroundStyle(AppColors.accentText)
             .accessibilityAddTraits(.isHeader)
             .accessibilityIdentifier("today.brand")
+    }
+
+    private var toolbarBrand: some View {
+        brandTitle
+            .font(.system(.title2, design: .rounded).weight(.bold))
+            .fixedSize(horizontal: true, vertical: false)
     }
 
     private var weekGrid: some View {

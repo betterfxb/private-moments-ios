@@ -321,6 +321,7 @@ final class SemanticColorTests: XCTestCase {
         for style in [UIUserInterfaceStyle.light, .dark] {
             for (foreground, background) in [
                 (AppColors.onAccent, AppColors.accent),
+                (AppColors.onAccent, AppColors.controlTint),
                 (AppColors.onDark, AppColors.session),
                 (AppColors.onDarkSecondary, AppColors.session),
                 (AppColors.onDarkAccent, AppColors.session)
