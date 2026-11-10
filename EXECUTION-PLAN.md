@@ -4,7 +4,13 @@
 
 Deliver a polished, privacy-first iPhone app with an offline record flow, then add Apple ecosystem features only after their data and sharing rules are explicit. The current Windows checkout can produce and inspect source, web prototypes, and documents. A supported Mac/Xcode environment is required to compile, simulate, sign, test on Apple devices, and submit.
 
-Automated Mac verification now runs in GitHub Actions. Final run [42665863317](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), source `5fdd3cf`, passed all four profiles, Debug/Release simulator builds, 23 unit tests and the complete core UI suite. All 112 bilingual gallery captures were downloaded and visually reviewed. The UI/reliability batch is complete; remaining device/release gates are in `release/UI-ACCEPTANCE.md`.
+Automated Mac verification runs in GitHub Actions. The latest native functional batch, source `b1225b5e065e81a5847c969d68278363780de9bd`, passed [run 42801899567](https://github.com/betterfxb/private-moments-ios/actions/runs/42801899567): all four profiles, Debug/Release builds, 30 unit tests and four compact-light UI tests, plus bilingual galleries on the other three profiles. All 148 PNGs were downloaded; 20 selected final-source originals were opened. Details and retained evidence are in [manual-entry acceptance](release/MANUAL-ENTRY-ACCEPTANCE.md). The earlier 112-capture run below is historical evidence, not the current source result.
+
+## Latest batch: native manual entry and day browsing
+
+The ordered [five-task plan](release/BATCH-04-PLAN.md) is complete: architecture review → draft/day rules → native manual entry/editing/filtering → localization and regression → screenshot review and evidence. Direct manual entry bypasses the timer; date and exact minute/second duration are editable; saving returns to the actual occurrence day. No storage-schema or backup-format change was made. Maximum-accessibility Chinese form clipping and nested-scroll reachability were corrected and revalidated.
+
+Work is on `feat/native-manual-entry`, draft [PR #1](https://github.com/betterfxb/private-moments-ios/pull/1); main has not been merged. This batch preserves the existing theme. Historical phase-completion statements describe implemented technical scope, not user approval of aesthetics: global visual direction and migration remain unfinished. Physical-device VoiceOver/privacy lifecycle, signing and TestFlight remain separate gates. Current localization audit covers 215 keys; older counts below are historical.
 
 ## Product decisions for the first release
 

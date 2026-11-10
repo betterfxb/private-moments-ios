@@ -1,6 +1,14 @@
 # Simulator UI acceptance
 
-## Latest verification (2026-11-10)
+## Latest native manual-entry verification (2026-11-10)
+
+Source `b1225b5e065e81a5847c969d68278363780de9bd`, run [42801899567](https://github.com/betterfxb/private-moments-ios/actions/runs/42801899567), passed all four profiles. Compact-light passes Debug/Release builds, 30 unit tests and all four UI tests; the other three profiles pass the bilingual gallery. The 148 exported PNGs comprise 38 compact-light, 38 compact-dark-accessibility, 36 phone-dark and 36 ipad-light captures. Logs identify Xcode 16.4, iPhoneSimulator 18.5 SDK and iOS 26.2 Simulator runtime. This is not a new-SDK matrix result.
+
+New coverage includes direct manual entry, exact minute/second editing, saved-day selection, empty-day filtering, cancel safeguards and relaunch persistence. Screenshot review rejected an earlier green run for Chinese maximum-text clipping. The final implementation uses a wrapping date row and a separate date panel at accessibility sizes, with input-frame boundary assertions. Twenty selected final-source originals were opened; this is not manual review of all 148 images. Retained unmodified images, hashes, profile details and limitations are in [the manual-entry acceptance record](MANUAL-ENTRY-ACCEPTANCE.md) and [verification receipt](evidence/batch-04/verification.json).
+
+All evidence uses isolated synthetic stores. The existing global theme remains in place; these functional checks do not establish visual approval, physical VoiceOver/privacy acceptance or distribution readiness. Historical counts below describe their own source revisions only.
+
+## Historical verification (2026-11-10, source 5fdd3cf)
 
 Complete: source `5fdd3cf`, run [42665863317](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), overall success on attempt 2. The full compact-light suite passes Debug/Release builds, 23 unit tests and all three UI tests; the other three profiles each pass the bilingual gallery. This is six UI-test executions in total. All profiles used Xcode 16.4 and the iOS 26.2 Simulator runtime.
 
