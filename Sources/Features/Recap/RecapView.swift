@@ -142,16 +142,15 @@ struct RecapView: View {
             }
         }
         .accessibilityAction(.escape) { requestCancel() }
-        .alert("Couldn't save this moment", isPresented: $showingSaveError) {
+        .alert("Not saved", isPresented: $showingSaveError) {
             if !store.isStorageAvailable {
-                Button("Reload journal") { store.reload() }
+                Button("Reload") { store.reload() }
             }
-            Button("Keep editing", role: .cancel) { }
+            Button("Edit", role: .cancel) { }
         } message: {
-            Text(AppLocalization.format("%@\n\n%@",
-                store.errorMessage ?? AppLocalization.string("Couldn't save this moment. Your existing entries are unchanged."),
-                AppLocalization.string("Your draft is still here. Reload your journal, then save again.")
-            ))
+            Text(!store.isStorageAvailable
+                ? AppLocalization.string("Your draft is here. Reload, then save.")
+                : (store.errorMessage ?? AppLocalization.string("Couldn't save this moment. Your existing entries are unchanged.")))
         }
         .onChange(of: scenePhase) { _, phase in
             if phase != .active { showingOccurrencePicker = false }

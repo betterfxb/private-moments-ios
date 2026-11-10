@@ -337,9 +337,16 @@ final class PrivateMomentsUITests: XCTestCase {
     private func recoverFailedSave(language: String = "en", captureScenes: Bool = false, app: XCUIApplication) {
         let alert = app.alerts.firstMatch
         XCTAssertTrue(alert.waitForExistence(timeout: 10))
-        XCTAssertTrue(alert.staticTexts[language == "en" ? "Couldn't save this moment" : "暂时无法保存"].exists)
+        XCTAssertTrue(alert.staticTexts[language == "en" ? "Not saved" : "尚未保存"].exists)
+        let edit = alert.buttons[language == "en" ? "Edit" : "继续编辑"]
+        let reloadAction = alert.buttons[language == "en" ? "Reload" : "重新读取"]
+        for action in [edit, reloadAction] {
+            XCTAssertTrue(action.isHittable, "Recovery actions must be visible before scrolling the alert.")
+            XCTAssertGreaterThanOrEqual(action.frame.minY, app.frame.minY)
+            XCTAssertLessThanOrEqual(action.frame.maxY, app.frame.maxY)
+        }
         if captureScenes { capture("Save-error-\(language)", app) }
-        tap(alert.buttons[language == "en" ? "Keep editing" : "继续编辑"], in: app)
+        tap(edit, in: app)
         let reload = app.buttons["recap.reloadToolbar"]
         XCTAssertTrue(reload.waitForExistence(timeout: 5))
         XCTAssertTrue(reload.isHittable)
