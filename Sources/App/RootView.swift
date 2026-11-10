@@ -93,7 +93,7 @@ struct RootView: View {
         switch route {
         case .manual(let startedAt):
             RecapView(
-                durationSeconds: 20 * 60,
+                durationSeconds: 0,
                 startedAt: startedAt,
                 isManualEntry: true,
                 onCancel: { finishRecap(editingID: nil, path: path) },
