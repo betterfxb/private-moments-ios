@@ -78,11 +78,20 @@ struct RecapView: View {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
                 headerSection
                 timingSection
-                moodSection
-                kindSection
-                ratingSection
-                tagsSection
-                noteSection
+                VStack(alignment: .leading, spacing: 20) {
+                    moodSection
+                    Divider()
+                    kindSection
+                    Divider()
+                    ratingSection
+                }
+                .modifier(JournalPanel())
+                VStack(alignment: .leading, spacing: 20) {
+                    tagsSection
+                    Divider()
+                    noteSection
+                }
+                .modifier(JournalPanel())
                 saveSection
             }
             .padding(.horizontal, AppSpacing.page)
@@ -92,7 +101,7 @@ struct RecapView: View {
             .frame(maxWidth: .infinity)
         }
         .scrollDismissesKeyboard(.interactively)
-        .background(AppColors.cream.ignoresSafeArea())
+        .background(AppColors.background.ignoresSafeArea())
         .navigationTitle(isManualEntry ? LocalizedStringKey("Add past moment") : LocalizedStringKey("Quick recap"))
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -100,7 +109,7 @@ struct RecapView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Cancel", action: requestCancel)
                     .accessibilityIdentifier("recap.cancel")
-                    .foregroundStyle(AppColors.terracottaDark)
+                    .foregroundStyle(AppColors.accentText)
             }
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
@@ -153,11 +162,11 @@ struct RecapView: View {
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(existingMoment == nil ? "A moment to remember" : "Edit your reflection")
-                .font(.system(.largeTitle, design: .serif))
-                .foregroundStyle(AppColors.ink)
+                .font(.system(.title2, design: .rounded).weight(.semibold))
+                .foregroundStyle(AppColors.text)
             Text(AppLocalization.format("%@ · %@", timing.occurredAt.formatted(date: .abbreviated, time: .shortened), SessionClock.durationText((try? timing.durationSeconds()) ?? durationSeconds)))
                 .font(.system(.subheadline, design: .rounded))
-                .foregroundStyle(AppColors.inkSoft)
+                .foregroundStyle(AppColors.secondaryText)
         }
     }
 
@@ -199,7 +208,7 @@ struct RecapView: View {
         }
         .padding(.horizontal, dynamicTypeSize.isAccessibilitySize ? 0 : 16)
         .padding(.vertical, 16)
-        .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+        .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
     }
 
     private var timingContentInset: CGFloat { dynamicTypeSize.isAccessibilitySize ? 16 : 0 }
@@ -256,13 +265,7 @@ struct RecapView: View {
                     Button {
                         mood = option
                     } label: {
-                        Text(option.displayName)
-                            .font(.system(.subheadline, design: .rounded).weight(.medium))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                            .foregroundStyle(mood == option ? AppColors.onAccent : AppColors.ink)
-                            .background(mood == option ? AppColors.terracotta : AppColors.paper, in: Capsule())
-                            .overlay(Capsule().stroke(mood == option ? AppColors.terracotta : AppColors.line, lineWidth: 1))
+                        SelectionPill(title: option.displayName, symbol: option.symbol, isSelected: mood == option)
                     }
                     .buttonStyle(.plain)
                     .accessibilityAddTraits(mood == option ? .isSelected : [])
@@ -280,13 +283,9 @@ struct RecapView: View {
                     Button {
                         kind = option
                     } label: {
-                        Text(option.displayName)
-                            .font(.system(.subheadline, design: .rounded).weight(.medium))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                            .foregroundStyle(kind == option ? AppColors.onAccent : AppColors.ink)
-                            .background(kind == option ? AppColors.terracotta : AppColors.paper, in: Capsule())
-                            .overlay(Capsule().stroke(kind == option ? AppColors.terracotta : AppColors.line, lineWidth: 1))
+                        SelectionPill(title: option.displayName,
+                                      symbol: option == .together ? "person.2" : "person",
+                                      isSelected: kind == option)
                     }
                     .buttonStyle(.plain)
                     .accessibilityIdentifier("recap.kind.\(option.rawValue)")
@@ -307,7 +306,7 @@ struct RecapView: View {
                     } label: {
                         Image(systemName: value <= rating ? "star.fill" : "star")
                             .font(.title2)
-                            .foregroundStyle(value <= rating ? AppColors.terracottaDark : AppColors.inkSoft)
+                            .foregroundStyle(value <= rating ? AppColors.accentText : AppColors.secondaryText)
                             .frame(minWidth: 44, minHeight: 44)
                     }
                     .buttonStyle(.plain)
@@ -333,15 +332,15 @@ struct RecapView: View {
                 Spacer()
                 Text("Included in backups")
                     .font(.system(.caption, design: .rounded).weight(.semibold))
-                    .foregroundStyle(AppColors.terracottaDark)
+                    .foregroundStyle(AppColors.accentText)
             }
             TextEditor(text: $privateNote)
                 .focused($focusedField, equals: .note)
                 .scrollContentBackground(.hidden)
                 .padding(8)
                 .frame(minHeight: 112)
-                .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: AppRadius.control).stroke(AppColors.line, lineWidth: 1))
+                .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: AppRadius.control).stroke(AppColors.separator, lineWidth: 1))
                 .accessibilityLabel("Private note")
                 .accessibilityIdentifier("recap.note")
                 .autocorrectionDisabled()
@@ -352,8 +351,8 @@ struct RecapView: View {
                     .font(.system(.caption, design: .rounded).monospacedDigit())
                     .foregroundStyle(
                         noteValidationMessage != nil
-                            ? AppColors.terracottaDark
-                            : AppColors.inkSoft
+                            ? AppColors.accentText
+                            : AppColors.secondaryText
                     )
                     .accessibilityLabel(AppLocalization.format("Private note, %lld of %lld characters", privateNote.count, MomentValidator.maximumNoteLength))
             }
@@ -391,8 +390,8 @@ struct RecapView: View {
 
     private func sectionTitle(_ title: LocalizedStringKey) -> some View {
         Text(title)
-            .font(.system(.title3, design: .serif).weight(.semibold))
-            .foregroundStyle(AppColors.ink)
+            .font(.system(.headline, design: .rounded).weight(.semibold))
+            .foregroundStyle(AppColors.text)
     }
 
     private func adaptiveLayout(spacing: CGFloat) -> AnyLayout {
@@ -465,9 +464,9 @@ private struct FlowTags: View {
                 .padding(.horizontal, 12)
                 .padding(.vertical, 9)
                 .frame(minHeight: 44)
-                .foregroundStyle(isSelected ? AppColors.terracottaDark : AppColors.inkSoft)
-                .background(isSelected ? AppColors.blush.opacity(0.22) : AppColors.paper, in: Capsule())
-                .overlay(Capsule().stroke(isSelected ? AppColors.blush : AppColors.line, lineWidth: 1))
+                .foregroundStyle(isSelected ? AppColors.accentText : AppColors.secondaryText)
+                .background(isSelected ? AppColors.accentWash.opacity(0.22) : AppColors.surface, in: Capsule())
+                .overlay(Capsule().stroke(isSelected ? AppColors.accentWash : AppColors.separator, lineWidth: 1))
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(isSelected ? .isSelected : [])

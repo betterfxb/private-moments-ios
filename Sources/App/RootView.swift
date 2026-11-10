@@ -67,7 +67,7 @@ struct RootView: View {
                     .zIndex(1)
             }
         }
-        .tint(AppColors.terracottaDark)
+        .tint(AppColors.accentText)
         .onAppear { isSceneShielded = scenePhase != .active }
         .onChange(of: scenePhase) { _, newPhase in
             isSceneShielded = newPhase != .active

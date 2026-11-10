@@ -4,10 +4,8 @@ struct PrivateBadge: View {
     var body: some View {
         Label("Private by default", systemImage: "lock.fill")
             .font(.system(.caption, design: .rounded).weight(.semibold))
-            .foregroundStyle(AppColors.terracottaDark)
-            .padding(.horizontal, 11)
-            .padding(.vertical, 8)
-            .background(AppColors.blush.opacity(0.18), in: Capsule())
+            .foregroundStyle(AppColors.accentText)
+            .padding(.vertical, 4)
             .accessibilityLabel("Private by default")
     }
 }
@@ -22,34 +20,50 @@ struct MomentRow: View {
 
     var body: some View {
         rowLayout {
-            Circle()
-                .fill(AppColors.terracotta)
-                .frame(width: 10, height: 10)
-                .padding(5)
-                .background(AppColors.blush.opacity(0.16), in: Circle())
+            Image(systemName: moment.kind == .together ? "person.2.fill" : "person.fill")
+                .font(.system(.body, design: .rounded).weight(.medium))
+                .foregroundStyle(AppColors.accentText)
+                .frame(width: 42, height: 46)
+                .background(AppColors.accentWash, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 5) {
+                HStack(spacing: 6) {
+                    Text(moment.kind.displayName)
+                        .font(.system(.headline, design: .rounded).weight(.semibold))
+                    if !moment.privateNote.isEmpty {
+                        Image(systemName: "lock.fill")
+                            .font(.caption2)
+                            .foregroundStyle(AppColors.secondaryText)
+                            .accessibilityLabel("Private note")
+                    }
+                }
+                    .foregroundStyle(AppColors.text)
+                Label(moment.mood.displayName, systemImage: moment.mood.symbol)
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundStyle(AppColors.secondaryText)
                 Text(dateText)
-                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                    .foregroundStyle(AppColors.ink)
-                Text(AppLocalization.format("%@ · %@", moment.kind.displayName, moment.mood.displayName))
-                    .font(.system(.footnote, design: .rounded))
-                    .foregroundStyle(AppColors.inkSoft)
+                    .font(.system(.caption2, design: .rounded))
+                    .foregroundStyle(AppColors.secondaryText)
             }
 
             Spacer(minLength: 8)
 
-            Text(SessionClock.durationText(moment.durationSeconds))
-                .font(.system(.footnote, design: .rounded).weight(.medium))
-                .foregroundStyle(AppColors.inkSoft)
-                .fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .trailing, spacing: 6) {
+                Text(SessionClock.durationText(moment.durationSeconds))
+                    .font(.system(.subheadline, design: .rounded).weight(.semibold).monospacedDigit())
+                    .foregroundStyle(AppColors.accentText)
+                Label(AppLocalization.format("%lld of 5", moment.rating), systemImage: "star.fill")
+                    .font(.system(.caption2, design: .rounded))
+                    .foregroundStyle(AppColors.secondaryText)
+            }
+            .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(14)
-        .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
+        .padding(16)
+        .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous)
-                .stroke(AppColors.line.opacity(0.72), lineWidth: 1)
+                .stroke(AppColors.separator.opacity(0.6), lineWidth: 0.5)
         }
         .contentShape(RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
         .accessibilityElement(children: .combine)
@@ -70,25 +84,59 @@ struct EmptyStateCard: View {
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: symbol)
-                .font(.system(size: 26, weight: .regular))
-                .foregroundStyle(AppColors.terracotta)
+                .font(.system(size: 24, weight: .regular))
+                .foregroundStyle(AppColors.accentText)
+                .frame(width: 60, height: 60)
+                .background(AppColors.accentWash, in: Circle())
                 .accessibilityHidden(true)
             Text(title)
                 .font(.system(.headline, design: .rounded).weight(.semibold))
-                .foregroundStyle(AppColors.ink)
+                .foregroundStyle(AppColors.text)
             Text(message)
                 .font(.system(.subheadline, design: .rounded))
-                .foregroundStyle(AppColors.inkSoft)
+                .foregroundStyle(AppColors.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 28)
         .padding(.horizontal, 20)
-        .background(AppColors.paper.opacity(0.88), in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+        .background(AppColors.surface.opacity(0.88), in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+    }
+}
+
+struct SelectionPill: View {
+    let title: String
+    let symbol: String
+    let isSelected: Bool
+
+    var body: some View {
+        HStack(spacing: 7) {
+            Image(systemName: isSelected ? "checkmark" : symbol).accessibilityHidden(true)
+            Text(title).fixedSize(horizontal: false, vertical: true)
+        }
+        .font(.system(.subheadline, design: .rounded).weight(.medium))
+        .foregroundStyle(isSelected ? AppColors.onAccent : AppColors.accentText)
+        .frame(maxWidth: .infinity, minHeight: 44)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(isSelected ? AppColors.accent : AppColors.accentWash, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous)
-                .strokeBorder(AppColors.line, style: StrokeStyle(lineWidth: 1, dash: [5, 4]))
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .strokeBorder(isSelected ? AppColors.accentText : .clear, lineWidth: 1.5)
+        }
+    }
+}
+
+extension MomentMood {
+    /// Presentation-only system symbols; persisted mood raw values stay stable.
+    var symbol: String {
+        switch self {
+        case .calm: "leaf"
+        case .connected: "heart"
+        case .joyful: "sparkles"
+        case .relaxed: "moon"
+        case .happy: "face.smiling"
         }
     }
 }
@@ -99,10 +147,10 @@ struct ErrorNotice: View {
     var body: some View {
         Label(message, systemImage: "exclamationmark.triangle.fill")
             .font(.system(.footnote, design: .rounded).weight(.medium))
-            .foregroundStyle(AppColors.terracottaDark)
+            .foregroundStyle(AppColors.accentText)
             .padding(12)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(AppColors.blush.opacity(0.18), in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
+            .background(AppColors.accentWash.opacity(0.18), in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
     }
 }
 
@@ -119,10 +167,10 @@ struct StorageRecoveryCard: View {
                     .padding(.vertical, 8)
             }
             .buttonStyle(.bordered)
-            .tint(AppColors.terracottaDark)
+            .tint(AppColors.accentText)
             .accessibilityHint("Attempts to load your local journal again")
         }
         .padding(12)
-        .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
+        .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
     }
 }

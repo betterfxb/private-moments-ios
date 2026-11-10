@@ -25,31 +25,30 @@ struct SettingsView: View {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
                 VStack(alignment: .leading, spacing: 8) {
                     PrivateBadge()
-                    Text("Your privacy,\nyour rules.")
-                        .font(.system(.largeTitle, design: .serif))
-                        .tracking(-1)
-                        .foregroundStyle(AppColors.ink)
-                    Text("Core journaling works offline. Optional Apple services are not connected in this MVP.")
+                    Text("Your space, your choice.")
+                        .font(.system(.title2, design: .rounded).weight(.semibold))
+                        .foregroundStyle(AppColors.text)
+                    Text("Your journal stays on this device. Manage its privacy and backups here.")
                         .font(.system(.subheadline, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
+                        .foregroundStyle(AppColors.secondaryText)
                 }
 
                 settingsCard(title: "ON THIS DEVICE") {
                     Label("Local journal", systemImage: "iphone")
-                    Divider().overlay(AppColors.line)
+                    Divider().overlay(AppColors.separator)
                     HStack {
                         Label("Saved moments", systemImage: "heart.text.square")
                         Spacer()
                         Text(store.isStorageAvailable ? "\(store.moments.count)" : AppLocalization.string("Unknown"))
-                            .foregroundStyle(AppColors.inkSoft)
+                            .foregroundStyle(AppColors.secondaryText)
                     }
-                    Divider().overlay(AppColors.line)
+                    Divider().overlay(AppColors.separator)
                     Label("No cloud sync configured", systemImage: "icloud.slash")
-                    Divider().overlay(AppColors.line)
+                    Divider().overlay(AppColors.separator)
                     Label("Files protected while device is locked", systemImage: "lock.fill")
                     Text("The app requests exclusion from device backups. Use the JSON backup controls below to move records to another device.")
                         .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
+                        .foregroundStyle(AppColors.secondaryText)
                     if !store.isStorageAvailable {
                         StorageRecoveryCard(
                             message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
@@ -60,17 +59,17 @@ struct SettingsView: View {
 
                 settingsCard(title: "NOT CONNECTED") {
                     Label("HealthKit and Apple Watch", systemImage: "heart")
-                    Divider().overlay(AppColors.line)
+                    Divider().overlay(AppColors.separator)
                     Label("Partner sharing", systemImage: "person.2")
                     Text("This starter keeps all entries on this device. No health readings or partner payloads are created.")
                         .font(.system(.footnote, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
+                        .foregroundStyle(AppColors.secondaryText)
                 }
 
                 settingsCard(title: "DATA MANAGEMENT") {
                     Text("Create a portable JSON backup or restore one you made earlier.")
                         .font(.system(.footnote, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
+                        .foregroundStyle(AppColors.secondaryText)
                     Button {
                         showingExportWarning = true
                     } label: {
@@ -79,7 +78,7 @@ struct SettingsView: View {
                             .padding(.vertical, 12)
                     }
                     .buttonStyle(.bordered)
-                    .tint(AppColors.terracottaDark)
+                    .tint(AppColors.accentText)
                     .disabled(!store.isStorageAvailable)
 
                     Button {
@@ -90,7 +89,7 @@ struct SettingsView: View {
                             .padding(.vertical, 12)
                     }
                     .buttonStyle(.bordered)
-                    .tint(AppColors.terracottaDark)
+                    .tint(AppColors.accentText)
                     .disabled(!store.isStorageAvailable)
 
                     if let backupStatus {
@@ -98,20 +97,20 @@ struct SettingsView: View {
                         case .success(let message):
                             Label(message, systemImage: "checkmark.circle.fill")
                                 .font(.system(.footnote, design: .rounded))
-                                .foregroundStyle(AppColors.sage)
+                                .foregroundStyle(AppColors.success)
                         case .error(let message):
                             ErrorNotice(message: message)
                         }
                     }
                     Text("Backups include private notes. Keep the file somewhere only you can access.")
                         .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
+                        .foregroundStyle(AppColors.secondaryText)
                 }
 
                 settingsCard(title: "APP LOCK") {
                     Text("Use this device's Face ID, Touch ID, or passcode before opening the journal.")
                         .font(.system(.footnote, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
+                        .foregroundStyle(AppColors.secondaryText)
                     Button {
                         Task { await privacyLock.setEnabled(!privacyLock.isEnabled) }
                     } label: {
@@ -119,7 +118,7 @@ struct SettingsView: View {
                             Label("Lock journal", systemImage: "lock.fill")
                             Spacer()
                             Text(privacyLock.isEnabled ? "On" : "Off")
-                                .foregroundStyle(AppColors.terracottaDark)
+                                .foregroundStyle(AppColors.accentText)
                         }
                         .frame(maxWidth: .infinity)
                         .frame(minHeight: 44)
@@ -133,13 +132,13 @@ struct SettingsView: View {
                     }
                     Text("Authentication stays on this device. The app never receives biometric data.")
                         .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
+                        .foregroundStyle(AppColors.secondaryText)
                 }
 
                 settingsCard(title: "PRIVACY") {
                     Text("Understand what stays on this device, how authentication works, and what a backup contains.")
                         .font(.system(.footnote, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
+                        .foregroundStyle(AppColors.secondaryText)
                     NavigationLink {
                         PrivacyInformationView()
                     } label: {
@@ -148,7 +147,7 @@ struct SettingsView: View {
                             .padding(.vertical, 8)
                     }
                     .buttonStyle(.plain)
-                    .tint(AppColors.terracottaDark)
+                    .tint(AppColors.accentText)
                     .accessibilityHint("Explains how the app stores your records, authentication, and backups.")
                 }
 
@@ -164,19 +163,19 @@ struct SettingsView: View {
                         .padding(.vertical, 14)
                 }
                 .buttonStyle(.bordered)
-                .tint(AppColors.terracottaDark)
+                .tint(AppColors.accentText)
                 .disabled(!store.isStorageAvailable)
 
                 if deletionCompleted {
                     Label("Local entries deleted.", systemImage: "checkmark.circle.fill")
                         .font(.system(.subheadline, design: .rounded))
-                        .foregroundStyle(AppColors.sage)
+                        .foregroundStyle(AppColors.success)
                 }
 
-                Text("Verify file protection and backup behavior on an iPhone before release.")
+                Text("Your backups can contain private notes. Keep them somewhere you trust.")
                     .accessibilityIdentifier("settings.footer")
                     .font(.system(.footnote, design: .rounded))
-                    .foregroundStyle(AppColors.inkSoft)
+                    .foregroundStyle(AppColors.secondaryText)
             }
             .padding(.horizontal, AppSpacing.page)
             .padding(.top, 18)
@@ -184,7 +183,7 @@ struct SettingsView: View {
             .frame(maxWidth: 680)
             .frame(maxWidth: .infinity)
         }
-        .background(AppColors.cream.ignoresSafeArea())
+        .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(
@@ -255,16 +254,12 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 13) {
             Text(title)
                 .font(.system(.caption, design: .rounded).weight(.bold))
-                .tracking(1.2)
-                .foregroundStyle(AppColors.terracottaDark)
+                .foregroundStyle(AppColors.accentText)
             content()
                 .font(.system(.subheadline, design: .rounded))
-                .foregroundStyle(AppColors.ink)
+                .foregroundStyle(AppColors.text)
         }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: AppRadius.card).stroke(AppColors.line.opacity(0.8), lineWidth: 1))
+        .modifier(JournalPanel())
     }
 
     private func prepareBackupExport() {

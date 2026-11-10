@@ -15,6 +15,11 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertTrue(start.waitForExistence(timeout: 15))
             XCTAssertEqual(start.label, language == "en" ? "Start a moment" : "开始记录")
             XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0, "Each locale must use an isolated empty store.")
+            for action in [start, app.buttons["today.addRecord"]] {
+                XCTAssertGreaterThanOrEqual(action.frame.minX, app.frame.minX, "Home action is clipped on the left.")
+                XCTAssertLessThanOrEqual(action.frame.maxX, app.frame.maxX, "Home action is clipped on the right.")
+                XCTAssertGreaterThanOrEqual(action.frame.height, 44, "Home action needs an accessible target height.")
+            }
             capture("Today-\(language)", app)
             tap(app.buttons["today.addRecord"], in: app)
             capture("Manual-top-\(language)", app)

@@ -320,10 +320,10 @@ final class SemanticColorTests: XCTestCase {
     func testAccentAndSessionTextRemainReadableInBothAppearances() {
         for style in [UIUserInterfaceStyle.light, .dark] {
             for (foreground, background) in [
-                (AppColors.onAccent, AppColors.terracotta),
-                (AppColors.onDark, AppColors.espresso),
-                (AppColors.onDarkSecondary, AppColors.espresso),
-                (AppColors.onDarkAccent, AppColors.espresso)
+                (AppColors.onAccent, AppColors.accent),
+                (AppColors.onDark, AppColors.session),
+                (AppColors.onDarkSecondary, AppColors.session),
+                (AppColors.onDarkAccent, AppColors.session)
             ] {
                 XCTAssertGreaterThanOrEqual(contrast(foreground, background, style), 4.5)
             }
@@ -332,8 +332,8 @@ final class SemanticColorTests: XCTestCase {
 
     func testBodyAndSecondaryTextContrastOnSurfaces() {
         for style in [UIUserInterfaceStyle.light, .dark] {
-            for surface in [AppColors.cream, AppColors.paper] {
-                for foreground in [AppColors.ink, AppColors.inkSoft, AppColors.terracottaDark] {
+            for surface in [AppColors.background, AppColors.surface, AppColors.accentWash] {
+                for foreground in [AppColors.text, AppColors.secondaryText, AppColors.accentText] {
                     XCTAssertGreaterThanOrEqual(contrast(foreground, surface, style), 4.5)
                 }
             }

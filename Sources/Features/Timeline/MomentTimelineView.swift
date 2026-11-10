@@ -33,6 +33,13 @@ struct MomentTimelineView: View {
         }
     }
 
+    private var dayGroups: [MomentDayGroup] {
+        let calendar = Calendar.current
+        return Dictionary(grouping: results, by: { calendar.startOfDay(for: $0.occurredAt) })
+            .map { MomentDayGroup(date: $0.key, moments: $0.value) }
+            .sorted { $0.date > $1.date }
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
@@ -58,7 +65,7 @@ struct MomentTimelineView: View {
 
                     Text(AppLocalization.momentCount(results.count))
                         .font(.system(.subheadline, design: .rounded).weight(.medium))
-                        .foregroundStyle(AppColors.inkSoft)
+                        .foregroundStyle(AppColors.secondaryText)
 
                     if results.isEmpty {
                         EmptyStateCard(
@@ -70,13 +77,21 @@ struct MomentTimelineView: View {
                         )
                     } else {
                         LazyVStack(spacing: 9) {
-                            ForEach(results) { moment in
-                                Button { onOpen(moment.id) } label: {
-                                    MomentRow(moment: moment)
+                            ForEach(dayGroups) { group in
+                                Text(group.date.formatted(date: .abbreviated, time: .omitted))
+                                    .font(.system(.caption, design: .rounded).weight(.semibold))
+                                    .foregroundStyle(AppColors.accentText)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.top, 8)
+                                    .accessibilityAddTraits(.isHeader)
+                                ForEach(group.moments) { moment in
+                                    Button { onOpen(moment.id) } label: {
+                                        MomentRow(moment: moment)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .accessibilityHint("Opens the private details for this moment")
+                                    .accessibilityIdentifier("moment.row")
                                 }
-                                .buttonStyle(.plain)
-                                .accessibilityHint("Opens the private details for this moment")
-                                .accessibilityIdentifier("moment.row")
                             }
                         }
                     }
@@ -88,9 +103,9 @@ struct MomentTimelineView: View {
             .frame(maxWidth: 700)
             .frame(maxWidth: .infinity)
         }
-        .background(AppColors.cream.ignoresSafeArea())
+        .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Your moments")
-        .navigationBarTitleDisplayMode(dynamicTypeSize.isAccessibilitySize ? .inline : .large)
+        .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $searchText, prompt: "Date, type, mood, or tag")
         .task { store.reload() }
     }
@@ -103,4 +118,10 @@ struct MomentTimelineView: View {
         }
         .accessibilityIdentifier("timeline.filter")
     }
+}
+
+private struct MomentDayGroup: Identifiable {
+    let date: Date
+    let moments: [Moment]
+    var id: Date { date }
 }

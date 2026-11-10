@@ -37,170 +37,106 @@ struct TodayView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
-                adaptiveLayout {
-                    PrivateBadge()
-                    Spacer()
-                    Text(todayLabel)
-                        .font(.system(.caption, design: .rounded).weight(.medium))
-                        .foregroundStyle(AppColors.inkSoft)
-                }
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Your moments")
-                        .font(.system(.largeTitle).weight(.bold))
-                        .foregroundStyle(AppColors.ink)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Private Moments")
+                        .font(.system(.title, design: .rounded).weight(.bold))
+                        .foregroundStyle(AppColors.accentText)
                         .fixedSize(horizontal: false, vertical: true)
-                }
-
-                Button(action: onStart) {
-                    HStack(spacing: 14) {
-                        if !dynamicTypeSize.isAccessibilitySize {
-                            Image(systemName: "waveform.path")
-                                .font(.system(size: 22, weight: .medium))
-                        }
-                        Text("Start a moment")
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        if !dynamicTypeSize.isAccessibilitySize {
-                            Image(systemName: "arrow.up.right")
-                                .font(.system(size: 14, weight: .semibold))
-                                .frame(width: 34, height: 34)
-                                .background(AppColors.onAccent.opacity(0.2), in: Circle())
-                        }
+                    adaptiveLayout {
+                        Text(todayLabel)
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundStyle(AppColors.secondaryText)
+                        Spacer(minLength: 0)
+                        PrivateBadge()
                     }
-                    .padding(.horizontal, 2)
                 }
-                .buttonStyle(PrimaryActionButtonStyle())
-                .disabled(!store.isStorageAvailable)
-                .accessibilityIdentifier("today.startMoment")
-                .accessibilityHint(
-                    store.isStorageAvailable
-                        ? "Starts a private session timer. Health data is optional and is not connected in this MVP."
-                        : "Load your local journal before starting a session."
-                )
 
-                Button { onAddRecord(min(selectedDate ?? .now, .now)) } label: {
-                    Label("Add past moment", systemImage: "square.and.pencil")
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
+                if store.isStorageAvailable {
+                    weekSelector
                 }
-                .buttonStyle(.bordered)
-                .tint(AppColors.terracottaDark)
-                .disabled(!store.isStorageAvailable)
-                .accessibilityIdentifier("today.addRecord")
-                .accessibilityHint("Adds a record without starting the timer")
+
+                adaptiveLayout {
+                    Button(action: onStart) {
+                        Label("Start a moment", systemImage: "play.fill")
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .buttonStyle(PrimaryActionButtonStyle())
+                    .disabled(!store.isStorageAvailable)
+                    .accessibilityIdentifier("today.startMoment")
+                    .accessibilityHint(store.isStorageAvailable
+                        ? "Starts a private session timer"
+                        : "Load your journal before starting a record.")
+
+                    Button { onAddRecord(min(selectedDate ?? .now, .now)) } label: {
+                        Label("Add past moment", systemImage: "square.and.pencil")
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .buttonStyle(SecondaryActionButtonStyle())
+                    .disabled(!store.isStorageAvailable)
+                    .accessibilityIdentifier("today.addRecord")
+                    .accessibilityHint("Adds a record without starting the timer")
+                }
 
                 if !store.isStorageAvailable {
                     StorageRecoveryCard(
                         message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
                         onRetry: store.reload
                     )
-                }
+                } else {
+                    if let errorMessage = store.errorMessage { ErrorNotice(message: errorMessage) }
 
-                if store.isStorageAvailable {
-                    adaptiveLayout {
-                        if let selectedDate {
-                            Text(selectedDate.formatted(date: .abbreviated, time: .omitted))
-                                .font(.headline)
-                                .foregroundStyle(AppColors.ink)
-                        } else {
-                            Text("Recent moments")
-                                .font(.headline)
-                                .foregroundStyle(AppColors.ink)
-                        }
-                        Spacer()
-                        Text(AppLocalization.format("%lld saved", selectedDate == nil ? store.moments.count : visibleMoments.count))
-                            .font(.system(.caption, design: .rounded).weight(.medium))
-                            .foregroundStyle(AppColors.inkSoft)
-                    }
-
-                    if selectedDate != nil {
-                        Button("Show recent moments") { selectedDate = nil }
-                            .accessibilityIdentifier("today.clearDateFilter")
-                            .frame(minHeight: 44)
-                    }
-
-                    if visibleMoments.isEmpty {
-                        EmptyStateCard(
-                            title: selectedDate == nil ? "Nothing to look back on yet" : "No moments on this day",
-                            message: selectedDate == nil
-                                ? "When you're ready, save a moment. It stays in this app on this device."
-                                : "Choose another day or add a past moment.",
-                            symbol: "heart"
-                        )
-                    } else {
-                        VStack(spacing: 9) {
-                            ForEach(visibleMoments) { moment in
-                                Button { onOpen(moment.id) } label: {
-                                    MomentRow(moment: moment)
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityHint("Opens the private details for this moment")
-                                .accessibilityIdentifier("moment.row")
-                            }
-                        }
-                    }
-
-                    VStack(alignment: .leading, spacing: 14) {
+                    VStack(alignment: .leading, spacing: 12) {
                         adaptiveLayout {
-                            Text("This week")
-                                .font(.system(.title3, design: .serif).weight(.semibold))
-                                .foregroundStyle(AppColors.ink)
-                            Spacer()
-                            let weekTotal = weekSummary.reduce(0) { $0 + $1.count }
-                            Text(AppLocalization.format("%lld saved", weekTotal))
-                                .font(.system(.caption, design: .rounded).weight(.medium))
-                                .foregroundStyle(AppColors.inkSoft)
+                            Text(selectedDate.map { $0.formatted(date: .abbreviated, time: .omitted) } ?? AppLocalization.string("Recent moments"))
+                                .font(.system(.headline, design: .rounded).weight(.semibold))
+                                .foregroundStyle(AppColors.text)
+                            Spacer(minLength: 0)
+                            Text(AppLocalization.format("%lld saved", selectedDate == nil ? store.moments.count : visibleMoments.count))
+                                .font(.system(.caption, design: .rounded))
+                                .foregroundStyle(AppColors.secondaryText)
                         }
-
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 3 : 7), spacing: 8) {
-                            ForEach(weekSummary) { day in
-                                Button { selectedDate = day.date } label: {
-                                    VStack(spacing: 7) {
-                                        Text(day.count == 0 ? "·" : (day.count > 99 ? "99+" : "\(day.count)"))
-                                            .font(.system(.caption, design: .rounded).weight(.semibold).monospacedDigit())
-                                            .foregroundStyle(day.count == 0 ? AppColors.inkSoft : AppColors.onAccent)
-                                            .frame(minWidth: 28, minHeight: 34)
-                                            .background(day.count == 0 ? AppColors.cream : AppColors.terracotta, in: Circle())
-                                        Text(day.date.formatted(.dateTime.weekday(.narrow)))
-                                            .font(.system(.caption2, design: .rounded).weight(.medium))
-                                            .foregroundStyle(AppColors.inkSoft)
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .accessibilityElement(children: .ignore)
-                                    .accessibilityLabel(day.accessibilityDescription)
-                                }
-                                .buttonStyle(.plain)
+                        if selectedDate != nil {
+                            Button("Show recent moments") { selectedDate = nil }
+                                .font(.subheadline)
                                 .frame(minHeight: 44)
-                                .background(selectedDate.map { Calendar.current.isDate($0, inSameDayAs: day.date) } == true ? AppColors.blush.opacity(0.22) : .clear, in: RoundedRectangle(cornerRadius: 10))
-                                .accessibilityAddTraits(selectedDate.map { Calendar.current.isDate($0, inSameDayAs: day.date) } == true ? .isSelected : [])
-                                .accessibilityIdentifier("today.weekday")
-                                .accessibilityHint("Shows moments from this day")
+                                .accessibilityIdentifier("today.clearDateFilter")
+                        }
+                        if visibleMoments.isEmpty {
+                            EmptyStateCard(
+                                title: selectedDate == nil ? "No moments here yet" : "No moments on this day",
+                                message: selectedDate == nil
+                                    ? "Your timeline will appear here after you save a moment."
+                                    : "Choose another day or add a past moment.",
+                                symbol: "heart"
+                            )
+                        } else {
+                            LazyVStack(spacing: 10) {
+                                ForEach(visibleMoments) { moment in
+                                    Button { onOpen(moment.id) } label: { MomentRow(moment: moment) }
+                                        .buttonStyle(.plain)
+                                        .accessibilityHint("Opens the private details for this moment")
+                                        .accessibilityIdentifier("moment.row")
+                                }
                             }
                         }
                     }
-                    .padding(16)
-                    .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
 
                     adaptiveLayout {
                         summaryTile(
                             value: store.averageDurationMinutes.map { AppLocalization.format("%lld min", $0) } ?? "—",
                             title: "Average"
                         )
-                        summaryTile(
-                            value: store.mostCommonMood?.displayName ?? "—",
-                            title: "Most common mood"
-                        )
+                        summaryTile(value: store.mostCommonMood?.displayName ?? "—", title: "Most common mood")
                     }
                 }
             }
             .padding(.horizontal, AppSpacing.page)
-            .padding(.top, 18)
+            .padding(.top, 16)
             .padding(.bottom, 30)
-            .frame(maxWidth: 640)
+            .frame(maxWidth: 700)
             .frame(maxWidth: .infinity)
         }
-        .background(AppColors.cream.ignoresSafeArea())
+        .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Today")
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: scenePhase) { _, phase in
@@ -248,19 +184,64 @@ struct TodayView: View {
         .task { store.reload() }
     }
 
+    private var weekSelector: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("This week")
+                    .font(.system(.caption, design: .rounded).weight(.semibold))
+                Spacer()
+                Text(AppLocalization.format("%lld saved", weekSummary.reduce(0) { $0 + $1.count }))
+                    .font(.system(.caption2, design: .rounded))
+            }
+            .foregroundStyle(AppColors.secondaryText)
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 3 : 7), spacing: 3) {
+                ForEach(weekSummary) { day in
+                    let selected = selectedDate.map { Calendar.current.isDate($0, inSameDayAs: day.date) } == true
+                    Button { selectedDate = day.date } label: {
+                        VStack(spacing: 6) {
+                            Text(day.date.formatted(.dateTime.weekday(.narrow)))
+                                .font(.system(.caption2, design: .rounded))
+                            Text(day.date.formatted(.dateTime.day()))
+                                .font(.system(.subheadline, design: .rounded).weight(.semibold).monospacedDigit())
+                            Circle()
+                                .fill(day.count > 0 ? (selected ? AppColors.onAccent : AppColors.accentText) : .clear)
+                                .frame(width: 4, height: 4)
+                                .accessibilityHidden(true)
+                        }
+                        .foregroundStyle(selected ? AppColors.onAccent : AppColors.accentText)
+                        .frame(maxWidth: .infinity, minHeight: 68)
+                        .background(selected ? AppColors.accent : .clear, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .overlay {
+                            if Calendar.current.isDateInToday(day.date) && !selected {
+                                RoundedRectangle(cornerRadius: 18).strokeBorder(AppColors.separator, lineWidth: 1)
+                            }
+                        }
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(day.accessibilityDescription)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(selected ? .isSelected : [])
+                    .accessibilityIdentifier("today.weekday")
+                    .accessibilityHint("Shows moments from this day")
+                }
+            }
+        }
+    }
+
     private func summaryTile(value: String, title: LocalizedStringKey) -> some View {
         VStack(alignment: .leading, spacing: 7) {
             Text(value)
-                .font(.system(.headline, design: .rounded).weight(.semibold))
-                .foregroundStyle(AppColors.ink)
+                .font(.system(.title3, design: .rounded).weight(.semibold))
+                .foregroundStyle(AppColors.accentText)
                 .fixedSize(horizontal: false, vertical: true)
             Text(title)
                 .font(.system(.caption, design: .rounded).weight(.medium))
-                .foregroundStyle(AppColors.inkSoft)
+                .foregroundStyle(AppColors.secondaryText)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
+        .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
     }
 
     private var adaptiveLayout: AnyLayout {
@@ -277,6 +258,6 @@ private struct WeekdayCount: Identifiable {
     var id: Date { date }
 
     var accessibilityDescription: String {
-        AppLocalization.format("%@, %@", date.formatted(.dateTime.weekday(.wide)), AppLocalization.momentCount(count))
+        AppLocalization.format("%@, %@", date.formatted(date: .complete, time: .omitted), AppLocalization.momentCount(count))
     }
 }

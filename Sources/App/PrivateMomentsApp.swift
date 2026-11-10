@@ -86,6 +86,6 @@ private struct StorageUnavailableView: View {
             .buttonStyle(.borderedProminent)
             .disabled(isRetrying)
         }
-        .tint(AppColors.terracotta)
+        .tint(AppColors.accent)
     }
 }

@@ -1,6 +1,14 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Private Moments": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "私密时刻"}}}},
+    "Starts a private session timer": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "开始私密计时"}}}},
+    "Load your journal before starting a record.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "请先读取本机记录，再开始记录。"}}}},
+    "You can add your reflection when you finish.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "结束后，可以慢慢写下此刻的感受。"}}}},
+    "Your space, your choice.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "你的空间，由你做主。"}}}},
+    "Your journal stays on this device. Manage its privacy and backups here.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "记录保存在这台设备上。在这里管理隐私和备份。"}}}},
+    "Your backups can contain private notes. Keep them somewhere you trust.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "备份可能包含私密笔记，请将它保存在你信任的位置。"}}}},
+    "Private notes are included in exported backups.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "导出的备份会包含私密笔记。"}}}},
     "Add past moment": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "补记"}}}},
     "Adds a record without starting the timer": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "直接填写记录，不启动计时"}}}},
     "Date and duration": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "日期与时长"}}}},
@@ -297,16 +305,6 @@
         }
       }
     },
-    "Core journaling works offline. Optional Apple services are not connected in this MVP.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日常记录可离线使用；当前版本尚未接入其他 Apple 服务。"
-          }
-        }
-      }
-    },
     "Create a portable JSON backup or restore one you made earlier.": {
       "localizations": {
         "zh-Hans": {
@@ -483,16 +481,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "愉悦"
-          }
-        }
-      }
-    },
-    "Health and Watch readings are not connected in this MVP.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当前版本尚未接入健康数据或 Apple Watch。"
           }
         }
       }
@@ -707,16 +695,6 @@
         }
       }
     },
-    "Nothing to look back on yet": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "还没有值得回看的记录"
-          }
-        }
-      }
-    },
     "On": {
       "localizations": {
         "zh-Hans": {
@@ -803,16 +781,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "私密备注"
-          }
-        }
-      }
-    },
-    "Private notes are not part of sharing in this MVP.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当前版本不会分享私密备注。"
           }
         }
       }
@@ -1037,16 +1005,6 @@
         }
       }
     },
-    "Starts a private session timer. Health data is optional and is not connected in this MVP.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "开始私密计时。健康数据为可选项，目前尚未接入。"
-          }
-        }
-      }
-    },
     "Take the time you need.\nYou can finish whenever you like.": {
       "localizations": {
         "zh-Hans": {
@@ -1247,16 +1205,6 @@
         }
       }
     },
-    "Type": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "类型"
-          }
-        }
-      }
-    },
     "Under a minute": {
       "localizations": {
         "zh-Hans": {
@@ -1323,16 +1271,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "你的时刻"
-          }
-        }
-      }
-    },
-    "Your privacy,\nyour rules.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "隐私由你掌握，\n规则由你决定。"
           }
         }
       }
@@ -1413,16 +1351,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "此备份使用的格式版本 (%lld) 不受支持。"
-          }
-        }
-      }
-    },
-    "Load your local journal before starting a session.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请先加载本机日记，再开始计时。"
           }
         }
       }
@@ -1577,16 +1505,6 @@
         }
       }
     },
-    "When you're ready, save a moment. It stays in this app on this device.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "准备好时，记下一段时刻。它只会保存在此设备的应用中。"
-          }
-        }
-      }
-    },
     "Filters your private records by moment type": {
       "localizations": {
         "zh-Hans": {
@@ -1643,16 +1561,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "开启时需要通过设备验证"
-          }
-        }
-      }
-    },
-    "Verify file protection and backup behavior on an iPhone before release.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "发布前请在 iPhone 上验证文件保护与备份行为。"
           }
         }
       }
