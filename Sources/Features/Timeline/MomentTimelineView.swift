@@ -69,6 +69,7 @@ struct MomentTimelineView: View {
                     Text(AppLocalization.momentCount(results.count))
                         .font(.system(.subheadline, design: .rounded).weight(.medium))
                         .foregroundStyle(AppColors.secondaryText)
+                        .accessibilityIdentifier("timeline.resultCount")
 
                     if hasActiveFilters {
                         Button {

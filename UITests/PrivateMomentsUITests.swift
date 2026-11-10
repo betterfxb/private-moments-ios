@@ -42,7 +42,7 @@ final class PrivateMomentsUITests: XCTestCase {
             let quickSave = app.buttons["recap.saveToolbar"]
             XCTAssertTrue(quickSave.isHittable, "Saving must be reachable without scrolling the form.")
             XCTAssertEqual(quickSave.label, language == "en" ? "Save privately" : "私密保存")
-            XCTAssertGreaterThanOrEqual(quickSave.frame.height, 44)
+            assertToolbarTarget(quickSave)
             capture("Manual-top-\(language)", app)
             let datePanel = app.buttons["recap.date.open"]
             if datePanel.exists {
@@ -74,7 +74,6 @@ final class PrivateMomentsUITests: XCTestCase {
             recoverFailedSave(language: language, captureScenes: true, app: app)
             tap(app.buttons["recap.saveToolbar"], in: app)
             XCTAssertTrue(start.waitForExistence(timeout: 10))
-            XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1, "Failure and retry must not create duplicate entries.")
             if weekMenu.exists {
                 revealFully(from: app.staticTexts["today.brand"], through: app.staticTexts["today.brand"], in: app)
             }
@@ -89,6 +88,11 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Today-summary-\(language)", app)
             selectTab("Timeline", "时间线", language: language, app: app)
             capture("Timeline-\(language)", app)
+            // Lazy rows outside the large-text viewport are not a record count.
+            let total = app.staticTexts["timeline.resultCount"]
+            reveal(total, in: app)
+            XCTAssertEqual(total.label, language == "en" ? "1 moment" : "1 条记录",
+                "Failure and retry must persist exactly one entry.")
             chooseMomentFilter(language == "en" ? "Solo" : "独自", in: app)
             XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
             let noMatches = app.staticTexts[language == "en" ? "No matching moments" : "没有找到匹配记录"]
@@ -100,7 +104,7 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
             let edit = app.buttons["detail.editToolbar"]
             XCTAssertTrue(edit.isHittable, "Details must offer editing without scrolling past the note.")
-            XCTAssertGreaterThanOrEqual(edit.frame.height, 44)
+            assertToolbarTarget(edit)
             XCTAssertEqual(edit.label, language == "en" ? "Edit reflection" : "编辑感受")
             capture("Detail-top-\(language)", app)
             revealFully(from: app.buttons["detail.edit"], through: app.buttons["detail.delete"], in: app)
@@ -341,7 +345,7 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertTrue(reload.isHittable)
         XCTAssertTrue(reload.isEnabled)
         XCTAssertEqual(reload.label, language == "en" ? "Reload journal" : "重新读取记录")
-        XCTAssertGreaterThanOrEqual(reload.frame.height, 44)
+        assertToolbarTarget(reload)
         XCTAssertFalse(app.buttons["recap.save"].isEnabled)
         if captureScenes { capture("Save-recovery-\(language)", app) }
         tap(reload, in: app)
@@ -355,6 +359,14 @@ final class PrivateMomentsUITests: XCTestCase {
         let tab = app.buttons.matching(NSPredicate(format: "label == %@", label)).firstMatch
         XCTAssertTrue(tab.waitForExistence(timeout: 10), "Missing tab: \(label)")
         tab.tap()
+    }
+
+    private func assertToolbarTarget(_ control: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        // Snapshot coordinates can differ from 44 by one floating-point ULP.
+        // A millionth of a point is below a display pixel; 36pt still fails.
+        let tolerance: CGFloat = 0.000001
+        XCTAssertGreaterThanOrEqual(control.frame.width + tolerance, 44, file: file, line: line)
+        XCTAssertGreaterThanOrEqual(control.frame.height + tolerance, 44, file: file, line: line)
     }
 
     private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
