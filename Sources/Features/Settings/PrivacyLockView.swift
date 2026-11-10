@@ -9,7 +9,7 @@ struct PrivacyLockView: View {
             VStack(spacing: 18) {
                 Image(systemName: "lock.fill")
                     .font(.system(size: 30, weight: .medium))
-                    .foregroundStyle(AppColors.accent)
+                    .foregroundStyle(AppColors.accentText)
                     .frame(width: 68, height: 68)
                     .background(AppColors.accentWash, in: Circle())
                     .accessibilityHidden(true)

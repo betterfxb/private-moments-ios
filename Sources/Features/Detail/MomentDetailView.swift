@@ -174,7 +174,7 @@ struct MomentDetailView: View {
     private func infoCard(title: LocalizedStringKey, value: String, symbol: String) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Image(systemName: symbol)
-                .foregroundStyle(AppColors.accent)
+                .foregroundStyle(AppColors.accentText)
             Text(title)
                 .font(.system(.caption, design: .rounded))
                 .foregroundStyle(AppColors.secondaryText)
