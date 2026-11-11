@@ -5,6 +5,17 @@ final class PrivateMomentsUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    override func tearDownWithError() throws {
+        let app = XCUIApplication()
+        if app.state != .notRunning {
+            // A failed picker assertion must not leave a remote system window
+            // covering the next test's freshly launched journal.
+            if app.collectionViews["File View"].exists,
+               let cancel = nativeControl(["Cancel"], app: app) { cancel.tap() }
+            app.terminate()
+        }
+    }
+
     // The CI profile controls device, system appearance, and system text size.
     // Each locale gets a separate persistent test store; no normal journal is reset.
     func testScreenGallery() throws {
@@ -134,7 +145,8 @@ final class PrivateMomentsUITests: XCTestCase {
             reveal(lock, in: app)
             let recovered = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: lock)
             XCTAssertEqual(XCTWaiter.wait(for: [recovered], timeout: 10), .completed)
-            XCTAssertEqual(lock.label, language == "en" ? "Lock journal, Off" : "锁定日记, 关闭")
+            XCTAssertTrue(lock.staticTexts[language == "en" ? "Off" : "关闭"].exists)
+            XCTAssertFalse(lock.staticTexts[language == "en" ? "On" : "开启"].exists)
             captureSystem("Lock-recovery-\(language)", app)
             app.terminate()
         }
@@ -283,9 +295,19 @@ final class PrivateMomentsUITests: XCTestCase {
             captureSystem("Import-file-unavailable", app)
             return XCTFail("Exported file is not available in the real document picker.")
         }
-        file.tap()
+        XCTAssertTrue(file.isEnabled, "The exported JSON must be selectable in the real picker.")
+        let thumbnail = file.images.firstMatch
+        if thumbnail.exists && thumbnail.isHittable {
+            // Icon-mode cells include a filename/metadata area below the
+            // actual document thumbnail; choose the visible document itself.
+            thumbnail.tap()
+        } else {
+            file.tap()
+        }
         if !app.buttons["backup.merge"].waitForExistence(timeout: 5), let open = nativeControl(["Open"], app: app) { open.tap() }
-        XCTAssertTrue(app.buttons["backup.merge"].waitForExistence(timeout: 10), "Selecting the file must lead to a validated review.")
+        let reviewed = app.buttons["backup.merge"].waitForExistence(timeout: 10)
+        if !reviewed { captureSystem("Import-selection-unresolved", app) }
+        XCTAssertTrue(reviewed, "Selecting the file must lead to a validated review.")
     }
 
     private func captureSystem(_ name: String, _ app: XCUIApplication) {
