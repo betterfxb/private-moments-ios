@@ -2,6 +2,12 @@ import XCTest
 
 final class PrivateMomentsUITests: XCTestCase {
     private var importRecoveryCount = 0
+    private enum BackupSelectionResult {
+        case delivered
+        case pendingDelivery
+        case unavailablePicker(XCUICoordinate)
+        case failed
+    }
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -230,7 +236,13 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["settings.restore"], in: app)
         let cancel = try XCTUnwrap(nativeControl(["Cancel"], app: app, timeout: 10))
         captureSystem("Import-files-en", app)
-        cancel.tap()
+        if let outside = pickerDismissalPoint(in: app, requireBlank: false) {
+            // Exercise the real adaptive presentation's escape path on iPad.
+            print("Explicit native picker backdrop cancellation; journal checked unchanged afterward.")
+            outside.tap()
+        } else {
+            cancel.tap()
+        }
         assertImportCancelled(in: app)
         capture("Import-cancelled-en", app)
         assertSavedCount("1", app: app)
@@ -377,14 +389,17 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(metric.label, value)
     }
 
-    private func nativeControl(_ labels: [String], app: XCUIApplication, timeout: TimeInterval = 2) -> XCUIElement? {
+    private func nativeControl(_ labels: [String], app: XCUIApplication, timeout: TimeInterval = 2,
+        surface: XCUIElement? = nil, enabledAction: Bool = false) -> XCUIElement? {
+        let scope: XCUIElement = surface ?? app
         let deadline = Date().addingTimeInterval(timeout)
         repeat {
             for label in labels {
-                let items = app.buttons.matching(NSPredicate(format: "label == %@", label)).allElementsBoundByIndex
-                    + app.staticTexts.matching(NSPredicate(format: "label == %@", label)).allElementsBoundByIndex
+                let predicate = NSPredicate(format: "label == %@", label)
+                let items = scope.buttons.matching(predicate).allElementsBoundByIndex
+                    + (enabledAction ? [] : scope.staticTexts.matching(predicate).allElementsBoundByIndex)
                 for item in items {
-                    if item.exists && item.isHittable { return item }
+                    if item.exists && item.isHittable && (!enabledAction || item.isEnabled) { return item }
                 }
             }
         } while Date() < deadline
@@ -392,11 +407,28 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func saveToLocalFiles(_ app: XCUIApplication) {
-        if let local = nativeControl(["On My iPhone", "On My iPad"], app: app) { local.tap() }
+        // A visible location title is not a sidebar action: tapping it can open
+        // Browse and turn its unrelated More menu into Edit. Stay in a ready
+        // local browser, or navigate using the actual location cell/button.
+        if !localFileRoots(in: app).firstMatch.exists {
+            guard let local = localFilesLocation(app, timeout: 15) else {
+                captureSystem("Exporter-unavailable", app)
+                return XCTFail("The native local destination is not available.")
+            }
+            local.tap()
+        }
+        let root = localFileRoots(in: app).firstMatch
+        guard root.waitForExistence(timeout: 15) else {
+            captureSystem("Exporter-unavailable", app)
+            return XCTFail("The local file browser did not finish navigating.")
+        }
         let labels = ["Save", "Export", "Move"]
-        if let action = nativeControl(labels, app: app), action.isEnabled { action.tap(); return }
-        if let more = nativeControl(["More"], app: app) { more.tap() }
-        guard let folder = nativeControl(["New Folder"], app: app) else {
+        if let action = nativeControl(labels, app: app, timeout: 15, surface: root, enabledAction: true) {
+            action.tap()
+            return
+        }
+        if let more = nativeControl(["More"], app: app, timeout: 5, surface: root, enabledAction: true) { more.tap() }
+        guard let folder = nativeControl(["New Folder"], app: app, timeout: 5, enabledAction: true) else {
             captureSystem("Exporter-unavailable", app)
             return XCTFail("No writable local folder or New Folder action in system exporter.")
         }
@@ -404,9 +436,10 @@ final class PrivateMomentsUITests: XCTestCase {
         let name = app.alerts.firstMatch.exists ? app.alerts.firstMatch.textFields.firstMatch : app.textFields.firstMatch
         XCTAssertTrue(name.waitForExistence(timeout: 5))
         replaceNumber(name, with: "PM Tests", in: app)
-        guard let create = nativeControl(["Create", "Done"], app: app) else { return XCTFail("Missing native folder creation action") }
+        guard let create = nativeControl(["Create", "Done"], app: app, timeout: 5, enabledAction: true) else { return XCTFail("Missing native folder creation action") }
         create.tap()
-        guard let save = nativeControl(labels, app: app, timeout: 5), save.isEnabled else { return XCTFail("No enabled system save action") }
+        guard let save = nativeControl(labels, app: app, timeout: 15,
+            surface: localFileRoots(in: app).firstMatch, enabledAction: true) else { return XCTFail("No enabled system save action") }
         save.tap()
     }
 
@@ -414,25 +447,41 @@ final class PrivateMomentsUITests: XCTestCase {
         let originalCount = app.staticTexts["settings.savedCount"].label
         tap(app.buttons["settings.restore"], in: app)
         for attempt in 0..<2 {
-            let delivered = selectBackupFile(filename, app: app)
+            let selection = selectBackupFile(filename, app: app)
             if app.buttons["backup.merge"].exists { return }
-            if !delivered {
-                // A selected item can remain in the system picker without a
-                // delegate URL. Exercise its real Cancel/reopen path once;
-                // never infer a successful read or retry the whole test.
-                guard attempt == 0, app.collectionViews["File View"].exists,
-                      let cancel = nativeControl(["Cancel"], app: app) else {
+            switch selection {
+            case .failed: return
+            case .pendingDelivery, .unavailablePicker:
+                // An actual selection can remain undelivered, or the native
+                // browser can fail to load. Both share one explicit escape and
+                // reopen budget; never infer a read or retry the whole test.
+                guard attempt == 0 else {
                     captureSystem("Import-selection-unresolved", app)
-                    return XCTFail("The system picker did not deliver a file and has no bounded recovery left.")
+                    return XCTFail("The system picker has no bounded recovery left.")
+                }
+                let cancel: () -> Void
+                let reason: String
+                if case .unavailablePicker(let outside) = selection {
+                    cancel = { outside.tap() }
+                    reason = "picker-unavailable"
+                } else {
+                    guard app.collectionViews["File View"].exists,
+                          let button = nativeControl(["Cancel"], app: app) else {
+                        captureSystem("Import-selection-unresolved", app)
+                        return XCTFail("A pending system selection has no native cancel action.")
+                    }
+                    cancel = { button.tap() }
+                    reason = "picker-not-delivered"
                 }
                 importRecoveryCount += 1
                 captureSystem("Import-recovery-\(importRecoveryCount)-en", app)
-                cancel.tap()
+                cancel()
                 assertImportCancelled(in: app)
                 XCTAssertEqual(app.staticTexts["settings.savedCount"].label, originalCount)
-                print("Explicit system backup reselection \(importRecoveryCount); local record count unchanged. Reason: picker-not-delivered.")
+                print("Explicit system backup reselection \(importRecoveryCount); local record count unchanged. Reason: \(reason).")
                 tap(app.buttons["settings.restore"], in: app)
                 continue
+            case .delivered: break
             }
             let chooseAgain = app.buttons["settings.chooseBackupAgain"]
             guard attempt == 0, chooseAgain.exists else {
@@ -453,14 +502,28 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTFail("Backup review did not open after the explicit recovery action.")
     }
 
-    private func selectBackupFile(_ filename: String, app: XCUIApplication) -> Bool {
+    private func localFileRoots(in app: XCUIApplication) -> XCUIElementQuery {
+        app.otherElements.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@", "DOC.browsingRoot Source: com.apple.FileProvider.LocalStorage,"
+        ))
+    }
+
+    private func selectBackupFile(_ filename: String, app: XCUIApplication) -> BackupSelectionResult {
+        // The native Files service is a separate process. Wait for its actual
+        // browser, as the exporter already does, before looking for a filename.
+        guard app.collectionViews["File View"].waitForExistence(timeout: 90) else {
+            if let outside = pickerDismissalPoint(in: app, requireBlank: true) {
+                return .unavailablePicker(outside)
+            }
+            captureSystem("Import-file-unavailable", app)
+            XCTFail("The native browser is unavailable and has no safe blank-panel dismissal.")
+            return .failed
+        }
         let predicate = NSPredicate(format: "label CONTAINS[cd] %@", filename)
         func selectedFile() -> XCUIElement? {
             // Browse can reopen its previous local folder directly. Scope the
             // file to the actual local provider, never a Recents staging copy.
-            let localRoots = app.otherElements.matching(NSPredicate(
-                format: "identifier BEGINSWITH %@", "DOC.browsingRoot Source: com.apple.FileProvider.LocalStorage,"
-            ))
+            let localRoots = localFileRoots(in: app)
             for root in localRoots.allElementsBoundByIndex {
                 for browser in root.collectionViews.matching(identifier: "File View").allElementsBoundByIndex {
                     for item in browser.cells.matching(predicate).allElementsBoundByIndex {
@@ -483,7 +546,7 @@ final class PrivateMomentsUITests: XCTestCase {
         guard let file else {
             captureSystem("Import-file-unavailable", app)
             XCTFail("Exported file is not available in the real document picker.")
-            return false
+            return .failed
         }
         waitForStableFrame(file, requireHittable: true, message: "The system file cell must finish presenting.")
         XCTAssertTrue(file.isEnabled, "The exported JSON must be selectable in the real picker.")
@@ -504,7 +567,34 @@ final class PrivateMomentsUITests: XCTestCase {
         let resolved = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             app.buttons["backup.merge"].exists || app.buttons["settings.chooseBackupAgain"].exists
         }, object: nil)
-        return XCTWaiter.wait(for: [resolved], timeout: 30) == .completed
+        return XCTWaiter.wait(for: [resolved], timeout: 30) == .completed ? .delivered : .pendingDelivery
+    }
+
+    private func pickerDismissalPoint(in app: XCUIApplication, requireBlank: Bool) -> XCUICoordinate? {
+        let window = app.windows.firstMatch
+        let viewport = window.frame
+        guard !viewport.isEmpty, !viewport.isNull, !viewport.isInfinite else { return nil }
+        // Match the actual adaptive presentation backdrop and its sibling panel,
+        // not a guessed sheet size or a tap on an underlying journal control.
+        for overlay in window.children(matching: .other).allElementsBoundByIndex.reversed() {
+            let children = overlay.children(matching: .other)
+            let backdrop = children.matching(identifier: "PopoverDismissRegion").firstMatch
+            guard backdrop.exists else { continue }
+            for panel in children.allElementsBoundByIndex where panel.identifier != "PopoverDismissRegion" {
+                let frame = panel.frame
+                guard !frame.isEmpty, frame != viewport, viewport.contains(frame) else { continue }
+                if requireBlank {
+                    guard panel.buttons.count == 0, panel.staticTexts.count == 0,
+                          panel.collectionViews.count == 0 else { continue }
+                }
+                for offset in [CGVector(dx: 0.05, dy: 0.5), CGVector(dx: 0.95, dy: 0.5)] {
+                    let point = window.coordinate(withNormalizedOffset: offset)
+                    if viewport.contains(point.screenPoint), backdrop.frame.contains(point.screenPoint),
+                       !frame.insetBy(dx: -8, dy: -8).contains(point.screenPoint) { return point }
+                }
+            }
+        }
+        return nil
     }
 
     private func localFilesLocation(_ app: XCUIApplication, timeout: TimeInterval) -> XCUIElement? {
@@ -514,7 +604,7 @@ final class PrivateMomentsUITests: XCTestCase {
             let locations = app.buttons.matching(predicate).allElementsBoundByIndex
                 + app.cells.matching(predicate).allElementsBoundByIndex
             for location in locations {
-                if location.exists && location.isHittable { return location }
+                if location.exists && location.isHittable && location.isEnabled { return location }
             }
         } while Date() < deadline
         return nil

@@ -202,6 +202,7 @@ struct SettingsView: View {
                             handleBackupImport(result)
                         }
                         .id(requestID)
+                        .presentationDragIndicator(.visible)
                     }
 
                     Text("Backups include private notes. Keep the file somewhere only you can access.")
