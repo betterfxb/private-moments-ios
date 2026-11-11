@@ -314,6 +314,7 @@ final class PrivateMomentsUITests: XCTestCase {
         }, object: nil)
         let outcome = XCTWaiter.wait(for: [visible], timeout: 10)
         if outcome != .completed {
+            print("Backup feedback visibility: exists=\(result.exists), hittable=\(result.isHittable), result=\(result.frame), navigation=\(app.navigationBars.firstMatch.frame), tabs=\(app.tabBars.firstMatch.frame), app=\(app.frame)")
             captureSystem("Backup-result-unavailable-en", app)
         }
         XCTAssertEqual(outcome, .completed,

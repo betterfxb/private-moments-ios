@@ -41,7 +41,9 @@ struct SettingsView: View {
                 .onChange(of: backupStatus) { _, status in
                     guard status != nil else { return }
                     withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
-                        proxy.scrollTo(ScrollAnchor.backupResult, anchor: .top)
+                        // Keep feedback away from translucent navigation chrome,
+                        // including on compact screens after a system sheet closes.
+                        proxy.scrollTo(ScrollAnchor.backupResult, anchor: .center)
                     }
                 }
         }
