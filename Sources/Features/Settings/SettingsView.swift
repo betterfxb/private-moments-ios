@@ -188,6 +188,9 @@ struct SettingsView: View {
                         let requestID = backupPickerID
                         BackupFilePicker(onBeginReading: {
                             guard requestID == backupPickerID else { return }
+                            // Files may dismiss the sheet before delivering its
+                            // URL. Reading is the current outcome once delivered.
+                            backupStatus = nil
                             isReadingBackup = true
                             logger.notice("Backup picker delivered a file for validation.")
                         }) { result in
