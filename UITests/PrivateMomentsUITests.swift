@@ -457,8 +457,10 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(search, in: app)
         search.typeText(query)
         search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: query.count))
+        waitForTimelineRows(1, in: app)
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
         search.typeText("Calm")
+        waitForTimelineRows(1, in: app)
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
         search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 4))
         // Dismiss search so the keyboard cannot cover the entry row.
@@ -694,6 +696,16 @@ final class PrivateMomentsUITests: XCTestCase {
     private func tap(_ element: XCUIElement, in app: XCUIApplication) {
         reveal(element, in: app)
         element.tap()
+    }
+
+    private func waitForTimelineRows(_ count: Int, in app: XCUIApplication) {
+        // Keyboard events can complete before SwiftUI publishes the next
+        // accessibility snapshot. Wait for actual results, never a fixed delay.
+        let updated = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            app.buttons.matching(identifier: "moment.row").count == count
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [updated], timeout: 5), .completed,
+            "Timeline did not publish the expected record count after search changed.")
     }
 
     private func cancelConfirmation(_ label: String, destructiveAction: String, in app: XCUIApplication) {
