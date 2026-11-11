@@ -6,6 +6,7 @@ import UIKit
 private enum BackupStatus {
     case success(String)
     case error(String)
+    case unavailable(String)
 }
 
 struct SettingsView: View {
@@ -72,6 +73,29 @@ struct SettingsView: View {
                     Text("Create a portable JSON backup or restore one you made earlier.")
                         .font(.system(.footnote, design: .rounded))
                         .foregroundStyle(AppColors.secondaryText)
+                    if let backupStatus {
+                        switch backupStatus {
+                        case .success(let message):
+                            Label(message, systemImage: "checkmark.circle.fill")
+                                .font(.system(.footnote, design: .rounded))
+                                .foregroundStyle(AppColors.success)
+                                .accessibilityIdentifier("settings.backupStatus")
+                        case .error(let message):
+                            ErrorNotice(message: message)
+                                .accessibilityIdentifier("settings.backupStatus")
+                        case .unavailable(let message):
+                            ErrorNotice(message: message)
+                                .accessibilityIdentifier("settings.backupUnavailableMessage")
+                            Button(action: beginBackupImport) {
+                                Label("Choose backup", systemImage: "folder")
+                                    .frame(maxWidth: .infinity, minHeight: 44)
+                            }
+                                .buttonStyle(.bordered)
+                                .tint(AppColors.accentText)
+                                .disabled(!store.isStorageAvailable || isWorking)
+                                .accessibilityIdentifier("settings.chooseBackupAgain")
+                        }
+                    }
                     Button {
                         backupStatus = nil
                         showingExportWarning = true
@@ -104,13 +128,7 @@ struct SettingsView: View {
                         }
                     }
 
-                    Button {
-                        backupStatus = nil
-                        pendingImport = nil
-                        backupPickerID = UUID()
-                        backupPickerDismissed = false
-                        isImporting = true
-                    } label: {
+                    Button(action: beginBackupImport) {
                         Group {
                             if isReadingBackup { ProgressView("Reading backup…") }
                             else { Label("Restore from JSON", systemImage: "square.and.arrow.down") }
@@ -140,18 +158,6 @@ struct SettingsView: View {
                         .id(requestID)
                     }
 
-                    if let backupStatus {
-                        switch backupStatus {
-                        case .success(let message):
-                            Label(message, systemImage: "checkmark.circle.fill")
-                                .font(.system(.footnote, design: .rounded))
-                                .foregroundStyle(AppColors.success)
-                                .accessibilityIdentifier("settings.backupStatus")
-                        case .error(let message):
-                            ErrorNotice(message: message)
-                                .accessibilityIdentifier("settings.backupStatus")
-                        }
-                    }
                     Text("Backups include private notes. Keep the file somewhere only you can access.")
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(AppColors.secondaryText)
@@ -313,6 +319,15 @@ struct SettingsView: View {
         }
     }
 
+    private func beginBackupImport() {
+        guard !isWorking, store.isStorageAvailable else { return }
+        backupStatus = nil
+        pendingImport = nil
+        backupPickerID = UUID()
+        backupPickerDismissed = false
+        isImporting = true
+    }
+
     private func handleBackupImport(_ result: Result<MomentBackupEnvelope, Error>) {
         isReadingBackup = false
         switch result {
@@ -324,6 +339,10 @@ struct SettingsView: View {
         case .failure(let error):
             guard (error as? CocoaError)?.code != .userCancelled else { return }
             logger.error("Backup reading failed: \(String(describing: error), privacy: .private)")
+            if case .sourceUnavailable? = error as? MomentBackupError {
+                backupStatus = .unavailable(error.localizedDescription)
+                return
+            }
             let message: String
             switch error {
             case let backupError as MomentBackupError:

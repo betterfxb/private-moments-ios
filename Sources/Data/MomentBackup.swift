@@ -61,21 +61,29 @@ enum MomentBackupFileReader {
             moved = Result {
                 guard try isOwnedImportedFile(source) else { throw CocoaError(.fileReadNoPermission) }
                 let attributes = try FileManager.default.attributesOfItem(atPath: source.path)
+                try FileManager.default.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: source.path)
+                try excludeFromBackup(source)
                 if let size = attributes[.size] as? NSNumber, size.intValue > MomentBackupCodec.maximumFileSize {
                     throw MomentBackupError.fileTooLarge
                 }
-                try FileManager.default.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: source.path)
-                try excludeFromBackup(source)
                 coordinator.item(at: source, willMoveTo: destination)
                 do { try FileManager.default.moveItem(at: source, to: destination) }
                 catch {
                     coordinator.item(at: source, didMoveTo: source)
+                    if isMissingFile(error), !FileManager.default.fileExists(atPath: source.path) {
+                        throw MomentBackupError.sourceUnavailable(error)
+                    }
                     throw error
                 }
                 coordinator.item(at: source, didMoveTo: destination)
             }
         }
-        if let coordinationError { throw coordinationError }
+        if let coordinationError {
+            if isMissingFile(coordinationError), !FileManager.default.fileExists(atPath: url.path) {
+                throw MomentBackupError.sourceUnavailable(coordinationError)
+            }
+            throw coordinationError
+        }
         guard let moved else { throw CocoaError(.fileReadUnknown) }
         try moved.get()
         return try read(snapshot)
@@ -86,6 +94,11 @@ enum MomentBackupFileReader {
         var values = URLResourceValues()
         values.isExcludedFromBackup = true
         try target.setResourceValues(values)
+    }
+
+    private static func isMissingFile(_ error: Error) -> Bool {
+        guard let error = error as? CocoaError else { return false }
+        return error.code == .fileReadNoSuchFile || error.code == .fileNoSuchFile
     }
 
     private static func cleanSnapshot(_ url: URL, folder: URL) {
@@ -116,8 +129,13 @@ enum MomentBackupFileReader {
         }
         guard ownedPath else { return false }
         // Do not change attributes of directories or symbolic links.
-        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        return attributes[.type] as? FileAttributeType == .typeRegular
+        do {
+            let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+            return attributes[.type] as? FileAttributeType == .typeRegular
+        } catch {
+            if isMissingFile(error) { throw MomentBackupError.sourceUnavailable(error) }
+            throw error
+        }
     }
 
     static func read(_ url: URL) throws -> MomentBackupEnvelope {
@@ -159,6 +177,7 @@ enum MomentBackupFileReader {
 }
 
 enum MomentBackupError: LocalizedError {
+    case sourceUnavailable(Error)
     case unsupportedVersion(Int)
     case invalidFormat
     case fileTooLarge
@@ -167,6 +186,8 @@ enum MomentBackupError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
+        case .sourceUnavailable:
+            return AppLocalization.string("Couldn't access that backup. Your records are unchanged.")
         case .unsupportedVersion(let version):
             return AppLocalization.format("This backup uses an unsupported format version (%lld).", version)
         case .invalidFormat:

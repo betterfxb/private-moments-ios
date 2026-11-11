@@ -38,6 +38,11 @@ final class BackupUXTests: XCTestCase {
         let file = try temporaryFile()
         defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
         XCTAssertThrowsError(try MomentBackupFileReader.read(file))
+        XCTAssertThrowsError(try MomentBackupFileReader.readPickerSnapshot(file)) { error in
+            guard case .sourceUnavailable? = error as? MomentBackupError else {
+                return XCTFail("Expected an unavailable source copy, got \(error)")
+            }
+        }
         try Data("invalid fixture".utf8).write(to: file)
         XCTAssertThrowsError(try MomentBackupFileReader.read(file)) { error in
             guard case .invalidFormat? = error as? MomentBackupError else {
@@ -58,6 +63,12 @@ final class BackupUXTests: XCTestCase {
                 return XCTFail("Expected size limit, got \(error)")
             }
         }
+        XCTAssertThrowsError(try MomentBackupFileReader.readPickerSnapshot(file)) { error in
+            guard case .fileTooLarge? = error as? MomentBackupError else {
+                return XCTFail("Expected the snapshot size limit, got \(error)")
+            }
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: file.path))
     }
 
     func testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames() throws {

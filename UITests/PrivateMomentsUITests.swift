@@ -1,8 +1,11 @@
 import XCTest
 
 final class PrivateMomentsUITests: XCTestCase {
+    private var importRecoveryCount = 0
+
     override func setUpWithError() throws {
         continueAfterFailure = false
+        importRecoveryCount = 0
     }
 
     override func tearDownWithError() throws {
@@ -280,7 +283,31 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func openBackup(_ filename: String, app: XCUIApplication) {
+        let originalCount = app.staticTexts["settings.savedCount"].label
         tap(app.buttons["settings.restore"], in: app)
+        for attempt in 0..<2 {
+            selectBackupFile(filename, app: app)
+            if app.buttons["backup.merge"].exists { return }
+            let chooseAgain = app.buttons["settings.chooseBackupAgain"]
+            guard attempt == 0, chooseAgain.exists else {
+                captureSystem("Import-selection-unresolved", app)
+                return XCTFail("The real file selection must reach review after at most one explicit reselection.")
+            }
+            // A provider can withdraw its temporary URL before capture. Only
+            // this typed source error offers recovery; decoder/staging errors
+            // still fail. Verify no data write, then use the actual UI again.
+            XCTAssertEqual(app.staticTexts["settings.savedCount"].label, originalCount)
+            let message = app.descendants(matching: .any).matching(identifier: "settings.backupUnavailableMessage").firstMatch
+            revealFully(from: message, through: chooseAgain, in: app)
+            importRecoveryCount += 1
+            print("Explicit system backup reselection \(importRecoveryCount); local record count unchanged.")
+            captureSystem("Import-recovery-\(importRecoveryCount)-en", app)
+            tap(chooseAgain, in: app)
+        }
+        XCTFail("Backup review did not open after the explicit recovery action.")
+    }
+
+    private func selectBackupFile(_ filename: String, app: XCUIApplication) {
         let predicate = NSPredicate(format: "label CONTAINS[cd] %@", filename)
         func selectedFile() -> XCUIElement? {
             // Browse can reopen its previous local folder directly. Scope the
@@ -324,10 +351,15 @@ final class PrivateMomentsUITests: XCTestCase {
         } else {
             file.tap()
         }
-        if !app.buttons["backup.merge"].waitForExistence(timeout: 5), let open = nativeControl(["Open"], app: app) { open.tap() }
-        let reviewed = app.buttons["backup.merge"].waitForExistence(timeout: 10)
-        if !reviewed { captureSystem("Import-selection-unresolved", app) }
-        XCTAssertTrue(reviewed, "Selecting the file must lead to a validated review.")
+        if !app.buttons["backup.merge"].waitForExistence(timeout: 5),
+           !app.buttons["settings.chooseBackupAgain"].exists,
+           let open = nativeControl(["Open"], app: app) { open.tap() }
+        let resolved = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            app.buttons["backup.merge"].exists || app.buttons["settings.chooseBackupAgain"].exists
+        }, object: nil)
+        let finished = XCTWaiter.wait(for: [resolved], timeout: 15) == .completed
+        if !finished { captureSystem("Import-selection-unresolved", app) }
+        XCTAssertTrue(finished, "The selected file must reach review or an explicit unavailable-source state.")
     }
 
     private func localFilesLocation(_ app: XCUIApplication, timeout: TimeInterval) -> XCUIElement? {
