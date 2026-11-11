@@ -652,7 +652,8 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func fixedFooterTop(ignoring element: XCUIElement, in app: XCUIApplication) -> CGFloat? {
-        guard element.identifier != "backup.merge", !app.alerts.firstMatch.exists else { return nil }
+        guard !app.alerts.firstMatch.exists else { return nil }
+        if element.exists, element.identifier == "backup.merge" { return nil }
         let footers = app.buttons.matching(identifier: "backup.merge").allElementsBoundByIndex
         // Reserve the visible button and its 12pt top safe-area padding.
         return footers.first(where: { $0.isHittable }).map { $0.frame.minY - 12 }
