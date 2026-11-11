@@ -176,6 +176,13 @@ struct SettingsView: View {
                     .sheet(isPresented: $isImporting, onDismiss: {
                         backupPickerDismissed = true
                         logger.notice("Backup picker dismissed.")
+                        // Interactive/system dismissal need not deliver the
+                        // document-picker delegate's cancellation callback.
+                        // Never replace an in-flight read or a delivered result.
+                        if !isImporting, !isReadingBackup, pendingImport == nil, backupStatus == nil {
+                            logger.notice("Backup picker closed without delivering a file; journal unchanged.")
+                            backupStatus = .notice(AppLocalization.string("Import cancelled. Records unchanged."))
+                        }
                         presentBackupReviewIfReady()
                     }) {
                         let requestID = backupPickerID
@@ -184,7 +191,10 @@ struct SettingsView: View {
                             isReadingBackup = true
                             logger.notice("Backup picker delivered a file for validation.")
                         }) { result in
-                            guard requestID == backupPickerID else { return }
+                            guard requestID == backupPickerID else {
+                                logger.notice("Ignored stale backup picker completion.")
+                                return
+                            }
                             isImporting = false
                             handleBackupImport(result)
                         }
@@ -423,6 +433,7 @@ struct SettingsView: View {
             presentBackupReviewIfReady()
         case .failure(let error):
             if (error as? CocoaError)?.code == .userCancelled {
+                logger.notice("Backup import cancelled by picker delegate.")
                 backupStatus = .notice(AppLocalization.string("Import cancelled. Records unchanged."))
                 return
             }

@@ -296,7 +296,9 @@ final class PrivateMomentsUITests: XCTestCase {
 
     private func assertImportCancelled(in app: XCUIApplication) {
         let notice = app.staticTexts["Import cancelled. Records unchanged."]
-        XCTAssertTrue(notice.waitForExistence(timeout: 15))
+        let exists = notice.waitForExistence(timeout: 15)
+        if !exists { captureFailure("Import-cancelled-unavailable-en", app) }
+        XCTAssertTrue(exists)
         assertBackupResultVisible(notice, in: app)
     }
 
