@@ -60,16 +60,17 @@ final class BackupUXTests: XCTestCase {
         }
     }
 
-    func testImportedCopyIsDeletedAfterSuccessfulValidation() throws {
+    func testImportedCopyRemainsAvailableForRepeatedValidation() throws {
         let file = try temporaryFile()
         defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
         let moment = makeRecoveryMoment()
         try MomentBackupCodec.encode([moment]).write(to: file)
         XCTAssertEqual(try MomentBackupFileReader.readImportedCopy(file).moments, [moment])
-        XCTAssertFalse(FileManager.default.fileExists(atPath: file.path))
+        XCTAssertEqual(try MomentBackupFileReader.readImportedCopy(file).moments, [moment])
+        XCTAssertTrue(FileManager.default.fileExists(atPath: file.path))
     }
 
-    func testInvalidImportedCopyIsDeletedWithoutHidingValidationError() throws {
+    func testInvalidImportedCopyPreservesTheFileAndValidationError() throws {
         let file = try temporaryFile()
         defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
         try Data("invalid fixture".utf8).write(to: file)
@@ -78,7 +79,7 @@ final class BackupUXTests: XCTestCase {
                 return XCTFail("Expected invalid backup format, got \(error)")
             }
         }
-        XCTAssertFalse(FileManager.default.fileExists(atPath: file.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: file.path))
     }
 
     func testImportedCopyNeverDeletesAPrefixSibling() throws {

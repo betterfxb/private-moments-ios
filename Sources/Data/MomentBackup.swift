@@ -1,8 +1,6 @@
 import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
-import OSLog
-import Darwin
 
 struct MomentBackupEnvelope: Codable, Sendable {
     let formatVersion: Int
@@ -37,19 +35,11 @@ struct BackupImportSummary {
 }
 
 enum MomentBackupFileReader {
-    private static let logger = Logger(subsystem: "com.example.PrivateMoments", category: "backup")
-
     static func readImportedCopy(_ url: URL) throws -> MomentBackupEnvelope {
-        let ownsCopy = try isOwnedImportedFile(url)
-        defer {
-            if ownsCopy {
-                do { try removeImportedFile(url) }
-                catch {
-                    logger.error("Imported backup copy cleanup failed: \(String(describing: error), privacy: .private)")
-                }
-            }
-        }
-        if ownsCopy {
+        // UIKit owns the temporary import's lifetime. Deleting it here can
+        // race a later picker that reuses the same Inbox filename. Read-only
+        // restore never removes a selected file, including on decode failure.
+        if try isOwnedImportedFile(url) {
             try FileManager.default.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: url.path)
             var copyURL = url
             var values = URLResourceValues()
@@ -57,19 +47,6 @@ enum MomentBackupFileReader {
             try copyURL.setResourceValues(values)
         }
         return try read(url)
-    }
-
-    private static func removeImportedFile(_ url: URL) throws {
-        // unlink removes a single file/link and cannot recursively delete a
-        // directory even if its type changes after the initial ownership check.
-        var failureCode: Int32 = EINVAL
-        let removed = url.withUnsafeFileSystemRepresentation { path -> Bool in
-            guard let path else { return false }
-            let result = Darwin.unlink(path)
-            if result != 0 { failureCode = errno }
-            return result == 0
-        }
-        guard removed else { throw POSIXError(POSIXErrorCode(rawValue: failureCode) ?? .EIO) }
     }
 
     private static func isOwnedImportedFile(_ url: URL) throws -> Bool {
@@ -84,8 +61,7 @@ enum MomentBackupFileReader {
             return file.count > components.count && file.starts(with: components)
         }
         guard ownedPath else { return false }
-        // Never recursively remove a package/directory, or follow an imported
-        // symbolic link when deciding which temporary item belongs to us.
+        // Do not change attributes of directories or symbolic links.
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
         return attributes[.type] as? FileAttributeType == .typeRegular
     }
