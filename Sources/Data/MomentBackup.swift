@@ -1,6 +1,8 @@
 import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
+import OSLog
+import Darwin
 
 struct MomentBackupEnvelope: Codable, Sendable {
     let formatVersion: Int
@@ -35,18 +37,70 @@ struct BackupImportSummary {
 }
 
 enum MomentBackupFileReader {
-    static func readImportedCopy(_ url: URL) throws -> MomentBackupEnvelope {
-        // UIKit owns the temporary import's lifetime. Deleting it here can
-        // race a later picker that reuses the same Inbox filename. Read-only
-        // restore never removes a selected file, including on decode failure.
-        if try isOwnedImportedFile(url) {
-            try FileManager.default.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: url.path)
-            var copyURL = url
-            var values = URLResourceValues()
-            values.isExcludedFromBackup = true
-            try copyURL.setResourceValues(values)
+    private static let logger = Logger(subsystem: "com.example.PrivateMoments", category: "backup")
+
+    static func readPickerSnapshot(_ url: URL) throws -> MomentBackupEnvelope {
+        // Only consume a copy already imported into this app. Never move a
+        // user-owned original or depend on the provider's shared Inbox name.
+        guard try isOwnedImportedFile(url) else { throw CocoaError(.fileReadNoPermission) }
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(
+            "PrivateMoments-Import-" + UUID().uuidString, isDirectory: true
+        )
+        let snapshot = folder.appendingPathComponent("backup.json")
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false,
+            attributes: [.protectionKey: FileProtectionType.complete])
+        defer { cleanSnapshot(snapshot, folder: folder) }
+        try excludeFromBackup(folder)
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        let coordinator = NSFileCoordinator()
+        var coordinationError: NSError?
+        var moved: Result<Void, Error>?
+        coordinator.coordinate(writingItemAt: url, options: .forMoving,
+            writingItemAt: snapshot, options: [], error: &coordinationError) { source, destination in
+            moved = Result {
+                guard try isOwnedImportedFile(source) else { throw CocoaError(.fileReadNoPermission) }
+                let attributes = try FileManager.default.attributesOfItem(atPath: source.path)
+                if let size = attributes[.size] as? NSNumber, size.intValue > MomentBackupCodec.maximumFileSize {
+                    throw MomentBackupError.fileTooLarge
+                }
+                try FileManager.default.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: source.path)
+                try excludeFromBackup(source)
+                coordinator.item(at: source, willMoveTo: destination)
+                do { try FileManager.default.moveItem(at: source, to: destination) }
+                catch {
+                    coordinator.item(at: source, didMoveTo: source)
+                    throw error
+                }
+                coordinator.item(at: source, didMoveTo: destination)
+            }
         }
-        return try read(url)
+        if let coordinationError { throw coordinationError }
+        guard let moved else { throw CocoaError(.fileReadUnknown) }
+        try moved.get()
+        return try read(snapshot)
+    }
+
+    private static func excludeFromBackup(_ url: URL) throws {
+        var target = url
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        try target.setResourceValues(values)
+    }
+
+    private static func cleanSnapshot(_ url: URL, folder: URL) {
+        // Each path is a fresh UUID owned by this operation. Neither syscall
+        // can recursively delete a directory or remove the provider original.
+        for (item, directory) in [(url, false), (folder, true)] {
+            let failure = item.withUnsafeFileSystemRepresentation { path -> Int32 in
+                guard let path else { return EINVAL }
+                let result = directory ? Darwin.rmdir(path) : Darwin.unlink(path)
+                return result == 0 || errno == ENOENT ? 0 : errno
+            }
+            if failure != 0 {
+                logger.error("Backup snapshot cleanup failed: POSIX \(failure, privacy: .private)")
+            }
+        }
     }
 
     private static func isOwnedImportedFile(_ url: URL) throws -> Bool {

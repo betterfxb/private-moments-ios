@@ -128,7 +128,11 @@ struct SettingsView: View {
                         presentBackupReviewIfReady()
                     }) {
                         let requestID = backupPickerID
-                        BackupFilePicker { result in
+                        BackupFilePicker(onBeginReading: {
+                            guard requestID == backupPickerID else { return }
+                            isReadingBackup = true
+                            logger.notice("Backup picker delivered a file for validation.")
+                        }) { result in
                             guard requestID == backupPickerID else { return }
                             isImporting = false
                             handleBackupImport(result)
@@ -309,45 +313,29 @@ struct SettingsView: View {
         }
     }
 
-    private func handleBackupImport(_ result: Result<[URL], Error>) {
-        guard case .success(let urls) = result else {
-            if case .failure(let error) = result,
-               (error as? CocoaError)?.code != .userCancelled {
-                backupStatus = .error(AppLocalization.string("Couldn't open that backup. Please try another JSON file."))
+    private func handleBackupImport(_ result: Result<MomentBackupEnvelope, Error>) {
+        isReadingBackup = false
+        switch result {
+        case .success(let envelope):
+            pendingImport = envelope
+            backupStatus = nil
+            logger.notice("Backup file validated.")
+            presentBackupReviewIfReady()
+        case .failure(let error):
+            guard (error as? CocoaError)?.code != .userCancelled else { return }
+            logger.error("Backup reading failed: \(String(describing: error), privacy: .private)")
+            let message: String
+            switch error {
+            case let backupError as MomentBackupError:
+                message = backupError.localizedDescription
+            case let validationError as MomentValidationError:
+                message = validationError.localizedDescription
+            case let fileError as CocoaError where fileError.code == .fileReadUnknown:
+                message = AppLocalization.string("Couldn't open that backup. Please try another JSON file.")
+            default:
+                message = AppLocalization.string("Couldn't read this file. Choose a valid Private Moments JSON backup.")
             }
-            return
-        }
-        guard !isWorking else { return }
-        guard let url = urls.first else {
-            logger.error("Backup picker delivered no files.")
-            backupStatus = .error(AppLocalization.string("Couldn't open that backup. Please try another JSON file."))
-            return
-        }
-        logger.notice("Backup picker delivered a file for validation.")
-        isReadingBackup = true
-        Task { @MainActor in
-            defer { isReadingBackup = false }
-            do {
-                let envelope = try await Task.detached(priority: .userInitiated) {
-                    try MomentBackupFileReader.readImportedCopy(url)
-                }.value
-                pendingImport = envelope
-                backupStatus = nil
-                logger.notice("Backup file validated.")
-                presentBackupReviewIfReady()
-            } catch {
-                logger.error("Backup reading failed: \(String(describing: error), privacy: .private)")
-                let message: String
-                switch error {
-                case let backupError as MomentBackupError:
-                    message = backupError.localizedDescription
-                case let validationError as MomentValidationError:
-                    message = validationError.localizedDescription
-                default:
-                    message = AppLocalization.string("Couldn't read this file. Choose a valid Private Moments JSON backup.")
-                }
-                backupStatus = .error(message)
-            }
+            backupStatus = .error(message)
         }
     }
 
@@ -432,9 +420,10 @@ struct SettingsView: View {
                     }
                     .safeAreaInset(edge: .bottom) {
                         Button(action: mergeImportedBackup) {
-                            Label("Merge backup", systemImage: "arrow.triangle.merge")
+                            Label("Merge", systemImage: "arrow.triangle.merge")
                         }
                         .buttonStyle(PrimaryActionButtonStyle())
+                        .accessibilityLabel(Text("Merge backup"))
                         .disabled(!store.isStorageAvailable)
                         .accessibilityIdentifier("backup.merge")
                         .frame(maxWidth: 640)
@@ -480,9 +469,10 @@ struct SettingsView: View {
 
 @MainActor
 private struct BackupFilePicker: UIViewControllerRepresentable {
-    let completion: (Result<[URL], Error>) -> Void
+    let onBeginReading: () -> Void
+    let completion: (Result<MomentBackupEnvelope, Error>) -> Void
 
-    func makeCoordinator() -> Coordinator { Coordinator(completion: completion) }
+    func makeCoordinator() -> Coordinator { Coordinator(onBeginReading: onBeginReading, completion: completion) }
 
     func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
         // Restore consumes a validated snapshot rather than editing a live
@@ -497,22 +487,42 @@ private struct BackupFilePicker: UIViewControllerRepresentable {
 
     @MainActor
     final class Coordinator: NSObject, UIDocumentPickerDelegate {
-        private let completion: (Result<[URL], Error>) -> Void
+        private let onBeginReading: () -> Void
+        private let completion: (Result<MomentBackupEnvelope, Error>) -> Void
         private var didComplete = false
 
-        init(completion: @escaping (Result<[URL], Error>) -> Void) {
+        init(onBeginReading: @escaping () -> Void, completion: @escaping (Result<MomentBackupEnvelope, Error>) -> Void) {
+            self.onBeginReading = onBeginReading
             self.completion = completion
         }
 
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            finish(.success(urls))
+            guard !didComplete else { return }
+            didComplete = true
+            guard let url = urls.first else {
+                completion(.failure(CocoaError(.fileReadUnknown)))
+                return
+            }
+            onBeginReading()
+            Task { @MainActor [controller] in
+                let result: Result<MomentBackupEnvelope, Error>
+                do {
+                    let envelope = try await Task.detached(priority: .userInitiated) {
+                        try MomentBackupFileReader.readPickerSnapshot(url)
+                    }.value
+                    result = .success(envelope)
+                } catch { result = .failure(error) }
+                // The picker remains alive through snapshot capture/read;
+                // teardown must not race delivery of its temporary document.
+                withExtendedLifetime(controller) { self.completion(result) }
+            }
         }
 
         func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
             finish(.failure(CocoaError(.userCancelled)))
         }
 
-        private func finish(_ result: Result<[URL], Error>) {
+        private func finish(_ result: Result<MomentBackupEnvelope, Error>) {
             guard !didComplete else { return }
             didComplete = true
             completion(result)

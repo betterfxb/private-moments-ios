@@ -60,26 +60,29 @@ final class BackupUXTests: XCTestCase {
         }
     }
 
-    func testImportedCopyRemainsAvailableForRepeatedValidation() throws {
+    func testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames() throws {
         let file = try temporaryFile()
         defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
         let moment = makeRecoveryMoment()
         try MomentBackupCodec.encode([moment]).write(to: file)
-        XCTAssertEqual(try MomentBackupFileReader.readImportedCopy(file).moments, [moment])
-        XCTAssertEqual(try MomentBackupFileReader.readImportedCopy(file).moments, [moment])
-        XCTAssertTrue(FileManager.default.fileExists(atPath: file.path))
+        XCTAssertEqual(try MomentBackupFileReader.readPickerSnapshot(file).moments, [moment])
+        XCTAssertFalse(FileManager.default.fileExists(atPath: file.path))
+        let next = Moment(occurredAt: moment.occurredAt, durationSeconds: 91, mood: .happy, rating: 4, tags: [], privateNote: "Fresh snapshot")
+        try MomentBackupCodec.encode([next]).write(to: file)
+        XCTAssertEqual(try MomentBackupFileReader.readPickerSnapshot(file).moments, [next])
     }
 
-    func testInvalidImportedCopyPreservesTheFileAndValidationError() throws {
+    func testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError() throws {
         let file = try temporaryFile()
         defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
+        let before = try snapshotFolders()
         try Data("invalid fixture".utf8).write(to: file)
-        XCTAssertThrowsError(try MomentBackupFileReader.readImportedCopy(file)) { error in
+        XCTAssertThrowsError(try MomentBackupFileReader.readPickerSnapshot(file)) { error in
             guard case .invalidFormat? = error as? MomentBackupError else {
                 return XCTFail("Expected invalid backup format, got \(error)")
             }
         }
-        XCTAssertTrue(FileManager.default.fileExists(atPath: file.path))
+        XCTAssertEqual(try snapshotFolders(), before)
     }
 
     func testImportedCopyNeverDeletesAPrefixSibling() throws {
@@ -92,7 +95,7 @@ final class BackupUXTests: XCTestCase {
         let file = folder.appendingPathComponent("original.json")
         let data = try MomentBackupCodec.encode([makeRecoveryMoment()])
         try data.write(to: file)
-        XCTAssertEqual(try MomentBackupFileReader.readImportedCopy(file).moments.count, 1)
+        XCTAssertThrowsError(try MomentBackupFileReader.readPickerSnapshot(file))
         XCTAssertEqual(try Data(contentsOf: file), data)
     }
 
@@ -100,7 +103,7 @@ final class BackupUXTests: XCTestCase {
         let file = try temporaryFile()
         defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
         try FileManager.default.createDirectory(at: file, withIntermediateDirectories: true)
-        XCTAssertThrowsError(try MomentBackupFileReader.readImportedCopy(file))
+        XCTAssertThrowsError(try MomentBackupFileReader.readPickerSnapshot(file))
         var isDirectory: ObjCBool = false
         XCTAssertTrue(FileManager.default.fileExists(atPath: file.path, isDirectory: &isDirectory))
         XCTAssertTrue(isDirectory.boolValue)
@@ -110,6 +113,11 @@ final class BackupUXTests: XCTestCase {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         return folder.appendingPathComponent("backup.json")
+    }
+
+    private func snapshotFolders() throws -> Set<String> {
+        Set(try FileManager.default.contentsOfDirectory(atPath: FileManager.default.temporaryDirectory.path)
+            .filter { $0.hasPrefix("PrivateMoments-Import-") })
     }
 }
 

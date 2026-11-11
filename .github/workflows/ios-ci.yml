@@ -8,9 +8,18 @@ on:
   workflow_dispatch:
     inputs:
       backup_smoke:
-        description: Run compact-light backup unit and system file flow (not full acceptance)
+        description: Run selected-profile backup unit and file flow (not full acceptance)
         type: boolean
         default: false
+      backup_smoke_profile:
+        description: Device profile for focused backup diagnosis (ignored by full acceptance)
+        type: choice
+        default: compact-light
+        options:
+          - compact-light
+          - phone-dark
+          - ipad-light
+          - compact-dark-accessibility
 
 permissions:
   contents: read
@@ -29,8 +38,9 @@ jobs:
       - id: matrix
         env:
           MATRIX_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.backup_smoke && 'backup' || 'full' }}
+          SMOKE_PROFILE: ${{ inputs.backup_smoke_profile || 'compact-light' }}
         run: |
-          matrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE")"
+          matrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"
           printf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"
 
   build-and-test:

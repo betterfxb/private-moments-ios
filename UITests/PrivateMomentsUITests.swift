@@ -618,13 +618,16 @@ final class PrivateMomentsUITests: XCTestCase {
             let frame = exists ? element.frame : .zero
             let center = CGPoint(x: frame.midX, y: frame.midY)
             let keyboardCoversCenter = keyboard.exists && keyboard.frame.contains(center)
-            if exists, element.isHittable, app.frame.contains(center), !keyboardCoversCenter { return }
+            let footerTop = fixedFooterTop(ignoring: element, in: app)
+            let footerCoversCenter = footerTop.map { center.y >= $0 } ?? false
+            if exists, element.isHittable, app.frame.contains(center), !keyboardCoversCenter, !footerCoversCenter { return }
             let scroll = scrollSurface(containing: element, in: app)
             if exists, !frame.isEmpty, scroll.exists {
                 let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
                 var bottom = min(scroll.frame.maxY, app.frame.maxY) - 12
                 if keyboard.exists { bottom = min(bottom, keyboard.frame.minY - 12) }
                 if app.tabBars.firstMatch.exists { bottom = min(bottom, app.tabBars.firstMatch.frame.minY - 12) }
+                if let footerTop { bottom = min(bottom, footerTop - 12) }
                 guard bottom > top + 44 else { return XCTFail("No usable scroll viewport for \(element)") }
                 let middle = (top + bottom) / 2
                 let limit = (bottom - top) * 0.4
@@ -646,6 +649,13 @@ final class PrivateMomentsUITests: XCTestCase {
             if owners.firstMatch.exists { return owners.firstMatch }
         }
         return app.scrollViews.firstMatch
+    }
+
+    private func fixedFooterTop(ignoring element: XCUIElement, in app: XCUIApplication) -> CGFloat? {
+        guard element.identifier != "backup.merge", !app.alerts.firstMatch.exists else { return nil }
+        let footers = app.buttons.matching(identifier: "backup.merge").allElementsBoundByIndex
+        // Reserve the visible button and its 12pt top safe-area padding.
+        return footers.first(where: { $0.isHittable }).map { $0.frame.minY - 12 }
     }
 
     private func tap(_ element: XCUIElement, in app: XCUIApplication) {
@@ -686,7 +696,8 @@ final class PrivateMomentsUITests: XCTestCase {
         for _ in 0..<6 {
             XCTAssertTrue(first.exists)
             let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
-            let bottom = min(scroll.frame.maxY, app.frame.maxY) - 12
+            var bottom = min(scroll.frame.maxY, app.frame.maxY) - 12
+            if let footerTop = fixedFooterTop(ignoring: last, in: app) { bottom = min(bottom, footerTop - 12) }
             let section = first.frame.union(last.frame)
             let delta: CGFloat
             if section.minY < top {

@@ -3,7 +3,7 @@ import argparse
 import json
 
 
-def matrix(scope: str) -> dict:
+def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
     profiles = [
         dict(profile="compact-light", family="compact", appearance="light",
              text_size="large", gallery_only="0"),
@@ -16,10 +16,16 @@ def matrix(scope: str) -> dict:
     ]
     if scope not in {"full", "backup"}:
         raise ValueError("Unknown UI verification scope: " + scope)
-    return {"include": profiles[:1] if scope == "backup" else profiles}
+    selected = [p for p in profiles if p["profile"] == smoke_profile]
+    if not selected:
+        raise ValueError("Unknown backup smoke profile: " + smoke_profile)
+    return {"include": selected if scope == "backup" else profiles}
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("scope", nargs="?", choices=["full", "backup"], default="full")
-    print(json.dumps(matrix(parser.parse_args().scope)))
+    parser.add_argument("--smoke-profile", default="compact-light",
+                        choices=["compact-light", "phone-dark", "ipad-light", "compact-dark-accessibility"])
+    args = parser.parse_args()
+    print(json.dumps(matrix(args.scope, args.smoke_profile)))
