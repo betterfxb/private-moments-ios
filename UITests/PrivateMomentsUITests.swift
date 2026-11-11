@@ -234,14 +234,17 @@ final class PrivateMomentsUITests: XCTestCase {
             "Dismissing feedback must leave the journal available without changing its records.")
 
         tap(app.buttons["settings.restore"], in: app)
-        let cancel = try XCTUnwrap(nativeControl(["Cancel"], app: app, timeout: 10))
+        let cancel = nativeControl(["Cancel"], app: app, timeout: 10)
+        let outside = pickerDismissalPoint(in: app, requireBlank: false)
         captureSystem("Import-files-en", app)
-        if let outside = pickerDismissalPoint(in: app, requireBlank: false) {
+        if let outside {
             // Exercise the real adaptive presentation's escape path on iPad.
             print("Explicit native picker backdrop cancellation; journal checked unchanged afterward.")
             outside.tap()
-        } else {
+        } else if let cancel {
             cancel.tap()
+        } else {
+            return XCTFail("The system picker has no native cancel action or safe outside dismissal.")
         }
         assertImportCancelled(in: app)
         capture("Import-cancelled-en", app)
