@@ -297,10 +297,13 @@ final class PrivateMomentsUITests: XCTestCase {
         }
         XCTAssertTrue(file.isEnabled, "The exported JSON must be selectable in the real picker.")
         let thumbnail = file.images.firstMatch
-        if thumbnail.exists && thumbnail.isHittable {
+        if thumbnail.exists && !thumbnail.frame.isEmpty {
             // Icon-mode cells include a filename/metadata area below the
             // actual document thumbnail; choose the visible document itself.
-            thumbnail.tap()
+            let target = thumbnail.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            XCTAssertTrue(file.frame.contains(target.screenPoint))
+            XCTAssertTrue(app.frame.contains(target.screenPoint))
+            target.tap()
         } else {
             file.tap()
         }

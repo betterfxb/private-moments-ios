@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      backup_smoke:
+        description: Run only the compact-light system backup file flow (not full acceptance)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -15,34 +20,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: matrix
+        env:
+          MATRIX_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.backup_smoke && 'backup' || 'full' }}
+        run: |
+          matrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE")"
+          printf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"
+
   build-and-test:
+    needs: plan
     name: ${{ matrix.profile }}
     runs-on: macos-15
     timeout-minutes: 45
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - profile: compact-light
-            family: compact
-            appearance: light
-            text_size: large
-            gallery_only: '0'
-          - profile: phone-dark
-            family: phone
-            appearance: dark
-            text_size: large
-            gallery_only: '1'
-          - profile: ipad-light
-            family: ipad
-            appearance: light
-            text_size: large
-            gallery_only: '1'
-          - profile: compact-dark-accessibility
-            family: compact
-            appearance: dark
-            text_size: accessibility-extra-extra-extra-large
-            gallery_only: '1'
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
 
     steps:
       - name: Check out source
@@ -104,6 +102,7 @@ jobs:
           PRIVATE_MOMENTS_DERIVED_DATA: ${{ runner.temp }}/PrivateMomentsDerivedData
           PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments.xcresult
           PRIVATE_MOMENTS_UI_GALLERY_ONLY: ${{ matrix.gallery_only }}
+          PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.backup_smoke && '1' || '0' }}
         run: bash scripts/verify-mac.sh
 
       - name: Export XCTest UI screenshots

@@ -50,7 +50,12 @@ fi
 # Keep the array nonempty for macOS Bash 3.2 with `set -u`, and run on the
 # configured simulator rather than parallel clones with different UI settings.
 TEST_SCOPE_ARGUMENTS=(-parallel-testing-enabled NO)
-if [[ "${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}" == "1" ]]; then
+BACKUP_ONLY="${PRIVATE_MOMENTS_UI_BACKUP_ONLY:-0}"
+[[ "$BACKUP_ONLY" == "0" || "$BACKUP_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_BACKUP_ONLY must be 0 or 1."
+if [[ "$BACKUP_ONLY" == "1" ]]; then
+    printf '\nFocused backup smoke only; this is not full simulator acceptance.\n'
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
+elif [[ "${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
 else
@@ -97,5 +102,10 @@ xcodebuild \
     CODE_SIGNING_ALLOWED=NO \
     test
 
-printf '\nMac simulator acceptance passed.\nXcode result bundle: %s\n' "$RESULT_BUNDLE_PATH"
+if [[ "$BACKUP_ONLY" == "1" ]]; then
+    printf '\nFocused backup smoke passed; full regression is still required.\n'
+else
+    printf '\nMac simulator acceptance passed.\n'
+fi
+printf 'Xcode result bundle: %s\n' "$RESULT_BUNDLE_PATH"
 printf 'This script does not replace manual iPhone/iPad, localization, accessibility, privacy, or signing review.\n'
