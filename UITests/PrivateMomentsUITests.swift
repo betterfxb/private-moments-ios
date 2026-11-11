@@ -250,7 +250,9 @@ final class PrivateMomentsUITests: XCTestCase {
         let deadline = Date().addingTimeInterval(timeout)
         repeat {
             for label in labels {
-                for item in [app.buttons[label].firstMatch, app.staticTexts[label].firstMatch] {
+                let items = app.buttons.matching(NSPredicate(format: "label == %@", label)).allElementsBoundByIndex
+                    + app.staticTexts.matching(NSPredicate(format: "label == %@", label)).allElementsBoundByIndex
+                for item in items {
                     if item.exists && item.isHittable { return item }
                 }
             }
@@ -279,27 +281,31 @@ final class PrivateMomentsUITests: XCTestCase {
 
     private func openBackup(_ filename: String, app: XCUIApplication) {
         tap(app.buttons["settings.restore"], in: app)
-        // Always choose the original export's local folder, not a recent
-        // staging-copy entry or a descendant left by an older presentation.
-        if let location = localFilesLocation(app, timeout: 2) {
-            location.tap()
-        } else {
-            if let browse = nativeControl(["Browse"], app: app, timeout: 10) { browse.tap() }
-            let location = localFilesLocation(app, timeout: 10)
-            XCTAssertNotNil(location, "The real local Files location must be available.")
-            location?.tap()
-        }
         let predicate = NSPredicate(format: "label CONTAINS[cd] %@", filename)
         func selectedFile() -> XCUIElement? {
-            for browser in app.collectionViews.matching(identifier: "File View").allElementsBoundByIndex {
-                for item in browser.cells.matching(predicate).allElementsBoundByIndex {
-                    if item.exists && item.isHittable { return item }
+            // Browse can reopen its previous local folder directly. Scope the
+            // file to the actual local provider, never a Recents staging copy.
+            let localRoots = app.otherElements.matching(NSPredicate(
+                format: "identifier BEGINSWITH %@", "DOC.browsingRoot Source: com.apple.FileProvider.LocalStorage,"
+            ))
+            for root in localRoots.allElementsBoundByIndex {
+                for browser in root.collectionViews.matching(identifier: "File View").allElementsBoundByIndex {
+                    for item in browser.cells.matching(predicate).allElementsBoundByIndex {
+                        if item.exists && item.isHittable { return item }
+                    }
                 }
             }
             return nil
         }
+        var file: XCUIElement?
+        for _ in 0..<3 {
+            let navigationDeadline = Date().addingTimeInterval(3)
+            repeat { file = selectedFile() } while file == nil && Date() < navigationDeadline
+            if file != nil { break }
+            if let location = localFilesLocation(app, timeout: 1) { location.tap() }
+            else if let browse = nativeControl(["Browse"], app: app, timeout: 3) { browse.tap() }
+        }
         let deadline = Date().addingTimeInterval(10)
-        var file = selectedFile()
         while file == nil && Date() < deadline { file = selectedFile() }
         guard let file else {
             captureSystem("Import-file-unavailable", app)
@@ -328,7 +334,9 @@ final class PrivateMomentsUITests: XCTestCase {
         let predicate = NSPredicate(format: "label == %@ OR label == %@", "On My iPhone", "On My iPad")
         let deadline = Date().addingTimeInterval(timeout)
         repeat {
-            for location in app.cells.matching(predicate).allElementsBoundByIndex {
+            let locations = app.buttons.matching(predicate).allElementsBoundByIndex
+                + app.cells.matching(predicate).allElementsBoundByIndex
+            for location in locations {
                 if location.exists && location.isHittable { return location }
             }
         } while Date() < deadline
