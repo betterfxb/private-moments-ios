@@ -45,6 +45,7 @@ final class PrivateMomentsUITests: XCTestCase {
             }
             capture("Today-\(language)", app)
             let weekMenu = app.buttons["today.weekMenu"]
+            let usesAccessibilityLayout = weekMenu.exists
             if weekMenu.exists {
                 tap(weekMenu, in: app)
                 capture("Week-menu-\(language)", app)
@@ -126,13 +127,18 @@ final class PrivateMomentsUITests: XCTestCase {
             goBack(app)
             selectTab("Settings", "设置", language: language, app: app)
             capture("Settings-top-\(language)", app)
+            let countTitle = app.descendants(matching: .any).matching(identifier: "settings.savedCountTitle").firstMatch
+            let countValue = app.staticTexts["settings.savedCount"]
+            revealFully(from: countTitle, through: countValue, in: app)
+            capture("Settings-values-\(language)", app)
+            assertValueLayout(title: countTitle, value: countValue, stacked: usesAccessibilityLayout)
             revealFully(from: app.staticTexts["settings.footer"], through: app.staticTexts["settings.footer"], in: app)
             capture("Settings-bottom-\(language)", app)
             tap(app.buttons["settings.export"], in: app)
             let warning = app.alerts.firstMatch
             XCTAssertTrue(warning.waitForExistence(timeout: 5))
-            XCTAssertTrue(warning.buttons[language == "en" ? "Export" : "导出"].isHittable)
             capture("Backup-warning-\(language)", app)
+            assertExportWarning(warning, language: language, app: app)
             tap(warning.buttons[language == "en" ? "Cancel" : "取消"], in: app)
             tap(app.buttons["settings.lock"], in: app)
             // Simulator policy evaluation may remain pending rather than fail
@@ -150,6 +156,9 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(XCTWaiter.wait(for: [recovered], timeout: 10), .completed)
             XCTAssertTrue(lock.staticTexts[language == "en" ? "Off" : "关闭"].exists)
             XCTAssertFalse(lock.staticTexts[language == "en" ? "On" : "开启"].exists)
+            let lockTitle = lock.descendants(matching: .any).matching(identifier: "settings.lockTitle").firstMatch
+            assertValueLayout(title: lockTitle,
+                value: lock.staticTexts[language == "en" ? "Off" : "关闭"], stacked: usesAccessibilityLayout)
             captureSystem("Lock-recovery-\(language)", app)
             app.terminate()
         }
@@ -182,6 +191,8 @@ final class PrivateMomentsUITests: XCTestCase {
         saveToLocalFiles(app)
         let saved = app.staticTexts["Backup saved."]
         XCTAssertTrue(saved.waitForExistence(timeout: 15), "Only the real exporter completion may report success.")
+        assertBackupResultVisible(saved, in: app)
+        capture("Backup-exported-en", app)
 
         tap(app.buttons["settings.restore"], in: app)
         let cancel = try XCTUnwrap(nativeControl(["Cancel"], app: app, timeout: 10))
@@ -224,8 +235,11 @@ final class PrivateMomentsUITests: XCTestCase {
         openBackup(filename, app: app)
         tap(app.buttons["backup.replace"], in: app)
         tap(app.alerts.firstMatch.buttons["Replace"], in: app)
-        assertSavedCount("1", app: app)
+        let restored = app.staticTexts["Local journal replaced from backup."]
+        XCTAssertTrue(restored.waitForExistence(timeout: 15))
+        assertBackupResultVisible(restored, in: app)
         capture("Backup-restored-en", app)
+        assertSavedCount("1", app: app)
         app.terminate()
         app.launch()
         selectTab("Timeline", "时间线", app: app)
@@ -241,6 +255,59 @@ final class PrivateMomentsUITests: XCTestCase {
         let count = app.staticTexts["settings.savedCount"]
         reveal(count, in: app)
         XCTAssertEqual(count.label, value)
+    }
+
+    private func assertValueLayout(title: XCUIElement, value: XCUIElement, stacked: Bool) {
+        XCTAssertTrue(title.exists)
+        XCTAssertTrue(value.exists)
+        if stacked {
+            XCTAssertGreaterThanOrEqual(value.frame.minY, title.frame.maxY,
+                "Accessibility sizes must put the value below its complete title.")
+        } else {
+            XCTAssertGreaterThanOrEqual(value.frame.minX, title.frame.maxX,
+                "Standard sizes retain a trailing value.")
+        }
+    }
+
+    private func assertExportWarning(_ warning: XCUIElement, language: String, app: XCUIApplication) {
+        let message = warning.staticTexts[language == "en" ? "Includes private notes." : "包含私密备注。"]
+        let export = warning.buttons[language == "en" ? "Export" : "导出"]
+        let cancel = warning.buttons[language == "en" ? "Cancel" : "取消"]
+        XCTAssertTrue(message.exists)
+        for element in [message, export, cancel] {
+            XCTAssertTrue(element.isHittable, "The complete warning must be readable without scrolling.")
+            XCTAssertGreaterThan(element.frame.width, 0)
+            XCTAssertGreaterThan(element.frame.height, 0)
+            XCTAssertGreaterThanOrEqual(element.frame.minX, max(app.frame.minX, warning.frame.minX))
+            XCTAssertLessThanOrEqual(element.frame.maxX, min(app.frame.maxX, warning.frame.maxX))
+            XCTAssertGreaterThanOrEqual(element.frame.minY, max(app.frame.minY, warning.frame.minY))
+            XCTAssertLessThanOrEqual(element.frame.maxY, min(app.frame.maxY, warning.frame.maxY))
+        }
+        XCTAssertLessThanOrEqual(message.frame.maxY, min(export.frame.minY, cancel.frame.minY),
+            "The warning text must finish above the actions, including at the largest text size.")
+        assertToolbarTarget(export)
+        assertToolbarTarget(cancel)
+    }
+
+    private func assertBackupResultVisible(_ result: XCUIElement, in app: XCUIApplication) {
+        // No reveal/swipe is allowed here: the actual completion must bring
+        // its feedback into view, rather than the test doing that work.
+        let visible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard result.exists, result.isHittable else { return false }
+            let navigation = app.navigationBars.firstMatch
+            let top = navigation.exists ? navigation.frame.maxY : app.frame.minY
+            let tabBar = app.tabBars.firstMatch
+            let bottom = tabBar.exists && tabBar.frame.midY > app.frame.midY
+                ? tabBar.frame.minY : app.frame.maxY
+            return result.frame.minY >= top && result.frame.maxY <= bottom
+                && result.frame.minX >= app.frame.minX && result.frame.maxX <= app.frame.maxX
+        }, object: nil)
+        let outcome = XCTWaiter.wait(for: [visible], timeout: 10)
+        if outcome != .completed {
+            captureSystem("Backup-result-unavailable-en", app)
+        }
+        XCTAssertEqual(outcome, .completed,
+            "Backup completion feedback did not become fully visible without a test scroll.")
     }
 
     private func assertMetric(_ identifier: String, value: String, app: XCUIApplication) {

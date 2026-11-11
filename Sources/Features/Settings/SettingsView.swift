@@ -3,13 +3,15 @@ import UniformTypeIdentifiers
 import OSLog
 import UIKit
 
-private enum BackupStatus {
+private enum BackupStatus: Equatable {
     case success(String)
     case error(String)
     case unavailable(String)
 }
 
 struct SettingsView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @Environment(MomentStore.self) private var store
     @Environment(AppLockController.self) private var privacyLock
@@ -28,10 +30,53 @@ struct SettingsView: View {
     @State private var backupPickerDismissed = true
     @State private var backupPickerID = UUID()
     private let logger = Logger(subsystem: "com.example.PrivateMoments", category: "backup")
+    private enum ScrollAnchor: Hashable { case backupResult }
 
     private var isWorking: Bool { isPreparingBackup || isReadingBackup }
 
     var body: some View {
+        ScrollViewReader { proxy in
+            settingsScrollContent
+                .onChange(of: backupStatus) { _, status in
+                    guard status != nil else { return }
+                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
+                        proxy.scrollTo(ScrollAnchor.backupResult, anchor: .top)
+                    }
+                }
+        }
+        .background(AppColors.background.ignoresSafeArea())
+        .navigationTitle("Settings")
+        .navigationBarTitleDisplayMode(.inline)
+        .confirmationDialog(
+            "Delete all local moments?",
+            isPresented: $showingDeleteAllConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("Delete all moments", role: .destructive) {
+                deletionCompleted = store.deleteAll()
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("This removes current journal entries and private notes from this app's local database. Any JSON backup remains unchanged.")
+        }
+        .alert("Backup", isPresented: $showingExportWarning) {
+            Button("Export") { prepareBackupExport() }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Includes private notes.")
+        }
+        .sheet(isPresented: $showingImportReview, onDismiss: { pendingImport = nil }) {
+            if let pendingImport {
+                backupReview(pendingImport)
+            }
+        }
+        .task { store.reload() }
+        .onChange(of: store.moments.count) { _, count in
+            if count > 0 { deletionCompleted = false }
+        }
+    }
+
+    private var settingsScrollContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
                 VStack(alignment: .leading, spacing: 8) {
@@ -47,9 +92,11 @@ struct SettingsView: View {
                 settingsCard(title: "ON THIS DEVICE") {
                     Label("Local journal", systemImage: "iphone")
                     Divider().overlay(AppColors.separator)
-                    HStack {
+                    valueLayout {
                         Label("Saved moments", systemImage: "heart.text.square")
-                        Spacer()
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityIdentifier("settings.savedCountTitle")
+                        if !dynamicTypeSize.isAccessibilitySize { Spacer() }
                         Text(store.isStorageAvailable ? "\(store.moments.count)" : AppLocalization.string("Unknown"))
                             .foregroundStyle(AppColors.secondaryText)
                             .accessibilityIdentifier("settings.savedCount")
@@ -74,27 +121,8 @@ struct SettingsView: View {
                         .font(.system(.footnote, design: .rounded))
                         .foregroundStyle(AppColors.secondaryText)
                     if let backupStatus {
-                        switch backupStatus {
-                        case .success(let message):
-                            Label(message, systemImage: "checkmark.circle.fill")
-                                .font(.system(.footnote, design: .rounded))
-                                .foregroundStyle(AppColors.success)
-                                .accessibilityIdentifier("settings.backupStatus")
-                        case .error(let message):
-                            ErrorNotice(message: message)
-                                .accessibilityIdentifier("settings.backupStatus")
-                        case .unavailable(let message):
-                            ErrorNotice(message: message)
-                                .accessibilityIdentifier("settings.backupUnavailableMessage")
-                            Button(action: beginBackupImport) {
-                                Label("Choose backup", systemImage: "folder")
-                                    .frame(maxWidth: .infinity, minHeight: 44)
-                            }
-                                .buttonStyle(.bordered)
-                                .tint(AppColors.accentText)
-                                .disabled(!store.isStorageAvailable || isWorking)
-                                .accessibilityIdentifier("settings.chooseBackupAgain")
-                        }
+                        backupFeedback(backupStatus)
+                            .id(ScrollAnchor.backupResult)
                     }
                     Button {
                         backupStatus = nil
@@ -170,9 +198,11 @@ struct SettingsView: View {
                     Button {
                         Task { await privacyLock.setEnabled(!privacyLock.isEnabled) }
                     } label: {
-                        HStack {
+                        valueLayout {
                             Label("Lock journal", systemImage: "lock.fill")
-                            Spacer()
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityIdentifier("settings.lockTitle")
+                            if !dynamicTypeSize.isAccessibilitySize { Spacer() }
                             if privacyLock.isAuthenticating {
                                 ProgressView().accessibilityLabel("Authenticating…")
                             } else {
@@ -248,35 +278,37 @@ struct SettingsView: View {
             .frame(maxWidth: 680)
             .frame(maxWidth: .infinity)
         }
-        .background(AppColors.background.ignoresSafeArea())
-        .navigationTitle("Settings")
-        .navigationBarTitleDisplayMode(.inline)
-        .confirmationDialog(
-            "Delete all local moments?",
-            isPresented: $showingDeleteAllConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button("Delete all moments", role: .destructive) {
-                deletionCompleted = store.deleteAll()
+    }
+
+    private var valueLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 12))
+    }
+
+    private func backupFeedback(_ status: BackupStatus) -> some View {
+        VStack(alignment: .leading, spacing: 13) {
+            switch status {
+            case .success(let message):
+                Label(message, systemImage: "checkmark.circle.fill")
+                    .font(.system(.footnote, design: .rounded))
+                    .foregroundStyle(AppColors.success)
+                    .accessibilityIdentifier("settings.backupStatus")
+            case .error(let message):
+                ErrorNotice(message: message)
+                    .accessibilityIdentifier("settings.backupStatus")
+            case .unavailable(let message):
+                ErrorNotice(message: message)
+                    .accessibilityIdentifier("settings.backupUnavailableMessage")
+                Button(action: beginBackupImport) {
+                    Label("Choose backup", systemImage: "folder")
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                }
+                .buttonStyle(.bordered)
+                .tint(AppColors.accentText)
+                .disabled(!store.isStorageAvailable || isWorking)
+                .accessibilityIdentifier("settings.chooseBackupAgain")
             }
-            Button("Cancel", role: .cancel) { }
-        } message: {
-            Text("This removes current journal entries and private notes from this app's local database. Any JSON backup remains unchanged.")
-        }
-        .alert("Backup", isPresented: $showingExportWarning) {
-            Button("Export") { prepareBackupExport() }
-            Button("Cancel", role: .cancel) { }
-        } message: {
-            Text("Includes notes. Choose a private location.")
-        }
-        .sheet(isPresented: $showingImportReview, onDismiss: { pendingImport = nil }) {
-            if let pendingImport {
-                backupReview(pendingImport)
-            }
-        }
-        .task { store.reload() }
-        .onChange(of: store.moments.count) { _, count in
-            if count > 0 { deletionCompleted = false }
         }
     }
 
