@@ -288,15 +288,9 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 13) {
             switch status {
             case .success(let message):
-                Label(message, systemImage: "checkmark.circle.fill")
-                    .font(.system(.footnote, design: .rounded))
-                    .foregroundStyle(AppColors.success)
-                    .accessibilityIdentifier("settings.backupStatus")
+                backupMessage(message, systemImage: "checkmark.circle.fill", color: AppColors.success)
             case .notice(let message):
-                Label(message, systemImage: "xmark.circle")
-                    .font(.system(.footnote, design: .rounded))
-                    .foregroundStyle(AppColors.secondaryText)
-                    .accessibilityIdentifier("settings.backupStatus")
+                backupMessage(message, systemImage: "xmark.circle", color: AppColors.secondaryText)
             case .error(let message):
                 ErrorNotice(message: message)
                     .accessibilityIdentifier("settings.backupStatus")
@@ -313,6 +307,18 @@ struct SettingsView: View {
                 .accessibilityIdentifier("settings.chooseBackupAgain")
             }
         }
+    }
+
+    private func backupMessage(_ message: String, systemImage: String, color: Color) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            Image(systemName: systemImage)
+                .accessibilityHidden(true)
+            Text(message)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("settings.backupStatus")
+        }
+        .font(.system(.footnote, design: .rounded))
+        .foregroundStyle(color)
     }
 
     private func settingsCard<Content: View>(
