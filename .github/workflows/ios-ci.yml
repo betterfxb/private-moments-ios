@@ -105,6 +105,13 @@ jobs:
           PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.backup_smoke && '1' || '0' }}
         run: bash scripts/verify-mac.sh
 
+      - name: Read backup flow diagnostics
+        if: ${{ always() && env.IOS_SIMULATOR_DESTINATION != '' }}
+        run: |
+          simulator_id="${IOS_SIMULATOR_DESTINATION##*id=}"
+          xcrun simctl spawn "$simulator_id" log show --last 30m --style compact \
+            --predicate 'subsystem == "com.example.PrivateMoments" AND category == "backup"'
+
       - name: Export XCTest UI screenshots
         if: always()
         shell: bash

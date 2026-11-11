@@ -1,6 +1,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
 import OSLog
+import UIKit
 
 private enum BackupStatus {
     case success(String)
@@ -23,6 +24,7 @@ struct SettingsView: View {
     @State private var backupStatus: BackupStatus?
     @State private var isPreparingBackup = false
     @State private var isReadingBackup = false
+    @State private var backupPickerDismissed = true
     private let logger = Logger(subsystem: "com.example.PrivateMoments", category: "backup")
 
     private var isWorking: Bool { isPreparingBackup || isReadingBackup }
@@ -87,6 +89,8 @@ struct SettingsView: View {
 
                     Button {
                         backupStatus = nil
+                        pendingImport = nil
+                        backupPickerDismissed = false
                         isImporting = true
                     } label: {
                         Group {
@@ -243,12 +247,15 @@ struct SettingsView: View {
                 backupStatus = isCancelled ? nil : .error(AppLocalization.string("Couldn't save the backup. Please try again."))
             }
         }
-        .fileImporter(
-            isPresented: $isImporting,
-            allowedContentTypes: [.json],
-            allowsMultipleSelection: false
-        ) { result in
-            handleBackupImport(result)
+        .sheet(isPresented: $isImporting, onDismiss: {
+            backupPickerDismissed = true
+            logger.notice("Backup picker dismissed.")
+            presentBackupReviewIfReady()
+        }) {
+            BackupFilePicker { result in
+                isImporting = false
+                handleBackupImport(result)
+            }
         }
         .task { store.reload() }
         .onChange(of: store.moments.count) { _, count in
@@ -302,6 +309,7 @@ struct SettingsView: View {
             return
         }
         guard let url = urls.first, !isWorking else { return }
+        logger.notice("Backup picker delivered a file for validation.")
         isReadingBackup = true
         Task { @MainActor in
             defer { isReadingBackup = false }
@@ -311,7 +319,8 @@ struct SettingsView: View {
                 }.value
                 pendingImport = envelope
                 backupStatus = nil
-                showingImportReview = true
+                logger.notice("Backup file validated.")
+                presentBackupReviewIfReady()
             } catch {
                 logger.error("Backup reading failed: \(String(describing: error), privacy: .private)")
                 let message: String
@@ -326,6 +335,12 @@ struct SettingsView: View {
                 backupStatus = .error(message)
             }
         }
+    }
+
+    private func presentBackupReviewIfReady() {
+        guard backupPickerDismissed, pendingImport != nil else { return }
+        logger.notice("Presenting validated backup review.")
+        showingImportReview = true
     }
 
     private func mergeImportedBackup() {
@@ -443,6 +458,46 @@ struct SettingsView: View {
                 .font(.system(.title2, design: .rounded).weight(.semibold))
                 .foregroundStyle(AppColors.text)
                 .accessibilityIdentifier(identifier)
+        }
+    }
+}
+
+@MainActor
+private struct BackupFilePicker: UIViewControllerRepresentable {
+    let completion: (Result<[URL], Error>) -> Void
+
+    func makeCoordinator() -> Coordinator { Coordinator(completion: completion) }
+
+    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.json], asCopy: false)
+        picker.allowsMultipleSelection = false
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ controller: UIDocumentPickerViewController, context: Context) { }
+
+    @MainActor
+    final class Coordinator: NSObject, UIDocumentPickerDelegate {
+        private let completion: (Result<[URL], Error>) -> Void
+        private var didComplete = false
+
+        init(completion: @escaping (Result<[URL], Error>) -> Void) {
+            self.completion = completion
+        }
+
+        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+            finish(.success(urls))
+        }
+
+        func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+            finish(.failure(CocoaError(.userCancelled)))
+        }
+
+        private func finish(_ result: Result<[URL], Error>) {
+            guard !didComplete else { return }
+            didComplete = true
+            completion(result)
         }
     }
 }
