@@ -121,10 +121,18 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Backup-warning-\(language)", app)
             tap(warning.buttons[language == "en" ? "Cancel" : "取消"], in: app)
             tap(app.buttons["settings.lock"], in: app)
-            let lockError = app.descendants(matching: .any)["settings.lockError"].firstMatch
-            XCTAssertTrue(lockError.waitForExistence(timeout: 10), "The unconfigured Simulator must explain authentication availability.")
-            reveal(lockError, in: app)
-            capture("Lock-unavailable-\(language)", app)
+            // Simulator policy evaluation may remain pending rather than fail
+            // immediately. Exercise real background cancellation, without an
+            // authentication-success fixture or an assumed Simulator policy.
+            XCUIDevice.shared.press(.home)
+            XCTAssertTrue(app.wait(for: .runningBackground, timeout: 10))
+            app.activate()
+            let lock = app.buttons["settings.lock"]
+            reveal(lock, in: app)
+            let recovered = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: lock)
+            XCTAssertEqual(XCTWaiter.wait(for: [recovered], timeout: 10), .completed)
+            XCTAssertEqual(lock.label, language == "en" ? "Lock journal, Off" : "锁定日记, 关闭")
+            captureSystem("Lock-recovery-\(language)", app)
             app.terminate()
         }
     }
@@ -134,6 +142,7 @@ final class PrivateMomentsUITests: XCTestCase {
         app.launch()
         tap(app.buttons["today.addRecord"], in: app)
         replaceNumber(app.textFields["recap.minutes"], with: "4", in: app)
+        tap(app.buttons["recap.dismissKeyboard"], in: app)
         replaceNumber(app.textFields["recap.seconds"], with: "7", in: app)
         tap(app.buttons["recap.dismissKeyboard"], in: app)
         tap(app.textViews["recap.note"], in: app)
@@ -143,12 +152,11 @@ final class PrivateMomentsUITests: XCTestCase {
         selectTab("Settings", "设置", app: app)
         tap(app.buttons["settings.export"], in: app)
         tap(app.alerts.firstMatch.buttons["Export"], in: app)
-        let nameField = app.textFields.firstMatch
-        let hasNameField = nameField.waitForExistence(timeout: 15)
+        XCTAssertNotNil(nativeControl(["Save"], app: app, timeout: 30))
         captureSystem("Export-files-en", app)
-        XCTAssertTrue(hasNameField, "The system exporter must show its filename field.")
-        let filename = "PM-" + String(UUID().uuidString.prefix(8))
-        replaceNumber(nameField, with: filename, in: app)
+        // Each hosted Simulator is fresh; this test exports exactly one file.
+        // iOS may hide Save As on first presentation; use the real default name.
+        let filename = "Private-Moments-Backup"
         saveToLocalFiles(app)
         let saved = app.staticTexts["Backup saved."]
         XCTAssertTrue(saved.waitForExistence(timeout: 15), "Only the real exporter completion may report success.")
@@ -262,9 +270,11 @@ final class PrivateMomentsUITests: XCTestCase {
         let deadline = Date().addingTimeInterval(10)
         var file = selectedFile()
         while file == nil && Date() < deadline { file = selectedFile() }
-        if file == nil, let recents = nativeControl(["Recents"], app: app) {
-            recents.tap()
-            file = selectedFile()
+        if file == nil {
+            if let browse = nativeControl(["Browse"], app: app) { browse.tap() }
+            if let local = nativeControl(["On My iPhone", "On My iPad"], app: app) { local.tap() }
+            let localDeadline = Date().addingTimeInterval(10)
+            repeat { file = selectedFile() } while file == nil && Date() < localDeadline
         }
         guard let file else {
             captureSystem("Import-file-unavailable", app)
@@ -545,11 +555,25 @@ final class PrivateMomentsUITests: XCTestCase {
         // A returned screen retains its scroll position. Existing controls can
         // be above it; lazy controls not yet created are searched below it.
         for _ in 0..<16 {
-            if element.waitForExistence(timeout: 0.5), element.isHittable { return }
+            let exists = element.waitForExistence(timeout: 0.5)
             let scroll = app.scrollViews.firstMatch
-            if element.exists, !element.frame.isEmpty,
-               element.frame.minY < scroll.frame.minY {
-                app.swipeDown()
+            let keyboard = app.keyboards.firstMatch
+            let frame = exists ? element.frame : .zero
+            let center = CGPoint(x: frame.midX, y: frame.midY)
+            let keyboardCoversCenter = keyboard.exists && keyboard.frame.contains(center)
+            if exists, element.isHittable, app.frame.contains(center), !keyboardCoversCenter { return }
+            if exists, !frame.isEmpty, scroll.exists {
+                let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
+                var bottom = min(scroll.frame.maxY, app.frame.maxY) - 12
+                if keyboard.exists { bottom = min(bottom, keyboard.frame.minY - 12) }
+                if app.tabBars.firstMatch.exists { bottom = min(bottom, app.tabBars.firstMatch.frame.minY - 12) }
+                guard bottom > top + 44 else { return XCTFail("No usable scroll viewport for \(element)") }
+                let middle = (top + bottom) / 2
+                let limit = (bottom - top) * 0.4
+                let delta = max(-limit, min(limit, middle - frame.midY))
+                let start = app.coordinate(withNormalizedOffset: .zero)
+                    .withOffset(CGVector(dx: min(scroll.frame.maxX - 12, app.frame.maxX - 12), dy: middle))
+                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: delta)))
             } else {
                 app.swipeUp()
             }
