@@ -125,7 +125,10 @@ final class PrivateMomentsUITests: XCTestCase {
             // immediately. Exercise real background cancellation, without an
             // authentication-success fixture or an assumed Simulator policy.
             XCUIDevice.shared.press(.home)
-            XCTAssertTrue(app.wait(for: .runningBackground, timeout: 10))
+            let background = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                app.state == .runningBackground || app.state == .runningBackgroundSuspended
+            }, object: app)
+            XCTAssertEqual(XCTWaiter.wait(for: [background], timeout: 10), .completed)
             app.activate()
             let lock = app.buttons["settings.lock"]
             reveal(lock, in: app)
