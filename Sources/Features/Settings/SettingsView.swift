@@ -319,7 +319,7 @@ struct SettingsView: View {
             defer { isReadingBackup = false }
             do {
                 let envelope = try await Task.detached(priority: .userInitiated) {
-                    try MomentBackupFileReader.read(url)
+                    try MomentBackupFileReader.readImportedCopy(url)
                 }.value
                 pendingImport = envelope
                 backupStatus = nil
@@ -474,7 +474,9 @@ private struct BackupFilePicker: UIViewControllerRepresentable {
     func makeCoordinator() -> Coordinator { Coordinator(completion: completion) }
 
     func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.json], asCopy: false)
+        // Restore consumes a validated snapshot rather than editing a live
+        // provider document or retaining its external security-scoped bookmark.
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.json], asCopy: true)
         picker.allowsMultipleSelection = false
         picker.delegate = context.coordinator
         return picker

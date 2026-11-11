@@ -60,6 +60,51 @@ final class BackupUXTests: XCTestCase {
         }
     }
 
+    func testImportedCopyIsDeletedAfterSuccessfulValidation() throws {
+        let file = try temporaryFile()
+        defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
+        let moment = makeRecoveryMoment()
+        try MomentBackupCodec.encode([moment]).write(to: file)
+        XCTAssertEqual(try MomentBackupFileReader.readImportedCopy(file).moments, [moment])
+        XCTAssertFalse(FileManager.default.fileExists(atPath: file.path))
+    }
+
+    func testInvalidImportedCopyIsDeletedWithoutHidingValidationError() throws {
+        let file = try temporaryFile()
+        defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
+        try Data("invalid fixture".utf8).write(to: file)
+        XCTAssertThrowsError(try MomentBackupFileReader.readImportedCopy(file)) { error in
+            guard case .invalidFormat? = error as? MomentBackupError else {
+                return XCTFail("Expected invalid backup format, got \(error)")
+            }
+        }
+        XCTAssertFalse(FileManager.default.fileExists(atPath: file.path))
+    }
+
+    func testImportedCopyNeverDeletesAPrefixSibling() throws {
+        let temporary = FileManager.default.temporaryDirectory.standardizedFileURL
+        let folder = temporary.deletingLastPathComponent().appendingPathComponent(
+            temporary.lastPathComponent + "-outside-" + UUID().uuidString, isDirectory: true
+        )
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let file = folder.appendingPathComponent("original.json")
+        let data = try MomentBackupCodec.encode([makeRecoveryMoment()])
+        try data.write(to: file)
+        XCTAssertEqual(try MomentBackupFileReader.readImportedCopy(file).moments.count, 1)
+        XCTAssertEqual(try Data(contentsOf: file), data)
+    }
+
+    func testImportedCopyNeverRecursivelyDeletesADirectory() throws {
+        let file = try temporaryFile()
+        defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
+        try FileManager.default.createDirectory(at: file, withIntermediateDirectories: true)
+        XCTAssertThrowsError(try MomentBackupFileReader.readImportedCopy(file))
+        var isDirectory: ObjCBool = false
+        XCTAssertTrue(FileManager.default.fileExists(atPath: file.path, isDirectory: &isDirectory))
+        XCTAssertTrue(isDirectory.boolValue)
+    }
+
     private func temporaryFile() throws -> URL {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)

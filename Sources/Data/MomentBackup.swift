@@ -1,6 +1,8 @@
 import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
+import OSLog
+import Darwin
 
 struct MomentBackupEnvelope: Codable, Sendable {
     let formatVersion: Int
@@ -35,9 +37,73 @@ struct BackupImportSummary {
 }
 
 enum MomentBackupFileReader {
+    private static let logger = Logger(subsystem: "com.example.PrivateMoments", category: "backup")
+
+    static func readImportedCopy(_ url: URL) throws -> MomentBackupEnvelope {
+        let ownsCopy = try isOwnedImportedFile(url)
+        defer {
+            if ownsCopy {
+                do { try removeImportedFile(url) }
+                catch {
+                    logger.error("Imported backup copy cleanup failed: \(String(describing: error), privacy: .private)")
+                }
+            }
+        }
+        if ownsCopy {
+            try FileManager.default.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: url.path)
+            var copyURL = url
+            var values = URLResourceValues()
+            values.isExcludedFromBackup = true
+            try copyURL.setResourceValues(values)
+        }
+        return try read(url)
+    }
+
+    private static func removeImportedFile(_ url: URL) throws {
+        // unlink removes a single file/link and cannot recursively delete a
+        // directory even if its type changes after the initial ownership check.
+        var failureCode: Int32 = EINVAL
+        let removed = url.withUnsafeFileSystemRepresentation { path -> Bool in
+            guard let path else { return false }
+            let result = Darwin.unlink(path)
+            if result != 0 { failureCode = errno }
+            return result == 0
+        }
+        guard removed else { throw POSIXError(POSIXErrorCode(rawValue: failureCode) ?? .EIO) }
+    }
+
+    private static func isOwnedImportedFile(_ url: URL) throws -> Bool {
+        guard url.isFileURL else { return false }
+        let file = url.standardizedFileURL.resolvingSymlinksInPath().pathComponents
+        var roots = [FileManager.default.temporaryDirectory]
+        if let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            roots.append(documents.appendingPathComponent("Inbox", isDirectory: true))
+        }
+        let ownedPath = roots.contains { root in
+            let components = root.standardizedFileURL.resolvingSymlinksInPath().pathComponents
+            return file.count > components.count && file.starts(with: components)
+        }
+        guard ownedPath else { return false }
+        // Never recursively remove a package/directory, or follow an imported
+        // symbolic link when deciding which temporary item belongs to us.
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        return attributes[.type] as? FileAttributeType == .typeRegular
+    }
+
     static func read(_ url: URL) throws -> MomentBackupEnvelope {
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        var coordinationError: NSError?
+        var result: Result<MomentBackupEnvelope, Error>?
+        NSFileCoordinator().coordinate(readingItemAt: url, options: [], error: &coordinationError) { coordinatedURL in
+            result = Result { try readContents(coordinatedURL) }
+        }
+        if let coordinationError { throw coordinationError }
+        guard let result else { throw CocoaError(.fileReadUnknown) }
+        return try result.get()
+    }
+
+    private static func readContents(_ url: URL) throws -> MomentBackupEnvelope {
         if let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
            let size = attributes[.size] as? NSNumber,
            size.intValue > MomentBackupCodec.maximumFileSize {
