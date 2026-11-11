@@ -127,14 +127,17 @@ final class PrivateMomentsUITests: XCTestCase {
             goBack(app)
             selectTab("Settings", "设置", language: language, app: app)
             capture("Settings-top-\(language)", app)
-            let countTitle = app.descendants(matching: .any).matching(identifier: "settings.savedCountTitle").firstMatch
+            let countTitle = app.staticTexts["settings.savedCountTitle"]
             let countValue = app.staticTexts["settings.savedCount"]
             revealFully(from: countTitle, through: countValue, in: app)
             capture("Settings-values-\(language)", app)
+            XCTAssertEqual(countTitle.label, language == "en" ? "Saved moments" : "已保存的记录")
             assertValueLayout(title: countTitle, value: countValue, stacked: usesAccessibilityLayout)
             revealFully(from: app.staticTexts["settings.footer"], through: app.staticTexts["settings.footer"], in: app)
             capture("Settings-bottom-\(language)", app)
-            tap(app.buttons["settings.export"], in: app)
+            let exportAction = app.buttons["settings.export"]
+            revealFully(from: exportAction, through: exportAction, in: app)
+            tap(exportAction, in: app)
             let warning = app.alerts.firstMatch
             XCTAssertTrue(warning.waitForExistence(timeout: 5))
             capture("Backup-warning-\(language)", app)
@@ -156,7 +159,8 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(XCTWaiter.wait(for: [recovered], timeout: 10), .completed)
             XCTAssertTrue(lock.staticTexts[language == "en" ? "Off" : "关闭"].exists)
             XCTAssertFalse(lock.staticTexts[language == "en" ? "On" : "开启"].exists)
-            let lockTitle = lock.descendants(matching: .any).matching(identifier: "settings.lockTitle").firstMatch
+            let lockTitle = lock.staticTexts["settings.lockTitle"]
+            XCTAssertEqual(lockTitle.label, language == "en" ? "Lock journal" : "锁定日记")
             assertValueLayout(title: lockTitle,
                 value: lock.staticTexts[language == "en" ? "Off" : "关闭"], stacked: usesAccessibilityLayout)
             captureSystem("Lock-recovery-\(language)", app)
