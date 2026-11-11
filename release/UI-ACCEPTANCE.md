@@ -1,6 +1,10 @@
 # Simulator UI acceptance
 
-## Latest editing and recovery verification (2026-11-11)
+## Latest backup and lock verification (2026-11-11)
+
+Source `d4a6a83d5ab4c2d2c650bbe9309ae3e998989779`, [run 43001370010](https://github.com/betterfxb/private-moments-ios/actions/runs/43001370010), passes four profiles on Xcode26.2 / SDK26.2 / iOS26.2: 50 unit tests, five main-profile UI tests and two UI methods per other profile, with Release hook exclusion. Actual English system exporter/importer roundtrips verify preview cancellation, merge, separately confirmed replacement and exact data after relaunch. Bilingual galleries cover short export warnings and authentication cancellation recovery feedback. 219 PNGs checked; 21 selected originals opened. See [acceptance and limits](UX-ACCEPTANCE-08.md), [originals](evidence/batch-08/index.html) and [receipt](evidence/batch-08/verification.json). Physical authentication/VoiceOver, external file providers and older runtimes remain open; prior sections are historical.
+
+## Historical editing and recovery verification (2026-11-11)
 
 Source `9070f3d89def44a79ba169c9c963567caad10dbe`, [run 42900233189](https://github.com/betterfxb/private-moments-ios/actions/runs/42900233189), passes all four profiles on Xcode26.2 / SDK26.2 / iOS26.2. Compact-light includes Debug/Release builds, actual Release Simulator test-hook exclusion, 32 unit tests and four UI tests. Other profiles run a bilingual gallery including injected first-save failure, retained draft, toolbar reload and explicit retry. All 175 PNGs downloaded; 17 selected final originals opened.
 
