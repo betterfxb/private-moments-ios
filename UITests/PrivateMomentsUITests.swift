@@ -321,7 +321,7 @@ final class PrivateMomentsUITests: XCTestCase {
         }, object: nil)
         let outcome = XCTWaiter.wait(for: [visible], timeout: 10)
         if outcome != .completed {
-            captureSystem("Backup-result-unavailable-en", app)
+            captureFailure("Backup-result-unavailable-en", app)
             print("Backup feedback visibility: exists=\(result.exists), result=\(result.frame), navigation=\(app.navigationBars.firstMatch.frame), tabs=\(app.tabBars.firstMatch.frame), app=\(app.frame)")
         }
         XCTAssertEqual(outcome, .completed,
@@ -479,6 +479,19 @@ final class PrivateMomentsUITests: XCTestCase {
 
     private func captureSystem(_ name: String, _ app: XCUIApplication) {
         capture(name, app, stableSurface: app.windows.firstMatch)
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.name = name + "-hierarchy"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+    }
+
+    private func captureFailure(_ name: String, _ app: XCUIApplication) {
+        // Capture the physical simulator surface first, even when a failing
+        // app cannot provide a stable window or accessibility snapshot.
+        let screenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        screenshot.name = name
+        screenshot.lifetime = .keepAlways
+        add(screenshot)
         let hierarchy = XCTAttachment(string: app.debugDescription)
         hierarchy.name = name + "-hierarchy"
         hierarchy.lifetime = .keepAlways

@@ -12,7 +12,6 @@ private enum BackupStatus: Equatable {
 
 struct SettingsView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @Environment(MomentStore.self) private var store
     @Environment(AppLockController.self) private var privacyLock
@@ -31,22 +30,21 @@ struct SettingsView: View {
     @State private var backupPickerDismissed = true
     @State private var backupPickerID = UUID()
     private let logger = Logger(subsystem: "com.example.PrivateMoments", category: "backup")
-    private enum ScrollAnchor: Hashable { case backupResult }
 
     private var isWorking: Bool { isPreparingBackup || isReadingBackup }
 
     var body: some View {
-        ScrollViewReader { proxy in
-            settingsScrollContent
-                .onChange(of: backupStatus) { _, status in
-                    guard status != nil else { return }
-                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
-                        // Keep feedback away from translucent navigation chrome,
-                        // including on compact screens after a system sheet closes.
-                        proxy.scrollTo(ScrollAnchor.backupResult, anchor: .center)
-                    }
+        settingsScrollContent
+            .safeAreaInset(edge: .top, spacing: 0) {
+                if let backupStatus {
+                    backupFeedback(backupStatus)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .modifier(JournalPanel())
+                        .padding(.horizontal, AppSpacing.page)
+                        .padding(.vertical, 8)
+                        .background(AppColors.background)
                 }
-        }
+            }
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
@@ -124,10 +122,6 @@ struct SettingsView: View {
                     Text("Create a portable JSON backup or restore one you made earlier.")
                         .font(.system(.footnote, design: .rounded))
                         .foregroundStyle(AppColors.secondaryText)
-                    if let backupStatus {
-                        backupFeedback(backupStatus)
-                            .id(ScrollAnchor.backupResult)
-                    }
                     Button {
                         backupStatus = nil
                         showingExportWarning = true
