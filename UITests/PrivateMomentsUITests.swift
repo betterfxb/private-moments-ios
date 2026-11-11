@@ -31,16 +31,16 @@ final class PrivateMomentsUITests: XCTestCase {
             let brand = app.staticTexts["today.brand"]
             XCTAssertTrue(brand.waitForExistence(timeout: 5))
             XCTAssertEqual(brand.label, language == "en" ? "Private Moments" : "私密时刻")
-            XCTAssertGreaterThanOrEqual(brand.frame.minX, app.frame.minX)
-            XCTAssertLessThanOrEqual(brand.frame.maxX, app.frame.maxX)
+            XCTAssertGreaterThanOrEqual(brand.frame.minX, app.windows.firstMatch.frame.minX)
+            XCTAssertLessThanOrEqual(brand.frame.maxX, app.windows.firstMatch.frame.maxX)
             if !app.buttons["today.weekMenu"].exists {
                 XCTAssertGreaterThanOrEqual(brand.frame.width, language == "en" ? 115 : 60,
                     "The brand must not collapse into an icon-sized toolbar item.")
             }
             XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0, "Each locale must use an isolated empty store.")
             for action in [start, app.buttons["today.addRecord"]] {
-                XCTAssertGreaterThanOrEqual(action.frame.minX, app.frame.minX, "Home action is clipped on the left.")
-                XCTAssertLessThanOrEqual(action.frame.maxX, app.frame.maxX, "Home action is clipped on the right.")
+                XCTAssertGreaterThanOrEqual(action.frame.minX, app.windows.firstMatch.frame.minX, "Home action is clipped on the left.")
+                XCTAssertLessThanOrEqual(action.frame.maxX, app.windows.firstMatch.frame.maxX, "Home action is clipped on the right.")
                 XCTAssertGreaterThanOrEqual(action.frame.height, 44, "Home action needs an accessible target height.")
             }
             capture("Today-\(language)", app)
@@ -67,8 +67,8 @@ final class PrivateMomentsUITests: XCTestCase {
             }
             revealFully(from: app.textFields["recap.minutes"], through: app.textFields["recap.seconds"], in: app)
             for field in [app.textFields["recap.minutes"], app.textFields["recap.seconds"]] {
-                XCTAssertGreaterThanOrEqual(field.frame.minX, app.frame.minX, "Timing input is clipped on the left.")
-                XCTAssertLessThanOrEqual(field.frame.maxX, app.frame.maxX, "Timing input is clipped on the right.")
+                XCTAssertGreaterThanOrEqual(field.frame.minX, app.windows.firstMatch.frame.minX, "Timing input is clipped on the left.")
+                XCTAssertLessThanOrEqual(field.frame.maxX, app.windows.firstMatch.frame.maxX, "Timing input is clipped on the right.")
             }
             capture("Manual-duration-\(language)", app)
             tap(app.buttons["recap.cancel"], in: app)
@@ -98,8 +98,8 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(app.buttons["today.applyDate"], in: app)
             capture("Today-filtered-\(language)", app)
             tap(app.buttons["today.clearDateFilter"], in: app)
-            app.swipeUp()
-            app.swipeUp()
+            app.windows.firstMatch.swipeUp()
+            app.windows.firstMatch.swipeUp()
             capture("Today-summary-\(language)", app)
             selectTab("Timeline", "时间线", language: language, app: app)
             capture("Timeline-\(language)", app)
@@ -323,10 +323,10 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertTrue(element.isHittable, "The complete warning must be readable without scrolling.")
             XCTAssertGreaterThan(element.frame.width, 0)
             XCTAssertGreaterThan(element.frame.height, 0)
-            XCTAssertGreaterThanOrEqual(element.frame.minX, max(app.frame.minX, warning.frame.minX))
-            XCTAssertLessThanOrEqual(element.frame.maxX, min(app.frame.maxX, warning.frame.maxX))
-            XCTAssertGreaterThanOrEqual(element.frame.minY, max(app.frame.minY, warning.frame.minY))
-            XCTAssertLessThanOrEqual(element.frame.maxY, min(app.frame.maxY, warning.frame.maxY))
+            XCTAssertGreaterThanOrEqual(element.frame.minX, max(app.windows.firstMatch.frame.minX, warning.frame.minX))
+            XCTAssertLessThanOrEqual(element.frame.maxX, min(app.windows.firstMatch.frame.maxX, warning.frame.maxX))
+            XCTAssertGreaterThanOrEqual(element.frame.minY, max(app.windows.firstMatch.frame.minY, warning.frame.minY))
+            XCTAssertLessThanOrEqual(element.frame.maxY, min(app.windows.firstMatch.frame.maxY, warning.frame.maxY))
         }
         XCTAssertLessThanOrEqual(message.frame.maxY, min(export.frame.minY, cancel.frame.minY),
             "The warning text must finish above the actions, including at the largest text size.")
@@ -348,16 +348,24 @@ final class PrivateMomentsUITests: XCTestCase {
                 lastObservation = "Feedback missing, app not foreground, or a modal remains."
                 return false
             }
-            let frame = result.frame
-            let viewport = app.frame
+            // Application is an accessibility root, not a visible rectangle.
+            // Files can leave that root without a frame while its real window
+            // and text remain valid. Measure the window owning this feedback.
+            let window = app.windows.containing(.staticText, identifier: "settings.backupStatus").firstMatch
+            guard window.exists else {
+                lastObservation = "No application window contains the feedback."
+                return false
+            }
+            let viewport = window.frame
+            let frame = window.staticTexts["settings.backupStatus"].frame
             guard !frame.isEmpty, !frame.isInfinite, !frame.isNull,
                   !viewport.isEmpty, !viewport.isInfinite, !viewport.isNull else {
                 lastObservation = "Invalid feedback or viewport frame: \(frame), \(viewport)."
                 return false
             }
-            let navigation = app.navigationBars.firstMatch
+            let navigation = window.navigationBars.firstMatch
             let navigationFrame = navigation.exists ? navigation.frame : nil
-            let tabBar = app.tabBars.firstMatch
+            let tabBar = window.tabBars.firstMatch
             let tabFrame = tabBar.exists ? tabBar.frame : nil
             let top = navigationFrame?.maxY ?? viewport.minY
             let bottom = tabFrame.map { $0.midY > viewport.midY ? $0.minY : viewport.maxY }
@@ -500,7 +508,7 @@ final class PrivateMomentsUITests: XCTestCase {
             // actual document thumbnail; choose the visible document itself.
             let target = thumbnail.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             XCTAssertTrue(file.frame.contains(target.screenPoint))
-            XCTAssertTrue(app.frame.contains(target.screenPoint))
+            XCTAssertTrue(app.windows.firstMatch.frame.contains(target.screenPoint))
             target.tap()
         } else {
             file.tap()
@@ -610,7 +618,7 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
         tap(app.segmentedControls.buttons["Solo"], in: app)
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
-        app.swipeDown()
+        app.windows.firstMatch.swipeDown()
         let search = app.searchFields.firstMatch
         tap(search, in: app)
         let query = "no-matching-mood"
@@ -774,8 +782,8 @@ final class PrivateMomentsUITests: XCTestCase {
         let reloadAction = alert.buttons[language == "en" ? "Reload" : "重新读取"]
         for action in [edit, reloadAction] {
             XCTAssertTrue(action.isHittable, "Recovery actions must be visible before scrolling the alert.")
-            XCTAssertGreaterThanOrEqual(action.frame.minY, app.frame.minY)
-            XCTAssertLessThanOrEqual(action.frame.maxY, app.frame.maxY)
+            XCTAssertGreaterThanOrEqual(action.frame.minY, app.windows.firstMatch.frame.minY)
+            XCTAssertLessThanOrEqual(action.frame.maxY, app.windows.firstMatch.frame.maxY)
         }
         if captureScenes { capture("Save-error-\(language)", app) }
         tap(edit, in: app)
@@ -813,17 +821,20 @@ final class PrivateMomentsUITests: XCTestCase {
         // be above it; lazy controls not yet created are searched below it.
         for _ in 0..<16 {
             let exists = element.waitForExistence(timeout: 0.5)
+            let window = app.windows.firstMatch
+            let viewport = window.frame
+            guard !viewport.isEmpty, !viewport.isInfinite, !viewport.isNull else { continue }
             let keyboard = app.keyboards.firstMatch
             let frame = exists ? element.frame : .zero
             let center = CGPoint(x: frame.midX, y: frame.midY)
             let keyboardCoversCenter = keyboard.exists && keyboard.frame.contains(center)
             let footerTop = fixedFooterTop(ignoring: element, in: app)
             let footerCoversCenter = footerTop.map { center.y >= $0 } ?? false
-            if exists, element.isHittable, app.frame.contains(center), !keyboardCoversCenter, !footerCoversCenter { return }
+            if exists, element.isHittable, viewport.contains(center), !keyboardCoversCenter, !footerCoversCenter { return }
             let scroll = scrollSurface(containing: element, in: app)
             if exists, !frame.isEmpty, scroll.exists {
                 let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
-                var bottom = min(scroll.frame.maxY, app.frame.maxY) - 12
+                var bottom = min(scroll.frame.maxY, viewport.maxY) - 12
                 if keyboard.exists { bottom = min(bottom, keyboard.frame.minY - 12) }
                 if app.tabBars.firstMatch.exists { bottom = min(bottom, app.tabBars.firstMatch.frame.minY - 12) }
                 if let footerTop { bottom = min(bottom, footerTop - 12) }
@@ -831,11 +842,12 @@ final class PrivateMomentsUITests: XCTestCase {
                 let middle = (top + bottom) / 2
                 let limit = (bottom - top) * 0.4
                 let delta = max(-limit, min(limit, middle - frame.midY))
-                let start = app.coordinate(withNormalizedOffset: .zero)
-                    .withOffset(CGVector(dx: min(scroll.frame.maxX - 12, app.frame.maxX - 12), dy: middle))
+                let start = window.coordinate(withNormalizedOffset: .zero)
+                    .withOffset(CGVector(dx: min(scroll.frame.maxX - 12, viewport.maxX - 12) - viewport.minX,
+                        dy: middle - viewport.minY))
                 start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: delta)))
             } else {
-                app.swipeUp()
+                window.swipeUp()
             }
         }
         XCTFail("Control is unreachable after scrolling: \(element)")
@@ -886,7 +898,7 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertTrue(popover.waitForExistence(timeout: 5), "Missing cancel action and popover.")
             let outside = [CGVector(dx: 0.05, dy: 0.5), CGVector(dx: 0.95, dy: 0.5),
                            CGVector(dx: 0.5, dy: 0.9), CGVector(dx: 0.5, dy: 0.1)]
-                .map { app.coordinate(withNormalizedOffset: $0) }
+                .map { app.windows.firstMatch.coordinate(withNormalizedOffset: $0) }
                 .first { !popover.frame.insetBy(dx: -8, dy: -8).contains($0.screenPoint) }
             guard let outside else {
                 XCTFail("No point outside the confirmation popover.")
@@ -906,7 +918,7 @@ final class PrivateMomentsUITests: XCTestCase {
         for _ in 0..<6 {
             XCTAssertTrue(first.exists)
             let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
-            var bottom = min(scroll.frame.maxY, app.frame.maxY) - 12
+            var bottom = min(scroll.frame.maxY, app.windows.firstMatch.frame.maxY) - 12
             if let footerTop = fixedFooterTop(ignoring: last, in: app) { bottom = min(bottom, footerTop - 12) }
             let section = first.frame.union(last.frame)
             let delta: CGFloat
@@ -936,7 +948,9 @@ final class PrivateMomentsUITests: XCTestCase {
         // animating. Require a stable scroll-surface frame across polling ticks.
         let surface = stableSurface ?? (app.alerts.firstMatch.exists ? app.alerts.firstMatch : app.scrollViews.firstMatch)
         waitForStableFrame(surface, message: "Screen never settled: \(name)")
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+        // Capture the physical display, including native system surfaces,
+        // without depending on the application root's optional frame.
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
