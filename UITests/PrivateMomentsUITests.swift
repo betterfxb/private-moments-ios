@@ -337,53 +337,38 @@ final class PrivateMomentsUITests: XCTestCase {
     private func assertBackupResultVisible(_ result: XCUIElement, in app: XCUIApplication) {
         // No reveal/swipe is allowed here: the actual completion must bring
         // its feedback into view, rather than the test doing that work.
-        var lastObservation = "No snapshot received."
-        let visible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            // This is read-only feedback, not a control to activate. Asking
-            // XCTest for a hit point can itself raise an automation failure.
-            // Require a foreground, unobscured screen and the whole text frame.
-            guard result.exists, app.state == .runningForeground,
-                  !app.alerts.firstMatch.exists, !app.sheets.firstMatch.exists,
-                  !app.collectionViews["File View"].exists else {
-                lastObservation = "Feedback missing, app not foreground, or a modal remains."
-                return false
-            }
-            // Application is an accessibility root, not a visible rectangle.
-            // Files can leave that root without a frame while its real window
-            // and text remain valid. Measure the window owning this feedback.
-            let window = app.windows.containing(.staticText, identifier: "settings.backupStatus").firstMatch
-            guard window.exists else {
-                lastObservation = "No application window contains the feedback."
-                return false
-            }
-            let viewport = window.frame
-            let frame = window.staticTexts["settings.backupStatus"].frame
-            guard !frame.isEmpty, !frame.isInfinite, !frame.isNull,
-                  !viewport.isEmpty, !viewport.isInfinite, !viewport.isNull else {
-                lastObservation = "Invalid feedback or viewport frame: \(frame), \(viewport)."
-                return false
-            }
-            let navigation = window.navigationBars.firstMatch
-            let navigationFrame = navigation.exists ? navigation.frame : nil
-            let tabBar = window.tabBars.firstMatch
-            let tabFrame = tabBar.exists ? tabBar.frame : nil
-            let top = navigationFrame?.maxY ?? viewport.minY
-            let bottom = tabFrame.map { $0.midY > viewport.midY ? $0.minY : viewport.maxY }
-                ?? viewport.maxY
-            lastObservation = "Feedback=\(frame), viewport=\(viewport), top=\(top), bottom=\(bottom)."
-            return frame.minY >= top && frame.maxY <= bottom
-                && frame.minX >= viewport.minX && frame.maxX <= viewport.maxX
-        }, object: nil)
-        // Files owns a separate accessibility process. A stale snapshot after
-        // dismissal can consume a polling cycle; allow a bounded fresh snapshot,
-        // without retrying the operation or changing the layout requirements.
-        let outcome = XCTWaiter.wait(for: [visible], timeout: 30)
-        if outcome != .completed {
-            print("Backup feedback visibility: \(lastObservation)")
+        // Callers already wait up to 15 seconds for the actual result message.
+        // Read geometry once, not inside a timed predicate: synchronous remote
+        // attribute reads can exhaust its clock even when every condition is true.
+        // Their duration is not a measurement of the app's response time.
+        let window = app.windows.containing(.staticText, identifier: "settings.backupStatus").firstMatch
+        guard window.exists else {
+            captureFailure("Backup-result-unavailable-en", app)
+            return XCTFail("No application window contains the feedback.")
+        }
+        let viewport = window.frame
+        let frame = window.staticTexts["settings.backupStatus"].frame
+        // Native navigation/tab surfaces can be separate from the content window.
+        let navigation = app.navigationBars.firstMatch
+        let navigationFrame = navigation.exists ? navigation.frame : nil
+        let tabBar = app.tabBars.firstMatch
+        let tabFrame = tabBar.exists ? tabBar.frame : nil
+        let top = navigationFrame?.maxY ?? viewport.minY
+        let bottom = tabFrame.map { $0.midY > viewport.midY ? $0.minY : viewport.maxY }
+            ?? viewport.maxY
+        let validFrames = !frame.isEmpty && !frame.isInfinite && !frame.isNull
+            && !viewport.isEmpty && !viewport.isInfinite && !viewport.isNull
+        let fullyVisible = validFrames && frame.minY >= top && frame.maxY <= bottom
+            && frame.minX >= viewport.minX && frame.maxX <= viewport.maxX
+        let unobscured = result.exists && app.state == .runningForeground
+            && !app.alerts.firstMatch.exists && !app.sheets.firstMatch.exists
+            && !app.collectionViews["File View"].exists
+        if !fullyVisible || !unobscured {
+            print("Backup feedback visibility: frame=\(frame), viewport=\(viewport), top=\(top), bottom=\(bottom), unobscured=\(unobscured).")
             captureFailure("Backup-result-unavailable-en", app)
         }
-        XCTAssertEqual(outcome, .completed,
-            "Backup completion feedback did not become fully visible without a test scroll.")
+        XCTAssertTrue(fullyVisible && unobscured,
+            "Backup completion feedback must be fully visible without a test scroll.")
     }
 
     private func assertMetric(_ identifier: String, value: String, app: XCUIApplication) {
