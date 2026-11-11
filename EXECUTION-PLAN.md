@@ -1,6 +1,10 @@
 # Private Moments — Project Execution Plan
 
-## Latest batch: backup review and authentication continuity
+## Latest batch: large text and result feedback — native acceptance blocked
+
+The ordered [batch-nine plan](release/BATCH-09-PLAN.md) has implemented tasks1–4: bounded architecture review, large-text settings/short warnings, dismissible outcome feedback and actual native-flow test updates. Task5 remains incomplete. Two focused runs and one full run ended `startup_failure` before creating any job; the latest source `adf8545674c35e4c4bde4f3c492b843ab2f14ee6` is not established as compiled or accepted. Local audits pass, with release placeholders retained. See [status and reproducible startup diagnostics](release/BATCH-09-STATUS.md). Restore the execution channel, pass the same-source four-profile matrix, then inspect originals and publish acceptance. Do not substitute prior screenshots, skip failed assertions or mark the batch complete.
+
+## Historical batch: backup review and authentication continuity
 
 The [batch-eight plan](release/BATCH-08-PLAN.md) is complete: architecture review → validated backup review/background file work → serialized device authentication → unit and actual system-file tests → four-profile regression and original evidence. See [acceptance](release/UX-ACCEPTANCE-08.md). Backup schema and repository transaction behavior remain compatible. Physical authentication/privacy, external file providers, older runtimes and distribution remain separate.
 
@@ -16,7 +20,7 @@ The ordered [batch-six plan](release/BATCH-06-PLAN.md) is complete: architecture
 
 Deliver a polished, privacy-first iPhone app with an offline record flow, then add Apple ecosystem features only after their data and sharing rules are explicit. The current Windows checkout can produce and inspect source, web prototypes, and documents. A supported Mac/Xcode environment is required to compile, simulate, sign, test on Apple devices, and submit.
 
-Automated Mac verification runs in GitHub Actions. Current backup/authentication source `d4a6a83d5ab4c2d2c650bbe9309ae3e998989779` passed [run 43001370010](https://github.com/betterfxb/private-moments-ios/actions/runs/43001370010) with Xcode26.2 / SDK26.2 / iOS26.2 in four profiles: 50 unit tests, five main-profile UI tests, two UI methods per other profile and actual Release hook exclusion. All 219 PNGs downloaded; 21 selected originals opened. See [current acceptance](release/UX-ACCEPTANCE-08.md). Earlier verification records below describe their own source revisions.
+Automated Mac verification runs in GitHub Actions. The last fully accepted backup/authentication source `d4a6a83d5ab4c2d2c650bbe9309ae3e998989779` passed [run 43001370010](https://github.com/betterfxb/private-moments-ios/actions/runs/43001370010) with Xcode26.2 / SDK26.2 / iOS26.2 in four profiles: 50 unit tests, five main-profile UI tests, two UI methods per other profile and actual Release hook exclusion. All 219 PNGs downloaded; 21 selected originals opened. See [historical acceptance](release/UX-ACCEPTANCE-08.md); this does not establish acceptance of the current batch. Earlier verification records below describe their own source revisions.
 
 ## Historical batch: native visual upgrade
 

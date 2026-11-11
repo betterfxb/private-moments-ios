@@ -1,6 +1,10 @@
 # Simulator UI acceptance
 
-## Latest backup and lock verification (2026-11-11)
+## Current large-text batch — verification incomplete (2026-11-12)
+
+Source `adf8545674c35e4c4bde4f3c492b843ab2f14ee6` includes large-text settings, brief bilingual warnings, separately laid-out dismissible outcomes and native-file test corrections. The latest full [run43097719619](https://github.com/betterfxb/private-moments-ios/actions/runs/43097719619), like two focused runs, ended `startup_failure` with zero jobs. Latest-source compilation, four-profile regression and final screenshot review remain unverified. Local 232-key / 109-object audits pass. [Current status](BATCH-09-STATUS.md) records the exact pending work; no batch-nine acceptance receipt has been generated. Previous successful evidence below belongs only to its stated revision.
+
+## Historical backup and lock verification (2026-11-11)
 
 Source `d4a6a83d5ab4c2d2c650bbe9309ae3e998989779`, [run 43001370010](https://github.com/betterfxb/private-moments-ios/actions/runs/43001370010), passes four profiles on Xcode26.2 / SDK26.2 / iOS26.2: 50 unit tests, five main-profile UI tests and two UI methods per other profile, with Release hook exclusion. Actual English system exporter/importer roundtrips verify preview cancellation, merge, separately confirmed replacement and exact data after relaunch. Bilingual galleries cover short export warnings and authentication cancellation recovery feedback. 219 PNGs checked; 21 selected originals opened. See [acceptance and limits](UX-ACCEPTANCE-08.md), [originals](evidence/batch-08/index.html) and [receipt](evidence/batch-08/verification.json). Physical authentication/VoiceOver, external file providers and older runtimes remain open; prior sections are historical.
 
