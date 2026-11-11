@@ -191,6 +191,7 @@ final class PrivateMomentsUITests: XCTestCase {
         assertMetric("backup.newCount", value: "1", app: app)
         assertMetric("backup.updatedCount", value: "0", app: app)
         assertMetric("backup.noteCount", value: "1", app: app)
+        revealFully(from: app.buttons["backup.replace"], through: app.buttons["backup.replace"], in: app)
         capture("Backup-review-controls-en", app)
         XCTAssertTrue(app.buttons["backup.merge"].isHittable)
         tap(app.buttons["backup.cancel"], in: app)
@@ -275,27 +276,33 @@ final class PrivateMomentsUITests: XCTestCase {
 
     private func openBackup(_ filename: String, app: XCUIApplication) {
         tap(app.buttons["settings.restore"], in: app)
+        // Always choose the original export's local folder, not a recent
+        // staging-copy entry or a descendant left by an older presentation.
+        if let location = localFilesLocation(app, timeout: 2) {
+            location.tap()
+        } else {
+            if let browse = nativeControl(["Browse"], app: app, timeout: 10) { browse.tap() }
+            let location = localFilesLocation(app, timeout: 10)
+            XCTAssertNotNil(location, "The real local Files location must be available.")
+            location?.tap()
+        }
         let predicate = NSPredicate(format: "label CONTAINS[cd] %@", filename)
         func selectedFile() -> XCUIElement? {
-            for query in [app.cells.matching(predicate), app.buttons.matching(predicate), app.staticTexts.matching(predicate)] {
-                let item = query.firstMatch
-                if item.exists && item.isHittable { return item }
+            for browser in app.collectionViews.matching(identifier: "File View").allElementsBoundByIndex {
+                for item in browser.cells.matching(predicate).allElementsBoundByIndex {
+                    if item.exists && item.isHittable { return item }
+                }
             }
             return nil
         }
         let deadline = Date().addingTimeInterval(10)
         var file = selectedFile()
         while file == nil && Date() < deadline { file = selectedFile() }
-        if file == nil {
-            if let browse = nativeControl(["Browse"], app: app) { browse.tap() }
-            if let local = nativeControl(["On My iPhone", "On My iPad"], app: app) { local.tap() }
-            let localDeadline = Date().addingTimeInterval(10)
-            repeat { file = selectedFile() } while file == nil && Date() < localDeadline
-        }
         guard let file else {
             captureSystem("Import-file-unavailable", app)
             return XCTFail("Exported file is not available in the real document picker.")
         }
+        waitForStableFrame(file, requireHittable: true, message: "The system file cell must finish presenting.")
         XCTAssertTrue(file.isEnabled, "The exported JSON must be selectable in the real picker.")
         let thumbnail = file.images.firstMatch
         if thumbnail.exists && !thumbnail.frame.isEmpty {
@@ -312,6 +319,17 @@ final class PrivateMomentsUITests: XCTestCase {
         let reviewed = app.buttons["backup.merge"].waitForExistence(timeout: 10)
         if !reviewed { captureSystem("Import-selection-unresolved", app) }
         XCTAssertTrue(reviewed, "Selecting the file must lead to a validated review.")
+    }
+
+    private func localFilesLocation(_ app: XCUIApplication, timeout: TimeInterval) -> XCUIElement? {
+        let predicate = NSPredicate(format: "label == %@ OR label == %@", "On My iPhone", "On My iPad")
+        let deadline = Date().addingTimeInterval(timeout)
+        repeat {
+            for location in app.cells.matching(predicate).allElementsBoundByIndex {
+                if location.exists && location.isHittable { return location }
+            }
+        } while Date() < deadline
+        return nil
     }
 
     private func captureSystem(_ name: String, _ app: XCUIApplication) {
@@ -585,12 +603,12 @@ final class PrivateMomentsUITests: XCTestCase {
         // be above it; lazy controls not yet created are searched below it.
         for _ in 0..<16 {
             let exists = element.waitForExistence(timeout: 0.5)
-            let scroll = app.scrollViews.firstMatch
             let keyboard = app.keyboards.firstMatch
             let frame = exists ? element.frame : .zero
             let center = CGPoint(x: frame.midX, y: frame.midY)
             let keyboardCoversCenter = keyboard.exists && keyboard.frame.contains(center)
             if exists, element.isHittable, app.frame.contains(center), !keyboardCoversCenter { return }
+            let scroll = scrollSurface(containing: element, in: app)
             if exists, !frame.isEmpty, scroll.exists {
                 let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
                 var bottom = min(scroll.frame.maxY, app.frame.maxY) - 12
@@ -608,6 +626,15 @@ final class PrivateMomentsUITests: XCTestCase {
             }
         }
         XCTFail("Control is unreachable after scrolling: \(element)")
+    }
+
+    private func scrollSurface(containing element: XCUIElement, in app: XCUIApplication) -> XCUIElement {
+        if element.exists, !element.identifier.isEmpty {
+            let owners = app.scrollViews.containing(.any, identifier: element.identifier)
+            if let visible = owners.allElementsBoundByIndex.first(where: { $0.isHittable }) { return visible }
+            if owners.firstMatch.exists { return owners.firstMatch }
+        }
+        return app.scrollViews.firstMatch
     }
 
     private func tap(_ element: XCUIElement, in app: XCUIApplication) {
@@ -642,7 +669,7 @@ final class PrivateMomentsUITests: XCTestCase {
 
     private func revealFully(from first: XCUIElement, through last: XCUIElement, in app: XCUIApplication) {
         reveal(last, in: app)
-        let scroll = app.scrollViews.firstMatch
+        let scroll = scrollSurface(containing: last, in: app)
         // A hittable element may be only partly visible. Fit the complete range
         // of controls or text below the navigation bar before taking a capture.
         for _ in 0..<6 {
@@ -676,10 +703,18 @@ final class PrivateMomentsUITests: XCTestCase {
         // A screenshot can be taken while a SwiftUI push or scroll is still
         // animating. Require a stable scroll-surface frame across polling ticks.
         let surface = stableSurface ?? (app.alerts.firstMatch.exists ? app.alerts.firstMatch : app.scrollViews.firstMatch)
+        waitForStableFrame(surface, message: "Screen never settled: \(name)")
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    private func waitForStableFrame(_ surface: XCUIElement, requireHittable: Bool = false, message: String) {
         var lastFrame = CGRect.null
         var stableSince = Date()
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            guard surface.exists else { return false }
+            guard surface.exists, !requireHittable || surface.isHittable else { return false }
             let frame = surface.frame
             if frame != lastFrame {
                 lastFrame = frame
@@ -688,10 +723,6 @@ final class PrivateMomentsUITests: XCTestCase {
             }
             return Date().timeIntervalSince(stableSince) >= 0.75
         }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 10), .completed, "Screen never settled: \(name)")
-        let attachment = XCTAttachment(screenshot: app.screenshot())
-        attachment.name = name
-        attachment.lifetime = .keepAlways
-        add(attachment)
+        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 10), .completed, message)
     }
 }

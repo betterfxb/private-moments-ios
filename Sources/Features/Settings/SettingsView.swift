@@ -25,6 +25,7 @@ struct SettingsView: View {
     @State private var isPreparingBackup = false
     @State private var isReadingBackup = false
     @State private var backupPickerDismissed = true
+    @State private var backupPickerID = UUID()
     private let logger = Logger(subsystem: "com.example.PrivateMoments", category: "backup")
 
     private var isWorking: Bool { isPreparingBackup || isReadingBackup }
@@ -106,6 +107,7 @@ struct SettingsView: View {
                     Button {
                         backupStatus = nil
                         pendingImport = nil
+                        backupPickerID = UUID()
                         backupPickerDismissed = false
                         isImporting = true
                     } label: {
@@ -125,10 +127,13 @@ struct SettingsView: View {
                         logger.notice("Backup picker dismissed.")
                         presentBackupReviewIfReady()
                     }) {
+                        let requestID = backupPickerID
                         BackupFilePicker { result in
+                            guard requestID == backupPickerID else { return }
                             isImporting = false
                             handleBackupImport(result)
                         }
+                        .id(requestID)
                     }
 
                     if let backupStatus {
@@ -312,7 +317,12 @@ struct SettingsView: View {
             }
             return
         }
-        guard let url = urls.first, !isWorking else { return }
+        guard !isWorking else { return }
+        guard let url = urls.first else {
+            logger.error("Backup picker delivered no files.")
+            backupStatus = .error(AppLocalization.string("Couldn't open that backup. Please try another JSON file."))
+            return
+        }
         logger.notice("Backup picker delivered a file for validation.")
         isReadingBackup = true
         Task { @MainActor in
@@ -382,6 +392,10 @@ struct SettingsView: View {
                                     .accessibilityIdentifier("backup.totalCount")
                                 Text(AppLocalization.format("Created %@", backup.createdAt.formatted(date: .abbreviated, time: .shortened)))
                                     .foregroundStyle(AppColors.secondaryText)
+                                Text("Merge adds new records and updates matching records. Other local records stay.")
+                                    .font(.system(.subheadline, design: .rounded))
+                                    .foregroundStyle(AppColors.secondaryText)
+                                    .fixedSize(horizontal: false, vertical: true)
                             }
                             VStack(alignment: .leading, spacing: 18) {
                                 reviewMetric("New records", value: summary.newCount, identifier: "backup.newCount")
@@ -393,9 +407,6 @@ struct SettingsView: View {
                                 reviewMetric("Other local records", value: summary.removedCount, identifier: "backup.otherCount")
                             }
                             .modifier(JournalPanel())
-                            Text("Merge adds new records and updates matching records. Other local records stay.")
-                                .foregroundStyle(AppColors.secondaryText)
-                                .fixedSize(horizontal: false, vertical: true)
                             if !store.isStorageAvailable {
                                 StorageRecoveryCard(message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."), onRetry: store.reload)
                             }
@@ -447,7 +458,7 @@ struct SettingsView: View {
                 Button("Replace", role: .destructive, action: replaceImportedBackup)
                 Button("Cancel", role: .cancel) { }
             } message: {
-                Text(AppLocalization.format("Replace %lld local with %lld backup records.", summary.localCount, summary.totalCount))
+                Text(AppLocalization.format("Local records: %lld. Backup records: %lld.", summary.localCount, summary.totalCount))
             }
             .onChange(of: scenePhase) { _, phase in
                 if phase != .active { showingReplaceConfirmation = false }
