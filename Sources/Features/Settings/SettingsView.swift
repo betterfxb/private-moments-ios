@@ -1,5 +1,6 @@
 import SwiftUI
 import UniformTypeIdentifiers
+import OSLog
 
 private enum BackupStatus {
     case success(String)
@@ -7,6 +8,7 @@ private enum BackupStatus {
 }
 
 struct SettingsView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(MomentStore.self) private var store
     @Environment(AppLockController.self) private var privacyLock
     @State private var showingDeleteAllConfirmation = false
@@ -14,11 +16,16 @@ struct SettingsView: View {
     @State private var showingExportWarning = false
     @State private var isExporting = false
     @State private var isImporting = false
-    @State private var showingImportChoices = false
+    @State private var showingImportReview = false
     @State private var showingReplaceConfirmation = false
     @State private var backupDocument = MomentBackupDocument(data: Data())
     @State private var pendingImport: MomentBackupEnvelope?
     @State private var backupStatus: BackupStatus?
+    @State private var isPreparingBackup = false
+    @State private var isReadingBackup = false
+    private let logger = Logger(subsystem: "com.example.PrivateMoments", category: "backup")
+
+    private var isWorking: Bool { isPreparingBackup || isReadingBackup }
 
     var body: some View {
         ScrollView {
@@ -41,6 +48,7 @@ struct SettingsView: View {
                         Spacer()
                         Text(store.isStorageAvailable ? "\(store.moments.count)" : AppLocalization.string("Unknown"))
                             .foregroundStyle(AppColors.secondaryText)
+                            .accessibilityIdentifier("settings.savedCount")
                     }
                     Divider().overlay(AppColors.separator)
                     Label("No cloud sync configured", systemImage: "icloud.slash")
@@ -62,26 +70,36 @@ struct SettingsView: View {
                         .font(.system(.footnote, design: .rounded))
                         .foregroundStyle(AppColors.secondaryText)
                     Button {
+                        backupStatus = nil
                         showingExportWarning = true
                     } label: {
-                        Label("Export private backup", systemImage: "square.and.arrow.up")
+                        Group {
+                            if isPreparingBackup { ProgressView("Preparing backup…") }
+                            else { Label("Export private backup", systemImage: "square.and.arrow.up") }
+                        }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
                     }
                     .buttonStyle(.bordered)
                     .tint(AppColors.accentText)
-                    .disabled(!store.isStorageAvailable)
+                    .disabled(!store.isStorageAvailable || isWorking)
+                    .accessibilityIdentifier("settings.export")
 
                     Button {
+                        backupStatus = nil
                         isImporting = true
                     } label: {
-                        Label("Restore from JSON", systemImage: "square.and.arrow.down")
+                        Group {
+                            if isReadingBackup { ProgressView("Reading backup…") }
+                            else { Label("Restore from JSON", systemImage: "square.and.arrow.down") }
+                        }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
                     }
                     .buttonStyle(.bordered)
                     .tint(AppColors.accentText)
-                    .disabled(!store.isStorageAvailable)
+                    .disabled(!store.isStorageAvailable || isWorking)
+                    .accessibilityIdentifier("settings.restore")
 
                     if let backupStatus {
                         switch backupStatus {
@@ -89,8 +107,10 @@ struct SettingsView: View {
                             Label(message, systemImage: "checkmark.circle.fill")
                                 .font(.system(.footnote, design: .rounded))
                                 .foregroundStyle(AppColors.success)
+                                .accessibilityIdentifier("settings.backupStatus")
                         case .error(let message):
                             ErrorNotice(message: message)
+                                .accessibilityIdentifier("settings.backupStatus")
                         }
                     }
                     Text("Backups include private notes. Keep the file somewhere only you can access.")
@@ -108,18 +128,25 @@ struct SettingsView: View {
                         HStack {
                             Label("Lock journal", systemImage: "lock.fill")
                             Spacer()
-                            Text(privacyLock.isEnabled ? "On" : "Off")
-                                .foregroundStyle(AppColors.accentText)
+                            if privacyLock.isAuthenticating {
+                                ProgressView().accessibilityLabel("Authenticating…")
+                            } else {
+                                Text(privacyLock.isEnabled ? "On" : "Off")
+                                    .foregroundStyle(AppColors.accentText)
+                            }
                         }
                         .frame(maxWidth: .infinity)
                         .frame(minHeight: 44)
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    .disabled(privacyLock.isAuthenticating)
+                    .accessibilityIdentifier("settings.lock")
                     .accessibilityHint(privacyLock.isEnabled ? "Requires device authentication to turn off" : "Requires device authentication to turn on")
 
                     if let lockError = privacyLock.errorMessage {
                         ErrorNotice(message: lockError)
+                            .accessibilityIdentifier("settings.lockError")
                     }
                     Text("Authentication stays on this device. The app never receives biometric data.")
                         .font(.system(.caption, design: .rounded))
@@ -156,7 +183,8 @@ struct SettingsView: View {
                 }
                 .buttonStyle(.plain)
                 .tint(AppColors.destructive)
-                .disabled(!store.isStorageAvailable)
+                .disabled(!store.isStorageAvailable || isWorking)
+                .accessibilityIdentifier("settings.deleteAll")
 
                 if deletionCompleted {
                     Label("Local entries deleted.", systemImage: "checkmark.circle.fill")
@@ -190,30 +218,16 @@ struct SettingsView: View {
         } message: {
             Text("This removes current journal entries and private notes from this app's local database. Any JSON backup remains unchanged.")
         }
-        .alert("Backup includes private notes", isPresented: $showingExportWarning) {
-            Button("Continue to export") { prepareBackupExport() }
+        .alert("Backup", isPresented: $showingExportWarning) {
+            Button("Export") { prepareBackupExport() }
             Button("Cancel", role: .cancel) { }
         } message: {
-            Text("The JSON file contains your journal entries and notes. Anyone who can open the file may be able to read them.")
+            Text("Includes notes. Choose a private location.")
         }
-        .confirmationDialog(
-            "Restore \(pendingImport?.moments.count ?? 0) records?",
-            isPresented: $showingImportChoices,
-            titleVisibility: .visible
-        ) {
-            Button("Merge into this journal") { mergeImportedBackup() }
-                .disabled(!store.isStorageAvailable)
-            Button("Replace all local records", role: .destructive) { showingReplaceConfirmation = true }
-                .disabled(!store.isStorageAvailable)
-            Button("Cancel", role: .cancel) { pendingImport = nil }
-        } message: {
-            Text("Merge keeps other local records and updates matching IDs. Replace removes every current local record first.")
-        }
-        .alert("Replace your entire journal?", isPresented: $showingReplaceConfirmation) {
-            Button("Replace journal", role: .destructive) { replaceImportedBackup() }
-            Button("Cancel", role: .cancel) { pendingImport = nil }
-        } message: {
-            Text(AppLocalization.format("This deletes %lld local records and restores %lld records from the backup. Exported backup files will not change.", store.moments.count, pendingImport?.moments.count ?? 0))
+        .sheet(isPresented: $showingImportReview, onDismiss: { pendingImport = nil }) {
+            if let pendingImport {
+                backupReview(pendingImport)
+            }
         }
         .fileExporter(
             isPresented: $isExporting,
@@ -237,6 +251,9 @@ struct SettingsView: View {
             handleBackupImport(result)
         }
         .task { store.reload() }
+        .onChange(of: store.moments.count) { _, count in
+            if count > 0 { deletionCompleted = false }
+        }
     }
 
     private func settingsCard<Content: View>(
@@ -255,14 +272,24 @@ struct SettingsView: View {
     }
 
     private func prepareBackupExport() {
-        do {
-            backupDocument = MomentBackupDocument(data: try MomentBackupCodec.encode(store.moments))
-            backupStatus = nil
-            isExporting = true
-        } catch {
-            let message = (error as? LocalizedError)?.errorDescription
-                ?? AppLocalization.string("Couldn't prepare the backup. Your saved records are unchanged.")
-            backupStatus = .error(message)
+        guard !isWorking, store.isStorageAvailable else { return }
+        let snapshot = store.moments
+        isPreparingBackup = true
+        Task { @MainActor in
+            defer { isPreparingBackup = false }
+            do {
+                let data = try await Task.detached(priority: .userInitiated) {
+                    try MomentBackupCodec.encode(snapshot)
+                }.value
+                backupDocument = MomentBackupDocument(data: data)
+                backupStatus = nil
+                isExporting = true
+            } catch {
+                logger.error("Backup encoding failed: \(String(describing: error), privacy: .private)")
+                let message = (error as? LocalizedError)?.errorDescription
+                    ?? AppLocalization.string("Couldn't prepare the backup. Your saved records are unchanged.")
+                backupStatus = .error(message)
+            }
         }
     }
 
@@ -274,53 +301,148 @@ struct SettingsView: View {
             }
             return
         }
-        guard let url = urls.first else { return }
-
-        let hasScopedAccess = url.startAccessingSecurityScopedResource()
-        defer {
-            if hasScopedAccess { url.stopAccessingSecurityScopedResource() }
-        }
-
-        do {
-            if let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
-               let size = attributes[.size] as? NSNumber,
-               size.intValue > MomentBackupCodec.maximumFileSize {
-                throw MomentBackupError.fileTooLarge
+        guard let url = urls.first, !isWorking else { return }
+        isReadingBackup = true
+        Task { @MainActor in
+            defer { isReadingBackup = false }
+            do {
+                let envelope = try await Task.detached(priority: .userInitiated) {
+                    try MomentBackupFileReader.read(url)
+                }.value
+                pendingImport = envelope
+                backupStatus = nil
+                showingImportReview = true
+            } catch {
+                logger.error("Backup reading failed: \(String(describing: error), privacy: .private)")
+                let message: String
+                switch error {
+                case let backupError as MomentBackupError:
+                    message = backupError.localizedDescription
+                case let validationError as MomentValidationError:
+                    message = validationError.localizedDescription
+                default:
+                    message = AppLocalization.string("Couldn't read this file. Choose a valid Private Moments JSON backup.")
+                }
+                backupStatus = .error(message)
             }
-            let fileHandle = try FileHandle(forReadingFrom: url)
-            defer { try? fileHandle.close() }
-            let data = try fileHandle.read(upToCount: MomentBackupCodec.maximumFileSize + 1) ?? Data()
-            let envelope = try MomentBackupCodec.decode(data)
-            pendingImport = envelope
-            backupStatus = nil
-            showingImportChoices = true
-        } catch {
-            let message: String
-            switch error {
-            case let backupError as MomentBackupError:
-                message = backupError.localizedDescription
-            case let validationError as MomentValidationError:
-                message = validationError.localizedDescription
-            default:
-                message = AppLocalization.string("Couldn't read this file. Choose a valid Private Moments JSON backup.")
-            }
-            backupStatus = .error(message)
         }
     }
 
     private func mergeImportedBackup() {
         guard let pendingImport else { return }
         if let addedCount = store.mergeBackup(pendingImport.moments) {
+            deletionCompleted = false
             backupStatus = .success(AppLocalization.format("Backup merged; %lld new records added.", addedCount))
+            showingImportReview = false
         }
-        self.pendingImport = nil
     }
 
     private func replaceImportedBackup() {
         guard let pendingImport else { return }
         if store.replaceWithBackup(pendingImport.moments) {
+            deletionCompleted = false
             backupStatus = .success(AppLocalization.string("Local journal replaced from backup."))
+            showingImportReview = false
         }
-        self.pendingImport = nil
+    }
+
+    private func backupReview(_ backup: MomentBackupEnvelope) -> some View {
+        let summary = BackupImportSummary(backup: backup, existing: store.moments)
+        let hidden = scenePhase != .active || privacyLock.isLocked
+        return NavigationStack {
+            Group {
+                if hidden {
+                    PrivacyLockView()
+                } else {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: AppSpacing.section) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(AppLocalization.momentCount(summary.totalCount))
+                                    .font(.system(.largeTitle, design: .rounded).weight(.semibold))
+                                    .foregroundStyle(AppColors.accentText)
+                                    .accessibilityIdentifier("backup.totalCount")
+                                Text(AppLocalization.format("Created %@", backup.createdAt.formatted(date: .abbreviated, time: .shortened)))
+                                    .foregroundStyle(AppColors.secondaryText)
+                            }
+                            VStack(alignment: .leading, spacing: 18) {
+                                reviewMetric("New records", value: summary.newCount, identifier: "backup.newCount")
+                                Divider()
+                                reviewMetric("Matching records", value: summary.updatedCount, identifier: "backup.updatedCount")
+                                Divider()
+                                reviewMetric("Private notes", value: summary.noteCount, identifier: "backup.noteCount")
+                                Divider()
+                                reviewMetric("Other local records", value: summary.removedCount, identifier: "backup.otherCount")
+                            }
+                            .modifier(JournalPanel())
+                            Text("Merge adds new records and updates matching records. Other local records stay.")
+                                .foregroundStyle(AppColors.secondaryText)
+                                .fixedSize(horizontal: false, vertical: true)
+                            if !store.isStorageAvailable {
+                                StorageRecoveryCard(message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."), onRetry: store.reload)
+                            }
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("Replace uses only this backup. Other local records are removed. Exported files stay unchanged.")
+                                    .font(.system(.footnote, design: .rounded))
+                                    .foregroundStyle(AppColors.secondaryText)
+                                Button(role: .destructive) { showingReplaceConfirmation = true } label: {
+                                    Text("Replace all local records")
+                                        .frame(maxWidth: .infinity, minHeight: 44)
+                                        .padding(.vertical, 10)
+                                }
+                                .buttonStyle(.plain)
+                                .foregroundStyle(AppColors.destructive)
+                                .disabled(!store.isStorageAvailable)
+                                .accessibilityIdentifier("backup.replace")
+                            }
+                            .modifier(JournalPanel())
+                        }
+                        .padding(AppSpacing.page)
+                        .frame(maxWidth: 680)
+                        .frame(maxWidth: .infinity)
+                    }
+                    .safeAreaInset(edge: .bottom) {
+                        Button(action: mergeImportedBackup) {
+                            Label("Merge backup", systemImage: "arrow.triangle.merge")
+                        }
+                        .buttonStyle(PrimaryActionButtonStyle())
+                        .disabled(!store.isStorageAvailable)
+                        .accessibilityIdentifier("backup.merge")
+                        .frame(maxWidth: 640)
+                        .padding(.horizontal, AppSpacing.page)
+                        .padding(.vertical, 12)
+                        .frame(maxWidth: .infinity)
+                        .background(AppColors.surface)
+                    }
+                }
+            }
+            .background(AppColors.background.ignoresSafeArea())
+            .navigationTitle("Review backup")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { showingImportReview = false }
+                        .accessibilityIdentifier("backup.cancel")
+                }
+            }
+            .alert("Replace?", isPresented: $showingReplaceConfirmation) {
+                Button("Replace", role: .destructive, action: replaceImportedBackup)
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text(AppLocalization.format("Replace %lld local with %lld backup records.", summary.localCount, summary.totalCount))
+            }
+            .onChange(of: scenePhase) { _, phase in
+                if phase != .active { showingReplaceConfirmation = false }
+            }
+        }
+    }
+
+    private func reviewMetric(_ title: LocalizedStringKey, value: Int, identifier: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title).font(.system(.subheadline, design: .rounded)).foregroundStyle(AppColors.secondaryText)
+            Text(value, format: .number)
+                .font(.system(.title2, design: .rounded).weight(.semibold))
+                .foregroundStyle(AppColors.text)
+                .accessibilityIdentifier(identifier)
+        }
     }
 }

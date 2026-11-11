@@ -4,7 +4,262 @@ import UIKit
 import SwiftData
 @testable import PrivateMoments
 
+final class BackupUXTests: XCTestCase {
+    func testPreviewCountsActualIDOverlapAndNotes() {
+        let first = makeRecoveryMoment()
+        let other = Moment(occurredAt: first.occurredAt, durationSeconds: 90, mood: .calm, rating: 3, tags: [], privateNote: "")
+        let added = Moment(occurredAt: first.occurredAt, durationSeconds: 120, mood: .happy, rating: 4, tags: [], privateNote: "")
+        let summary = BackupImportSummary(backup: MomentBackupEnvelope(moments: [first, added]), existing: [first, other])
+        XCTAssertEqual(summary.totalCount, 2)
+        XCTAssertEqual(summary.newCount, 1)
+        XCTAssertEqual(summary.updatedCount, 1)
+        XCTAssertEqual(summary.noteCount, 1)
+        XCTAssertEqual(summary.localCount, 2)
+        XCTAssertEqual(summary.removedCount, 1)
+    }
+
+    func testEmptyPreviewKeepsReplacementScopeExplicit() {
+        let summary = BackupImportSummary(backup: MomentBackupEnvelope(moments: []), existing: [makeRecoveryMoment()])
+        XCTAssertEqual(summary.totalCount, 0)
+        XCTAssertEqual(summary.newCount, 0)
+        XCTAssertEqual(summary.updatedCount, 0)
+        XCTAssertEqual(summary.removedCount, 1)
+    }
+
+    func testFileReaderPreservesTheFullValidatedRecord() throws {
+        let moment = makeRecoveryMoment()
+        let file = try temporaryFile()
+        defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
+        try MomentBackupCodec.encode([moment]).write(to: file)
+        XCTAssertEqual(try MomentBackupFileReader.read(file).moments, [moment])
+    }
+
+    func testFileReaderRejectsMalformedAndMissingFiles() throws {
+        let file = try temporaryFile()
+        defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
+        XCTAssertThrowsError(try MomentBackupFileReader.read(file))
+        try Data("invalid fixture".utf8).write(to: file)
+        XCTAssertThrowsError(try MomentBackupFileReader.read(file)) { error in
+            guard case .invalidFormat? = error as? MomentBackupError else {
+                return XCTFail("Expected invalid backup format, got \(error)")
+            }
+        }
+    }
+
+    func testFileReaderRejectsAnOversizedSparseFile() throws {
+        let file = try temporaryFile()
+        defer { try? FileManager.default.removeItem(at: file.deletingLastPathComponent()) }
+        XCTAssertTrue(FileManager.default.createFile(atPath: file.path, contents: Data()))
+        let handle = try FileHandle(forWritingTo: file)
+        try handle.truncate(atOffset: UInt64(MomentBackupCodec.maximumFileSize + 1))
+        try handle.close()
+        XCTAssertThrowsError(try MomentBackupFileReader.read(file)) { error in
+            guard case .fileTooLarge? = error as? MomentBackupError else {
+                return XCTFail("Expected size limit, got \(error)")
+            }
+        }
+    }
+
+    private func temporaryFile() throws -> URL {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        return folder.appendingPathComponent("backup.json")
+    }
+}
+
+@MainActor
+private final class ControlledJournalAuthenticator: JournalAuthenticating {
+    var onRequest: (() -> Void)?
+    var immediateResult: JournalAuthenticationResult?
+    private(set) var requests = 0
+    private(set) var cancellations = 0
+    private var pending: [CheckedContinuation<JournalAuthenticationResult, Never>] = []
+
+    func authenticate(reason: String) async -> JournalAuthenticationResult {
+        requests += 1
+        if let immediateResult { return immediateResult }
+        return await withCheckedContinuation { continuation in
+            pending.append(continuation)
+            onRequest?()
+        }
+    }
+
+    func cancel() { cancellations += 1 }
+
+    func finish(_ result: JournalAuthenticationResult) {
+        guard !pending.isEmpty else { return XCTFail("No pending authentication request") }
+        pending.removeFirst().resume(returning: result)
+    }
+}
+
+@MainActor
+final class AppLockUXTests: XCTestCase {
+    private func preferences() throws -> (UserDefaults, String) {
+        let name = "PrivateMoments-UnitTests-" + UUID().uuidString
+        return (try XCTUnwrap(UserDefaults(suiteName: name)), name)
+    }
+
+    func testOnlySuccessfulAuthenticationChangesPreferenceAndRelaunchLocks() async throws {
+        let (defaults, name) = try preferences()
+        defer { defaults.removePersistentDomain(forName: name) }
+        let auth = ControlledJournalAuthenticator()
+        auth.immediateResult = .authenticated
+        let lock = AppLockController(defaults: defaults, authenticator: auth)
+        let enabled = await lock.setEnabled(true)
+        XCTAssertTrue(enabled)
+        XCTAssertTrue(defaults.bool(forKey: "privateMoments.appLockEnabled"))
+        XCTAssertFalse(lock.isLocked)
+        XCTAssertTrue(AppLockController(defaults: defaults, authenticator: auth).isLocked)
+        let disabled = await lock.setEnabled(false)
+        XCTAssertTrue(disabled)
+        XCTAssertFalse(defaults.bool(forKey: "privateMoments.appLockEnabled"))
+    }
+
+    func testCancelledFailedAndUnavailableAuthenticationDoNotEnableLock() async throws {
+        for result in [JournalAuthenticationResult.cancelled, .failed, .passcodeRequired, .unavailable] {
+            let (defaults, name) = try preferences()
+            defer { defaults.removePersistentDomain(forName: name) }
+            let auth = ControlledJournalAuthenticator()
+            auth.immediateResult = result
+            let lock = AppLockController(defaults: defaults, authenticator: auth)
+            let changed = await lock.setEnabled(true)
+            XCTAssertFalse(changed)
+            XCTAssertFalse(lock.isEnabled)
+            XCTAssertFalse(defaults.bool(forKey: "privateMoments.appLockEnabled"))
+            XCTAssertFalse(lock.isAuthenticating)
+            if case .cancelled = result { XCTAssertNil(lock.errorMessage) }
+            else { XCTAssertNotNil(lock.errorMessage) }
+        }
+    }
+
+    func testFailedUnlockRemainsLocked() async throws {
+        let (defaults, name) = try preferences()
+        defer { defaults.removePersistentDomain(forName: name) }
+        defaults.set(true, forKey: "privateMoments.appLockEnabled")
+        let auth = ControlledJournalAuthenticator()
+        auth.immediateResult = .failed
+        let lock = AppLockController(defaults: defaults, authenticator: auth)
+        let unlocked = await lock.unlock()
+        XCTAssertFalse(unlocked)
+        XCTAssertTrue(lock.isLocked)
+        XCTAssertTrue(lock.isEnabled)
+    }
+
+    func testConcurrentRequestStartsOnlyOneEvaluation() async throws {
+        let (defaults, name) = try preferences()
+        defer { defaults.removePersistentDomain(forName: name) }
+        let auth = ControlledJournalAuthenticator()
+        let requested = expectation(description: "Authentication started")
+        auth.onRequest = { requested.fulfill() }
+        let lock = AppLockController(defaults: defaults, authenticator: auth)
+        let first = Task { await lock.setEnabled(true) }
+        await fulfillment(of: [requested], timeout: 3)
+        XCTAssertTrue(lock.isAuthenticating)
+        let duplicate = await lock.setEnabled(true)
+        XCTAssertFalse(duplicate)
+        XCTAssertEqual(auth.requests, 1)
+        auth.finish(.authenticated)
+        let result = await first.value
+        XCTAssertTrue(result)
+        XCTAssertFalse(lock.isAuthenticating)
+    }
+
+    func testBackgroundDiscardsLateEnableSuccess() async throws {
+        try await assertLatePreferenceChangeIgnored(initiallyEnabled: false)
+    }
+
+    func testBackgroundDiscardsLateDisableSuccess() async throws {
+        try await assertLatePreferenceChangeIgnored(initiallyEnabled: true)
+    }
+
+    private func assertLatePreferenceChangeIgnored(initiallyEnabled: Bool) async throws {
+        let (defaults, name) = try preferences()
+        defer { defaults.removePersistentDomain(forName: name) }
+        defaults.set(initiallyEnabled, forKey: "privateMoments.appLockEnabled")
+        let auth = ControlledJournalAuthenticator()
+        let requested = expectation(description: "Authentication started")
+        auth.onRequest = { requested.fulfill() }
+        let lock = AppLockController(defaults: defaults, authenticator: auth)
+        let task = Task { await lock.setEnabled(!initiallyEnabled) }
+        await fulfillment(of: [requested], timeout: 3)
+        lock.cancelAuthenticationForBackground()
+        XCTAssertEqual(auth.cancellations, 1)
+        auth.finish(.authenticated)
+        let changed = await task.value
+        XCTAssertFalse(changed)
+        XCTAssertEqual(lock.isEnabled, initiallyEnabled)
+        XCTAssertEqual(defaults.bool(forKey: "privateMoments.appLockEnabled"), initiallyEnabled)
+        XCTAssertEqual(lock.isLocked, initiallyEnabled)
+    }
+
+    func testOldCallbackCannotUnlockOrClearANewerAttempt() async throws {
+        let (defaults, name) = try preferences()
+        defer { defaults.removePersistentDomain(forName: name) }
+        defaults.set(true, forKey: "privateMoments.appLockEnabled")
+        let auth = ControlledJournalAuthenticator()
+        let firstRequest = expectation(description: "First request")
+        auth.onRequest = { firstRequest.fulfill() }
+        let lock = AppLockController(defaults: defaults, authenticator: auth)
+        let first = Task { await lock.unlock() }
+        await fulfillment(of: [firstRequest], timeout: 3)
+        lock.cancelAuthenticationForBackground()
+        let secondRequest = expectation(description: "Second request")
+        auth.onRequest = { secondRequest.fulfill() }
+        let second = Task { await lock.unlock() }
+        await fulfillment(of: [secondRequest], timeout: 3)
+        auth.finish(.authenticated)
+        let staleResult = await first.value
+        XCTAssertFalse(staleResult)
+        XCTAssertTrue(lock.isLocked)
+        XCTAssertTrue(lock.isAuthenticating)
+        auth.finish(.authenticated)
+        let currentResult = await second.value
+        XCTAssertTrue(currentResult)
+        XCTAssertFalse(lock.isLocked)
+    }
+
+    func testInactivePromptDoesNotCancelButBackgroundAlwaysLocks() async throws {
+        let (defaults, name) = try preferences()
+        defer { defaults.removePersistentDomain(forName: name) }
+        defaults.set(true, forKey: "privateMoments.appLockEnabled")
+        let auth = ControlledJournalAuthenticator()
+        auth.immediateResult = .authenticated
+        let lock = AppLockController(defaults: defaults, authenticator: auth)
+        _ = await lock.unlock()
+        auth.immediateResult = nil
+        let requested = expectation(description: "Disable request")
+        auth.onRequest = { requested.fulfill() }
+        let task = Task { await lock.setEnabled(false) }
+        await fulfillment(of: [requested], timeout: 3)
+        lock.lockForBackground()
+        XCTAssertFalse(lock.isLocked)
+        XCTAssertTrue(lock.isAuthenticating)
+        XCTAssertEqual(auth.cancellations, 0)
+        auth.finish(.cancelled)
+        _ = await task.value
+        XCTAssertTrue(lock.isEnabled)
+        lock.cancelAuthenticationForBackground()
+        XCTAssertTrue(lock.isLocked)
+    }
+}
+
 final class UITestIsolationTests: XCTestCase {
+    func testPrivacyPreferencesAreIsolatedByTheSameStoreUUID() {
+        let first = UUID()
+        let second = UUID()
+        let firstDefaults = PrivateStoreFactory.makePreferences(arguments: ["-pm-ui-test-store", first.uuidString])
+        let secondDefaults = PrivateStoreFactory.makePreferences(arguments: ["-pm-ui-test-store", second.uuidString])
+        defer {
+            firstDefaults.removePersistentDomain(forName: "PrivateMoments-UITests." + first.uuidString)
+            secondDefaults.removePersistentDomain(forName: "PrivateMoments-UITests." + second.uuidString)
+        }
+        let key = UUID().uuidString
+        firstDefaults.set(true, forKey: key)
+        XCTAssertTrue(PrivateStoreFactory.makePreferences(arguments: ["-pm-ui-test-store", first.uuidString]).bool(forKey: key))
+        XCTAssertNil(secondDefaults.object(forKey: key))
+        XCTAssertNil(UserDefaults.standard.object(forKey: key))
+    }
+
     func testTestStoreRequiresAValidUUID() {
         for arguments in [[], ["-pm-ui-test-store"], ["-pm-ui-test-store", "invalid"], ["-pm-ui-test-store", "-pm-ui-test-fail-save-once"]] {
             XCTAssertNil(PrivateStoreFactory.uiTestStoreIdentifier(arguments: arguments))

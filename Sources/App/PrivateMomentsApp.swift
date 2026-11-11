@@ -9,9 +9,10 @@ struct PrivateMomentsApp: App {
     @State private var modelContainer: ModelContainer?
     @State private var startupMessage: String?
     @State private var isRetryingStorage = false
-    @State private var privacyLock = AppLockController()
+    @State private var privacyLock: AppLockController
 
     init() {
+        _privacyLock = State(initialValue: AppLockController(defaults: PrivateStoreFactory.makePreferences()))
         do {
             _modelContainer = State(initialValue: try PrivateStoreFactory.makeContainer())
             _startupMessage = State(initialValue: nil)

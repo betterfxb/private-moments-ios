@@ -1,6 +1,25 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Device authentication is unavailable. Try again.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "设备认证暂时不可用，请重试。"}}}},
+    "Preparing backup…": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "正在准备备份…"}}}},
+    "Reading backup…": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "正在读取备份…"}}}},
+    "Authenticating…": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "正在验证…"}}}},
+    "Backup": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "备份"}}}},
+    "Export": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "导出"}}}},
+    "Includes notes. Choose a private location.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "包含私密备注，请选择安全的保存位置。"}}}},
+    "Created %@": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "创建于 %@"}}}},
+    "New records": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "新增记录"}}}},
+    "Matching records": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "匹配记录"}}}},
+    "Private notes": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "含备注记录"}}}},
+    "Other local records": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "其他本机记录"}}}},
+    "Merge adds new records and updates matching records. Other local records stay.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "合并会新增记录，并更新匹配的记录。其他本机记录会保留。"}}}},
+    "Replace uses only this backup. Other local records are removed. Exported files stay unchanged.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "替换后仅保留这份备份中的记录，其他本机记录将移除。导出的备份文件不受影响。"}}}},
+    "Merge backup": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "合并备份"}}}},
+    "Review backup": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "确认备份内容"}}}},
+    "Replace?": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "确认替换？"}}}},
+    "Replace": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "替换"}}}},
+    "Replace %lld local with %lld backup records.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "将 %lld 条本机记录替换为备份中的 %lld 条。"}}}},
     "Not saved": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "尚未保存"}}}},
     "Your draft is here. Reload, then save.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "草稿已保留。重新读取后再保存。"}}}},
     "Reload": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "重新读取"}}}},
@@ -239,16 +258,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "备份文件包含私密备注，请将它保存在只有你能访问的位置。"
-          }
-        }
-      }
-    },
-    "Backup includes private notes": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "备份包含私密备注"
           }
         }
       }
@@ -573,26 +582,6 @@
         }
       }
     },
-    "Merge into this journal": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "合并到此日记"
-          }
-        }
-      }
-    },
-    "Merge keeps other local records and updates matching IDs. Replace removes every current local record first.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "合并会保留其他本地记录，并更新 ID 相同的记录；替换会先删除当前所有本地记录。"
-          }
-        }
-      }
-    },
     "Moment details": {
       "localizations": {
         "zh-Hans": {
@@ -873,16 +862,6 @@
         }
       }
     },
-    "Restore %lld records?": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "要恢复 %lld 条记录吗？"
-          }
-        }
-      }
-    },
     "Resume": {
       "localizations": {
         "zh-Hans": {
@@ -1039,16 +1018,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "备份文件超过 25 MB 的大小限制。"
-          }
-        }
-      }
-    },
-    "The JSON file contains your journal entries and notes. Anyone who can open the file may be able to read them.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此 JSON 文件包含你的日记和备注。能够打开文件的人可能会看到其中内容。"
           }
         }
       }
@@ -1533,16 +1502,6 @@
         }
       }
     },
-    "Continue to export": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "继续导出"
-          }
-        }
-      }
-    },
     "Off": {
       "localizations": {
         "zh-Hans": {
@@ -1853,10 +1812,6 @@
         }
       }
     }
-    ,
-    "Replace your entire journal?": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "要替换整本日记吗？"}}}},
-    "Replace journal": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "替换日记"}}}},
-    "This deletes %lld local records and restores %lld records from the backup. Exported backup files will not change.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "这将删除本机的 %lld 条记录，并从备份恢复 %lld 条记录。已导出的备份文件不会改变。"}}}}
   },
   "version": "1.0"
 }

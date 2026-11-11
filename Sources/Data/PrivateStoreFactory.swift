@@ -12,6 +12,18 @@ enum PrivateMomentsMigrationPlan: SchemaMigrationPlan {
 }
 
 enum PrivateStoreFactory {
+    static func makePreferences(arguments: [String] = ProcessInfo.processInfo.arguments) -> UserDefaults {
+        #if DEBUG
+        if let identifier = uiTestStoreIdentifier(arguments: arguments) {
+            guard let defaults = UserDefaults(suiteName: "PrivateMoments-UITests." + identifier.uuidString) else {
+                preconditionFailure("Could not create isolated UI-test preferences.")
+            }
+            return defaults
+        }
+        #endif
+        return .standard
+    }
+
     #if DEBUG
     static func uiTestStoreIdentifier(arguments: [String] = ProcessInfo.processInfo.arguments) -> UUID? {
         guard let index = arguments.firstIndex(of: "-pm-ui-test-store"),

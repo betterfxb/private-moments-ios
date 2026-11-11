@@ -34,9 +34,15 @@ struct PrivacyLockView: View {
                     Button {
                         Task { await lockController.unlock() }
                     } label: {
-                        Label("Unlock journal", systemImage: "lock.open.fill")
+                        if lockController.isAuthenticating {
+                            ProgressView("Authenticating…").tint(AppColors.onAccent)
+                        } else {
+                            Label("Unlock journal", systemImage: "lock.open.fill")
+                        }
                     }
                     .buttonStyle(PrimaryActionButtonStyle())
+                    .disabled(lockController.isAuthenticating)
+                    .accessibilityIdentifier("privacy.unlock")
                 }
             }
             .padding(.horizontal, AppSpacing.page)

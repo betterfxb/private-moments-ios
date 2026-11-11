@@ -85,6 +85,7 @@ struct RootView: View {
         .onChange(of: scenePhase) { _, newPhase in
             isSceneShielded = newPhase != .active
             if newPhase != .active { privacyLock.lockForBackground() }
+            if newPhase == .background { privacyLock.cancelAuthenticationForBackground() }
         }
     }
 

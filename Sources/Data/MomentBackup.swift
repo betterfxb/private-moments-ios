@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct MomentBackupEnvelope: Codable {
+struct MomentBackupEnvelope: Codable, Sendable {
     let formatVersion: Int
     let createdAt: Date
     let moments: [Moment]
@@ -11,6 +11,54 @@ struct MomentBackupEnvelope: Codable {
         formatVersion = MomentBackupCodec.currentFormatVersion
         self.createdAt = createdAt
         self.moments = moments
+    }
+}
+
+struct BackupImportSummary {
+    let totalCount: Int
+    let newCount: Int
+    let updatedCount: Int
+    let noteCount: Int
+    let localCount: Int
+    let removedCount: Int
+
+    init(backup: MomentBackupEnvelope, existing: [Moment]) {
+        let localIDs = Set(existing.map(\.id))
+        let importedIDs = Set(backup.moments.map(\.id))
+        totalCount = backup.moments.count
+        newCount = importedIDs.subtracting(localIDs).count
+        updatedCount = importedIDs.intersection(localIDs).count
+        noteCount = backup.moments.filter { !$0.privateNote.isEmpty }.count
+        localCount = existing.count
+        removedCount = localIDs.subtracting(importedIDs).count
+    }
+}
+
+enum MomentBackupFileReader {
+    static func read(_ url: URL) throws -> MomentBackupEnvelope {
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        if let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
+           let size = attributes[.size] as? NSNumber,
+           size.intValue > MomentBackupCodec.maximumFileSize {
+            throw MomentBackupError.fileTooLarge
+        }
+        let handle = try FileHandle(forReadingFrom: url)
+        var data = Data()
+        do {
+            while data.count <= MomentBackupCodec.maximumFileSize {
+                let remaining = MomentBackupCodec.maximumFileSize + 1 - data.count
+                let part = try handle.read(upToCount: min(64 * 1024, remaining)) ?? Data()
+                if part.isEmpty { break }
+                data.append(part)
+            }
+            try handle.close()
+        } catch {
+            // Preserve the primary read error if cleanup also fails.
+            try? handle.close()
+            throw error
+        }
+        return try MomentBackupCodec.decode(data)
     }
 }
 

@@ -52,6 +52,7 @@ fi
 TEST_SCOPE_ARGUMENTS=(-parallel-testing-enabled NO)
 if [[ "${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
 else
 printf '\nBuilding Debug for the generic iOS Simulator destination...\n'
 xcodebuild \

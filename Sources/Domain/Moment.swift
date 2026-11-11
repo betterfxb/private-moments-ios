@@ -1,6 +1,6 @@
 import Foundation
 
-enum MomentMood: String, CaseIterable, Codable, Identifiable {
+enum MomentMood: String, CaseIterable, Codable, Identifiable, Sendable {
     case calm = "Calm"
     case connected = "Connected"
     case joyful = "Joyful"
@@ -12,7 +12,7 @@ enum MomentMood: String, CaseIterable, Codable, Identifiable {
     var displayName: String { AppLocalization.string(rawValue) }
 }
 
-enum MomentKind: String, CaseIterable, Codable, Identifiable {
+enum MomentKind: String, CaseIterable, Codable, Identifiable, Sendable {
     case together = "Together"
     case solo = "Solo"
 
@@ -21,7 +21,7 @@ enum MomentKind: String, CaseIterable, Codable, Identifiable {
     var displayName: String { AppLocalization.string(rawValue) }
 }
 
-struct Moment: Identifiable, Codable, Hashable {
+struct Moment: Identifiable, Codable, Hashable, Sendable {
     let id: UUID
     var occurredAt: Date
     var durationSeconds: Int
