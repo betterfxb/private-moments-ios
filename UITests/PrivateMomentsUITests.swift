@@ -204,6 +204,8 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["settings.deleteAll"], in: app)
         tap(app.buttons["Delete all moments"], in: app)
         assertSavedCount("0", app: app)
+        XCTAssertFalse(app.staticTexts["Import cancelled. Your records are unchanged."].exists,
+            "A new destructive operation must clear the earlier cancellation notice.")
 
         openBackup(filename, app: app)
         capture("Backup-review-en", app)

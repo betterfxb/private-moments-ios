@@ -54,6 +54,7 @@ struct SettingsView: View {
             titleVisibility: .visible
         ) {
             Button("Delete all moments", role: .destructive) {
+                backupStatus = nil
                 deletionCompleted = store.deleteAll()
             }
             Button("Cancel", role: .cancel) { }
