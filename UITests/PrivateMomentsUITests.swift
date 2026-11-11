@@ -303,19 +303,26 @@ final class PrivateMomentsUITests: XCTestCase {
         // No reveal/swipe is allowed here: the actual completion must bring
         // its feedback into view, rather than the test doing that work.
         let visible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            guard result.exists, result.isHittable else { return false }
+            // This is read-only feedback, not a control to activate. Asking
+            // XCTest for a hit point can itself raise an automation failure.
+            // Require a foreground, unobscured screen and the whole text frame.
+            guard result.exists, app.state == .runningForeground,
+                  !app.alerts.firstMatch.exists, !app.sheets.firstMatch.exists,
+                  !app.collectionViews["File View"].exists else { return false }
+            let frame = result.frame
+            guard !frame.isEmpty, !frame.isInfinite, !frame.isNull else { return false }
             let navigation = app.navigationBars.firstMatch
             let top = navigation.exists ? navigation.frame.maxY : app.frame.minY
             let tabBar = app.tabBars.firstMatch
             let bottom = tabBar.exists && tabBar.frame.midY > app.frame.midY
                 ? tabBar.frame.minY : app.frame.maxY
-            return result.frame.minY >= top && result.frame.maxY <= bottom
-                && result.frame.minX >= app.frame.minX && result.frame.maxX <= app.frame.maxX
+            return frame.minY >= top && frame.maxY <= bottom
+                && frame.minX >= app.frame.minX && frame.maxX <= app.frame.maxX
         }, object: nil)
         let outcome = XCTWaiter.wait(for: [visible], timeout: 10)
         if outcome != .completed {
-            print("Backup feedback visibility: exists=\(result.exists), hittable=\(result.isHittable), result=\(result.frame), navigation=\(app.navigationBars.firstMatch.frame), tabs=\(app.tabBars.firstMatch.frame), app=\(app.frame)")
             captureSystem("Backup-result-unavailable-en", app)
+            print("Backup feedback visibility: exists=\(result.exists), result=\(result.frame), navigation=\(app.navigationBars.firstMatch.frame), tabs=\(app.tabBars.firstMatch.frame), app=\(app.frame)")
         }
         XCTAssertEqual(outcome, .completed,
             "Backup completion feedback did not become fully visible without a test scroll.")
