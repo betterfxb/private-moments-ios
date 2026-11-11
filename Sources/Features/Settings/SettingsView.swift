@@ -29,6 +29,7 @@ struct SettingsView: View {
     @State private var isReadingBackup = false
     @State private var backupPickerDismissed = true
     @State private var backupPickerID = UUID()
+    private static let contentMaxWidth: CGFloat = 680
     private let logger = Logger(subsystem: "com.example.PrivateMoments", category: "backup")
 
     private var isWorking: Bool { isPreparingBackup || isReadingBackup }
@@ -42,6 +43,7 @@ struct SettingsView: View {
                         .modifier(JournalPanel())
                         .padding(.horizontal, AppSpacing.page)
                         .padding(.vertical, 8)
+                        .frame(maxWidth: Self.contentMaxWidth)
                         .background(AppColors.background)
                 }
             }
@@ -273,7 +275,7 @@ struct SettingsView: View {
             .padding(.horizontal, AppSpacing.page)
             .padding(.top, 18)
             .padding(.bottom, 30)
-            .frame(maxWidth: 680)
+            .frame(maxWidth: Self.contentMaxWidth)
             .frame(maxWidth: .infinity)
         }
     }
