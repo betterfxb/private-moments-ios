@@ -167,8 +167,9 @@ final class PrivateMomentsUITests: XCTestCase {
         selectTab("Settings", "设置", app: app)
         tap(app.buttons["settings.export"], in: app)
         tap(app.alerts.firstMatch.buttons["Export"], in: app)
-        XCTAssertNotNil(nativeControl(["Save"], app: app, timeout: 30))
+        let browserAction = nativeControl(["Save", "On My iPhone", "On My iPad"], app: app, timeout: 30)
         captureSystem("Export-files-en", app)
+        XCTAssertNotNil(browserAction, "The system exporter must show a destination or Save action.")
         // Each hosted Simulator is fresh; this test exports exactly one file.
         // iOS may hide Save As on first presentation; use the real default name.
         let filename = "Private-Moments-Backup"

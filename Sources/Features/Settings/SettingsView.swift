@@ -86,6 +86,22 @@ struct SettingsView: View {
                     .tint(AppColors.accentText)
                     .disabled(!store.isStorageAvailable || isWorking)
                     .accessibilityIdentifier("settings.export")
+                    .fileExporter(
+                        isPresented: $isExporting,
+                        document: backupDocument,
+                        contentType: .json,
+                        defaultFilename: AppLocalization.string("Private-Moments-Backup")
+                    ) { result in
+                        switch result {
+                        case .success:
+                            logger.notice("Backup exporter completed.")
+                            backupStatus = .success(AppLocalization.string("Backup saved."))
+                        case .failure(let error):
+                            logger.error("Backup exporter failed: \(String(describing: error), privacy: .private)")
+                            let isCancelled = (error as? CocoaError)?.code == .userCancelled
+                            backupStatus = isCancelled ? nil : .error(AppLocalization.string("Couldn't save the backup. Please try again."))
+                        }
+                    }
 
                     Button {
                         backupStatus = nil
@@ -104,6 +120,16 @@ struct SettingsView: View {
                     .tint(AppColors.accentText)
                     .disabled(!store.isStorageAvailable || isWorking)
                     .accessibilityIdentifier("settings.restore")
+                    .sheet(isPresented: $isImporting, onDismiss: {
+                        backupPickerDismissed = true
+                        logger.notice("Backup picker dismissed.")
+                        presentBackupReviewIfReady()
+                    }) {
+                        BackupFilePicker { result in
+                            isImporting = false
+                            handleBackupImport(result)
+                        }
+                    }
 
                     if let backupStatus {
                         switch backupStatus {
@@ -233,30 +259,6 @@ struct SettingsView: View {
                 backupReview(pendingImport)
             }
         }
-        .fileExporter(
-            isPresented: $isExporting,
-            document: backupDocument,
-            contentType: .json,
-            defaultFilename: AppLocalization.string("Private-Moments-Backup")
-        ) { result in
-            switch result {
-            case .success:
-                backupStatus = .success(AppLocalization.string("Backup saved."))
-            case .failure(let error):
-                let isCancelled = (error as? CocoaError)?.code == .userCancelled
-                backupStatus = isCancelled ? nil : .error(AppLocalization.string("Couldn't save the backup. Please try again."))
-            }
-        }
-        .sheet(isPresented: $isImporting, onDismiss: {
-            backupPickerDismissed = true
-            logger.notice("Backup picker dismissed.")
-            presentBackupReviewIfReady()
-        }) {
-            BackupFilePicker { result in
-                isImporting = false
-                handleBackupImport(result)
-            }
-        }
         .task { store.reload() }
         .onChange(of: store.moments.count) { _, count in
             if count > 0 { deletionCompleted = false }
@@ -282,6 +284,7 @@ struct SettingsView: View {
         guard !isWorking, store.isStorageAvailable else { return }
         let snapshot = store.moments
         isPreparingBackup = true
+        logger.notice("Preparing backup export.")
         Task { @MainActor in
             defer { isPreparingBackup = false }
             do {
@@ -290,6 +293,7 @@ struct SettingsView: View {
                 }.value
                 backupDocument = MomentBackupDocument(data: data)
                 backupStatus = nil
+                logger.notice("Prepared backup; presenting exporter.")
                 isExporting = true
             } catch {
                 logger.error("Backup encoding failed: \(String(describing: error), privacy: .private)")
@@ -448,6 +452,7 @@ struct SettingsView: View {
             .onChange(of: scenePhase) { _, phase in
                 if phase != .active { showingReplaceConfirmation = false }
             }
+            .onAppear { logger.notice("Backup review appeared.") }
         }
     }
 

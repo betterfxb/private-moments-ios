@@ -110,7 +110,7 @@ jobs:
         run: |
           simulator_id="${IOS_SIMULATOR_DESTINATION##*id=}"
           xcrun simctl spawn "$simulator_id" log show --last 30m --style compact \
-            --predicate 'subsystem == "com.example.PrivateMoments" AND category == "backup"'
+            --predicate 'process == "PrivateMoments" OR subsystem BEGINSWITH "com.apple.DocumentManager"'
 
       - name: Export XCTest UI screenshots
         if: always()
