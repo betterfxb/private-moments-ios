@@ -148,10 +148,30 @@ final class PrivateMomentsUITests: XCTestCase {
             // immediately. Exercise real background cancellation, without an
             // authentication-success fixture or an assumed Simulator policy.
             XCUIDevice.shared.press(.home)
-            let background = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                app.state == .runningBackground || app.state == .runningBackgroundSuspended
-            }, object: app)
-            XCTAssertEqual(XCTWaiter.wait(for: [background], timeout: 10), .completed)
+            var observedBackgroundState: XCUIApplication.State?
+            let backgroundPredicate = NSPredicate { _, _ in
+                let state = app.state
+                observedBackgroundState = state
+                return state == .runningBackground || state == .runningBackgroundSuspended
+            }
+            let background = XCTNSPredicateExpectation(predicate: backgroundPredicate, object: nil)
+            var backgroundOutcome = XCTWaiter.wait(for: [background], timeout: 2)
+            if backgroundOutcome == .timedOut {
+                // A system authentication surface may consume the first Home
+                // event. Only an app still in the foreground gets one more real
+                // Home event; the actual background state remains mandatory.
+                if app.state == .runningForeground {
+                    print("Additional Home press for authentication exit. Locale: \(language).")
+                    XCUIDevice.shared.press(.home)
+                }
+                let settledBackground = XCTNSPredicateExpectation(predicate: backgroundPredicate, object: nil)
+                backgroundOutcome = XCTWaiter.wait(for: [settledBackground], timeout: 10)
+            }
+            if backgroundOutcome != .completed {
+                print("Authentication exit state: \(String(describing: observedBackgroundState)); locale: \(language).")
+                captureFailure("Lock-background-unavailable-\(language)", app)
+            }
+            XCTAssertEqual(backgroundOutcome, .completed)
             app.activate()
             let lock = app.buttons["settings.lock"]
             reveal(lock, in: app)
@@ -197,6 +217,15 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertTrue(saved.waitForExistence(timeout: 15), "Only the real exporter completion may report success.")
         assertBackupResultVisible(saved, in: app)
         capture("Backup-exported-en", app)
+        let dismissFeedback = app.buttons["settings.dismissBackupStatus"]
+        XCTAssertEqual(dismissFeedback.label, "Dismiss message")
+        assertToolbarTarget(dismissFeedback)
+        dismissFeedback.tap()
+        let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !app.staticTexts["settings.backupStatus"].exists
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 5), .completed,
+            "Dismissing feedback must leave the journal available without changing its records.")
 
         tap(app.buttons["settings.restore"], in: app)
         let cancel = try XCTUnwrap(nativeControl(["Cancel"], app: app, timeout: 10))
@@ -208,7 +237,7 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["settings.deleteAll"], in: app)
         tap(app.buttons["Delete all moments"], in: app)
         assertSavedCount("0", app: app)
-        XCTAssertFalse(app.staticTexts["Import cancelled. Your records are unchanged."].exists,
+        XCTAssertFalse(app.staticTexts["Import cancelled. Records unchanged."].exists,
             "A new destructive operation must clear the earlier cancellation notice.")
 
         openBackup(filename, app: app)
@@ -266,7 +295,7 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func assertImportCancelled(in app: XCUIApplication) {
-        let notice = app.staticTexts["Import cancelled. Your records are unchanged."]
+        let notice = app.staticTexts["Import cancelled. Records unchanged."]
         XCTAssertTrue(notice.waitForExistence(timeout: 15))
         assertBackupResultVisible(notice, in: app)
     }
@@ -306,27 +335,42 @@ final class PrivateMomentsUITests: XCTestCase {
     private func assertBackupResultVisible(_ result: XCUIElement, in app: XCUIApplication) {
         // No reveal/swipe is allowed here: the actual completion must bring
         // its feedback into view, rather than the test doing that work.
+        var lastObservation = "No snapshot received."
         let visible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             // This is read-only feedback, not a control to activate. Asking
             // XCTest for a hit point can itself raise an automation failure.
             // Require a foreground, unobscured screen and the whole text frame.
             guard result.exists, app.state == .runningForeground,
                   !app.alerts.firstMatch.exists, !app.sheets.firstMatch.exists,
-                  !app.collectionViews["File View"].exists else { return false }
+                  !app.collectionViews["File View"].exists else {
+                lastObservation = "Feedback missing, app not foreground, or a modal remains."
+                return false
+            }
             let frame = result.frame
-            guard !frame.isEmpty, !frame.isInfinite, !frame.isNull else { return false }
+            let viewport = app.frame
+            guard !frame.isEmpty, !frame.isInfinite, !frame.isNull,
+                  !viewport.isEmpty, !viewport.isInfinite, !viewport.isNull else {
+                lastObservation = "Invalid feedback or viewport frame: \(frame), \(viewport)."
+                return false
+            }
             let navigation = app.navigationBars.firstMatch
-            let top = navigation.exists ? navigation.frame.maxY : app.frame.minY
+            let navigationFrame = navigation.exists ? navigation.frame : nil
             let tabBar = app.tabBars.firstMatch
-            let bottom = tabBar.exists && tabBar.frame.midY > app.frame.midY
-                ? tabBar.frame.minY : app.frame.maxY
+            let tabFrame = tabBar.exists ? tabBar.frame : nil
+            let top = navigationFrame?.maxY ?? viewport.minY
+            let bottom = tabFrame.map { $0.midY > viewport.midY ? $0.minY : viewport.maxY }
+                ?? viewport.maxY
+            lastObservation = "Feedback=\(frame), viewport=\(viewport), top=\(top), bottom=\(bottom)."
             return frame.minY >= top && frame.maxY <= bottom
-                && frame.minX >= app.frame.minX && frame.maxX <= app.frame.maxX
+                && frame.minX >= viewport.minX && frame.maxX <= viewport.maxX
         }, object: nil)
-        let outcome = XCTWaiter.wait(for: [visible], timeout: 10)
+        // Files owns a separate accessibility process. A stale snapshot after
+        // dismissal can consume a polling cycle; allow a bounded fresh snapshot,
+        // without retrying the operation or changing the layout requirements.
+        let outcome = XCTWaiter.wait(for: [visible], timeout: 30)
         if outcome != .completed {
+            print("Backup feedback visibility: \(lastObservation)")
             captureFailure("Backup-result-unavailable-en", app)
-            print("Backup feedback visibility: exists=\(result.exists), result=\(result.frame), navigation=\(app.navigationBars.firstMatch.frame), tabs=\(app.tabBars.firstMatch.frame), app=\(app.frame)")
         }
         XCTAssertEqual(outcome, .completed,
             "Backup completion feedback did not become fully visible without a test scroll.")

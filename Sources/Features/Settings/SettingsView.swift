@@ -8,6 +8,13 @@ private enum BackupStatus: Equatable {
     case notice(String)
     case error(String)
     case unavailable(String)
+
+    var isBrief: Bool {
+        switch self {
+        case .success, .notice: return true
+        case .error, .unavailable: return false
+        }
+    }
 }
 
 struct SettingsView: View {
@@ -35,18 +42,13 @@ struct SettingsView: View {
     private var isWorking: Bool { isPreparingBackup || isReadingBackup }
 
     var body: some View {
-        settingsScrollContent
-            .safeAreaInset(edge: .top, spacing: 0) {
-                if let backupStatus {
-                    backupFeedback(backupStatus)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .modifier(JournalPanel())
-                        .padding(.horizontal, AppSpacing.page)
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: Self.contentMaxWidth)
-                        .background(AppColors.background)
-                }
+        VStack(spacing: 0) {
+            if let backupStatus, backupStatus.isBrief {
+                backupBanner(backupStatus)
             }
+            settingsScrollContent
+                .frame(maxHeight: .infinity)
+        }
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
@@ -124,6 +126,9 @@ struct SettingsView: View {
                     Text("Create a portable JSON backup or restore one you made earlier.")
                         .font(.system(.footnote, design: .rounded))
                         .foregroundStyle(AppColors.secondaryText)
+                    if let backupStatus, !backupStatus.isBrief {
+                        backupFeedback(backupStatus)
+                    }
                     Button {
                         backupStatus = nil
                         showingExportWarning = true
@@ -286,6 +291,43 @@ struct SettingsView: View {
             : AnyLayout(HStackLayout(spacing: 12))
     }
 
+    private func backupBanner(_ status: BackupStatus) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if dynamicTypeSize.isAccessibilitySize {
+                HStack {
+                    Spacer()
+                    dismissBackupFeedback
+                }
+                backupFeedback(status)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            } else {
+                HStack(alignment: .center, spacing: 12) {
+                    backupFeedback(status)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    dismissBackupFeedback
+                }
+            }
+        }
+        .modifier(JournalPanel())
+        .padding(.horizontal, AppSpacing.page)
+        .padding(.vertical, 8)
+        .frame(maxWidth: Self.contentMaxWidth)
+        .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var dismissBackupFeedback: some View {
+        Button { backupStatus = nil } label: {
+            Image(systemName: "xmark")
+                .font(.system(size: 16, weight: .semibold))
+                .frame(width: 44, height: 44)
+                .background(AppColors.accentWash, in: Circle())
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(AppColors.accentText)
+        .accessibilityLabel("Dismiss message")
+        .accessibilityIdentifier("settings.dismissBackupStatus")
+    }
+
     private func backupFeedback(_ status: BackupStatus) -> some View {
         VStack(alignment: .leading, spacing: 13) {
             switch status {
@@ -381,7 +423,7 @@ struct SettingsView: View {
             presentBackupReviewIfReady()
         case .failure(let error):
             if (error as? CocoaError)?.code == .userCancelled {
-                backupStatus = .notice(AppLocalization.string("Import cancelled. Your records are unchanged."))
+                backupStatus = .notice(AppLocalization.string("Import cancelled. Records unchanged."))
                 return
             }
             logger.error("Backup reading failed: \(String(describing: error), privacy: .private)")
