@@ -167,7 +167,10 @@ final class PrivateMomentsUITests: XCTestCase {
         selectTab("Settings", "设置", app: app)
         tap(app.buttons["settings.export"], in: app)
         tap(app.alerts.firstMatch.buttons["Export"], in: app)
-        let browserAction = nativeControl(["Save", "On My iPhone", "On My iPad"], app: app, timeout: 30)
+        // The fresh hosted Simulator can take over 45 seconds to launch the
+        // DocumentManager extension. Wait for actual controls, not a fixed nap
+        // or a blank sheet that merely finished its presentation animation.
+        let browserAction = nativeControl(["Save", "On My iPhone", "On My iPad"], app: app, timeout: 90)
         captureSystem("Export-files-en", app)
         XCTAssertNotNil(browserAction, "The system exporter must show a destination or Save action.")
         // Each hosted Simulator is fresh; this test exports exactly one file.
