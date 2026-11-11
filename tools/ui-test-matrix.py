@@ -6,13 +6,13 @@ import json
 def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
     profiles = [
         dict(profile="compact-light", family="compact", appearance="light",
-             text_size="large", gallery_only="0"),
+             text_size="large", gallery_only="0", timeout_minutes=45),
         dict(profile="phone-dark", family="phone", appearance="dark",
-             text_size="large", gallery_only="1"),
+             text_size="large", gallery_only="1", timeout_minutes=45),
         dict(profile="ipad-light", family="ipad", appearance="light",
-             text_size="large", gallery_only="1"),
+             text_size="large", gallery_only="1", timeout_minutes=45),
         dict(profile="compact-dark-accessibility", family="compact", appearance="dark",
-             text_size="accessibility-extra-extra-extra-large", gallery_only="1"),
+             text_size="accessibility-extra-extra-extra-large", gallery_only="1", timeout_minutes=60),
     ]
     if scope not in {"full", "backup"}:
         raise ValueError("Unknown UI verification scope: " + scope)

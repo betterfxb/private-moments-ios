@@ -47,7 +47,7 @@ jobs:
     needs: plan
     name: ${{ matrix.profile }}
     runs-on: macos-15
-    timeout-minutes: 45
+    timeout-minutes: ${{ matrix.timeout_minutes }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
