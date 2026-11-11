@@ -198,6 +198,8 @@ final class PrivateMomentsUITests: XCTestCase {
         let cancel = try XCTUnwrap(nativeControl(["Cancel"], app: app, timeout: 10))
         captureSystem("Import-files-en", app)
         cancel.tap()
+        assertImportCancelled(in: app)
+        capture("Import-cancelled-en", app)
         assertSavedCount("1", app: app)
         tap(app.buttons["settings.deleteAll"], in: app)
         tap(app.buttons["Delete all moments"], in: app)
@@ -255,6 +257,12 @@ final class PrivateMomentsUITests: XCTestCase {
         let count = app.staticTexts["settings.savedCount"]
         reveal(count, in: app)
         XCTAssertEqual(count.label, value)
+    }
+
+    private func assertImportCancelled(in app: XCUIApplication) {
+        let notice = app.staticTexts["Import cancelled. Your records are unchanged."]
+        XCTAssertTrue(notice.waitForExistence(timeout: 15))
+        assertBackupResultVisible(notice, in: app)
     }
 
     private func assertValueLayout(title: XCUIElement, value: XCUIElement, stacked: Bool) {
@@ -353,8 +361,26 @@ final class PrivateMomentsUITests: XCTestCase {
         let originalCount = app.staticTexts["settings.savedCount"].label
         tap(app.buttons["settings.restore"], in: app)
         for attempt in 0..<2 {
-            selectBackupFile(filename, app: app)
+            let delivered = selectBackupFile(filename, app: app)
             if app.buttons["backup.merge"].exists { return }
+            if !delivered {
+                // A selected item can remain in the system picker without a
+                // delegate URL. Exercise its real Cancel/reopen path once;
+                // never infer a successful read or retry the whole test.
+                guard attempt == 0, app.collectionViews["File View"].exists,
+                      let cancel = nativeControl(["Cancel"], app: app) else {
+                    captureSystem("Import-selection-unresolved", app)
+                    return XCTFail("The system picker did not deliver a file and has no bounded recovery left.")
+                }
+                importRecoveryCount += 1
+                captureSystem("Import-recovery-\(importRecoveryCount)-en", app)
+                cancel.tap()
+                assertImportCancelled(in: app)
+                XCTAssertEqual(app.staticTexts["settings.savedCount"].label, originalCount)
+                print("Explicit system backup reselection \(importRecoveryCount); local record count unchanged. Reason: picker-not-delivered.")
+                tap(app.buttons["settings.restore"], in: app)
+                continue
+            }
             let chooseAgain = app.buttons["settings.chooseBackupAgain"]
             guard attempt == 0, chooseAgain.exists else {
                 captureSystem("Import-selection-unresolved", app)
@@ -367,14 +393,14 @@ final class PrivateMomentsUITests: XCTestCase {
             let message = app.descendants(matching: .any).matching(identifier: "settings.backupUnavailableMessage").firstMatch
             revealFully(from: message, through: chooseAgain, in: app)
             importRecoveryCount += 1
-            print("Explicit system backup reselection \(importRecoveryCount); local record count unchanged.")
+            print("Explicit system backup reselection \(importRecoveryCount); local record count unchanged. Reason: source-unavailable.")
             captureSystem("Import-recovery-\(importRecoveryCount)-en", app)
             tap(chooseAgain, in: app)
         }
         XCTFail("Backup review did not open after the explicit recovery action.")
     }
 
-    private func selectBackupFile(_ filename: String, app: XCUIApplication) {
+    private func selectBackupFile(_ filename: String, app: XCUIApplication) -> Bool {
         let predicate = NSPredicate(format: "label CONTAINS[cd] %@", filename)
         func selectedFile() -> XCUIElement? {
             // Browse can reopen its previous local folder directly. Scope the
@@ -403,7 +429,8 @@ final class PrivateMomentsUITests: XCTestCase {
         while file == nil && Date() < deadline { file = selectedFile() }
         guard let file else {
             captureSystem("Import-file-unavailable", app)
-            return XCTFail("Exported file is not available in the real document picker.")
+            XCTFail("Exported file is not available in the real document picker.")
+            return false
         }
         waitForStableFrame(file, requireHittable: true, message: "The system file cell must finish presenting.")
         XCTAssertTrue(file.isEnabled, "The exported JSON must be selectable in the real picker.")
@@ -424,9 +451,7 @@ final class PrivateMomentsUITests: XCTestCase {
         let resolved = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             app.buttons["backup.merge"].exists || app.buttons["settings.chooseBackupAgain"].exists
         }, object: nil)
-        let finished = XCTWaiter.wait(for: [resolved], timeout: 15) == .completed
-        if !finished { captureSystem("Import-selection-unresolved", app) }
-        XCTAssertTrue(finished, "The selected file must reach review or an explicit unavailable-source state.")
+        return XCTWaiter.wait(for: [resolved], timeout: 30) == .completed
     }
 
     private func localFilesLocation(_ app: XCUIApplication, timeout: TimeInterval) -> XCUIElement? {

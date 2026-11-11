@@ -5,6 +5,7 @@ import UIKit
 
 private enum BackupStatus: Equatable {
     case success(String)
+    case notice(String)
     case error(String)
     case unavailable(String)
 }
@@ -294,6 +295,11 @@ struct SettingsView: View {
                     .font(.system(.footnote, design: .rounded))
                     .foregroundStyle(AppColors.success)
                     .accessibilityIdentifier("settings.backupStatus")
+            case .notice(let message):
+                Label(message, systemImage: "xmark.circle")
+                    .font(.system(.footnote, design: .rounded))
+                    .foregroundStyle(AppColors.secondaryText)
+                    .accessibilityIdentifier("settings.backupStatus")
             case .error(let message):
                 ErrorNotice(message: message)
                     .accessibilityIdentifier("settings.backupStatus")
@@ -369,7 +375,10 @@ struct SettingsView: View {
             logger.notice("Backup file validated.")
             presentBackupReviewIfReady()
         case .failure(let error):
-            guard (error as? CocoaError)?.code != .userCancelled else { return }
+            if (error as? CocoaError)?.code == .userCancelled {
+                backupStatus = .notice(AppLocalization.string("Import cancelled. Your records are unchanged."))
+                return
+            }
             logger.error("Backup reading failed: \(String(describing: error), privacy: .private)")
             if case .sourceUnavailable? = error as? MomentBackupError {
                 backupStatus = .unavailable(error.localizedDescription)
