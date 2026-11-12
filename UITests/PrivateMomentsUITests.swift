@@ -212,9 +212,9 @@ final class PrivateMomentsUITests: XCTestCase {
         // The fresh hosted Simulator can take over 45 seconds to launch the
         // DocumentManager extension. Wait for actual controls, not a fixed nap
         // or a blank sheet that merely finished its presentation animation.
-        let browserAction = nativeControl(["Save", "On My iPhone", "On My iPad"], app: app, timeout: 90)
+        let browserReady = waitForLocalExportBrowser(app, timeout: 90)
         captureSystem("Export-files-en", app)
-        XCTAssertNotNil(browserAction, "The system exporter must show a destination or Save action.")
+        XCTAssertTrue(browserReady, "The system exporter must show the local browser or a real location control.")
         // Each hosted Simulator is fresh; this test exports exactly one file.
         // iOS may hide Save As on first presentation; use the real default name.
         let filename = "Private-Moments-Backup"
@@ -409,6 +409,18 @@ final class PrivateMomentsUITests: XCTestCase {
         return nil
     }
 
+    private func waitForLocalExportBrowser(_ app: XCUIApplication, timeout: TimeInterval) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        repeat {
+            // Readiness is not a tap: a navigation-title StaticText may have
+            // no activation point even while its provider root is ready.
+            if localFileRoots(in: app).firstMatch.exists || !nativeLocalLocations(in: app).isEmpty {
+                return true
+            }
+        } while Date() < deadline
+        return false
+    }
+
     private func saveToLocalFiles(_ app: XCUIApplication) {
         // A visible location title is not a sidebar action: tapping it can open
         // Browse and turn its unrelated More menu into Edit. Stay in a ready
@@ -600,13 +612,16 @@ final class PrivateMomentsUITests: XCTestCase {
         return nil
     }
 
-    private func localFilesLocation(_ app: XCUIApplication, timeout: TimeInterval) -> XCUIElement? {
+    private func nativeLocalLocations(in app: XCUIApplication) -> [XCUIElement] {
         let predicate = NSPredicate(format: "label == %@ OR label == %@", "On My iPhone", "On My iPad")
+        return app.buttons.matching(predicate).allElementsBoundByIndex
+            + app.cells.matching(predicate).allElementsBoundByIndex
+    }
+
+    private func localFilesLocation(_ app: XCUIApplication, timeout: TimeInterval) -> XCUIElement? {
         let deadline = Date().addingTimeInterval(timeout)
         repeat {
-            let locations = app.buttons.matching(predicate).allElementsBoundByIndex
-                + app.cells.matching(predicate).allElementsBoundByIndex
-            for location in locations {
+            for location in nativeLocalLocations(in: app) {
                 if location.exists && location.isHittable && location.isEnabled { return location }
             }
         } while Date() < deadline
@@ -837,7 +852,15 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(segment, in: app)
         } else {
             tap(app.buttons["timeline.filter"], in: app)
-            tap(app.buttons[label].firstMatch, in: app)
+            let option = app.buttons[label].firstMatch
+            // A menu is a native presentation, not content to reveal by
+            // swiping the underlying timeline while it is still appearing.
+            guard option.waitForExistence(timeout: 10) else {
+                captureFailure("Timeline-filter-unavailable", app)
+                return XCTFail("The requested native filter option did not appear: \(label)")
+            }
+            XCTAssertTrue(option.isEnabled)
+            option.tap()
         }
     }
 
