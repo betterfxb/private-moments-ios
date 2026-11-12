@@ -79,6 +79,7 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Manual-duration-\(language)", app)
             tap(app.buttons["recap.cancel"], in: app)
             XCTAssertTrue(start.waitForExistence(timeout: 10), "Untouched manual entry should close directly.")
+            checkManualNoteDraft(language: language, expanded: usesAccessibilityLayout, app: app)
             tap(start, in: app)
             capture("Session-\(language)", app)
             reveal(app.buttons["session.finish"], in: app)
@@ -304,6 +305,17 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func assertSavedCount(_ value: String, app: XCUIApplication) {
+        let dismiss = app.buttons["settings.dismissBackupStatus"]
+        if dismiss.exists {
+            // Read the captured result, then explicitly close it before
+            // inspecting the journal. This is a user action, not a store reset.
+            XCTAssertTrue(dismiss.isHittable)
+            dismiss.tap()
+            let closed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                !app.staticTexts["settings.backupStatus"].exists
+            }, object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 5), .completed)
+        }
         let count = app.staticTexts["settings.savedCount"]
         reveal(count, in: app)
         XCTAssertEqual(count.label, value)
@@ -846,6 +858,58 @@ final class PrivateMomentsUITests: XCTestCase {
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count) + value)
     }
 
+    private func checkManualNoteDraft(language: String, expanded: Bool, app: XCUIApplication) {
+        tap(app.buttons["today.addRecord"], in: app)
+        let minutes = app.textFields["recap.minutes"]
+        replaceNumber(minutes, with: "1", in: app)
+        dismissRecapKeyboard(language: language, app: app)
+
+        let note = app.textViews["recap.note"]
+        let draft = "Test draft\nKeep this"
+        tap(note, in: app)
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5))
+        note.typeText(draft)
+        let done = app.buttons["recap.dismissKeyboard"]
+        XCTAssertTrue(done.isHittable)
+        assertToolbarTarget(done)
+        captureSystem("Manual-note-keyboard-\(language)", app)
+        dismissRecapKeyboard(language: language, app: app)
+        XCTAssertEqual(note.value as? String, draft)
+
+        tap(app.buttons["recap.cancel"], in: app)
+        let discard = language == "en" ? "Discard reflection" : "放弃回顾"
+        cancelConfirmation(language == "en" ? "Keep editing" : "继续编辑",
+            destructiveAction: discard, in: app)
+        XCTAssertEqual(note.value as? String, draft)
+        XCTAssertEqual(minutes.value as? String, "1")
+        let save = app.buttons["recap.saveToolbar"]
+        XCTAssertTrue(save.isEnabled && save.isHittable)
+        revealFully(from: note, through: note, in: app)
+        XCTAssertGreaterThanOrEqual(note.frame.minX, app.windows.firstMatch.frame.minX)
+        XCTAssertLessThanOrEqual(note.frame.maxX, app.windows.firstMatch.frame.maxX)
+        XCTAssertGreaterThanOrEqual(note.frame.height, expanded ? 160 : 96)
+        capture("Manual-note-retained-\(language)", app)
+        tap(app.buttons["recap.cancel"], in: app)
+        XCTAssertTrue(app.buttons[discard].waitForExistence(timeout: 10))
+        tap(app.buttons[discard], in: app)
+        XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
+    }
+
+    private func dismissRecapKeyboard(language: String, app: XCUIApplication) {
+        let done = app.buttons["recap.dismissKeyboard"]
+        XCTAssertTrue(done.waitForExistence(timeout: 5))
+        XCTAssertEqual(done.label, language == "en" ? "Done" : "完成")
+        XCTAssertTrue(done.isEnabled && done.isHittable)
+        assertToolbarTarget(done)
+        let window = app.windows.firstMatch.frame
+        XCTAssertTrue(window.contains(done.frame))
+        done.tap()
+        let closed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !app.keyboards.firstMatch.exists
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 5), .completed)
+    }
+
     private func chooseMomentFilter(_ label: String, in app: XCUIApplication) {
         let segment = app.segmentedControls.buttons[label]
         if segment.exists {
@@ -907,6 +971,16 @@ final class PrivateMomentsUITests: XCTestCase {
         let tab = app.buttons.matching(NSPredicate(format: "label == %@", label)).firstMatch
         XCTAssertTrue(tab.waitForExistence(timeout: 10), "Missing tab: \(label)")
         tab.tap()
+        let destination: XCUIElement
+        switch english {
+        case "Timeline": destination = app.staticTexts["timeline.resultCount"]
+        case "Settings": destination = app.buttons["settings.export"]
+        default: destination = app.buttons["today.startMoment"]
+        }
+        guard destination.waitForExistence(timeout: 15) else {
+            captureFailure("Tab-destination-unavailable", app)
+            return XCTFail("The selected tab did not present its content: \(english)")
+        }
     }
 
     private func assertToolbarTarget(_ control: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
@@ -944,7 +1018,7 @@ final class PrivateMomentsUITests: XCTestCase {
                 let limit = (bottom - top) * 0.4
                 let delta = max(-limit, min(limit, middle - frame.midY))
                 let start = window.coordinate(withNormalizedOffset: .zero)
-                    .withOffset(CGVector(dx: min(scroll.frame.maxX - 12, viewport.maxX - 12) - viewport.minX,
+                    .withOffset(CGVector(dx: scroll.frame.intersection(viewport).midX - viewport.minX,
                         dy: middle - viewport.minY))
                 start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: delta)))
             } else {
@@ -1074,6 +1148,7 @@ final class PrivateMomentsUITests: XCTestCase {
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             guard surface.exists, !requireHittable || surface.isHittable else { return false }
             let frame = surface.frame
+            guard !frame.isEmpty, !frame.isNull, !frame.isInfinite else { return false }
             if frame != lastFrame {
                 lastFrame = frame
                 stableSince = Date()
@@ -1081,6 +1156,7 @@ final class PrivateMomentsUITests: XCTestCase {
             }
             return Date().timeIntervalSince(stableSince) >= 0.75
         }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 10), .completed, message)
+        // This is an automation sampling window, not a UI latency claim.
+        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 30), .completed, message)
     }
 }

@@ -369,8 +369,10 @@ struct SettingsView: View {
 
     private func backupMessage(_ message: String, systemImage: String, color: Color) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
-            Image(systemName: systemImage)
-                .accessibilityHidden(true)
+            if !dynamicTypeSize.isAccessibilitySize {
+                Image(systemName: systemImage)
+                    .accessibilityHidden(true)
+            }
             Text(message)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("settings.backupStatus")

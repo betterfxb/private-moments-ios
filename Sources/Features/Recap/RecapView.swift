@@ -25,6 +25,7 @@ struct RecapView: View {
     private let initialReflection: ReflectionSnapshot
     private enum InputField: Hashable { case note, minutes, seconds }
     @FocusState private var focusedField: InputField?
+    @ScaledMetric(relativeTo: .body) private var noteMinimumHeight: CGFloat = 112
 
     private struct ReflectionSnapshot: Equatable {
         let mood: MomentMood
@@ -137,7 +138,11 @@ struct RecapView: View {
             }
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
-                Button("Done") { focusedField = nil }
+                Button { focusedField = nil } label: {
+                    Text("Done")
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
+                }
                     .accessibilityIdentifier("recap.dismissKeyboard")
             }
         }
@@ -399,10 +404,11 @@ struct RecapView: View {
                     .foregroundStyle(AppColors.accentText)
             }
             TextEditor(text: $privateNote)
+                .font(.system(.body, design: .rounded))
                 .focused($focusedField, equals: .note)
                 .scrollContentBackground(.hidden)
                 .padding(8)
-                .frame(minHeight: 112)
+                .frame(minHeight: min(max(noteMinimumHeight, 112), 220))
                 .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: AppRadius.control).stroke(AppColors.separator, lineWidth: 1))
                 .accessibilityLabel("Private note")
