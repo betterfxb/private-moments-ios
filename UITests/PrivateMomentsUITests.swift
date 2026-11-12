@@ -973,7 +973,18 @@ final class PrivateMomentsUITests: XCTestCase {
 
     private func tap(_ element: XCUIElement, in app: XCUIApplication) {
         reveal(element, in: app)
+        let homeDestination: String?
+        switch element.identifier {
+        case "today.startMoment": homeDestination = "session.pauseResume"
+        case "today.addRecord": homeDestination = "recap.saveToolbar"
+        default: homeDestination = nil
+        }
         element.tap()
+        if let homeDestination,
+           !app.buttons[homeDestination].waitForExistence(timeout: 15) {
+            captureFailure("Home-action-destination-unavailable", app)
+            XCTFail("A single Home action did not present its destination: \(homeDestination)")
+        }
     }
 
     private func waitForTimelineRows(_ count: Int, in app: XCUIApplication) {

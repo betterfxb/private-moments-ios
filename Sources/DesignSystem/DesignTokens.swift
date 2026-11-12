@@ -61,6 +61,7 @@ struct PrimaryActionButtonStyle: ButtonStyle {
             .padding(.vertical, 15)
             .frame(minHeight: 50)
             .background(AppColors.accent.opacity(isEnabled ? 1 : 0.55), in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
             .scaleEffect(isEnabled && configuration.isPressed && !reduceMotion ? 0.985 : 1)
             .opacity(isEnabled && configuration.isPressed ? 0.92 : 1)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.16), value: configuration.isPressed)
@@ -92,6 +93,7 @@ struct SecondaryActionButtonStyle: ButtonStyle {
             .padding(.vertical, 15)
             .frame(minHeight: 50)
             .background(AppColors.accentWash, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
             .opacity(!isEnabled ? 0.5 : (configuration.isPressed ? 0.72 : 1))
     }
 }
