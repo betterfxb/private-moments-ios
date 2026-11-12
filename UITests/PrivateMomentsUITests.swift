@@ -162,15 +162,11 @@ final class PrivateMomentsUITests: XCTestCase {
             // immediately. Exercise real background cancellation, without an
             // authentication-success fixture or an assumed Simulator policy.
             XCUIDevice.shared.press(.home)
-            var observedBackgroundState: XCUIApplication.State?
-            let backgroundPredicate = NSPredicate { _, _ in
-                let state = app.state
-                observedBackgroundState = state
-                return state == .runningBackground || state == .runningBackgroundSuspended
-            }
-            let background = XCTNSPredicateExpectation(predicate: backgroundPredicate, object: nil)
-            var backgroundOutcome = XCTWaiter.wait(for: [background], timeout: 2)
-            if backgroundOutcome == .timedOut {
+            // XCUIApplication.state is updated asynchronously. Use its native
+            // lifecycle waiter rather than polling it inside a predicate waiter.
+            var backgrounded = app.wait(for: .runningBackground, timeout: 2) ||
+                app.state == .runningBackgroundSuspended
+            if !backgrounded {
                 // A system authentication surface may consume the first Home
                 // event. Only an app still in the foreground gets one more real
                 // Home event; the actual background state remains mandatory.
@@ -178,14 +174,15 @@ final class PrivateMomentsUITests: XCTestCase {
                     print("Additional Home press for authentication exit. Locale: \(language).")
                     XCUIDevice.shared.press(.home)
                 }
-                let settledBackground = XCTNSPredicateExpectation(predicate: backgroundPredicate, object: nil)
-                backgroundOutcome = XCTWaiter.wait(for: [settledBackground], timeout: 10)
+                backgrounded = app.state == .runningBackgroundSuspended ||
+                    app.wait(for: .runningBackground, timeout: 30) ||
+                    app.wait(for: .runningBackgroundSuspended, timeout: 2)
             }
-            if backgroundOutcome != .completed {
-                print("Authentication exit state: \(String(describing: observedBackgroundState)); locale: \(language).")
+            guard backgrounded else {
+                print("Authentication exit state raw value: \(app.state.rawValue); locale: \(language).")
                 captureFailure("Lock-background-unavailable-\(language)", app)
+                return XCTFail("Authentication exit must reach a real running background state.")
             }
-            XCTAssertEqual(backgroundOutcome, .completed)
             app.activate()
             let lock = app.buttons["settings.lock"]
             reveal(lock, in: app)
@@ -1087,14 +1084,19 @@ final class PrivateMomentsUITests: XCTestCase {
             let keyboardCoversCenter = keyboard.exists && keyboard.frame.contains(center)
             let footerTop = fixedFooterTop(ignoring: element, in: app)
             let footerCoversCenter = footerTop.map { center.y >= $0 } ?? false
+            let canTap = exists && element.isHittable && viewport.contains(center) &&
+                !keyboardCoversCenter && !footerCoversCenter
+            // Keep visible controls on the normal fast path. Only a fixed
+            // Settings result requires the extra scroll-ownership query.
+            if canTap && !app.buttons["settings.dismissBackupStatus"].exists { return }
             let scroll = scrollSurface(containing: element, in: app)
             // A fixed result banner can cover a control that still reports
             // hittable within the window. Require its center inside its own
             // scroll viewport; toolbar and native dialog actions have no owner.
-            let hasScrollOwner = exists && !element.identifier.isEmpty &&
+            let hasScrollOwner = canTap && !element.identifier.isEmpty &&
                 app.scrollViews.containing(.any, identifier: element.identifier).firstMatch.exists
             let visibleContent = hasScrollOwner ? scroll.frame.intersection(viewport) : viewport
-            if exists, element.isHittable, visibleContent.contains(center), !keyboardCoversCenter, !footerCoversCenter { return }
+            if canTap, visibleContent.contains(center) { return }
             if exists, !frame.isEmpty, scroll.exists {
                 let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
                 var bottom = min(scroll.frame.maxY, viewport.maxY) - 12

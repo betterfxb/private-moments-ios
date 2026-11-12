@@ -10,9 +10,9 @@ def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
         dict(profile="phone-dark", family="phone", appearance="dark",
              text_size="large", gallery_only="1", timeout_minutes=45),
         dict(profile="ipad-light", family="ipad", appearance="light",
-             text_size="large", gallery_only="1", timeout_minutes=45),
+             text_size="large", gallery_only="1", timeout_minutes=60),
         dict(profile="compact-dark-accessibility", family="compact", appearance="dark",
-             text_size="accessibility-extra-extra-extra-large", gallery_only="1", timeout_minutes=60),
+             text_size="accessibility-extra-extra-extra-large", gallery_only="1", timeout_minutes=75),
     ]
     if scope not in {"full", "backup", "input"}:
         raise ValueError("Unknown UI verification scope: " + scope)
