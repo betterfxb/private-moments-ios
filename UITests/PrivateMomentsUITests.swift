@@ -260,7 +260,12 @@ final class PrivateMomentsUITests: XCTestCase {
         // Settings gallery separately checks the visible count's geometry.
         XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
         tap(app.buttons["settings.deleteAll"], in: app)
-        tap(app.buttons["Delete all moments"], in: app)
+        let confirmDelete = app.buttons["Delete all moments"]
+        guard confirmDelete.waitForExistence(timeout: 10), confirmDelete.isHittable else {
+            captureFailure("Delete-confirmation-unavailable", app)
+            return XCTFail("The actual deletion confirmation must appear before confirming.")
+        }
+        confirmDelete.tap()
         assertDeletedJournal(in: app)
         assertSavedCount("0", app: app)
 
@@ -1082,8 +1087,14 @@ final class PrivateMomentsUITests: XCTestCase {
             let keyboardCoversCenter = keyboard.exists && keyboard.frame.contains(center)
             let footerTop = fixedFooterTop(ignoring: element, in: app)
             let footerCoversCenter = footerTop.map { center.y >= $0 } ?? false
-            if exists, element.isHittable, viewport.contains(center), !keyboardCoversCenter, !footerCoversCenter { return }
             let scroll = scrollSurface(containing: element, in: app)
+            // A fixed result banner can cover a control that still reports
+            // hittable within the window. Require its center inside its own
+            // scroll viewport; toolbar and native dialog actions have no owner.
+            let hasScrollOwner = exists && !element.identifier.isEmpty &&
+                app.scrollViews.containing(.any, identifier: element.identifier).firstMatch.exists
+            let visibleContent = hasScrollOwner ? scroll.frame.intersection(viewport) : viewport
+            if exists, element.isHittable, visibleContent.contains(center), !keyboardCoversCenter, !footerCoversCenter { return }
             if exists, !frame.isEmpty, scroll.exists {
                 let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
                 var bottom = min(scroll.frame.maxY, viewport.maxY) - 12
@@ -1102,6 +1113,7 @@ final class PrivateMomentsUITests: XCTestCase {
                 window.swipeUp()
             }
         }
+        captureFailure("Control-unreachable", app)
         XCTFail("Control is unreachable after scrolling: \(element)")
     }
 
