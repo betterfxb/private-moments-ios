@@ -249,7 +249,9 @@ final class PrivateMomentsUITests: XCTestCase {
         }
         assertImportCancelled(in: app)
         capture("Import-cancelled-en", app)
-        assertSavedCount("1", app: app)
+        // Keep this notice open to verify that Delete all clears it. The
+        // Settings gallery separately checks the visible count's geometry.
+        XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
         tap(app.buttons["settings.deleteAll"], in: app)
         tap(app.buttons["Delete all moments"], in: app)
         assertSavedCount("0", app: app)
