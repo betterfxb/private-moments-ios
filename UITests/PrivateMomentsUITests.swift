@@ -902,6 +902,16 @@ final class PrivateMomentsUITests: XCTestCase {
         let done = app.buttons["recap.dismissKeyboard"]
         XCTAssertTrue(done.isHittable)
         assertToolbarTarget(done)
+        let count = app.staticTexts["recap.noteCount"]
+        XCTAssertTrue(count.exists)
+        let countFrame = count.frame
+        let dismissFrame = done.frame
+        let clearOfAccessory = !countFrame.isEmpty && countFrame.maxX <= dismissFrame.minX + 0.000001
+        if !clearOfAccessory {
+            print("Keyboard metadata geometry: count=\(countFrame), dismiss=\(dismissFrame).")
+            captureFailure("Keyboard-counter-overlap-\(language)", app)
+        }
+        XCTAssertTrue(clearOfAccessory, "The note count must stay clear of the floating keyboard action.")
         captureSystem("Manual-note-keyboard-\(language)", app)
         dismissRecapKeyboard(language: language, app: app)
         XCTAssertEqual(note.value as? String, draft)

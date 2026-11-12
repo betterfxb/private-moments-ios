@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RecapView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(MomentStore.self) private var store
     @Environment(\.scenePhase) private var scenePhase
     let durationSeconds: Int
@@ -26,6 +27,7 @@ struct RecapView: View {
     private enum InputField: Hashable { case note, minutes, seconds }
     @FocusState private var focusedField: InputField?
     @ScaledMetric(relativeTo: .body) private var noteMinimumHeight: CGFloat = 112
+    private let keyboardDismissTargetSize: CGFloat = 44
 
     private struct ReflectionSnapshot: Equatable {
         let mood: MomentMood
@@ -148,7 +150,7 @@ struct RecapView: View {
                     Label("Done", systemImage: "keyboard.chevron.compact.down")
                         .labelStyle(.iconOnly)
                         .font(.system(size: 20, weight: .semibold))
-                        .frame(width: 44, height: 44)
+                        .frame(width: keyboardDismissTargetSize, height: keyboardDismissTargetSize)
                         .background(AppColors.accentWash, in: Circle())
                         .contentShape(Rectangle())
                 }
@@ -427,7 +429,13 @@ struct RecapView: View {
                             : AppColors.secondaryText
                     )
                     .accessibilityLabel(AppLocalization.format("Private note, %lld of %lld characters", privateNote.count, MomentValidator.maximumNoteLength))
+                    .accessibilityIdentifier("recap.noteCount")
             }
+            // The native keyboard accessory floats over the trailing edge.
+            // Keep metadata clear of its target without reducing text size.
+            .padding(.trailing,
+                focusedField != nil && horizontalSizeClass == .compact
+                    ? keyboardDismissTargetSize + AppSpacing.card : 0)
             if let noteValidationMessage {
                 ErrorNotice(message: noteValidationMessage)
             }
