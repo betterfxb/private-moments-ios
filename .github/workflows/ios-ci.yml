@@ -11,8 +11,12 @@ on:
         description: Run selected-profile backup unit and file flow (not full acceptance)
         type: boolean
         default: false
+      input_smoke:
+        description: Run selected-profile input gallery only (not full acceptance)
+        type: boolean
+        default: false
       backup_smoke_profile:
-        description: Device profile for focused backup diagnosis (ignored by full acceptance)
+        description: Device profile for focused diagnosis (ignored by full acceptance)
         type: choice
         default: compact-light
         options:
@@ -37,9 +41,15 @@ jobs:
       - uses: actions/checkout@v7
       - id: matrix
         env:
-          MATRIX_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.backup_smoke && 'backup' || 'full' }}
+          MATRIX_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && 'input' || github.event_name == 'workflow_dispatch' && inputs.backup_smoke && 'backup' || 'full' }}
           SMOKE_PROFILE: ${{ inputs.backup_smoke_profile || 'compact-light' }}
+          INPUT_SMOKE: ${{ inputs.input_smoke && '1' || '0' }}
+          BACKUP_SMOKE: ${{ inputs.backup_smoke && '1' || '0' }}
         run: |
+          if [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then
+            printf 'Input and backup smoke modes are mutually exclusive.\n' >&2
+            exit 1
+          fi
           matrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"
           printf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"
 
@@ -113,6 +123,7 @@ jobs:
           PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments.xcresult
           PRIVATE_MOMENTS_UI_GALLERY_ONLY: ${{ matrix.gallery_only }}
           PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.backup_smoke && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_INPUT_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && '1' || '0' }}
         run: bash scripts/verify-mac.sh
 
       - name: Read backup flow diagnostics

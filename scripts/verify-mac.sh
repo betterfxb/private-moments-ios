@@ -51,8 +51,14 @@ fi
 # configured simulator rather than parallel clones with different UI settings.
 TEST_SCOPE_ARGUMENTS=(-parallel-testing-enabled NO)
 BACKUP_ONLY="${PRIVATE_MOMENTS_UI_BACKUP_ONLY:-0}"
+INPUT_ONLY="${PRIVATE_MOMENTS_UI_INPUT_ONLY:-0}"
 [[ "$BACKUP_ONLY" == "0" || "$BACKUP_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_BACKUP_ONLY must be 0 or 1."
-if [[ "$BACKUP_ONLY" == "1" ]]; then
+[[ "$INPUT_ONLY" == "0" || "$INPUT_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_INPUT_ONLY must be 0 or 1."
+[[ "$BACKUP_ONLY" != "1" || "$INPUT_ONLY" != "1" ]] || fail "Input and backup smoke modes are mutually exclusive."
+if [[ "$INPUT_ONLY" == "1" ]]; then
+    printf '\nFocused input gallery only; this is not full simulator acceptance.\n'
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
+elif [[ "$BACKUP_ONLY" == "1" ]]; then
     printf '\nFocused backup smoke only; this is not full simulator acceptance.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/BackupUXTests)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
@@ -103,7 +109,9 @@ xcodebuild \
     CODE_SIGNING_ALLOWED=NO \
     test
 
-if [[ "$BACKUP_ONLY" == "1" ]]; then
+if [[ "$INPUT_ONLY" == "1" ]]; then
+    printf '\nFocused input gallery passed; full regression is still required.\n'
+elif [[ "$BACKUP_ONLY" == "1" ]]; then
     printf '\nFocused backup smoke passed; full regression is still required.\n'
 else
     printf '\nMac simulator acceptance passed.\n'

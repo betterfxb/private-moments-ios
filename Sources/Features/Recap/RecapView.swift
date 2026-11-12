@@ -129,6 +129,12 @@ struct RecapView: View {
                 Button("Cancel", action: requestCancel)
                     .accessibilityIdentifier("recap.cancel")
                     .foregroundStyle(AppColors.accentText)
+                    .alert("Discard changes?", isPresented: $showingDiscardConfirmation) {
+                        Button("Discard reflection", role: .destructive, action: onCancel)
+                        Button("Keep editing", role: .cancel) { }
+                    } message: {
+                        Text("Unsaved changes will be lost. Saved entries stay.")
+                    }
             }
             if #available(iOS 26.0, *) {
                 ToolbarItem(placement: .topBarTrailing) { toolbarSave }
@@ -140,10 +146,15 @@ struct RecapView: View {
                 Spacer()
                 Button { focusedField = nil } label: {
                     Text("Done")
+                        .font(.body.weight(.semibold))
+                        .padding(.horizontal, 12)
                         .frame(minWidth: 44, minHeight: 44)
+                        .background(AppColors.accentWash, in: Capsule())
                         .contentShape(Rectangle())
                 }
-                    .accessibilityIdentifier("recap.dismissKeyboard")
+                .buttonStyle(.plain)
+                .foregroundStyle(AppColors.accentText)
+                .accessibilityIdentifier("recap.dismissKeyboard")
             }
         }
         .accessibilityAction(.escape) { requestCancel() }
@@ -186,16 +197,6 @@ struct RecapView: View {
                     }
                 }
             }
-        }
-        .confirmationDialog(
-            "Discard this reflection?",
-            isPresented: $showingDiscardConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button("Discard reflection", role: .destructive, action: onCancel)
-            Button("Keep editing", role: .cancel) { }
-        } message: {
-            Text("Your unsaved reflection will be lost. Saved journal entries will not change.")
         }
     }
 

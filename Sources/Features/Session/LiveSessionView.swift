@@ -114,10 +114,9 @@ struct LiveSessionView: View {
         }
         .tint(AppColors.accentWash)
         .accessibilityAction(.escape) { showingCancelConfirmation = true }
-        .confirmationDialog(
+        .alert(
             "Discard this session?",
-            isPresented: $showingCancelConfirmation,
-            titleVisibility: .visible
+            isPresented: $showingCancelConfirmation
         ) {
             Button("Discard session", role: .destructive) {
                 hasFinished = true

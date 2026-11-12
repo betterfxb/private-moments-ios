@@ -254,9 +254,9 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
         tap(app.buttons["settings.deleteAll"], in: app)
         tap(app.buttons["Delete all moments"], in: app)
-        assertSavedCount("0", app: app)
         XCTAssertFalse(app.staticTexts["Import cancelled. Records unchanged."].exists,
             "A new destructive operation must clear the earlier cancellation notice.")
+        assertSavedCount("0", app: app)
 
         openBackup(filename, app: app)
         capture("Backup-review-en", app)
@@ -311,7 +311,13 @@ final class PrivateMomentsUITests: XCTestCase {
         if dismiss.exists {
             // Read the captured result, then explicitly close it before
             // inspecting the journal. This is a user action, not a store reset.
-            XCTAssertTrue(dismiss.isHittable)
+            let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                dismiss.exists && dismiss.isHittable
+            }, object: nil)
+            guard XCTWaiter.wait(for: [ready], timeout: 15) == .completed else {
+                captureFailure("Backup-feedback-dismiss-unavailable", app)
+                return XCTFail("Backup feedback did not become actionable after review dismissal.")
+            }
             dismiss.tap()
             let closed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
                 !app.staticTexts["settings.backupStatus"].exists
@@ -880,6 +886,15 @@ final class PrivateMomentsUITests: XCTestCase {
 
         tap(app.buttons["recap.cancel"], in: app)
         let discard = language == "en" ? "Discard reflection" : "放弃回顾"
+        let keep = language == "en" ? "Keep editing" : "继续编辑"
+        let confirmation = app.alerts.firstMatch
+        XCTAssertTrue(confirmation.waitForExistence(timeout: 10))
+        for action in [confirmation.buttons[keep], confirmation.buttons[discard]] {
+            XCTAssertTrue(action.isHittable)
+            assertToolbarTarget(action)
+            XCTAssertTrue(app.windows.firstMatch.frame.contains(action.frame))
+        }
+        captureSystem("Manual-note-confirm-\(language)", app)
         cancelConfirmation(language == "en" ? "Keep editing" : "继续编辑",
             destructiveAction: discard, in: app)
         XCTAssertEqual(note.value as? String, draft)
@@ -902,6 +917,10 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertTrue(done.waitForExistence(timeout: 5))
         XCTAssertEqual(done.label, language == "en" ? "Done" : "完成")
         XCTAssertTrue(done.isEnabled && done.isHittable)
+        let target = done.frame
+        if target.width < 44 - 0.000001 || target.height < 44 - 0.000001 {
+            captureFailure("Keyboard-target-invalid-\(language)", app)
+        }
         assertToolbarTarget(done)
         let window = app.windows.firstMatch.frame
         XCTAssertTrue(window.contains(done.frame))
@@ -1077,7 +1096,13 @@ final class PrivateMomentsUITests: XCTestCase {
         let action = app.buttons[destructiveAction].firstMatch
         XCTAssertTrue(action.waitForExistence(timeout: 10), "Confirmation must appear before cancellation.")
         let cancel = app.buttons[label].firstMatch
-        if cancel.exists && cancel.isHittable {
+        if label != "Cancel" {
+            // Keeping a draft or timer must be an explicit visible choice;
+            // the product no longer relies on a hidden popover-cancel role.
+            XCTAssertTrue(cancel.waitForExistence(timeout: 10))
+            XCTAssertTrue(cancel.isHittable)
+            cancel.tap()
+        } else if cancel.exists && cancel.isHittable {
             cancel.tap()
         } else {
             // SDK 26 presents a popover without the role-cancel button. Dismiss
@@ -1094,8 +1119,12 @@ final class PrivateMomentsUITests: XCTestCase {
             }
             outside.tap()
         }
-        let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: action)
-        XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 5), .completed, "Confirmation did not dismiss.")
+        let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !action.exists
+        }, object: nil)
+        let result = XCTWaiter.wait(for: [dismissed], timeout: 15)
+        if result != .completed { captureFailure("Confirmation-dismiss-unavailable", app) }
+        XCTAssertEqual(result, .completed, "Confirmation did not dismiss.")
     }
 
     private func revealFully(from first: XCUIElement, through last: XCUIElement, in app: XCUIApplication) {

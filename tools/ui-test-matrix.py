@@ -1,4 +1,4 @@
-"""Select the full UI matrix or an explicitly requested file-flow smoke run."""
+"""Select full acceptance or an explicitly requested native UI diagnostic."""
 import argparse
 import json
 
@@ -14,17 +14,17 @@ def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
         dict(profile="compact-dark-accessibility", family="compact", appearance="dark",
              text_size="accessibility-extra-extra-extra-large", gallery_only="1", timeout_minutes=60),
     ]
-    if scope not in {"full", "backup"}:
+    if scope not in {"full", "backup", "input"}:
         raise ValueError("Unknown UI verification scope: " + scope)
     selected = [p for p in profiles if p["profile"] == smoke_profile]
     if not selected:
-        raise ValueError("Unknown backup smoke profile: " + smoke_profile)
-    return {"include": selected if scope == "backup" else profiles}
+        raise ValueError("Unknown diagnostic profile: " + smoke_profile)
+    return {"include": profiles if scope == "full" else selected}
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("scope", nargs="?", choices=["full", "backup"], default="full")
+    parser.add_argument("scope", nargs="?", choices=["full", "backup", "input"], default="full")
     parser.add_argument("--smoke-profile", default="compact-light",
                         choices=["compact-light", "phone-dark", "ipad-light", "compact-dark-accessibility"])
     args = parser.parse_args()
