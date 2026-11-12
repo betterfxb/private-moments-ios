@@ -84,6 +84,13 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Session-\(language)", app)
             reveal(app.buttons["session.finish"], in: app)
             capture("Session-controls-\(language)", app)
+            tap(app.buttons["session.cancel"], in: app)
+            let discard = language == "en" ? "Discard" : "放弃"
+            let keep = language == "en" ? "Keep going" : "继续记录"
+            captureVisibleConfirmation("Session-discard-confirm-\(language)", keep: keep, discard: discard, app: app)
+            cancelConfirmation(keep, destructiveAction: discard, in: app)
+            XCTAssertEqual(app.buttons["session.pauseResume"].label, language == "en" ? "Pause" : "暂停",
+                "Keeping the timer must leave it running.")
             tap(app.buttons["session.finish"], in: app)
             capture("Recap-top-\(language)", app)
             revealFully(from: app.staticTexts["recap.kind.title"], through: app.buttons["recap.kind.Solo"], in: app)
@@ -254,8 +261,7 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
         tap(app.buttons["settings.deleteAll"], in: app)
         tap(app.buttons["Delete all moments"], in: app)
-        XCTAssertFalse(app.staticTexts["Import cancelled. Records unchanged."].exists,
-            "A new destructive operation must clear the earlier cancellation notice.")
+        assertDeletedJournal(in: app)
         assertSavedCount("0", app: app)
 
         openBackup(filename, app: app)
@@ -304,6 +310,20 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["detail.editToolbar"], in: app)
         XCTAssertEqual(app.textFields["recap.minutes"].value as? String, "4")
         XCTAssertEqual(app.textFields["recap.seconds"].value as? String, "7")
+    }
+
+    private func assertDeletedJournal(in app: XCUIApplication) {
+        // Observe the real operation's published outcome before a helper is
+        // allowed to dismiss any feedback. No further UI action is performed.
+        let published = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            app.staticTexts["Local entries deleted."].exists
+                && app.staticTexts["settings.savedCount"].label == "0"
+                && !app.staticTexts["Import cancelled. Records unchanged."].exists
+        }, object: nil)
+        let result = XCTWaiter.wait(for: [published], timeout: 15)
+        if result != .completed { captureFailure("Delete-all-outcome-unavailable", app) }
+        XCTAssertEqual(result, .completed,
+            "Deletion must publish success, zero records and clear the previous cancellation notice.")
     }
 
     private func assertSavedCount(_ value: String, app: XCUIApplication) {
@@ -674,22 +694,22 @@ final class PrivateMomentsUITests: XCTestCase {
         app.launch()
         tap(app.buttons["today.startMoment"], in: app)
         tap(app.buttons["session.cancel"], in: app)
-        cancelConfirmation("Keep going", destructiveAction: "Discard session", in: app)
+        cancelConfirmation("Keep going", destructiveAction: "Discard", in: app)
         XCTAssertTrue(app.buttons["session.finish"].exists)
         XCTAssertEqual(app.buttons["session.pauseResume"].label, "Pause",
             "Keeping a running timer must not silently pause it.")
         tap(app.buttons["session.cancel"], in: app)
-        tap(app.buttons["Discard session"], in: app)
+        tap(app.buttons["Discard"], in: app)
         XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
 
         tap(app.buttons["today.startMoment"], in: app)
         tap(app.buttons["session.finish"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
-        cancelConfirmation("Keep editing", destructiveAction: "Discard reflection", in: app)
+        cancelConfirmation("Edit", destructiveAction: "Discard", in: app)
         XCTAssertTrue(app.buttons["recap.save"].exists)
         tap(app.buttons["recap.cancel"], in: app)
-        tap(app.buttons["Discard reflection"], in: app)
+        tap(app.buttons["Discard"], in: app)
         XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
     }
@@ -719,7 +739,7 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["detail.edit"], in: app)
         tap(app.buttons["recap.rating.2"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
-        tap(app.buttons["Discard reflection"], in: app)
+        tap(app.buttons["Discard"], in: app)
         XCTAssertTrue(app.staticTexts["5 of 5"].waitForExistence(timeout: 10))
 
         app.terminate()
@@ -772,12 +792,12 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["today.addRecord"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
         XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
-        XCTAssertFalse(app.buttons["Discard reflection"].exists)
+        XCTAssertFalse(app.buttons["Discard"].exists)
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
         tap(app.buttons["today.addRecord"], in: app)
         tap(app.buttons["recap.kind.Solo"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
-        cancelConfirmation("Keep editing", destructiveAction: "Discard reflection", in: app)
+        cancelConfirmation("Edit", destructiveAction: "Discard", in: app)
         XCTAssertTrue(app.buttons["recap.saveToolbar"].isHittable)
         tap(app.buttons["recap.kind.Together"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
@@ -790,7 +810,7 @@ final class PrivateMomentsUITests: XCTestCase {
         ] {
             tap(app.buttons[changed], in: app)
             tap(app.buttons["recap.cancel"], in: app)
-            cancelConfirmation("Keep editing", destructiveAction: "Discard reflection", in: app)
+            cancelConfirmation("Edit", destructiveAction: "Discard", in: app)
             XCTAssertTrue(app.buttons[changed].isSelected, "Keeping the draft must preserve the selection.")
             tap(app.buttons[original], in: app)
             tap(app.buttons["recap.cancel"], in: app)
@@ -802,10 +822,10 @@ final class PrivateMomentsUITests: XCTestCase {
         app.textViews["recap.note"].typeText(shortNote)
         tap(app.buttons["recap.dismissKeyboard"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
-        cancelConfirmation("Keep editing", destructiveAction: "Discard reflection", in: app)
+        cancelConfirmation("Edit", destructiveAction: "Discard", in: app)
         XCTAssertEqual(app.textViews["recap.note"].value as? String, shortNote)
         tap(app.buttons["recap.cancel"], in: app)
-        tap(app.buttons["Discard reflection"], in: app)
+        tap(app.buttons["Discard"], in: app)
         XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
         tap(app.buttons["today.addRecord"], in: app)
@@ -854,7 +874,7 @@ final class PrivateMomentsUITests: XCTestCase {
         replaceNumber(app.textFields["recap.minutes"], with: "18", in: app)
         tap(app.buttons["recap.dismissKeyboard"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
-        tap(app.buttons["Discard reflection"], in: app)
+        tap(app.buttons["Discard"], in: app)
         tap(app.buttons["detail.editToolbar"], in: app)
         XCTAssertEqual(app.textFields["recap.minutes"].value as? String, "17")
         XCTAssertEqual(app.textFields["recap.seconds"].value as? String, "9")
@@ -887,17 +907,10 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(note.value as? String, draft)
 
         tap(app.buttons["recap.cancel"], in: app)
-        let discard = language == "en" ? "Discard reflection" : "放弃回顾"
-        let keep = language == "en" ? "Keep editing" : "继续编辑"
-        let confirmation = app.alerts.firstMatch
-        XCTAssertTrue(confirmation.waitForExistence(timeout: 10))
-        for action in [confirmation.buttons[keep], confirmation.buttons[discard]] {
-            XCTAssertTrue(action.isHittable)
-            assertToolbarTarget(action)
-            XCTAssertTrue(app.windows.firstMatch.frame.contains(action.frame))
-        }
-        captureSystem("Manual-note-confirm-\(language)", app)
-        cancelConfirmation(language == "en" ? "Keep editing" : "继续编辑",
+        let discard = language == "en" ? "Discard" : "放弃"
+        let keep = language == "en" ? "Edit" : "继续编辑"
+        captureVisibleConfirmation("Manual-note-confirm-\(language)", keep: keep, discard: discard, app: app)
+        cancelConfirmation(language == "en" ? "Edit" : "继续编辑",
             destructiveAction: discard, in: app)
         XCTAssertEqual(note.value as? String, draft)
         XCTAssertEqual(minutes.value as? String, "1")
@@ -912,6 +925,37 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertTrue(app.buttons[discard].waitForExistence(timeout: 10))
         tap(app.buttons[discard], in: app)
         XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
+    }
+
+    private func captureVisibleConfirmation(_ name: String, keep: String, discard: String, app: XCUIApplication) {
+        let alert = app.alerts.firstMatch
+        guard alert.waitForExistence(timeout: 10) else {
+            captureFailure("Confirmation-missing-\(name)", app)
+            return XCTFail("The confirmation did not appear.")
+        }
+        waitForStableFrame(alert, message: "Confirmation never settled: \(name)")
+        let window = app.windows.containing(.button, identifier: keep).firstMatch
+        guard window.exists else {
+            captureFailure("Confirmation-window-missing-\(name)", app)
+            return XCTFail("No window contains the confirmation action.")
+        }
+        let viewport = window.frame
+        for label in [keep, discard] {
+            let action = alert.buttons[label]
+            let frame = action.frame
+            let tolerance: CGFloat = 0.000001
+            let visible = !viewport.isEmpty && !frame.isEmpty
+                && frame.minX >= viewport.minX - tolerance && frame.maxX <= viewport.maxX + tolerance
+                && frame.minY >= viewport.minY - tolerance && frame.maxY <= viewport.maxY + tolerance
+            let hittable = action.isHittable
+            if !visible || !hittable || frame.width < 44 - tolerance || frame.height < 44 - tolerance {
+                print("Confirmation geometry: name=\(name), action=\(label), frame=\(frame), viewport=\(viewport), alert=\(alert.frame), hittable=\(hittable).")
+                captureFailure("Confirmation-invalid-\(name)", app)
+            }
+            XCTAssertTrue(visible && hittable, "Both confirmation actions must be fully visible without scrolling.")
+            assertToolbarTarget(action)
+        }
+        captureSystem(name, app)
     }
 
     private func dismissRecapKeyboard(language: String, app: XCUIApplication) {

@@ -130,10 +130,10 @@ struct RecapView: View {
                     .accessibilityIdentifier("recap.cancel")
                     .foregroundStyle(AppColors.accentText)
                     .alert("Discard changes?", isPresented: $showingDiscardConfirmation) {
-                        Button("Discard reflection", role: .destructive, action: onCancel)
-                        Button("Keep editing", role: .cancel) { }
+                        Button("Discard", role: .destructive, action: onCancel)
+                        Button("Edit", role: .cancel) { }
                     } message: {
-                        Text("Unsaved changes will be lost. Saved entries stay.")
+                        Text("Unsaved edits will be lost.")
                     }
             }
             if #available(iOS 26.0, *) {

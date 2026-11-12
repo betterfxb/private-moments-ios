@@ -115,17 +115,17 @@ struct LiveSessionView: View {
         .tint(AppColors.accentWash)
         .accessibilityAction(.escape) { showingCancelConfirmation = true }
         .alert(
-            "Discard this session?",
+            "Discard timer?",
             isPresented: $showingCancelConfirmation
         ) {
-            Button("Discard session", role: .destructive) {
+            Button("Discard", role: .destructive) {
                 hasFinished = true
                 _ = sessionClock.finish()
                 dismiss()
             }
             Button("Keep going", role: .cancel) { }
         } message: {
-            Text("This timer won't be saved to your journal.")
+            Text("This timer won't be saved.")
         }
         .onDisappear {
             if !hasFinished && sessionClock.isRunning {
