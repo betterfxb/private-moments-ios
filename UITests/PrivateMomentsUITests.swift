@@ -676,6 +676,8 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["session.cancel"], in: app)
         cancelConfirmation("Keep going", destructiveAction: "Discard session", in: app)
         XCTAssertTrue(app.buttons["session.finish"].exists)
+        XCTAssertEqual(app.buttons["session.pauseResume"].label, "Pause",
+            "Keeping a running timer must not silently pause it.")
         tap(app.buttons["session.cancel"], in: app)
         tap(app.buttons["Discard session"], in: app)
         XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))

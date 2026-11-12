@@ -145,15 +145,16 @@ struct RecapView: View {
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
                 Button { focusedField = nil } label: {
-                    Text("Done")
-                        .font(.body.weight(.semibold))
-                        .padding(.horizontal, 12)
-                        .frame(minWidth: 44, minHeight: 44)
-                        .background(AppColors.accentWash, in: Capsule())
+                    Label("Done", systemImage: "keyboard.chevron.compact.down")
+                        .labelStyle(.iconOnly)
+                        .font(.system(size: 20, weight: .semibold))
+                        .frame(width: 44, height: 44)
+                        .background(AppColors.accentWash, in: Circle())
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(AppColors.accentText)
+                .accessibilityLabel("Done")
                 .accessibilityIdentifier("recap.dismissKeyboard")
             }
         }
