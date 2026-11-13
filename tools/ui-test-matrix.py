@@ -16,6 +16,14 @@ def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
     ]
     if scope not in {"full", "backup", "input"}:
         raise ValueError("Unknown UI verification scope: " + scope)
+    if smoke_profile == "ipad-light-accessibility":
+        if scope != "input":
+            raise ValueError("iPad accessibility is a supplemental input gallery profile only.")
+        return {"include": [dict(
+            profile="ipad-light-accessibility", family="ipad", appearance="light",
+            text_size="accessibility-extra-extra-extra-large", gallery_only="1",
+            timeout_minutes=75,
+        )]}
     selected = [p for p in profiles if p["profile"] == smoke_profile]
     if not selected:
         raise ValueError("Unknown diagnostic profile: " + smoke_profile)
@@ -26,6 +34,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("scope", nargs="?", choices=["full", "backup", "input"], default="full")
     parser.add_argument("--smoke-profile", default="compact-light",
-                        choices=["compact-light", "phone-dark", "ipad-light", "compact-dark-accessibility"])
+                        choices=["compact-light", "phone-dark", "ipad-light", "compact-dark-accessibility",
+                                 "ipad-light-accessibility"])
     args = parser.parse_args()
     print(json.dumps(matrix(args.scope, args.smoke_profile)))

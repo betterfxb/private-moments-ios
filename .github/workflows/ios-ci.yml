@@ -24,6 +24,7 @@ on:
           - phone-dark
           - ipad-light
           - compact-dark-accessibility
+          - ipad-light-accessibility
 
 permissions:
   contents: read
@@ -50,6 +51,7 @@ jobs:
             printf 'Input and backup smoke modes are mutually exclusive.\n' >&2
             exit 1
           fi
+          python3 -m unittest discover -s tools -p 'test_ui_test_matrix.py' -v
           matrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"
           printf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"
 
