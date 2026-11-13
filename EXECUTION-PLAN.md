@@ -4,11 +4,15 @@
 
 Run focused diagnostics and full validation serially on a branch. The workflow uses a same-ref concurrency group with cancel-in-progress: starting a second run cancels the active one. A focused input or backup success is diagnostic evidence only; final acceptance requires the full matrix and original-image review. Do not restart a functional failure unchanged to obtain a pass.
 
-## Latest supplement: iPad maximum accessibility text
+## Latest full batch: Chinese files and operation continuity
+
+The [batch-twelve plan](release/BATCH-12-PLAN.md) adds an independently selectable Chinese real-file UI method, then runs focused Chinese verification and same-source four-profile acceptance serially. Source `7b92acbe21d0cb88e1e4378477b719fd86dd1ee3`, [full run 43442608041](https://github.com/betterfxb/private-moments-ios/actions/runs/43442608041), passes 50 unit tests, six main-profile UI methods, two per other profile, Debug/Release and Release test-hook exclusion. All 285 PNGs across focused and full runs checked; 88 selected originals opened. [Acceptance and limits](release/UX-ACCEPTANCE-12.md) preserve the phone-dark initial-export capture limitation, maximum-text scrolling requirements and physical-device gates. Production code, schema and resources are unchanged. No signing, Apple upload or main merge.
+
+## Previous supplement: iPad maximum accessibility text
 
 The ordered [batch-eleven plan](release/BATCH-11-PLAN.md) supplements the previous full regression with the iPad light/maximum-accessibility-text portrait input gallery. Source `5c0a63757a8ff3d60f5a247a69c146884f973785`, [run 43419507000](https://github.com/betterfxb/private-moments-ios/actions/runs/43419507000), passes one bilingual UI method; all 60 final originals were opened and retained. A diagnosed keyboard AX visibility assertion was corrected; application code is unchanged. [Evidence, failures and limits](release/UX-ACCEPTANCE-11.md) distinguish this scope from full acceptance. Physical IME/accessibility, iPad landscape/split view, authentication success and distribution remain open.
 
-## Last full batch: input and large-text continuity
+## Previous full batch: input and large-text continuity
 
 Native validation in the [batch-ten plan](release/BATCH-10-PLAN.md) is complete with its recorded dependency adjustment. Same-source four-profile [run 43381177893](https://github.com/betterfxb/private-moments-ios/actions/runs/43381177893) covers the pending batch-nine presentation scope plus scaled note editing, 44 pt keyboard Done and actual bilingual draft continuity. See [acceptance, original evidence and limits](release/UX-ACCEPTANCE-10.md). No schema, transaction, authentication, signing or main-merge change.
 
