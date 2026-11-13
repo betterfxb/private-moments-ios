@@ -1,5 +1,9 @@
 # Simulator UI acceptance
 
+## Supplementary iPad maximum-text portrait gallery (2026-11-13)
+
+Source `5c0a63757a8ff3d60f5a247a69c146884f973785`, [run 43419507000](https://github.com/betterfxb/private-moments-ios/actions/runs/43419507000), passes one bilingual input-gallery UI method on iPad Pro 13-inch (M5), Xcode/Simulator26.2, light appearance and system accessibility-extra-extra-extra-large. All 60 final original PNGs opened and retained at2064×2752. Keyboard visibility assertions were corrected after two archived failures; application code remains unchanged from the full result below. No new full matrix, 50 unit tests, Release or system-file roundtrip was performed in this supplement. [Report and limits](UX-ACCEPTANCE-11.md) · [all originals](evidence/batch-11/index.html) · [receipt](evidence/batch-11/verification.json). This closes only the previously unverified iPad light/max-text portrait gallery; physical IME/accessibility and remaining layouts stay open.
+
 ## Current input and large-text verification (2026-11-13)
 
 Source `204387dbc1b2b3de135a6901a2a8907e4ad353d5`, [run 43381177893](https://github.com/betterfxb/private-moments-ios/actions/runs/43381177893), passes four profiles with 50 unit tests,5 main UI methods and2 UI methods on each other profile; Release Debug-hook exclusion verified. 267 exact-name PNGs verified and75 final originals opened. [Report](UX-ACCEPTANCE-10.md) · [originals](evidence/batch-10/index.html) · [receipt](evidence/batch-10/verification.json). This closes the earlier pending presentation validation without declaring old failed runs successful. Physical-device/IME/authentication/distribution limits remain explicit in the report.
