@@ -968,6 +968,11 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func dismissRecapKeyboard(language: String, app: XCUIApplication) {
+        let keyboard = app.keyboards.firstMatch
+        guard keyboard.exists && keyboard.isHittable else {
+            captureFailure("Keyboard-not-visible-before-Done-\(language)", app)
+            return XCTFail("Actual typing must show an operable software keyboard before Done.")
+        }
         let done = app.buttons["recap.dismissKeyboard"]
         XCTAssertTrue(done.waitForExistence(timeout: 5))
         XCTAssertEqual(done.label, language == "en" ? "Done" : "完成")
@@ -981,7 +986,10 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertTrue(window.contains(done.frame))
         done.tap()
         let closed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            !app.keyboards.firstMatch.exists
+            // iPad can retain a non-hittable Keyboard with all keys below
+            // the screen after dismissal. Existence is not visibility.
+            let remainingKeyboard = app.keyboards.firstMatch
+            return !remainingKeyboard.exists || !remainingKeyboard.isHittable
         }, object: nil)
         let result = XCTWaiter.wait(for: [closed], timeout: 5)
         if result != .completed {
@@ -990,7 +998,9 @@ final class PrivateMomentsUITests: XCTestCase {
             print("Keyboard hierarchy after Done: \(keyboard.debugDescription)")
             captureFailure("Keyboard-dismissal-incomplete-\(language)", app)
         }
-        XCTAssertEqual(result, .completed, "Done must dismiss the software keyboard after the actual tap.")
+        XCTAssertEqual(result, .completed, "Done must hide the operable software keyboard after the actual tap.")
+        XCTAssertFalse(app.alerts.firstMatch.exists, "A blocking alert must not substitute for keyboard dismissal.")
+        print("Verified software keyboard dismissal after actual typing. Locale: \(language).")
     }
 
     private func chooseMomentFilter(_ label: String, in app: XCUIApplication) {
