@@ -186,9 +186,11 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertTrue(lock.staticTexts[language == "en" ? "Off" : "关闭"].exists)
             XCTAssertFalse(lock.staticTexts[language == "en" ? "On" : "开启"].exists)
             let lockTitle = lock.staticTexts["settings.lockTitle"]
+            let lockValue = lock.staticTexts[language == "en" ? "Off" : "关闭"]
+            revealFully(from: lockTitle, through: lockValue, in: app)
             XCTAssertEqual(lockTitle.label, language == "en" ? "Lock journal" : "锁定日记")
-            assertValueLayout(title: lockTitle,
-                value: lock.staticTexts[language == "en" ? "Off" : "关闭"], stacked: usesAccessibilityLayout)
+            assertValueLayout(title: lockTitle, value: lockValue, stacked: usesAccessibilityLayout)
+            print("Verified fully visible lock title and value. Locale: \(language).")
             captureSystem("Lock-recovery-\(language)", app)
             app.terminate()
         }
@@ -1201,6 +1203,14 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertTrue(first.exists)
             let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
             var bottom = min(scroll.frame.maxY, app.windows.firstMatch.frame.maxY) - 12
+            // Bottom tab bars overlay scroll content. A hittable center does
+            // not prove the complete text is above that native surface.
+            // iPad's top tab bar must not become the bottom boundary.
+            let tabBar = app.tabBars.firstMatch
+            if tabBar.exists, tabBar.isHittable,
+               tabBar.frame.midY > app.windows.firstMatch.frame.midY {
+                bottom = min(bottom, tabBar.frame.minY - 12)
+            }
             if let footerTop = fixedFooterTop(ignoring: last, in: app) { bottom = min(bottom, footerTop - 12) }
             let section = first.frame.union(last.frame)
             let delta: CGFloat
@@ -1216,6 +1226,7 @@ final class PrivateMomentsUITests: XCTestCase {
             let end = start.withOffset(CGVector(dx: 0, dy: distance))
             start.press(forDuration: 0.05, thenDragTo: end)
         }
+        captureFailure("Content-not-fully-visible", app)
         XCTFail("Content is not fully visible: \(first), \(last)")
     }
 
