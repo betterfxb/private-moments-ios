@@ -52,16 +52,23 @@ fi
 TEST_SCOPE_ARGUMENTS=(-parallel-testing-enabled NO)
 BACKUP_ONLY="${PRIVATE_MOMENTS_UI_BACKUP_ONLY:-0}"
 INPUT_ONLY="${PRIVATE_MOMENTS_UI_INPUT_ONLY:-0}"
+BACKUP_LANGUAGE="${PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE:-en}"
 [[ "$BACKUP_ONLY" == "0" || "$BACKUP_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_BACKUP_ONLY must be 0 or 1."
 [[ "$INPUT_ONLY" == "0" || "$INPUT_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_INPUT_ONLY must be 0 or 1."
 [[ "$BACKUP_ONLY" != "1" || "$INPUT_ONLY" != "1" ]] || fail "Input and backup smoke modes are mutually exclusive."
+[[ "$BACKUP_LANGUAGE" == "en" || "$BACKUP_LANGUAGE" == "zh-Hans" ]] || fail "Backup language must be en or zh-Hans."
+[[ "$BACKUP_LANGUAGE" != "zh-Hans" || "$BACKUP_ONLY" == "1" ]] || fail "Chinese backup selection requires explicit backup smoke."
 if [[ "$INPUT_ONLY" == "1" ]]; then
     printf '\nFocused input gallery only; this is not full simulator acceptance.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
 elif [[ "$BACKUP_ONLY" == "1" ]]; then
     printf '\nFocused backup smoke only; this is not full simulator acceptance.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/BackupUXTests)
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
+    if [[ "$BACKUP_LANGUAGE" == "zh-Hans" ]]; then
+        TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testChineseBackupFileRoundTrip)
+    else
+        TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
+    fi
 elif [[ "${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)

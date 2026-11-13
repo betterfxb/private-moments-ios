@@ -17,7 +17,7 @@ class UITestMatrixTests(unittest.TestCase):
             "compact-light", "phone-dark", "ipad-light", "compact-dark-accessibility",
         ])
         self.assertEqual([p["gallery_only"] for p in profiles], ["0", "1", "1", "1"])
-        self.assertEqual([p["timeout_minutes"] for p in profiles], [60, 45, 60, 75])
+        self.assertEqual([p["timeout_minutes"] for p in profiles], [75, 45, 60, 75])
         self.assertEqual([p["text_size"] for p in profiles], [
             "large", "large", "large", "accessibility-extra-extra-extra-large",
         ])

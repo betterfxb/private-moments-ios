@@ -11,6 +11,13 @@ on:
         description: Run selected-profile backup unit and file flow (not full acceptance)
         type: boolean
         default: false
+      backup_smoke_language:
+        description: Language for explicit backup smoke (zh-Hans requires backup_smoke)
+        type: choice
+        default: en
+        options:
+          - en
+          - zh-Hans
       input_smoke:
         description: Run selected-profile input gallery only (not full acceptance)
         type: boolean
@@ -46,9 +53,15 @@ jobs:
           SMOKE_PROFILE: ${{ inputs.backup_smoke_profile || 'compact-light' }}
           INPUT_SMOKE: ${{ inputs.input_smoke && '1' || '0' }}
           BACKUP_SMOKE: ${{ inputs.backup_smoke && '1' || '0' }}
+          BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
         run: |
           if [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then
             printf 'Input and backup smoke modes are mutually exclusive.\n' >&2
+            exit 1
+          fi
+          if [[ "$BACKUP_LANGUAGE" != "en" && "$BACKUP_LANGUAGE" != "zh-Hans" ]] ||
+             [[ "$BACKUP_LANGUAGE" == "zh-Hans" && "$BACKUP_SMOKE" != "1" ]]; then
+            printf 'Chinese backup language requires explicit backup smoke.\n' >&2
             exit 1
           fi
           python3 -m unittest discover -s tools -p 'test_ui_test_matrix.py' -v
@@ -125,6 +138,7 @@ jobs:
           PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments.xcresult
           PRIVATE_MOMENTS_UI_GALLERY_ONLY: ${{ matrix.gallery_only }}
           PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.backup_smoke && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
           PRIVATE_MOMENTS_UI_INPUT_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && '1' || '0' }}
         run: bash scripts/verify-mac.sh
 

@@ -20,7 +20,7 @@ final class PrivateMomentsUITests: XCTestCase {
             // A failed picker assertion must not leave a remote system window
             // covering the next test's freshly launched journal.
             if app.collectionViews["File View"].exists,
-               let cancel = nativeControl(["Cancel"], app: app) { cancel.tap() }
+               let cancel = nativeControl(["Cancel", "取消"], app: app) { cancel.tap() }
             app.terminate()
         }
     }
@@ -197,7 +197,16 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     func testBackupFileRoundTrip() throws {
-        let app = makeApp()
+        runBackupFileRoundTrip(language: "en")
+    }
+
+    func testChineseBackupFileRoundTrip() throws {
+        runBackupFileRoundTrip(language: "zh-Hans")
+    }
+
+    private func runBackupFileRoundTrip(language: String) {
+        let english = language == "en"
+        let app = makeApp(language: language)
         app.launch()
         tap(app.buttons["today.addRecord"], in: app)
         replaceNumber(app.textFields["recap.minutes"], with: "4", in: app)
@@ -208,25 +217,27 @@ final class PrivateMomentsUITests: XCTestCase {
         app.textViews["recap.note"].typeText("Synthetic backup note")
         tap(app.buttons["recap.dismissKeyboard"], in: app)
         tap(app.buttons["recap.saveToolbar"], in: app)
-        selectTab("Settings", "设置", app: app)
+        selectTab("Settings", "设置", language: language, app: app)
         tap(app.buttons["settings.export"], in: app)
-        tap(app.alerts.firstMatch.buttons["Export"], in: app)
+        XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5))
+        assertExportWarning(app.alerts.firstMatch, language: language, app: app)
+        tap(app.alerts.firstMatch.buttons[english ? "Export" : "导出"], in: app)
         // The fresh hosted Simulator can take over 45 seconds to launch the
         // DocumentManager extension. Wait for actual controls, not a fixed nap
         // or a blank sheet that merely finished its presentation animation.
         let browserReady = waitForLocalExportBrowser(app, timeout: 90)
-        captureSystem("Export-files-en", app)
+        captureSystem("Export-files-\(language)", app)
         XCTAssertTrue(browserReady, "The system exporter must show the local browser or a real location control.")
-        // Each hosted Simulator is fresh; this test exports exactly one file.
+        // Each locale exports one distinct default filename on the fresh host.
         // iOS may hide Save As on first presentation; use the real default name.
-        let filename = "Private-Moments-Backup"
+        let filename = english ? "Private-Moments-Backup" : "私密时刻-备份"
         saveToLocalFiles(app)
-        let saved = app.staticTexts["Backup saved."]
+        let saved = app.staticTexts[english ? "Backup saved." : "备份已保存。"]
         XCTAssertTrue(saved.waitForExistence(timeout: 15), "Only the real exporter completion may report success.")
         assertBackupResultVisible(saved, in: app)
-        capture("Backup-exported-en", app)
+        capture("Backup-exported-\(language)", app)
         let dismissFeedback = app.buttons["settings.dismissBackupStatus"]
-        XCTAssertEqual(dismissFeedback.label, "Dismiss message")
+        XCTAssertEqual(dismissFeedback.label, english ? "Dismiss message" : "关闭提示")
         assertToolbarTarget(dismissFeedback)
         dismissFeedback.tap()
         let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
@@ -236,9 +247,9 @@ final class PrivateMomentsUITests: XCTestCase {
             "Dismissing feedback must leave the journal available without changing its records.")
 
         tap(app.buttons["settings.restore"], in: app)
-        let cancel = nativeControl(["Cancel"], app: app, timeout: 10)
+        let cancel = nativeControl(["Cancel", "取消"], app: app, timeout: 10)
         let outside = pickerDismissalPoint(in: app, requireBlank: false)
-        captureSystem("Import-files-en", app)
+        captureSystem("Import-files-\(language)", app)
         if let outside {
             // Exercise the real adaptive presentation's escape path on iPad.
             print("Explicit native picker backdrop cancellation; journal checked unchanged afterward.")
@@ -248,76 +259,79 @@ final class PrivateMomentsUITests: XCTestCase {
         } else {
             return XCTFail("The system picker has no native cancel action or safe outside dismissal.")
         }
-        assertImportCancelled(in: app)
-        capture("Import-cancelled-en", app)
+        assertImportCancelled(language: language, in: app)
+        capture("Import-cancelled-\(language)", app)
         // Keep this notice open to verify that Delete all clears it. The
         // Settings gallery separately checks the visible count's geometry.
         XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
         tap(app.buttons["settings.deleteAll"], in: app)
-        let confirmDelete = app.buttons["Delete all moments"]
+        let confirmDelete = app.buttons[english ? "Delete all moments" : "删除所有记录"]
         guard confirmDelete.waitForExistence(timeout: 10), confirmDelete.isHittable else {
             captureFailure("Delete-confirmation-unavailable", app)
             return XCTFail("The actual deletion confirmation must appear before confirming.")
         }
         confirmDelete.tap()
-        assertDeletedJournal(in: app)
+        assertDeletedJournal(language: language, in: app)
         assertSavedCount("0", app: app)
 
-        openBackup(filename, app: app)
-        capture("Backup-review-en", app)
+        openBackup(filename, language: language, app: app)
+        XCTAssertTrue(app.navigationBars[english ? "Review backup" : "确认备份内容"].exists)
+        XCTAssertEqual(app.buttons["backup.merge"].label, english ? "Merge backup" : "合并备份")
+        capture("Backup-review-\(language)", app)
         assertMetric("backup.newCount", value: "1", app: app)
         assertMetric("backup.updatedCount", value: "0", app: app)
         assertMetric("backup.noteCount", value: "1", app: app)
         revealFully(from: app.buttons["backup.replace"], through: app.buttons["backup.replace"], in: app)
-        capture("Backup-review-controls-en", app)
+        capture("Backup-review-controls-\(language)", app)
         XCTAssertTrue(app.buttons["backup.merge"].isHittable)
         tap(app.buttons["backup.cancel"], in: app)
         assertSavedCount("0", app: app)
-        openBackup(filename, app: app)
+        openBackup(filename, language: language, app: app)
         tap(app.buttons["backup.merge"], in: app)
         assertSavedCount("1", app: app)
 
-        selectTab("Today", "今天", app: app)
+        selectTab("Today", "今天", language: language, app: app)
         tap(app.buttons["today.addRecord"], in: app)
         tap(app.buttons["recap.saveToolbar"], in: app)
-        selectTab("Settings", "设置", app: app)
+        selectTab("Settings", "设置", language: language, app: app)
         assertSavedCount("2", app: app)
-        openBackup(filename, app: app)
+        openBackup(filename, language: language, app: app)
         assertMetric("backup.updatedCount", value: "1", app: app)
         assertMetric("backup.otherCount", value: "1", app: app)
-        capture("Replace-review-en", app)
+        capture("Replace-review-\(language)", app)
         tap(app.buttons["backup.replace"], in: app)
         XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5))
-        capture("Backup-replace-en", app)
-        tap(app.alerts.firstMatch.buttons["Cancel"], in: app)
+        capture("Backup-replace-\(language)", app)
+        tap(app.alerts.firstMatch.buttons[english ? "Cancel" : "取消"], in: app)
         tap(app.buttons["backup.cancel"], in: app)
         assertSavedCount("2", app: app)
-        openBackup(filename, app: app)
+        openBackup(filename, language: language, app: app)
         tap(app.buttons["backup.replace"], in: app)
-        tap(app.alerts.firstMatch.buttons["Replace"], in: app)
-        let restored = app.staticTexts["Local journal replaced from backup."]
+        tap(app.alerts.firstMatch.buttons[english ? "Replace" : "替换"], in: app)
+        let restored = app.staticTexts[english ? "Local journal replaced from backup." : "已从备份替换本地记录。"]
         XCTAssertTrue(restored.waitForExistence(timeout: 15))
         assertBackupResultVisible(restored, in: app)
-        capture("Backup-restored-en", app)
+        capture("Backup-restored-\(language)", app)
         assertSavedCount("1", app: app)
         app.terminate()
         app.launch()
-        selectTab("Timeline", "时间线", app: app)
+        selectTab("Timeline", "时间线", language: language, app: app)
         tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
         reveal(app.staticTexts["detail.note"], in: app)
         XCTAssertEqual(app.staticTexts["detail.note"].label, "Synthetic backup note")
         tap(app.buttons["detail.editToolbar"], in: app)
         XCTAssertEqual(app.textFields["recap.minutes"].value as? String, "4")
         XCTAssertEqual(app.textFields["recap.seconds"].value as? String, "7")
+        print("Verified real backup file roundtrip and relaunch. Locale: \(language); filename: \(filename); explicit recoveries: \(importRecoveryCount).")
     }
 
-    private func assertDeletedJournal(in app: XCUIApplication) {
+    private func assertDeletedJournal(language: String = "en", in app: XCUIApplication) {
         // Observe the real operation's published outcome before a helper is
         // allowed to dismiss any feedback. No further UI action is performed.
         let published = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            app.staticTexts["Local entries deleted."].exists
+            app.staticTexts[language == "en" ? "Local entries deleted." : "本地记录已删除。"].exists
                 && app.staticTexts["settings.savedCount"].label == "0"
-                && !app.staticTexts["Import cancelled. Records unchanged."].exists
+                && !app.staticTexts[language == "en" ? "Import cancelled. Records unchanged." : "已取消导入，记录未改动。"].exists
         }, object: nil)
         let result = XCTWaiter.wait(for: [published], timeout: 15)
         if result != .completed { captureFailure("Delete-all-outcome-unavailable", app) }
@@ -348,10 +362,10 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(count.label, value)
     }
 
-    private func assertImportCancelled(in app: XCUIApplication) {
-        let notice = app.staticTexts["Import cancelled. Records unchanged."]
+    private func assertImportCancelled(language: String = "en", in app: XCUIApplication) {
+        let notice = app.staticTexts[language == "en" ? "Import cancelled. Records unchanged." : "已取消导入，记录未改动。"]
         let exists = notice.waitForExistence(timeout: 15)
-        if !exists { captureFailure("Import-cancelled-unavailable-en", app) }
+        if !exists { captureFailure("Import-cancelled-unavailable-\(language)", app) }
         XCTAssertTrue(exists)
         assertBackupResultVisible(notice, in: app)
     }
@@ -397,7 +411,7 @@ final class PrivateMomentsUITests: XCTestCase {
         // Their duration is not a measurement of the app's response time.
         let window = app.windows.containing(.staticText, identifier: "settings.backupStatus").firstMatch
         guard window.exists else {
-            captureFailure("Backup-result-unavailable-en", app)
+            captureFailure("Backup-result-unavailable", app)
             return XCTFail("No application window contains the feedback.")
         }
         let viewport = window.frame
@@ -419,7 +433,7 @@ final class PrivateMomentsUITests: XCTestCase {
             && !app.collectionViews["File View"].exists
         if !fullyVisible || !unobscured {
             print("Backup feedback visibility: frame=\(frame), viewport=\(viewport), top=\(top), bottom=\(bottom), unobscured=\(unobscured).")
-            captureFailure("Backup-result-unavailable-en", app)
+            captureFailure("Backup-result-unavailable", app)
         }
         XCTAssertTrue(fullyVisible && unobscured,
             "Backup completion feedback must be fully visible without a test scroll.")
@@ -476,13 +490,13 @@ final class PrivateMomentsUITests: XCTestCase {
             captureSystem("Exporter-unavailable", app)
             return XCTFail("The local file browser did not finish navigating.")
         }
-        let labels = ["Save", "Export", "Move"]
+        let labels = ["Save", "Export", "Move", "存储", "保存", "导出", "移动"]
         if let action = nativeControl(labels, app: app, timeout: 15, surface: root, enabledAction: true) {
             action.tap()
             return
         }
-        if let more = nativeControl(["More"], app: app, timeout: 5, surface: root, enabledAction: true) { more.tap() }
-        guard let folder = nativeControl(["New Folder"], app: app, timeout: 5, enabledAction: true) else {
+        if let more = nativeControl(["More", "更多"], app: app, timeout: 5, surface: root, enabledAction: true) { more.tap() }
+        guard let folder = nativeControl(["New Folder", "新建文件夹"], app: app, timeout: 5, enabledAction: true) else {
             captureSystem("Exporter-unavailable", app)
             return XCTFail("No writable local folder or New Folder action in system exporter.")
         }
@@ -490,14 +504,14 @@ final class PrivateMomentsUITests: XCTestCase {
         let name = app.alerts.firstMatch.exists ? app.alerts.firstMatch.textFields.firstMatch : app.textFields.firstMatch
         XCTAssertTrue(name.waitForExistence(timeout: 5))
         replaceNumber(name, with: "PM Tests", in: app)
-        guard let create = nativeControl(["Create", "Done"], app: app, timeout: 5, enabledAction: true) else { return XCTFail("Missing native folder creation action") }
+        guard let create = nativeControl(["Create", "Done", "创建", "完成"], app: app, timeout: 5, enabledAction: true) else { return XCTFail("Missing native folder creation action") }
         create.tap()
         guard let save = nativeControl(labels, app: app, timeout: 15,
             surface: localFileRoots(in: app).firstMatch, enabledAction: true) else { return XCTFail("No enabled system save action") }
         save.tap()
     }
 
-    private func openBackup(_ filename: String, app: XCUIApplication) {
+    private func openBackup(_ filename: String, language: String = "en", app: XCUIApplication) {
         let originalCount = app.staticTexts["settings.savedCount"].label
         tap(app.buttons["settings.restore"], in: app)
         for attempt in 0..<2 {
@@ -520,7 +534,7 @@ final class PrivateMomentsUITests: XCTestCase {
                     reason = "picker-unavailable"
                 } else {
                     guard app.collectionViews["File View"].exists,
-                          let button = nativeControl(["Cancel"], app: app) else {
+                          let button = nativeControl(["Cancel", "取消"], app: app) else {
                         captureSystem("Import-selection-unresolved", app)
                         return XCTFail("A pending system selection has no native cancel action.")
                     }
@@ -528,9 +542,9 @@ final class PrivateMomentsUITests: XCTestCase {
                     reason = "picker-not-delivered"
                 }
                 importRecoveryCount += 1
-                captureSystem("Import-recovery-\(importRecoveryCount)-en", app)
+                captureSystem("Import-recovery-\(importRecoveryCount)-\(language)", app)
                 cancel()
-                assertImportCancelled(in: app)
+                assertImportCancelled(language: language, in: app)
                 XCTAssertEqual(app.staticTexts["settings.savedCount"].label, originalCount)
                 print("Explicit system backup reselection \(importRecoveryCount); local record count unchanged. Reason: \(reason).")
                 tap(app.buttons["settings.restore"], in: app)
@@ -550,7 +564,7 @@ final class PrivateMomentsUITests: XCTestCase {
             revealFully(from: message, through: chooseAgain, in: app)
             importRecoveryCount += 1
             print("Explicit system backup reselection \(importRecoveryCount); local record count unchanged. Reason: source-unavailable.")
-            captureSystem("Import-recovery-\(importRecoveryCount)-en", app)
+            captureSystem("Import-recovery-\(importRecoveryCount)-\(language)", app)
             tap(chooseAgain, in: app)
         }
         XCTFail("Backup review did not open after the explicit recovery action.")
@@ -593,7 +607,7 @@ final class PrivateMomentsUITests: XCTestCase {
             repeat { file = selectedFile() } while file == nil && Date() < navigationDeadline
             if file != nil { break }
             if let location = localFilesLocation(app, timeout: 1) { location.tap() }
-            else if let browse = nativeControl(["Browse"], app: app, timeout: 3) { browse.tap() }
+            else if let browse = nativeControl(["Browse", "浏览"], app: app, timeout: 3) { browse.tap() }
         }
         let deadline = Date().addingTimeInterval(10)
         while file == nil && Date() < deadline { file = selectedFile() }
@@ -617,7 +631,7 @@ final class PrivateMomentsUITests: XCTestCase {
         }
         if !app.buttons["backup.merge"].waitForExistence(timeout: 5),
            !app.buttons["settings.chooseBackupAgain"].exists,
-           let open = nativeControl(["Open"], app: app) { open.tap() }
+           let open = nativeControl(["Open", "打开"], app: app) { open.tap() }
         let resolved = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             app.buttons["backup.merge"].exists || app.buttons["settings.chooseBackupAgain"].exists
         }, object: nil)
@@ -652,7 +666,7 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func nativeLocalLocations(in app: XCUIApplication) -> [XCUIElement] {
-        let predicate = NSPredicate(format: "label == %@ OR label == %@", "On My iPhone", "On My iPad")
+        let predicate = NSPredicate(format: "label IN %@", ["On My iPhone", "On My iPad", "我的 iPhone", "我的 iPad"])
         return app.buttons.matching(predicate).allElementsBoundByIndex
             + app.cells.matching(predicate).allElementsBoundByIndex
     }
