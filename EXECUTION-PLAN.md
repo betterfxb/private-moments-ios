@@ -1,8 +1,12 @@
 # Private Moments — Project Execution Plan
 
-## Latest batch: large text and result feedback — native acceptance blocked
+## Cloud validation ordering
 
-The ordered [batch-nine plan](release/BATCH-09-PLAN.md) has implemented tasks1–4: bounded architecture review, large-text settings/short warnings, dismissible outcome feedback and actual native-flow test updates. Task5 remains incomplete. Two focused runs and one full run ended `startup_failure` before creating any job; the latest source `adf8545674c35e4c4bde4f3c492b843ab2f14ee6` is not established as compiled or accepted. Local audits pass, with release placeholders retained. See [status and reproducible startup diagnostics](release/BATCH-09-STATUS.md). Restore the execution channel, pass the same-source four-profile matrix, then inspect originals and publish acceptance. Do not substitute prior screenshots, skip failed assertions or mark the batch complete.
+Run focused diagnostics and full validation serially on a branch. The workflow uses a same-ref concurrency group with cancel-in-progress: starting a second run cancels the active one. A focused input or backup success is diagnostic evidence only; final acceptance requires the full matrix and original-image review. Do not restart a functional failure unchanged to obtain a pass.
+
+## Latest batch: input and large-text continuity
+
+Native validation in the [batch-ten plan](release/BATCH-10-PLAN.md) is complete with its recorded dependency adjustment. Same-source four-profile [run 43381177893](https://github.com/betterfxb/private-moments-ios/actions/runs/43381177893) covers the pending batch-nine presentation scope plus scaled note editing, 44 pt keyboard Done and actual bilingual draft continuity. See [acceptance, original evidence and limits](release/UX-ACCEPTANCE-10.md). No schema, transaction, authentication, signing or main-merge change.
 
 ## Historical batch: backup review and authentication continuity
 

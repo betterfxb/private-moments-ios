@@ -1,8 +1,8 @@
 # Simulator UI acceptance
 
-## Current large-text batch — verification incomplete (2026-11-12)
+## Current input and large-text verification (2026-11-13)
 
-Source `adf8545674c35e4c4bde4f3c492b843ab2f14ee6` includes large-text settings, brief bilingual warnings, separately laid-out dismissible outcomes and native-file test corrections. The latest full [run43097719619](https://github.com/betterfxb/private-moments-ios/actions/runs/43097719619), like two focused runs, ended `startup_failure` with zero jobs. Latest-source compilation, four-profile regression and final screenshot review remain unverified. Local 232-key / 109-object audits pass. [Current status](BATCH-09-STATUS.md) records the exact pending work; no batch-nine acceptance receipt has been generated. Previous successful evidence below belongs only to its stated revision.
+Source `204387dbc1b2b3de135a6901a2a8907e4ad353d5`, [run 43381177893](https://github.com/betterfxb/private-moments-ios/actions/runs/43381177893), passes four profiles with 50 unit tests,5 main UI methods and2 UI methods on each other profile; Release Debug-hook exclusion verified. 267 exact-name PNGs verified and75 final originals opened. [Report](UX-ACCEPTANCE-10.md) · [originals](evidence/batch-10/index.html) · [receipt](evidence/batch-10/verification.json). This closes the earlier pending presentation validation without declaring old failed runs successful. Physical-device/IME/authentication/distribution limits remain explicit in the report.
 
 ## Historical backup and lock verification (2026-11-11)
 
