@@ -22,6 +22,10 @@ on:
         description: Run selected-profile input gallery only (not full acceptance)
         type: boolean
         default: false
+      rotation_smoke:
+        description: Run iPad light/Large rotation continuity only (requires ipad-light profile)
+        type: boolean
+        default: false
       backup_smoke_profile:
         description: Device profile for focused diagnosis (ignored by full acceptance)
         type: choice
@@ -49,12 +53,17 @@ jobs:
       - uses: actions/checkout@v7
       - id: matrix
         env:
-          MATRIX_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && 'input' || github.event_name == 'workflow_dispatch' && inputs.backup_smoke && 'backup' || 'full' }}
+          MATRIX_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.rotation_smoke && 'rotation' || github.event_name == 'workflow_dispatch' && inputs.input_smoke && 'input' || github.event_name == 'workflow_dispatch' && inputs.backup_smoke && 'backup' || 'full' }}
           SMOKE_PROFILE: ${{ inputs.backup_smoke_profile || 'compact-light' }}
           INPUT_SMOKE: ${{ inputs.input_smoke && '1' || '0' }}
           BACKUP_SMOKE: ${{ inputs.backup_smoke && '1' || '0' }}
           BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
+          ROTATION_SMOKE: ${{ inputs.rotation_smoke && '1' || '0' }}
         run: |
+          if [[ "$ROTATION_SMOKE" == "1" && ( "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then
+            printf 'Rotation, input and backup smoke modes are mutually exclusive.\n' >&2
+            exit 1
+          fi
           if [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then
             printf 'Input and backup smoke modes are mutually exclusive.\n' >&2
             exit 1
@@ -140,6 +149,8 @@ jobs:
           PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.backup_smoke && '1' || '0' }}
           PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
           PRIVATE_MOMENTS_UI_INPUT_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_ROTATION_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.rotation_smoke && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_IPAD_TESTS: ${{ matrix.family == 'ipad' && '1' || '0' }}
         run: bash scripts/verify-mac.sh
 
       - name: Read backup flow diagnostics

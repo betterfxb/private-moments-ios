@@ -1,7 +1,9 @@
 import XCTest
+import UIKit
 
 final class PrivateMomentsUITests: XCTestCase {
     private var importRecoveryCount = 0
+    private let rotationNote = "Rotation draft\nKeep every line"
     private enum BackupSelectionResult {
         case delivered
         case pendingDelivery
@@ -23,6 +25,7 @@ final class PrivateMomentsUITests: XCTestCase {
                let cancel = nativeControl(["Cancel", "取消"], app: app) { cancel.tap() }
             app.terminate()
         }
+        XCUIDevice.shared.orientation = .portrait
     }
 
     // The CI profile controls device, system appearance, and system text size.
@@ -196,6 +199,138 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testIPadRotationContinuity() throws {
+        XCTAssertEqual(UIDevice.current.userInterfaceIdiom, .pad, "This method requires the explicit iPad profile.")
+        for language in ["en", "zh-Hans"] {
+            let app = makeApp(language: language)
+            app.launch()
+            rotateInterface(.portrait, stage: "initial", language: language, app: app)
+            createRotatingDraft(language: language, app: app)
+            inspectRotatingNavigation(language: language, app: app)
+            inspectRotatingPausedTimer(language: language, app: app)
+            assertRotationRecordAfterRelaunch(language: language, app: app)
+            print("Verified iPad rotation continuity. Locale: \(language).")
+            app.terminate()
+        }
+    }
+
+    private func createRotatingDraft(language: String, app: XCUIApplication) {
+        tap(app.buttons["today.addRecord"], in: app)
+        replaceNumber(app.textFields["recap.minutes"], with: "3", in: app)
+        dismissRecapKeyboard(language: language, app: app)
+        replaceNumber(app.textFields["recap.seconds"], with: "8", in: app)
+        dismissRecapKeyboard(language: language, app: app)
+        let note = app.textViews["recap.note"]
+        tap(note, in: app)
+        note.typeText(rotationNote)
+        dismissRecapKeyboard(language: language, app: app)
+        rotateInterface(.landscapeLeft, stage: "draft", language: language, app: app)
+        assertRotationDraft(app)
+        revealFully(from: note, through: note, in: app)
+        capture("Rotation-draft-landscape-\(language)", app)
+        tap(app.buttons["recap.cancel"], in: app)
+        let keep = language == "en" ? "Edit" : "继续编辑"
+        let discard = language == "en" ? "Discard" : "放弃"
+        captureVisibleConfirmation("Rotation-discard-confirm-\(language)", keep: keep, discard: discard, app: app)
+        cancelConfirmation(keep, destructiveAction: discard, in: app)
+        rotateInterface(.portrait, stage: "retained-draft", language: language, app: app)
+        assertRotationDraft(app)
+        revealFully(from: note, through: note, in: app)
+        capture("Rotation-draft-portrait-\(language)", app)
+        tap(app.buttons["recap.saveToolbar"], in: app)
+        XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
+    }
+
+    private func assertRotationDraft(_ app: XCUIApplication) {
+        XCTAssertEqual(app.textFields["recap.minutes"].value as? String, "3")
+        XCTAssertEqual(app.textFields["recap.seconds"].value as? String, "8")
+        XCTAssertEqual(app.textViews["recap.note"].value as? String, rotationNote)
+        let save = app.buttons["recap.saveToolbar"]
+        XCTAssertTrue(save.isEnabled && save.isHittable)
+        assertToolbarTarget(save)
+    }
+
+    private func inspectRotatingNavigation(language: String, app: XCUIApplication) {
+        rotateInterface(.landscapeLeft, stage: "today", language: language, app: app)
+        for action in [app.buttons["today.startMoment"], app.buttons["today.addRecord"]] {
+            XCTAssertTrue(action.isHittable && app.windows.firstMatch.frame.contains(action.frame))
+        }
+        capture("Rotation-today-landscape-\(language)", app)
+        selectTab("Timeline", "时间线", language: language, app: app)
+        let row = app.buttons.matching(identifier: "moment.row").firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, language == "en" ? "1 moment" : "1 条记录")
+        capture("Rotation-timeline-landscape-\(language)", app)
+        tap(row, in: app)
+        rotateInterface(.landscapeRight, stage: "detail", language: language, app: app)
+        revealFully(from: app.staticTexts["detail.note"], through: app.staticTexts["detail.note"], in: app)
+        XCTAssertEqual(app.staticTexts["detail.note"].label, rotationNote)
+        capture("Rotation-detail-landscape-\(language)", app)
+        tap(app.buttons["detail.editToolbar"], in: app)
+        assertRotationDraft(app)
+        tap(app.buttons["recap.cancel"], in: app)
+        XCTAssertTrue(app.buttons["detail.editToolbar"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.alerts.firstMatch.exists, "Unchanged editing should return directly to the same detail.")
+        rotateInterface(.portrait, stage: "detail-return", language: language, app: app)
+        revealFully(from: app.staticTexts["detail.note"], through: app.staticTexts["detail.note"], in: app)
+        XCTAssertEqual(app.staticTexts["detail.note"].label, rotationNote)
+        capture("Rotation-detail-portrait-\(language)", app)
+        goBack(app)
+        selectTab("Settings", "设置", language: language, app: app)
+        rotateInterface(.landscapeLeft, stage: "settings", language: language, app: app)
+        revealFully(from: app.staticTexts["settings.savedCountTitle"], through: app.staticTexts["settings.savedCount"], in: app)
+        XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
+        capture("Rotation-settings-landscape-\(language)", app)
+        selectTab("Today", "今天", language: language, app: app)
+    }
+
+    private func inspectRotatingPausedTimer(language: String, app: XCUIApplication) {
+        tap(app.buttons["today.startMoment"], in: app)
+        let pause = app.buttons["session.pauseResume"]
+        tap(pause, in: app)
+        XCTAssertEqual(pause.label, language == "en" ? "Resume" : "继续")
+        rotateInterface(.portrait, stage: "paused-timer", language: language, app: app)
+        XCTAssertEqual(pause.label, language == "en" ? "Resume" : "继续")
+        reveal(app.buttons["session.finish"], in: app)
+        capture("Rotation-timer-portrait-\(language)", app)
+        tap(app.buttons["session.cancel"], in: app)
+        tap(app.buttons[language == "en" ? "Discard" : "放弃"], in: app)
+        XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
+    }
+
+    private func assertRotationRecordAfterRelaunch(language: String, app: XCUIApplication) {
+        app.terminate()
+        app.launch()
+        rotateInterface(.portrait, stage: "relaunch", language: language, app: app)
+        selectTab("Timeline", "时间线", language: language, app: app)
+        let row = app.buttons.matching(identifier: "moment.row").firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, language == "en" ? "1 moment" : "1 条记录")
+        tap(row, in: app)
+        revealFully(from: app.staticTexts["detail.note"], through: app.staticTexts["detail.note"], in: app)
+        XCTAssertEqual(app.staticTexts["detail.note"].label, rotationNote)
+        capture("Rotation-relaunched-portrait-\(language)", app)
+        tap(app.buttons["detail.editToolbar"], in: app)
+        assertRotationDraft(app)
+    }
+
+    private func rotateInterface(_ orientation: UIDeviceOrientation, stage: String, language: String, app: XCUIApplication) {
+        XCUIDevice.shared.orientation = orientation
+        let window = app.windows.firstMatch
+        let changed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard window.exists else { return false }
+            let frame = window.frame
+            return frame.width > 0 && frame.height > 0 &&
+                (orientation.isLandscape ? frame.width > frame.height : frame.height > frame.width)
+        }, object: nil)
+        guard XCTWaiter.wait(for: [changed], timeout: 20) == .completed else {
+            captureFailure("Rotation-interface-unavailable-\(stage)-\(language)", app)
+            return XCTFail("The actual app interface must rotate, not only the device orientation value.")
+        }
+        waitForStableFrame(window, message: "The rotated application window must settle.")
+        print("Verified rotated app geometry. Locale: \(language); stage: \(stage); device: \(orientation.rawValue); frame: \(window.frame).")
+    }
+
     func testBackupFileRoundTrip() throws {
         runBackupFileRoundTrip(language: "en")
     }
@@ -226,12 +361,14 @@ final class PrivateMomentsUITests: XCTestCase {
         // DocumentManager extension. Wait for actual controls, not a fixed nap
         // or a blank sheet that merely finished its presentation animation.
         let browserReady = waitForLocalExportBrowser(app, timeout: 90)
-        captureSystem("Export-files-\(language)", app)
-        XCTAssertTrue(browserReady, "The system exporter must show the local browser or a real location control.")
+        guard browserReady else {
+            captureFailure("Exporter-browser-unavailable-\(language)", app)
+            return XCTFail("The system exporter must show the local browser or a real location control.")
+        }
         // Each locale exports one distinct default filename on the fresh host.
         // iOS may hide Save As on first presentation; use the real default name.
         let filename = english ? "Private-Moments-Backup" : "私密时刻-备份"
-        saveToLocalFiles(app)
+        saveToLocalFiles(app, language: language)
         let saved = app.staticTexts[english ? "Backup saved." : "备份已保存。"]
         XCTAssertTrue(saved.waitForExistence(timeout: 15), "Only the real exporter completion may report success.")
         assertBackupResultVisible(saved, in: app)
@@ -474,7 +611,7 @@ final class PrivateMomentsUITests: XCTestCase {
         return false
     }
 
-    private func saveToLocalFiles(_ app: XCUIApplication) {
+    private func saveToLocalFiles(_ app: XCUIApplication, language: String) {
         // A visible location title is not a sidebar action: tapping it can open
         // Browse and turn its unrelated More menu into Edit. Stay in a ready
         // local browser, or navigate using the actual location cell/button.
@@ -492,6 +629,7 @@ final class PrivateMomentsUITests: XCTestCase {
         }
         let labels = ["Save", "Export", "Move", "存储", "保存", "导出", "移动"]
         if let action = nativeControl(labels, app: app, timeout: 15, surface: root, enabledAction: true) {
+            captureReadyExporter(action: action, language: language, app: app)
             action.tap()
             return
         }
@@ -508,7 +646,16 @@ final class PrivateMomentsUITests: XCTestCase {
         create.tap()
         guard let save = nativeControl(labels, app: app, timeout: 15,
             surface: localFileRoots(in: app).firstMatch, enabledAction: true) else { return XCTFail("No enabled system save action") }
+        captureReadyExporter(action: save, language: language, app: app)
         save.tap()
+    }
+
+    private func captureReadyExporter(action: XCUIElement, language: String, app: XCUIApplication) {
+        waitForStableFrame(action, requireHittable: true, message: "The real system save action must settle before capture.")
+        XCTAssertTrue(action.isEnabled && action.isHittable)
+        XCTAssertTrue(app.windows.firstMatch.frame.contains(action.frame), "The complete system save action must be on screen.")
+        captureSystem("Export-files-\(language)", app)
+        print("Verified ready native export action. Locale: \(language); label: \(action.label); frame: \(action.frame).")
     }
 
     private func openBackup(_ filename: String, language: String = "en", app: XCUIApplication) {

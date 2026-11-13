@@ -44,6 +44,12 @@ class UITestMatrixTests(unittest.TestCase):
             with self.subTest(scope=scope, profile=profile), self.assertRaises(ValueError):
                 matrix(scope, profile)
 
+    def test_rotation_requires_ipad_light_profile(self):
+        self.assertEqual(matrix("rotation", "ipad-light"), matrix("input", "ipad-light"))
+        for profile in ["compact-light", "phone-dark", "compact-dark-accessibility", "ipad-light-accessibility", "unknown"]:
+            with self.subTest(profile=profile), self.assertRaises(ValueError):
+                matrix("rotation", profile)
+
 
 if __name__ == "__main__":
     unittest.main()

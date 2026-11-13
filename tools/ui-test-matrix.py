@@ -14,8 +14,10 @@ def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
         dict(profile="compact-dark-accessibility", family="compact", appearance="dark",
              text_size="accessibility-extra-extra-extra-large", gallery_only="1", timeout_minutes=75),
     ]
-    if scope not in {"full", "backup", "input"}:
+    if scope not in {"full", "backup", "input", "rotation"}:
         raise ValueError("Unknown UI verification scope: " + scope)
+    if scope == "rotation" and smoke_profile != "ipad-light":
+        raise ValueError("Rotation smoke requires the explicit iPad light/Large profile.")
     if smoke_profile == "ipad-light-accessibility":
         if scope != "input":
             raise ValueError("iPad accessibility is a supplemental input gallery profile only.")
@@ -32,7 +34,7 @@ def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("scope", nargs="?", choices=["full", "backup", "input"], default="full")
+    parser.add_argument("scope", nargs="?", choices=["full", "backup", "input", "rotation"], default="full")
     parser.add_argument("--smoke-profile", default="compact-light",
                         choices=["compact-light", "phone-dark", "ipad-light", "compact-dark-accessibility",
                                  "ipad-light-accessibility"])
