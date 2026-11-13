@@ -983,7 +983,14 @@ final class PrivateMomentsUITests: XCTestCase {
         let closed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             !app.keyboards.firstMatch.exists
         }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 5), .completed)
+        let result = XCTWaiter.wait(for: [closed], timeout: 5)
+        if result != .completed {
+            let keyboard = app.keyboards.firstMatch
+            print("Keyboard dismissal diagnostic: locale=\(language), exists=\(keyboard.exists), frame=\(keyboard.frame), hittable=\(keyboard.isHittable), action=\(done.frame), window=\(app.windows.firstMatch.frame).")
+            print("Keyboard hierarchy after Done: \(keyboard.debugDescription)")
+            captureFailure("Keyboard-dismissal-incomplete-\(language)", app)
+        }
+        XCTAssertEqual(result, .completed, "Done must dismiss the software keyboard after the actual tap.")
     }
 
     private func chooseMomentFilter(_ label: String, in app: XCUIApplication) {

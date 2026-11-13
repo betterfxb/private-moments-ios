@@ -29,3 +29,4 @@
 
 - 任务1完成：当前 HEAD aa675fe，只有既有 design 未跟踪目录；第十批最终源码 204387d、四配置与证据已关闭。已审查矩阵、工作流、verify-mac.sh、图库流程和自适应 Today／共享组件职责。本批为验证能力增量，不进行应用架构重构。
 - 任务2完成：新增配置仅在显式 input 范围返回；full／backup 选此配置会明确失败。四项矩阵回归测试通过（含原有八种定向组合），CI plan 会先执行这些检查再输出矩阵。本地230键、109项目对象及 diff 检查通过。应用、资源、Swift 单元／UI 用例和 verify-mac.sh 均未修改；开始提交后再执行任务3。
+- 任务3首次运行43410423992（源码86674c9，iPad任务131835237097）实际构建后执行1项UI，109.270秒失败；英文录入分钟1后，单次Done点击后的keyboard.exists五秒检查未完成。5张阶段原图及完整日志已下载校验；实际打开Today／时长两图，并从已校验录屏打开98／104／106秒三帧，后两帧显示完整表单、键盘已不在屏幕上，但浮动工具按钮仍在底部。该证据与AX存在谓词不同，不能直接判定产品焦点失效，也不将本轮计通过。根据Apple exists／hittable的区别，先补充原谓词失败时的键盘frame／命中／完整层级及物理截图，不更改原通过条件、等待时间或应用代码；新源码定向诊断后再决定最小修正。依据：https://developer.apple.com/documentation/xcuiautomation/xcuielement/ishittable ；现有FocusState清空语义：https://developer.apple.com/documentation/swiftui/focusstate/ 。任务4—5保持依赖未完成。
