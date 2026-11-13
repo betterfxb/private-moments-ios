@@ -159,30 +159,25 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(warning.buttons[language == "en" ? "Cancel" : "取消"], in: app)
             tap(app.buttons["settings.lock"], in: app)
             // Simulator policy evaluation may remain pending rather than fail
-            // immediately. Exercise real background cancellation, without an
-            // authentication-success fixture or an assumed Simulator policy.
-            XCUIDevice.shared.press(.home)
-            // XCUIApplication.state is updated asynchronously. Use its native
-            // lifecycle waiter rather than polling it inside a predicate waiter.
-            var backgrounded = app.wait(for: .runningBackground, timeout: 2) ||
-                app.state == .runningBackgroundSuspended
-            if !backgrounded {
-                // A system authentication surface may consume the first Home
-                // event. Only an app still in the foreground gets one more real
-                // Home event; the actual background state remains mandatory.
-                if app.state == .runningForeground {
-                    print("Additional Home press for authentication exit. Locale: \(language).")
-                    XCUIDevice.shared.press(.home)
-                }
-                backgrounded = app.state == .runningBackgroundSuspended ||
-                    app.wait(for: .runningBackground, timeout: 30) ||
-                    app.wait(for: .runningBackgroundSuspended, timeout: 2)
+            // immediately. Exercise a real background handoff after the request,
+            // without an authentication-success fixture or assumed prompt state.
+            // Activate a real second app: Home events may leave this app in the
+            // foreground on hosted iPad Simulators. No system setting is changed.
+            let systemSettings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+            systemSettings.activate()
+            guard systemSettings.wait(for: .runningForeground, timeout: 10) else {
+                captureFailure("System-settings-foreground-unavailable-\(language)", app)
+                return XCTFail("System Settings must actually receive the foreground.")
             }
+            let backgrounded = app.state == .runningBackgroundSuspended ||
+                app.wait(for: .runningBackground, timeout: 30) ||
+                app.wait(for: .runningBackgroundSuspended, timeout: 2)
             guard backgrounded else {
                 print("Authentication exit state raw value: \(app.state.rawValue); locale: \(language).")
                 captureFailure("Lock-background-unavailable-\(language)", app)
                 return XCTFail("Authentication exit must reach a real running background state.")
             }
+            print("Verified system Settings foreground handoff. Locale: \(language).")
             app.activate()
             let lock = app.buttons["settings.lock"]
             reveal(lock, in: app)
