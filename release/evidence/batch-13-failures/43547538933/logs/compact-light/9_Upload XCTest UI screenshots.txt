@@ -1,0 +1,26 @@
+﻿2026-11-14T02:52:25.0924980Z ##[group]Run actions/upload-artifact@v7
+2026-11-14T02:52:25.0925690Z with:
+2026-11-14T02:52:25.0926210Z   name: private-moments-ui-screenshots-compact-light
+2026-11-14T02:52:25.0927060Z   path: /Users/runner/work/_temp/PrivateMomentsUIScreenshots
+2026-11-14T02:52:25.0927760Z   if-no-files-found: ignore
+2026-11-14T02:52:25.0928250Z   retention-days: 7
+2026-11-14T02:52:25.0928690Z   compression-level: 6
+2026-11-14T02:52:25.0929120Z   overwrite: false
+2026-11-14T02:52:25.0929540Z   include-hidden-files: false
+2026-11-14T02:52:25.0930020Z   archive: true
+2026-11-14T02:52:25.0930400Z env:
+2026-11-14T02:52:25.0930950Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T02:52:25.0932000Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=A1285399-F2F4-46E9-8CF2-4AA227FF7EF3
+2026-11-14T02:52:25.0932890Z ##[endgroup]
+2026-11-14T02:52:26.3542890Z With the provided path, there will be 7 files uploaded
+2026-11-14T02:52:26.3772710Z Artifact name is valid!
+2026-11-14T02:52:26.3877590Z Root directory input is valid!
+2026-11-14T02:52:26.5265840Z Uploading artifact: private-moments-ui-screenshots-compact-light.zip
+2026-11-14T02:52:26.5527740Z Beginning upload of artifact content to blob storage
+2026-11-14T02:52:26.9323360Z Uploaded bytes 2996849
+2026-11-14T02:52:26.9792740Z Finished uploading artifact content to blob storage!
+2026-11-14T02:52:26.9895960Z SHA256 digest of uploaded artifact is ca1184b6a7892c8981bf785398cba387813b2f79227ab29a317addb2b11c7b49
+2026-11-14T02:52:26.9896780Z Finalizing artifact upload
+2026-11-14T02:52:27.3585080Z Artifact private-moments-ui-screenshots-compact-light successfully finalized. Artifact ID 14094842225
+2026-11-14T02:52:27.3683830Z Artifact private-moments-ui-screenshots-compact-light has been successfully uploaded! Final size is 2996849 bytes. Artifact ID is 14094842225
+2026-11-14T02:52:27.3803970Z Artifact download URL: https://github.com/betterfxb/private-moments-ios/actions/runs/43547538933/artifacts/14094842225

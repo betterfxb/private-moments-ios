@@ -1,6 +1,14 @@
 # Simulator UI acceptance
 
-## Latest full verification: Chinese files and continuity (2026-11-14)
+## iPad rotation and ready-export verification (2026-11-14)
+
+Final tested source `fb78856ca48a43eb1739d5c2c6198d973a519246`, [full run 43556512255](https://github.com/betterfxb/private-moments-ios/actions/runs/43556512255): four profiles pass, with 50 unit tests and 6 main / 3 iPad / 2 each other phone UI executions. Debug/Release and Release hook exclusion pass. Phone-dark English and maximum-text English file diagnostics passed on `96e21b0`; compact-light Chinese diagnostics passed on `adac204`. After a second full attempt exposed maximum-text feedback dismissal, final-source maximum-text file diagnostics preceded this full run. Initial phone and rotation diagnostics retain their own sources; four failed runs remain archived separately.
+
+Across seven successful runs, 363 exact original PNGs checked; 166 selected originals actually opened and retained. [Report and limits](UX-ACCEPTANCE-13.md) · [originals](evidence/batch-13/index.html) · [receipt](evidence/batch-13/verification.json) · [project memory](../PROJECT-MEMORY.md). Changes concern tests/CI/tools, with production app paths unchanged. Keyboard-dismissed iPad rotation is verified in light/Large/full window; split view, other layouts, physical-device interaction and aesthetic approval remain open. No signing, Apple upload or main merge.
+
+The final full compact-light English and Chinese flows each encountered one real source-unavailable message and recovered through one explicit backup reselection. Both recovery originals were reviewed; unchanged records and exact restore/relaunch checks passed. Other profiles used no explicit recovery.
+
+## Historical full verification: Chinese files and continuity (2026-11-14)
 
 Source `7b92acbe21d0cb88e1e4378477b719fd86dd1ee3`, [run 43442608041](https://github.com/betterfxb/private-moments-ios/actions/runs/43442608041), passes all four profiles on Xcode/SDK/Simulator26.2: 50 unit tests, six main-profile UI methods, two per other profile, Debug/Release and Release hook exclusion. Chinese real system-file roundtrip is covered on compact-light; English files and bilingual galleries run on every profile. A preceding same-source Chinese focused run passes 9 backup unit tests and one UI method. All 285 PNGs across the two runs verified; 88 selected originals opened and retained. [Report, actual coverage and capture limits](UX-ACCEPTANCE-12.md) · [originals](evidence/batch-12/index.html) · [receipt](evidence/batch-12/verification.json). Application code unchanged; no signing, Apple upload or main merge. Physical-device and remaining layout gates stay open; historical results below retain their own source and scope.
 

@@ -1,0 +1,87 @@
+﻿2026-11-14T00:47:11.6237130Z ##[group]Run actions/checkout@v7
+2026-11-14T00:47:11.6238030Z with:
+2026-11-14T00:47:11.6238390Z   repository: betterfxb/private-moments-ios
+2026-11-14T00:47:11.6241050Z   token: ***
+2026-11-14T00:47:11.6241370Z   ssh-strict: true
+2026-11-14T00:47:11.6241680Z   ssh-user: git
+2026-11-14T00:47:11.6242010Z   persist-credentials: true
+2026-11-14T00:47:11.6242360Z   clean: true
+2026-11-14T00:47:11.6242690Z   sparse-checkout-cone-mode: true
+2026-11-14T00:47:11.6243070Z   fetch-depth: 1
+2026-11-14T00:47:11.6243380Z   fetch-tags: false
+2026-11-14T00:47:11.6243710Z   show-progress: true
+2026-11-14T00:47:11.6244040Z   lfs: false
+2026-11-14T00:47:11.6244350Z   submodules: false
+2026-11-14T00:47:11.6244680Z   set-safe-directory: true
+2026-11-14T00:47:11.6245050Z   allow-unsafe-pr-checkout: false
+2026-11-14T00:47:11.6245550Z ##[endgroup]
+2026-11-14T00:47:12.1534210Z Syncing repository: betterfxb/private-moments-ios
+2026-11-14T00:47:12.1536300Z ##[group]Getting Git version info
+2026-11-14T00:47:12.1537340Z Working directory is '/Users/runner/work/private-moments-ios/private-moments-ios'
+2026-11-14T00:47:12.1538690Z [command]/opt/homebrew/bin/git version
+2026-11-14T00:47:12.2002960Z git version 2.56.0
+2026-11-14T00:47:12.2016120Z ##[endgroup]
+2026-11-14T00:47:12.2028730Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/2b6eca8e-cdd5-463a-a88c-464f080234f8/.gitconfig'
+2026-11-14T00:47:12.2039920Z Temporarily overriding HOME='/Users/runner/work/_temp/2b6eca8e-cdd5-463a-a88c-464f080234f8' before making global git config changes
+2026-11-14T00:47:12.2044120Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T00:47:12.2047640Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/private-moments-ios/private-moments-ios
+2026-11-14T00:47:12.2164270Z Deleting the contents of '/Users/runner/work/private-moments-ios/private-moments-ios'
+2026-11-14T00:47:12.2166390Z ##[group]Determining repository object format
+2026-11-14T00:47:12.2167200Z ##[endgroup]
+2026-11-14T00:47:12.2168690Z ##[group]Initializing the repository
+2026-11-14T00:47:12.2170500Z [command]/opt/homebrew/bin/git init /Users/runner/work/private-moments-ios/private-moments-ios
+2026-11-14T00:47:12.2457730Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-14T00:47:12.2461150Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-14T00:47:12.2462270Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-14T00:47:12.2462860Z hint: call:
+2026-11-14T00:47:12.2463200Z hint:
+2026-11-14T00:47:12.2463660Z hint: 	git config --global init.defaultBranch <name>
+2026-11-14T00:47:12.2464170Z hint:
+2026-11-14T00:47:12.2464590Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-14T00:47:12.2465280Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-14T00:47:12.2465810Z hint:
+2026-11-14T00:47:12.2466140Z hint: 	git branch -m <name>
+2026-11-14T00:47:12.2466550Z hint:
+2026-11-14T00:47:12.2467020Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-14T00:47:12.2467860Z Initialized empty Git repository in /Users/runner/work/private-moments-ios/private-moments-ios/.git/
+2026-11-14T00:47:12.2469460Z [command]/opt/homebrew/bin/git remote add origin https://github.com/betterfxb/private-moments-ios
+2026-11-14T00:47:12.2554460Z ##[endgroup]
+2026-11-14T00:47:12.2555320Z ##[group]Disabling automatic garbage collection
+2026-11-14T00:47:12.2563990Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2026-11-14T00:47:12.2660440Z ##[endgroup]
+2026-11-14T00:47:12.2662880Z ##[group]Setting up auth
+2026-11-14T00:47:12.2664080Z Removing SSH command configuration
+2026-11-14T00:47:12.2665750Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T00:47:12.2729190Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T00:47:12.3882990Z Removing HTTP extra header
+2026-11-14T00:47:12.3886880Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T00:47:12.3950800Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T00:47:12.4700350Z Removing includeIf entries pointing to credentials config files
+2026-11-14T00:47:12.4707400Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T00:47:12.4767060Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T00:47:12.5491740Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-10e6dfe1-dcae-4234-b8d3-5e0ed17b4ff1.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-14T00:47:12.5555650Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/private-moments-ios/private-moments-ios/.git.path /Users/runner/work/_temp/git-credentials-10e6dfe1-dcae-4234-b8d3-5e0ed17b4ff1.config
+2026-11-14T00:47:12.5617560Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/private-moments-ios/private-moments-ios/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-10e6dfe1-dcae-4234-b8d3-5e0ed17b4ff1.config
+2026-11-14T00:47:12.5678190Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-10e6dfe1-dcae-4234-b8d3-5e0ed17b4ff1.config
+2026-11-14T00:47:12.5757810Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-10e6dfe1-dcae-4234-b8d3-5e0ed17b4ff1.config
+2026-11-14T00:47:12.5816350Z ##[endgroup]
+2026-11-14T00:47:12.5817060Z ##[group]Fetching the repository
+2026-11-14T00:47:12.5821360Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +41b18ca1c0653c655d9ea5b083f68d46b14c1100:refs/remotes/origin/feat/native-manual-entry
+2026-11-14T00:47:25.3763620Z From https://github.com/betterfxb/private-moments-ios
+2026-11-14T00:47:25.3765700Z  * [new ref]         41b18ca1c0653c655d9ea5b083f68d46b14c1100 -> origin/feat/native-manual-entry
+2026-11-14T00:47:25.3783930Z [command]/opt/homebrew/bin/git branch --list --remote origin/feat/native-manual-entry
+2026-11-14T00:47:25.3867280Z   origin/feat/native-manual-entry
+2026-11-14T00:47:25.3876360Z [command]/opt/homebrew/bin/git rev-parse refs/remotes/origin/feat/native-manual-entry
+2026-11-14T00:47:25.3932900Z 41b18ca1c0653c655d9ea5b083f68d46b14c1100
+2026-11-14T00:47:25.3938790Z ##[endgroup]
+2026-11-14T00:47:25.3939400Z ##[group]Determining the checkout info
+2026-11-14T00:47:25.3940850Z ##[endgroup]
+2026-11-14T00:47:25.3945810Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2026-11-14T00:47:25.4034720Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-14T00:47:25.4106470Z ##[group]Checking out the ref
+2026-11-14T00:47:25.4109560Z [command]/opt/homebrew/bin/git checkout --progress --force -B feat/native-manual-entry refs/remotes/origin/feat/native-manual-entry
+2026-11-14T00:47:25.9870480Z Switched to a new branch 'feat/native-manual-entry'
+2026-11-14T00:47:25.9881060Z branch 'feat/native-manual-entry' set up to track 'origin/feat/native-manual-entry'.
+2026-11-14T00:47:25.9902190Z ##[endgroup]
+2026-11-14T00:47:26.0054250Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2026-11-14T00:47:26.0144920Z 41b18ca1c0653c655d9ea5b083f68d46b14c1100
