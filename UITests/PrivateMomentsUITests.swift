@@ -204,6 +204,7 @@ final class PrivateMomentsUITests: XCTestCase {
         for language in ["en", "zh-Hans"] {
             let app = makeApp(language: language)
             app.launch()
+            prepareRotationControls(language: language, app: app)
             rotateInterface(.portrait, stage: "initial", language: language, app: app)
             createRotatingDraft(language: language, app: app)
             inspectRotatingNavigation(language: language, app: app)
@@ -212,6 +213,47 @@ final class PrivateMomentsUITests: XCTestCase {
             print("Verified iPad rotation continuity. Locale: \(language).")
             app.terminate()
         }
+    }
+
+    private func prepareRotationControls(language: String, app: XCUIApplication) {
+        // Device orientation alone does not establish that system rotation is
+        // unlocked. Observe the real control before making any change.
+        XCUIDevice.shared.orientation = .portrait
+        let window = app.windows.firstMatch
+        XCTAssertTrue(window.waitForExistence(timeout: 10))
+        waitForStableFrame(window, message: "The initial iPad window must settle.")
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.01))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.55))
+        start.press(forDuration: 0.1, thenDragTo: end)
+        let system = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let predicate = NSPredicate(format:
+            "identifier CONTAINS[c] 'OrientationLock' OR " +
+            "(label CONTAINS[c] 'Rotation' AND label CONTAINS[c] 'Lock') OR " +
+            "(label CONTAINS[c] 'Orientation' AND label CONTAINS[c] 'Lock') OR " +
+            "label CONTAINS '锁定旋转' OR label CONTAINS '方向锁定'")
+        let controls = system.buttons.matching(predicate)
+        guard controls.firstMatch.waitForExistence(timeout: 10), controls.count == 1 else {
+            captureFailure("Rotation-system-control-unavailable-\(language)", system)
+            return XCTFail("The real system rotation-lock control must be identifiable.")
+        }
+        let control = controls.firstMatch
+        waitForStableFrame(control, requireHittable: true, message: "Rotation lock control must settle.")
+        print("Observed rotation lock before setup. Locale: \(language); selected: \(control.isSelected); control: \(control.debugDescription)")
+        captureSystem("Rotation-system-controls-\(language)", system)
+        if control.isSelected {
+            control.tap()
+            let unlocked = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                control.exists && !control.isSelected
+            }, object: nil)
+            guard XCTWaiter.wait(for: [unlocked], timeout: 10) == .completed else {
+                captureFailure("Rotation-system-unlock-unavailable-\(language)", system)
+                return XCTFail("One selected rotation-lock tap must unlock the system.")
+            }
+            print("Unlocked actual selected rotation lock once. Locale: \(language).")
+        }
+        XCUIDevice.shared.press(.home)
+        app.activate()
+        XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
     }
 
     private func createRotatingDraft(language: String, app: XCUIApplication) {
