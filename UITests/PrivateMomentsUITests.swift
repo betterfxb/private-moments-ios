@@ -275,13 +275,34 @@ final class PrivateMomentsUITests: XCTestCase {
         revealFully(from: app.staticTexts["detail.note"], through: app.staticTexts["detail.note"], in: app)
         XCTAssertEqual(app.staticTexts["detail.note"].label, rotationNote)
         capture("Rotation-detail-portrait-\(language)", app)
-        goBack(app)
+        returnFromRotatingDetail(app)
         selectTab("Settings", "设置", language: language, app: app)
         rotateInterface(.landscapeLeft, stage: "settings", language: language, app: app)
         revealFully(from: app.staticTexts["settings.savedCountTitle"], through: app.staticTexts["settings.savedCount"], in: app)
         XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
         capture("Rotation-settings-landscape-\(language)", app)
         selectTab("Today", "今天", language: language, app: app)
+    }
+
+    private func returnFromRotatingDetail(_ app: XCUIApplication) {
+        // The first navigation button may belong to a transitioning stack.
+        // Resolve the native back control and prove the destination after one tap.
+        let back = app.navigationBars.buttons.matching(identifier: "BackButton").firstMatch
+        guard back.waitForExistence(timeout: 10) else {
+            captureFailure("Rotation-back-unavailable", app)
+            return XCTFail("The rotated detail must expose its native Back control.")
+        }
+        waitForStableFrame(back, requireHittable: true, message: "Rotated Back control must settle.")
+        print("Rotated native Back before tap: \(back.debugDescription)")
+        back.tap()
+        let returned = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            app.staticTexts["timeline.resultCount"].exists &&
+                !app.buttons["detail.editToolbar"].exists
+        }, object: nil)
+        guard XCTWaiter.wait(for: [returned], timeout: 15) == .completed else {
+            captureFailure("Rotation-back-destination-unavailable", app)
+            return XCTFail("One native Back tap must return to Timeline after rotation.")
+        }
     }
 
     private func inspectRotatingPausedTimer(language: String, app: XCUIApplication) {
