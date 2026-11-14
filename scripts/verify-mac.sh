@@ -55,6 +55,7 @@ INPUT_ONLY="${PRIVATE_MOMENTS_UI_INPUT_ONLY:-0}"
 BACKUP_LANGUAGE="${PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE:-en}"
 ROTATION_ONLY="${PRIVATE_MOMENTS_UI_ROTATION_ONLY:-0}"
 IPAD_TESTS="${PRIVATE_MOMENTS_UI_IPAD_TESTS:-0}"
+ROTATION_START="${PRIVATE_MOMENTS_UI_ROTATION_START:-reference}"
 [[ "$BACKUP_ONLY" == "0" || "$BACKUP_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_BACKUP_ONLY must be 0 or 1."
 [[ "$INPUT_ONLY" == "0" || "$INPUT_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_INPUT_ONLY must be 0 or 1."
 [[ "$BACKUP_ONLY" != "1" || "$INPUT_ONLY" != "1" ]] || fail "Input and backup smoke modes are mutually exclusive."
@@ -63,12 +64,26 @@ IPAD_TESTS="${PRIVATE_MOMENTS_UI_IPAD_TESTS:-0}"
 [[ "$ROTATION_ONLY" == "0" || "$ROTATION_ONLY" == "1" ]] || fail "Rotation scope must be 0 or 1."
 [[ "$IPAD_TESTS" == "0" || "$IPAD_TESTS" == "1" ]] || fail "iPad test selection must be 0 or 1."
 [[ "$ROTATION_ONLY" != "1" || ( "$IPAD_TESTS" == "1" && "$BACKUP_ONLY" == "0" && "$INPUT_ONLY" == "0" ) ]] || fail "Rotation smoke requires iPad and excludes input/backup smoke."
+[[ "$ROTATION_START" == "reference" || "$ROTATION_START" == "cold-en" || "$ROTATION_START" == "cold-zh-Hans" ]] || fail "Rotation start must be reference, cold-en or cold-zh-Hans."
+[[ "$ROTATION_START" == "reference" || "$ROTATION_ONLY" == "1" ]] || fail "Cold rotation requires explicit rotation-only scope."
+if [[ "$ROTATION_START" != "cold-en" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadColdEnglishRotationContinuity)
+fi
+if [[ "$ROTATION_START" != "cold-zh-Hans" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadColdChineseRotationContinuity)
+fi
 if [[ "$IPAD_TESTS" == "0" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadRotationContinuity)
 fi
 if [[ "$ROTATION_ONLY" == "1" ]]; then
     printf '\nFocused iPad rotation only; this is not full simulator acceptance.\n'
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadRotationContinuity)
+    case "$ROTATION_START" in
+        cold-en) ROTATION_METHOD=testIPadColdEnglishRotationContinuity ;;
+        cold-zh-Hans) ROTATION_METHOD=testIPadColdChineseRotationContinuity ;;
+        reference) ROTATION_METHOD=testIPadRotationContinuity ;;
+    esac
+    printf 'Rotation start: %s; selected method: %s\n' "$ROTATION_START" "$ROTATION_METHOD"
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/"$ROTATION_METHOD")
 elif [[ "$INPUT_ONLY" == "1" ]]; then
     printf '\nFocused input gallery only; this is not full simulator acceptance.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)

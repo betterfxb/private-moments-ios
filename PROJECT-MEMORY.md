@@ -35,6 +35,14 @@
 
 ## 第十四批补充适配验收
 
+<!-- batch15-current:start -->
+### 第十五批执行中
+
+按[第十五批计划](release/BATCH-15-PLAN.md)依次补齐无Settings前置的首次旋转：独立英文冷启动、独立中文冷启动、默认浅色reference回归，再归档及更新记忆。每冷语言单独新macOS任务，不把同一次双语循环的第二语言称为冷启动。新增显式rotation_start（reference／cold-en／cold-zh-Hans），只允许rotation范围；完整及其他定向排除两个冷方法，默认四配置保持。
+
+本地18项工具测试、801组脚本／工作流范围防护、Bash语法和既有审计通过；生产Sources／Resources／Tests／Xcode项目未改。当前原生结果尚待实际运行，不把第十四批有Settings参考的通过重标为本批冷启动成功。现有design目录保持未跟踪。
+<!-- batch15-current:end -->
+
 按[第十四批计划](release/BATCH-14-PLAN.md)完成，详见[报告](release/UX-ACCEPTANCE-14.md)、[原图](release/evidence/batch-14/index.html)与[收据](release/evidence/batch-14/verification.json)。默认四配置保持；新配置仅显式input／rotation可用，不允许full／backup，mini缺失不得回退为大屏。
 
 - [ipad-mini-light / rotation 运行43571193201](https://github.com/betterfxb/private-moments-ios/actions/runs/43571193201)，实际源码 `d1ab55bad08c341d4eadf18d81b63e73b4d2dac0`。

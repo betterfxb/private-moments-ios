@@ -200,11 +200,32 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     func testIPadRotationContinuity() throws {
+        runRotationContinuity(languages: ["en", "zh-Hans"], usingSystemReference: true)
+    }
+
+    func testIPadColdEnglishRotationContinuity() throws {
+        runRotationContinuity(languages: ["en"], usingSystemReference: false)
+    }
+
+    func testIPadColdChineseRotationContinuity() throws {
+        runRotationContinuity(languages: ["zh-Hans"], usingSystemReference: false)
+    }
+
+    private func runRotationContinuity(languages: [String], usingSystemReference: Bool) {
         XCTAssertEqual(UIDevice.current.userInterfaceIdiom, .pad, "This method requires the explicit iPad profile.")
-        for language in ["en", "zh-Hans"] {
+        if !usingSystemReference {
+            // Each cold method must be selected alone in a fresh CI job. A
+            // second locale in the same process cannot establish cold rotation.
+            XCTAssertEqual(languages.count, 1)
+            XCTAssertEqual(XCUIApplication().state, .notRunning)
+            print("Cold rotation entry: app not running; no system reference activation; locale: \(languages[0]).")
+        }
+        for language in languages {
             let app = makeApp(language: language)
             app.launch()
-            prepareRotationReference(language: language, app: app)
+            if usingSystemReference {
+                prepareRotationReference(language: language, app: app)
+            }
             rotateInterface(.portrait, stage: "initial", language: language, app: app)
             createRotatingDraft(language: language, app: app)
             inspectRotatingNavigation(language: language, app: app)
