@@ -1091,10 +1091,17 @@ final class PrivateMomentsUITests: XCTestCase {
             return XCTFail("Numeric input must expose its current editable value.")
         }
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count) + value)
-        let updated = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            field.value as? String == value
-        }, object: nil)
-        guard XCTWaiter.wait(for: [updated], timeout: 5) == .completed else {
+        // A remote accessibility value query can itself take several seconds.
+        // Inspect its result before the next deadline check; do not lose a
+        // matching value because the expectation's timer fired during a query.
+        let valueDeadline = Date().addingTimeInterval(15)
+        var observed = field.value as? String
+        while observed != value && Date() < valueDeadline {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.25))
+            observed = field.value as? String
+        }
+        guard observed == value else {
+            print("Numeric value mismatch: identifier=\(field.identifier), expected=\(value), observed=\(observed ?? "<unavailable>").")
             captureFailure("Numeric-value-mismatch-\(field.identifier)", app)
             return XCTFail("Numeric typing must publish the exact requested value.")
         }
