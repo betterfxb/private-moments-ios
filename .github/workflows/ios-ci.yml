@@ -23,7 +23,7 @@ on:
         type: boolean
         default: false
       rotation_smoke:
-        description: Run iPad light/Large rotation continuity only (requires ipad-light profile)
+        description: Run bilingual rotation only on an explicitly supported iPad profile
         type: boolean
         default: false
       backup_smoke_profile:
@@ -36,6 +36,8 @@ on:
           - ipad-light
           - compact-dark-accessibility
           - ipad-light-accessibility
+          - ipad-mini-light
+          - ipad-dark-accessibility
 
 permissions:
   contents: read
@@ -73,7 +75,7 @@ jobs:
             printf 'Chinese backup language requires explicit backup smoke.\n' >&2
             exit 1
           fi
-          python3 -m unittest discover -s tools -p 'test_ui_test_matrix.py' -v
+          python3 -m unittest discover -s tools -p 'test_ui*.py' -v
           matrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"
           printf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"
 
@@ -123,6 +125,8 @@ jobs:
               if family == "compact":
                   preferences = ["iPhone SE (3rd generation)", "iPhone 16e", "iPhone 17e", "iPhone 16", "iPhone 17"]
                   devices = [d for name in preferences for d in devices if d["name"] == name]
+              elif family == "ipad-mini":
+                  devices = [d for d in devices if d["name"].startswith("iPad mini")]
               elif family == "ipad":
                   devices = [d for d in devices if d["name"].startswith("iPad")]
               else:
@@ -150,7 +154,7 @@ jobs:
           PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
           PRIVATE_MOMENTS_UI_INPUT_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && '1' || '0' }}
           PRIVATE_MOMENTS_UI_ROTATION_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.rotation_smoke && '1' || '0' }}
-          PRIVATE_MOMENTS_UI_IPAD_TESTS: ${{ matrix.family == 'ipad' && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_IPAD_TESTS: ${{ startsWith(matrix.family, 'ipad') && '1' || '0' }}
         run: bash scripts/verify-mac.sh
 
       - name: Read backup flow diagnostics

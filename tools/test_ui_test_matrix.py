@@ -50,6 +50,20 @@ class UITestMatrixTests(unittest.TestCase):
             with self.subTest(profile=profile), self.assertRaises(ValueError):
                 matrix("rotation", profile)
 
+    def test_supplemental_ipads_require_explicit_input_or_rotation(self):
+        for name, family, appearance, size in [
+            ("ipad-mini-light", "ipad-mini", "light", "large"),
+            ("ipad-dark-accessibility", "ipad", "dark", "accessibility-extra-extra-extra-large"),
+        ]:
+            for scope in ["input", "rotation"]:
+                with self.subTest(profile=name, scope=scope):
+                    self.assertEqual(matrix(scope, name)["include"], [dict(
+                        profile=name, family=family, appearance=appearance,
+                        text_size=size, gallery_only="1", timeout_minutes=75)])
+            for scope in ["full", "backup"]:
+                with self.subTest(profile=name, scope=scope), self.assertRaises(ValueError):
+                    matrix(scope, name)
+
 
 if __name__ == "__main__":
     unittest.main()

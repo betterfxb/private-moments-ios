@@ -16,8 +16,19 @@ def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
     ]
     if scope not in {"full", "backup", "input", "rotation"}:
         raise ValueError("Unknown UI verification scope: " + scope)
+    supplements = {
+        "ipad-mini-light": dict(profile="ipad-mini-light", family="ipad-mini",
+            appearance="light", text_size="large", gallery_only="1", timeout_minutes=75),
+        "ipad-dark-accessibility": dict(profile="ipad-dark-accessibility", family="ipad",
+            appearance="dark", text_size="accessibility-extra-extra-extra-large",
+            gallery_only="1", timeout_minutes=75),
+    }
+    if smoke_profile in supplements:
+        if scope not in {"input", "rotation"}:
+            raise ValueError("Supplemental iPad profiles require explicit input or rotation scope.")
+        return {"include": [supplements[smoke_profile]]}
     if scope == "rotation" and smoke_profile != "ipad-light":
-        raise ValueError("Rotation smoke requires the explicit iPad light/Large profile.")
+        raise ValueError("Rotation smoke requires an explicitly supported iPad profile.")
     if smoke_profile == "ipad-light-accessibility":
         if scope != "input":
             raise ValueError("iPad accessibility is a supplemental input gallery profile only.")
@@ -37,6 +48,6 @@ if __name__ == "__main__":
     parser.add_argument("scope", nargs="?", choices=["full", "backup", "input", "rotation"], default="full")
     parser.add_argument("--smoke-profile", default="compact-light",
                         choices=["compact-light", "phone-dark", "ipad-light", "compact-dark-accessibility",
-                                 "ipad-light-accessibility"])
+                                 "ipad-light-accessibility", "ipad-mini-light", "ipad-dark-accessibility"])
     args = parser.parse_args()
     print(json.dumps(matrix(args.scope, args.smoke_profile)))
