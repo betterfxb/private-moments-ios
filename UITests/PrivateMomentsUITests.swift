@@ -436,7 +436,8 @@ final class PrivateMomentsUITests: XCTestCase {
         // The fresh hosted Simulator can take over 45 seconds to launch the
         // DocumentManager extension. Wait for actual controls, not a fixed nap
         // or a blank sheet that merely finished its presentation animation.
-        let browserReady = waitForLocalExportBrowser(app, timeout: 90)
+        let browserDeadline = Date().addingTimeInterval(90)
+        let browserReady = waitForLocalExportBrowser(app, timeout: max(0, browserDeadline.timeIntervalSinceNow))
         guard browserReady else {
             captureFailure("Exporter-browser-unavailable-\(language)", app)
             return XCTFail("The system exporter must show the local browser or a real location control.")
@@ -444,7 +445,7 @@ final class PrivateMomentsUITests: XCTestCase {
         // Each locale exports one distinct default filename on the fresh host.
         // iOS may hide Save As on first presentation; use the real default name.
         let filename = english ? "Private-Moments-Backup" : "私密时刻-备份"
-        saveToLocalFiles(app, language: language)
+        saveToLocalFiles(app, language: language, browserDeadline: browserDeadline)
         let saved = app.staticTexts[english ? "Backup saved." : "备份已保存。"]
         XCTAssertTrue(saved.waitForExistence(timeout: 15), "Only the real exporter completion may report success.")
         assertBackupResultVisible(saved, in: app)
@@ -692,16 +693,21 @@ final class PrivateMomentsUITests: XCTestCase {
         return false
     }
 
-    private func saveToLocalFiles(_ app: XCUIApplication, language: String) {
+    private func saveToLocalFiles(_ app: XCUIApplication, language: String, browserDeadline: Date) {
         // A visible location title is not a sidebar action: tapping it can open
         // Browse and turn its unrelated More menu into Edit. Stay in a ready
         // local browser, or navigate using the actual location cell/button.
-        guard enterLocalExportBrowser(app, timeout: 15) else {
+        guard enterLocalExportBrowser(app, timeout: max(0, browserDeadline.timeIntervalSinceNow)) else {
             captureSystem("Exporter-unavailable", app)
             return XCTFail("The native local destination is not available.")
         }
         let root = localFileRoots(in: app).firstMatch
-        guard root.waitForExistence(timeout: 15) else {
+        // Sidebar appearance does not establish completed provider navigation.
+        // Share the original 90-second browser budget across both phases;
+        // never reset that budget after tapping the native location once.
+        let remaining = max(0, browserDeadline.timeIntervalSinceNow)
+        print("Waiting for actual local export root within remaining browser budget: \(remaining) seconds.")
+        guard root.waitForExistence(timeout: remaining) else {
             captureSystem("Exporter-unavailable", app)
             return XCTFail("The local file browser did not finish navigating.")
         }
