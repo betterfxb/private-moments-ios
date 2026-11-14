@@ -397,12 +397,17 @@ final class PrivateMomentsUITests: XCTestCase {
         let dismissFeedback = app.buttons["settings.dismissBackupStatus"]
         XCTAssertEqual(dismissFeedback.label, english ? "Dismiss message" : "关闭提示")
         assertToolbarTarget(dismissFeedback)
+        waitForStableFrame(dismissFeedback, requireHittable: true,
+            message: "Backup feedback dismissal must settle before one tap.")
         dismissFeedback.tap()
         let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             !app.staticTexts["settings.backupStatus"].exists
         }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 5), .completed,
-            "Dismissing feedback must leave the journal available without changing its records.")
+        guard XCTWaiter.wait(for: [dismissed], timeout: 15) == .completed else {
+            captureFailure("Backup-dismiss-unavailable-\(language)", app)
+            return XCTFail("One feedback dismissal must remove the status without changing journal records.")
+        }
+        XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
 
         tap(app.buttons["settings.restore"], in: app)
         let cancel = nativeControl(["Cancel", "取消"], app: app, timeout: 10)
