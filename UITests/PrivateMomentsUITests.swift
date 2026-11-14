@@ -1496,10 +1496,33 @@ final class PrivateMomentsUITests: XCTestCase {
                 !app.buttons["timeline.clearFilters"].exists
         }, object: nil)
         XCTAssertEqual(XCTWaiter.wait(for: [cleared], timeout: 10), .completed)
-        XCTAssertEqual(search.placeholderValue, language == "en" ? "Search moments" : "搜索记录")
+        // Native phone search collapses after the body scrolls to Clear filters.
+        // Reveal it with the normal scroll gesture before reading its value.
+        let clearedSearch = revealTimelineSearch(in: app)
+        let placeholder = language == "en" ? "Search moments" : "搜索记录"
+        XCTAssertEqual(clearedSearch.placeholderValue, placeholder)
+        let clearedValue = clearedSearch.value as? String
+        XCTAssertTrue(clearedValue == "" || clearedValue == placeholder,
+            "Revealing the inactive search field must show an empty query.")
+        XCTAssertFalse(app.keyboards.firstMatch.exists)
         revealFully(from: scope, through: total, in: app)
         capture("Timeline-search-cleared-\(language)", app)
         print("Verified short search prompt, scope, empty/matched queries and clear keyboard dismissal. Locale: \(language).")
+    }
+
+    private func revealTimelineSearch(in app: XCUIApplication) -> XCUIElement {
+        let search = app.searchFields.firstMatch
+        for attempt in 0...4 {
+            if search.exists && search.isHittable && app.windows.firstMatch.frame.contains(search.frame) {
+                waitForStableFrame(search, requireHittable: true,
+                    message: "The revealed native search field must settle.")
+                return search
+            }
+            if attempt < 4 { app.scrollViews.firstMatch.swipeDown() }
+        }
+        captureFailure("Timeline-search-not-revealed", app)
+        XCTFail("Normal scrolling must reveal the cleared native search field.")
+        return search
     }
 
     private func waitForTimelineRows(_ count: Int, in app: XCUIApplication) {
