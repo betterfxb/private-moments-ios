@@ -6,6 +6,46 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      backup_smoke:
+        description: Run selected-profile backup unit and file flow (not full acceptance)
+        type: boolean
+        default: false
+      backup_smoke_language:
+        description: Language for explicit backup smoke (zh-Hans requires backup_smoke)
+        type: choice
+        default: en
+        options:
+          - en
+          - zh-Hans
+      input_smoke:
+        description: Run selected-profile input gallery only (not full acceptance)
+        type: boolean
+        default: false
+      rotation_smoke:
+        description: Run bilingual rotation only on an explicitly supported iPad profile
+        type: boolean
+        default: false
+      rotation_start:
+        description: Reference uses Settings first; each cold locale requires a separate fresh rotation-only job
+        type: choice
+        default: reference
+        options:
+          - reference
+          - cold-en
+          - cold-zh-Hans
+      backup_smoke_profile:
+        description: Device profile for focused diagnosis (ignored by full acceptance)
+        type: choice
+        default: compact-light
+        options:
+          - compact-light
+          - phone-dark
+          - ipad-light
+          - compact-dark-accessibility
+          - ipad-light-accessibility
+          - ipad-mini-light
+          - ipad-dark-accessibility
 
 permissions:
   contents: read
@@ -15,34 +55,52 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: matrix
+        env:
+          MATRIX_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.rotation_smoke && 'rotation' || github.event_name == 'workflow_dispatch' && inputs.input_smoke && 'input' || github.event_name == 'workflow_dispatch' && inputs.backup_smoke && 'backup' || 'full' }}
+          SMOKE_PROFILE: ${{ inputs.backup_smoke_profile || 'compact-light' }}
+          INPUT_SMOKE: ${{ inputs.input_smoke && '1' || '0' }}
+          BACKUP_SMOKE: ${{ inputs.backup_smoke && '1' || '0' }}
+          BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
+          ROTATION_SMOKE: ${{ inputs.rotation_smoke && '1' || '0' }}
+          ROTATION_START: ${{ inputs.rotation_start || 'reference' }}
+        run: |
+          if [[ "$ROTATION_SMOKE" == "1" && ( "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then
+            printf 'Rotation, input and backup smoke modes are mutually exclusive.\n' >&2
+            exit 1
+          fi
+          if [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then
+            printf 'Input and backup smoke modes are mutually exclusive.\n' >&2
+            exit 1
+          fi
+          if [[ "$BACKUP_LANGUAGE" != "en" && "$BACKUP_LANGUAGE" != "zh-Hans" ]] ||
+             [[ "$BACKUP_LANGUAGE" == "zh-Hans" && "$BACKUP_SMOKE" != "1" ]]; then
+            printf 'Chinese backup language requires explicit backup smoke.\n' >&2
+            exit 1
+          fi
+          if [[ "$ROTATION_START" != "reference" && "$ROTATION_START" != "cold-en" && "$ROTATION_START" != "cold-zh-Hans" ]] ||
+             [[ "$ROTATION_START" != "reference" && "$ROTATION_SMOKE" != "1" ]]; then
+            printf 'Cold rotation requires an explicit rotation-only scope and a supported locale.\n' >&2
+            exit 1
+          fi
+          python3 -m unittest discover -s tools -p 'test_ui*.py' -v
+          matrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"
+          printf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"
+
   build-and-test:
+    needs: plan
     name: ${{ matrix.profile }}
     runs-on: macos-15
-    timeout-minutes: 45
+    timeout-minutes: ${{ matrix.timeout_minutes }}
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - profile: compact-light
-            family: compact
-            appearance: light
-            text_size: large
-            gallery_only: '0'
-          - profile: phone-dark
-            family: phone
-            appearance: dark
-            text_size: large
-            gallery_only: '1'
-          - profile: ipad-light
-            family: ipad
-            appearance: light
-            text_size: large
-            gallery_only: '1'
-          - profile: compact-dark-accessibility
-            family: compact
-            appearance: dark
-            text_size: accessibility-extra-extra-extra-large
-            gallery_only: '1'
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
 
     steps:
       - name: Check out source
@@ -54,6 +112,9 @@ jobs:
           node tools/audit-xcode-project.mjs
           node tools/audit-release-materials.mjs
 
+      - name: Select and verify pinned UI toolchain
+        run: python3 tools/distribute.py select-toolchain
+
       - name: Select and configure simulator
         shell: bash
         env:
@@ -64,17 +125,22 @@ jobs:
           destination="$(xcrun simctl list devices available --json | python3 -c '
           import json
           import os
+          import subprocess
           import sys
 
           devices_by_runtime = json.load(sys.stdin).get("devices", {})
+          sdk = subprocess.check_output(["xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"], text=True).strip()
+          expected_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + "-".join(sdk.split(".")[:2])
           for runtime in sorted(devices_by_runtime, reverse=True):
-              if ".iOS-" not in runtime:
+              if runtime != expected_runtime:
                   continue
               devices = [d for d in devices_by_runtime[runtime] if d.get("isAvailable")]
               family = os.environ["SIMULATOR_FAMILY"]
               if family == "compact":
                   preferences = ["iPhone SE (3rd generation)", "iPhone 16e", "iPhone 17e", "iPhone 16", "iPhone 17"]
                   devices = [d for name in preferences for d in devices if d["name"] == name]
+              elif family == "ipad-mini":
+                  devices = [d for d in devices if d["name"].startswith("iPad mini")]
               elif family == "ipad":
                   devices = [d for d in devices if d["name"].startswith("iPad")]
               else:
@@ -84,7 +150,7 @@ jobs:
                   print("Selected: {} ({})".format(device["name"], runtime), file=sys.stderr)
                   print("platform=iOS Simulator,id={}".format(device["udid"]))
                   raise SystemExit(0)
-          raise SystemExit("No simulator matched the required device profile.")
+          raise SystemExit("No simulator matched the pinned SDK runtime and required device profile.")
           ')"
           echo "IOS_SIMULATOR_DESTINATION=$destination" >> "$GITHUB_ENV"
           printf 'Selected simulator: %s\n' "$destination"
@@ -98,7 +164,37 @@ jobs:
           PRIVATE_MOMENTS_DERIVED_DATA: ${{ runner.temp }}/PrivateMomentsDerivedData
           PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments.xcresult
           PRIVATE_MOMENTS_UI_GALLERY_ONLY: ${{ matrix.gallery_only }}
+          PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.backup_smoke && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
+          PRIVATE_MOMENTS_UI_INPUT_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_ROTATION_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.rotation_smoke && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_ROTATION_START: ${{ inputs.rotation_start || 'reference' }}
+          PRIVATE_MOMENTS_UI_IPAD_TESTS: ${{ startsWith(matrix.family, 'ipad') && '1' || '0' }}
         run: bash scripts/verify-mac.sh
+
+      - name: Read backup flow diagnostics
+        if: ${{ always() && env.IOS_SIMULATOR_DESTINATION != '' }}
+        run: |
+          simulator_id="${IOS_SIMULATOR_DESTINATION##*id=}"
+          xcrun simctl spawn "$simulator_id" log show --last 30m --style compact \
+            --predicate '(process == "PrivateMoments" AND subsystem != "com.apple.dt.xctest") OR subsystem BEGINSWITH "com.apple.DocumentManager"'
+
+      - name: Read compiled orientation metadata
+        if: always()
+        run: |
+          python3 - "${RUNNER_TEMP}/PrivateMomentsDerivedData/Build/Products/Debug-iphonesimulator/PrivateMoments.app/Info.plist" <<'PY'
+          import json
+          from pathlib import Path
+          import plistlib
+          import sys
+          path = Path(sys.argv[1])
+          if path.is_file():
+              data = plistlib.loads(path.read_bytes())
+              keys = ['UIDeviceFamily', 'UISupportedInterfaceOrientations', 'UISupportedInterfaceOrientations~ipad', 'UIRequiresFullScreen', 'UIApplicationSceneManifest']
+              print(json.dumps({k: data.get(k) for k in keys}, sort_keys=True))
+          else:
+              print('No compiled app orientation metadata available.')
+          PY
 
       - name: Export XCTest UI screenshots
         if: always()

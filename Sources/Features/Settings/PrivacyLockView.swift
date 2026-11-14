@@ -5,17 +5,17 @@ struct PrivacyLockView: View {
 
     var body: some View {
         ZStack {
-            AppColors.cream.ignoresSafeArea()
+            AppColors.background.ignoresSafeArea()
             VStack(spacing: 18) {
                 Image(systemName: "lock.fill")
                     .font(.system(size: 30, weight: .medium))
-                    .foregroundStyle(AppColors.terracotta)
+                    .foregroundStyle(AppColors.accentText)
                     .frame(width: 68, height: 68)
-                    .background(AppColors.blush.opacity(0.18), in: Circle())
+                    .background(AppColors.accentWash, in: Circle())
                     .accessibilityHidden(true)
                 Text("Your journal is private")
-                    .font(.system(.largeTitle, design: .serif))
-                    .foregroundStyle(AppColors.ink)
+                    .font(.system(.title2, design: .rounded).weight(.semibold))
+                    .foregroundStyle(AppColors.text)
                     .multilineTextAlignment(.center)
                 Text(
                     lockController.isEnabled
@@ -23,7 +23,7 @@ struct PrivacyLockView: View {
                         : "Your entries are hidden while the app is inactive."
                 )
                     .font(.system(.body, design: .rounded))
-                    .foregroundStyle(AppColors.inkSoft)
+                    .foregroundStyle(AppColors.secondaryText)
                     .multilineTextAlignment(.center)
 
                 if let errorMessage = lockController.errorMessage {
@@ -34,9 +34,15 @@ struct PrivacyLockView: View {
                     Button {
                         Task { await lockController.unlock() }
                     } label: {
-                        Label("Unlock journal", systemImage: "lock.open.fill")
+                        if lockController.isAuthenticating {
+                            ProgressView("Authenticating…").tint(AppColors.onAccent)
+                        } else {
+                            Label("Unlock journal", systemImage: "lock.open.fill")
+                        }
                     }
                     .buttonStyle(PrimaryActionButtonStyle())
+                    .disabled(lockController.isAuthenticating)
+                    .accessibilityIdentifier("privacy.unlock")
                 }
             }
             .padding(.horizontal, AppSpacing.page)

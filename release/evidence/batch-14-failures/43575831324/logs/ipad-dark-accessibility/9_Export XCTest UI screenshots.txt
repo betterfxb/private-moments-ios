@@ -1,0 +1,39 @@
+﻿2026-11-14T08:38:23.0234100Z ##[group]Run result_bundle="${RUNNER_TEMP}/PrivateMoments.xcresult"
+2026-11-14T08:38:23.0234580Z [36;1mresult_bundle="${RUNNER_TEMP}/PrivateMoments.xcresult"[0m
+2026-11-14T08:38:23.0234980Z [36;1mscreenshot_directory="${RUNNER_TEMP}/PrivateMomentsUIScreenshots"[0m
+2026-11-14T08:38:23.0235340Z [36;1mif [[ ! -d "$result_bundle" ]]; then[0m
+2026-11-14T08:38:23.0235720Z [36;1m  printf 'No XCTest result bundle was produced; skipping screenshot export.\n'[0m
+2026-11-14T08:38:23.0236140Z [36;1m  exit 0[0m
+2026-11-14T08:38:23.0236320Z [36;1mfi[0m
+2026-11-14T08:38:23.0236510Z [36;1mmkdir -p "$screenshot_directory"[0m
+2026-11-14T08:38:23.0246870Z [36;1mxcrun xcresulttool export attachments \[0m
+2026-11-14T08:38:23.0247200Z [36;1m  --path "$result_bundle" \[0m
+2026-11-14T08:38:23.0247450Z [36;1m  --output-path "$screenshot_directory"[0m
+2026-11-14T08:38:23.0247870Z [36;1mscreenshot_count="$(find "$screenshot_directory" -type f -iname '*.png' | wc -l | tr -d ' ')"[0m
+2026-11-14T08:38:23.0248340Z [36;1mprintf 'Exported %s PNG attachment(s).\n' "$screenshot_count"[0m
+2026-11-14T08:38:23.0293080Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T08:38:23.0293400Z env:
+2026-11-14T08:38:23.0293660Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T08:38:23.0294110Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=73C19119-B10E-4309-872E-C53EF3F0EF27
+2026-11-14T08:38:23.0294500Z ##[endgroup]
+2026-11-14T08:38:25.8099390Z Exported 17 attachments for: PrivateMomentsUITests/testIPadRotationContinuity():
+2026-11-14T08:38:25.8116550Z File: 4CCE2048-D7CE-4770-B836-838AFB1ECFC5.txt, suggested name: "Rotation-system-control-unavailable-en-hierarchy_0_87FFAD5C-384B-4DA8-9770-380DE5FBD6E3.txt"
+2026-11-14T08:38:25.8120500Z File: 4DD3A12C-AAAD-4B73-B199-02EA0DE37F43.png, suggested name: "Rotation-system-control-unavailable-en_0_2D396B20-1E7E-4676-827C-F35E47604B11.png"
+2026-11-14T08:38:25.8124430Z File: C97AB561-6A15-47DA-83E9-687C8A90B969.txt, suggested name: "App UI hierarchy for com.apple_0_7AA2D509-0695-43DC-A444-37C3B98510B9.springboard"
+2026-11-14T08:38:25.8127740Z File: 81749654-FF0D-4BFF-B207-0F2AD8591197, suggested name: "UI Snapshot 2026-11-14 at 08.37.07 AM"
+2026-11-14T08:38:25.8130040Z File: BB53AE38-1C34-4134-BF1E-F3B70E5A63AB.txt, suggested name: "Debug description for `Button (First Match)`_0_7D5B5380-EBEF-46B9-81E1-F690625A2C79.txt"
+2026-11-14T08:38:25.8132920Z File: 980026A6-C0C5-4A51-87D5-82410F844DEA.txt, suggested name: "Debug description for `Button (First Match)`_0_787F7670-83D3-40DA-BA8E-A3340262AFCA.txt"
+2026-11-14T08:38:25.8136270Z File: A9EBF24E-1CB8-403E-9643-69ADD4E99CE7.txt, suggested name: "Debug description for `Button (First Match)`_0_0169951A-7AD7-4E75-9620-55EE3741A12F.txt"
+2026-11-14T08:38:25.8139090Z File: 76CFB40B-D794-4206-AE83-1E3D0302D233.txt, suggested name: "Debug description for `Button (First Match)`_0_29882E97-964E-4745-B043-3B6C950CA4E6.txt"
+2026-11-14T08:38:25.8142050Z File: 8CAFB3B8-BB78-4E52-9522-2A88C583EDDD.txt, suggested name: "Debug description for `Button (First Match)`_0_8E32BC70-4FE3-477A-8DCD-DBE9496CE6E8.txt"
+2026-11-14T08:38:25.8145350Z File: D17FD18A-D353-4F10-A528-FBD0C6D58FF9.txt, suggested name: "Debug description for `Button (First Match)`_0_A01DD81E-69E9-4720-8DFA-004AF97C8CA1.txt"
+2026-11-14T08:38:25.8147980Z File: E4BF27D3-2C75-4C69-8DB3-B932EFABA890.txt, suggested name: "Debug description for `Button (First Match)`_0_D0603A00-1C97-4F8C-9E03-A04D206735A8.txt"
+2026-11-14T08:38:25.8150800Z File: 21820BB2-A0F5-4D18-AA1C-5927069D3858.txt, suggested name: "Debug description for `Button (First Match)`_0_DE9529AF-AF3F-473D-BFE6-B1F29EDFB54A.txt"
+2026-11-14T08:38:25.8152500Z File: E34C7DD5-8AD9-4F29-A920-17CC76E182C7.txt, suggested name: "Debug description for `Button (First Match)`_0_29F32E23-9066-4687-855A-15FF198201DB.txt"
+2026-11-14T08:38:25.8306630Z File: F50972E6-91F7-49D6-BCBC-2D8C76E80D15.txt, suggested name: "Debug description for `Button (First Match)`_0_58B4F9FC-8D00-438F-9084-A64F2386EDA8.txt"
+2026-11-14T08:38:25.8355580Z File: C9041C2B-C382-4448-A882-A39E0DF7F772, suggested name: "UI Snapshot 2026-11-14 at 08.36.54 AM"
+2026-11-14T08:38:25.8356360Z File: 9EAE980D-4BB9-4DDA-97C2-91233CD5DD74, suggested name: "Synthesized Event 2026-11-14 at 08.36.56 AM"
+2026-11-14T08:38:25.8357040Z File: 702A2197-CB41-46E8-9423-147005929A58.mp4, suggested name: "Screen Recording 2026-11-14 at 08.36.27 AM.mp4"
+2026-11-14T08:38:25.8357470Z 
+2026-11-14T08:38:25.8357870Z Generated manifest file with attachment details: /Users/runner/work/_temp/PrivateMomentsUIScreenshots/manifest.json
+2026-11-14T08:38:25.8758880Z Exported 1 PNG attachment(s).

@@ -1,5 +1,17 @@
 # Recap Acceptance Record
 
+## Current backup continuity verification (2026-11-11)
+
+[Batch eight](UX-ACCEPTANCE-08.md) preserves the existing editor regression and adds actual system export/import, review cancellation, merge/replacement and relaunch checks for a 4-minute-7-second record with a synthetic private note on four profiles. Backup review shows counts rather than note content. This does not imply successful physical biometric authentication or external-provider/file-protection acceptance.
+
+## Historical failure-recovery verification (2026-11-11)
+
+The [batch-seven acceptance](UX-ACCEPTANCE-07.md) adds actual first-save failure through the real SwiftData rollback path, retained drafts, toolbar reload and explicit retry in four bilingual configurations. Full regression covers selection change/revert, note keep/discard and long-note plus exact-time persistence after retry/relaunch. A simulated pre-commit failure does not replace physical storage, VoiceOver, privacy lifecycle or process-recovery acceptance; earlier tables describe their own revisions.
+
+## Current editor verification (2026-11-11)
+
+The [batch-six interaction report](UX-ACCEPTANCE-06.md) supersedes the historical status below for clean manual cancellation, changed/reverted manual drafts, toolbar Save and timing validation. Timed recap cancellation remains guarded. The latest four-profile evidence and exact source are linked there; per-field VoiceOver and injected save-failure UI acceptance remain open. The older table records its own revision only.
+
 Status: source review and Windows audits complete. Final cloud run [42665863317](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), source `5fdd3cf`, passed all 23 unit tests and all three core UI tests. The keyboard-covered Save issue is fixed: the test enters a synthetic note, dismisses the keyboard with Done, saves it, edits the rating, discards a later change, and verifies the original note/rating after relaunch. Basic new-reflection keep/discard confirmations also pass. The broader field-by-field and VoiceOver scenarios below still require manual acceptance.
 
 | Scenario | Steps | Expected result | Runtime result |

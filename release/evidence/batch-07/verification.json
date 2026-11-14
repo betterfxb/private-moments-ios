@@ -1,0 +1,241 @@
+{
+  "sourceCommit": "9070f3d89def44a79ba169c9c963567caad10dbe",
+  "runId": 42900233189,
+  "runURL": "https://github.com/betterfxb/private-moments-ios/actions/runs/42900233189",
+  "toolchain": {
+    "xcode": "26.2",
+    "simulatorSDK": "26.2",
+    "runtime": "26.2"
+  },
+  "runtimeEvidence": [
+    {
+      "profile": "compact-light",
+      "jobID": 130124845920,
+      "method": "run ZIP selection step",
+      "sha256": "70ed92586f34b3d3ade0faeef87faf4f5f23fe6e6844081889320482c694c3dd"
+    },
+    {
+      "profile": "ipad-light",
+      "jobID": 130124846035,
+      "method": "run ZIP selection step",
+      "sha256": "dc8377c978d13b92bfaa1306f118d0800e4024339ba122e02c6b73bcc88ff37c"
+    },
+    {
+      "profile": "phone-dark",
+      "jobID": 130124846108,
+      "method": "run ZIP selection step",
+      "sha256": "93cdfea27da0f51812d553671921de35b83f6ea4a13a7f016e5c619f87bc51e0"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "jobID": 130124846250,
+      "method": "run ZIP selection step",
+      "sha256": "3d6d5ab0c1b76484f5becc05dc6524bc625ed2b8493f84fe4ca0f86e74905adb"
+    }
+  ],
+  "tests": {
+    "compactLightUnitTests": 32,
+    "compactLightUITests": 4,
+    "otherProfiles": "bilingual gallery with injected save failure",
+    "releaseSimulatorDebugHooks": "absent",
+    "localDistributionToolTests": 25
+  },
+  "profiles": [
+    {
+      "name": "compact-light",
+      "jobID": 130124845920,
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 45
+    },
+    {
+      "name": "ipad-light",
+      "jobID": 130124846035,
+      "conclusion": "success",
+      "device": "iPad Pro 13-inch (M5)",
+      "exportedPNGCount": 42
+    },
+    {
+      "name": "phone-dark",
+      "jobID": 130124846108,
+      "conclusion": "success",
+      "device": "iPhone 17 Pro",
+      "exportedPNGCount": 42
+    },
+    {
+      "name": "compact-dark-accessibility",
+      "jobID": 130124846250,
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 46
+    }
+  ],
+  "openedCaptures": [
+    "phone-dark/Save-error-en",
+    "phone-dark/Save-recovery-en",
+    "ipad-light/Detail-top-zh-Hans",
+    "ipad-light/Save-error-zh-Hans",
+    "compact-dark-accessibility/Save-error-en",
+    "compact-dark-accessibility/Save-error-zh-Hans",
+    "compact-dark-accessibility/Save-recovery-zh-Hans",
+    "compact-dark-accessibility/Detail-top-zh-Hans",
+    "compact-dark-accessibility/Save-recovery-en",
+    "phone-dark/Detail-top-zh-Hans",
+    "compact-light/Save-error-en",
+    "compact-light/Save-error-zh-Hans",
+    "compact-light/Save-recovery-en",
+    "compact-light/Save-recovery-zh-Hans",
+    "compact-light/Detail-top-zh-Hans",
+    "compact-light/Long-detail-top-en",
+    "compact-light/Manual-entered-en"
+  ],
+  "retainedUnmodifiedScreenshots": [
+    {
+      "file": "compact-light-Save-error-en.png",
+      "title": "小屏英文：保存失败与草稿说明",
+      "profile": "compact-light",
+      "capture": "Save-error-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "d2da4d825953e762fdc45755bf9c86371da449cb84c0176cf975413aacc3fcef"
+    },
+    {
+      "file": "compact-light-Save-error-zh-Hans.png",
+      "title": "小屏中文：保存失败与草稿说明",
+      "profile": "compact-light",
+      "capture": "Save-error-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "80e5497bb0da29dc34a745c5f6b9b6b88fb4eae91dbbcfa32eb3f9ed772622d2"
+    },
+    {
+      "file": "compact-light-Save-recovery-en.png",
+      "title": "小屏英文：顶部重新读取",
+      "profile": "compact-light",
+      "capture": "Save-recovery-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "de6dba5899a1112ebbab83a6a934dd62496664da31faa2c9314203dc00aa9b84"
+    },
+    {
+      "file": "compact-light-Save-recovery-zh-Hans.png",
+      "title": "小屏中文：顶部重新读取",
+      "profile": "compact-light",
+      "capture": "Save-recovery-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "6dcadd28f98417eb2df3ffd21272735f01f7fc7b43190d9e11bb97a6078ba0dc"
+    },
+    {
+      "file": "compact-light-Detail-top-zh-Hans.png",
+      "title": "详情顶部编辑入口",
+      "profile": "compact-light",
+      "capture": "Detail-top-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "f19a179c81f01308c5d3b284f33b4f7afe604660757146b5cd08a762a36ab2c4"
+    },
+    {
+      "file": "compact-light-Long-detail-top-en.png",
+      "title": "长备注记录：直接进入编辑",
+      "profile": "compact-light",
+      "capture": "Long-detail-top-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "2c4dc6917e629413b3a9e272074a505142db6cd9779631dbc3669311061ec1db"
+    },
+    {
+      "file": "compact-light-Manual-entered-en.png",
+      "title": "失败前的精确分钟与秒",
+      "profile": "compact-light",
+      "capture": "Manual-entered-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "22821d200e7b93adc391b46f521c16101cfbc8122d13a2bf139cd24773d46d8b"
+    },
+    {
+      "file": "phone-dark-Save-error-en.png",
+      "title": "深色：失败提示",
+      "profile": "phone-dark",
+      "capture": "Save-error-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "1565a7923f5e32bb8112d88f4edb7b49a424858962248df16c81ab9214c7a9cd"
+    },
+    {
+      "file": "phone-dark-Save-recovery-en.png",
+      "title": "深色：重新读取",
+      "profile": "phone-dark",
+      "capture": "Save-recovery-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "d565761b350a097731860376517eba6415ba18bbd96aefd7e8e71aaec97e8e53"
+    },
+    {
+      "file": "ipad-light-Detail-top-zh-Hans.png",
+      "title": "iPad：顶部编辑",
+      "profile": "ipad-light",
+      "capture": "Detail-top-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "1902e55399feb8754a0f128df9f6ba3082f365c4c204cdb850f8f6fe185cd29e"
+    },
+    {
+      "file": "compact-dark-accessibility-Save-error-en.png",
+      "title": "辅助字号：短英文提示与可见操作",
+      "profile": "compact-dark-accessibility",
+      "capture": "Save-error-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "5bfc583222afe1f5ec1175b10ce7d24b6e3456e0ee99fabd981fd220894b4820"
+    },
+    {
+      "file": "compact-dark-accessibility-Save-error-zh-Hans.png",
+      "title": "辅助字号：失败提示",
+      "profile": "compact-dark-accessibility",
+      "capture": "Save-error-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "309d8c526dc54696189700889eeac16c08b1a6ab6a6a827e22dd8cf3b75670d7"
+    },
+    {
+      "file": "compact-dark-accessibility-Save-recovery-zh-Hans.png",
+      "title": "辅助字号：顶部重新读取",
+      "profile": "compact-dark-accessibility",
+      "capture": "Save-recovery-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "b0d6be807a7dc418293579b0dc68b0b0ba69c63f421e5e5965ab9b3d11840119"
+    },
+    {
+      "file": "compact-dark-accessibility-Detail-top-zh-Hans.png",
+      "title": "辅助字号：顶部编辑",
+      "profile": "compact-dark-accessibility",
+      "capture": "Detail-top-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "fd86b7c99b3ad9b54dffe9d04faaea35b3efb7832664ad291de9cdf45ee69ac0"
+    }
+  ],
+  "baseline": [
+    {
+      "file": "before-Detail-top-zh-Hans.png",
+      "sourceCommit": "02e4c07506ab8caa52cfb90210d9f5114ceeddd7",
+      "runId": 42885697214,
+      "sha256": "43cd7f3fac2c391e5d73716ac4a50ddb200e3fab47a672f0dc218016be85a68e"
+    },
+    {
+      "file": "before-Save-error-en.png",
+      "sourceCommit": "d55c0b11ab83faaf3d92b5f2881dc3c9f5c7a6e9",
+      "runId": 42896038479,
+      "sha256": "cbc0338a46304641f7ea1afbd6c09cfd14bc3ce1b41d996b6431b3a820fbf9f7",
+      "purpose": "diagnostic before image; this run did not pass"
+    }
+  ],
+  "limits": [
+    "Failure is injected once before commit into a Debug UUID-isolated test store, not a physical disk fault",
+    "Selected screenshots reviewed, not all exported PNGs",
+    "No physical VoiceOver, tactile, privacy-lifecycle or older-runtime acceptance",
+    "No signing, TestFlight upload or main merge"
+  ]
+}

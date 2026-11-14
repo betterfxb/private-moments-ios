@@ -1,0 +1,36 @@
+﻿2026-11-14T00:24:34.6031953Z ##[group]Run if [[ "$ROTATION_SMOKE" == "1" && ( "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then
+2026-11-14T00:24:34.6032960Z [36;1mif [[ "$ROTATION_SMOKE" == "1" && ( "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then[0m
+2026-11-14T00:24:34.6033561Z [36;1m  printf 'Rotation, input and backup smoke modes are mutually exclusive.\n' >&2[0m
+2026-11-14T00:24:34.6033998Z [36;1m  exit 1[0m
+2026-11-14T00:24:34.6034194Z [36;1mfi[0m
+2026-11-14T00:24:34.6034475Z [36;1mif [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then[0m
+2026-11-14T00:24:34.6034930Z [36;1m  printf 'Input and backup smoke modes are mutually exclusive.\n' >&2[0m
+2026-11-14T00:24:34.6035347Z [36;1m  exit 1[0m
+2026-11-14T00:24:34.6035549Z [36;1mfi[0m
+2026-11-14T00:24:34.6035854Z [36;1mif [[ "$BACKUP_LANGUAGE" != "en" && "$BACKUP_LANGUAGE" != "zh-Hans" ]] ||[0m
+2026-11-14T00:24:34.6036340Z [36;1m   [[ "$BACKUP_LANGUAGE" == "zh-Hans" && "$BACKUP_SMOKE" != "1" ]]; then[0m
+2026-11-14T00:24:34.6036842Z [36;1m  printf 'Chinese backup language requires explicit backup smoke.\n' >&2[0m
+2026-11-14T00:24:34.6037298Z [36;1m  exit 1[0m
+2026-11-14T00:24:34.6037489Z [36;1mfi[0m
+2026-11-14T00:24:34.6037810Z [36;1mpython3 -m unittest discover -s tools -p 'test_ui_test_matrix.py' -v[0m
+2026-11-14T00:24:34.6038406Z [36;1mmatrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"[0m
+2026-11-14T00:24:34.6038939Z [36;1mprintf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T00:24:34.6091962Z shell: /usr/bin/bash -e {0}
+2026-11-14T00:24:34.6092249Z env:
+2026-11-14T00:24:34.6092464Z   MATRIX_SCOPE: rotation
+2026-11-14T00:24:34.6092897Z   SMOKE_PROFILE: ipad-light
+2026-11-14T00:24:34.6093139Z   INPUT_SMOKE: 0
+2026-11-14T00:24:34.6093341Z   BACKUP_SMOKE: 0
+2026-11-14T00:24:34.6093541Z   BACKUP_LANGUAGE: en
+2026-11-14T00:24:34.6093758Z   ROTATION_SMOKE: 1
+2026-11-14T00:24:34.6093958Z ##[endgroup]
+2026-11-14T00:24:34.6713313Z test_existing_diagnostics_select_exactly_the_requested_profile (test_ui_test_matrix.UITestMatrixTests.test_existing_diagnostics_select_exactly_the_requested_profile) ... ok
+2026-11-14T00:24:34.6715660Z test_full_acceptance_keeps_original_profiles_and_scopes (test_ui_test_matrix.UITestMatrixTests.test_full_acceptance_keeps_original_profiles_and_scopes) ... ok
+2026-11-14T00:24:34.6717199Z test_ipad_accessibility_requires_explicit_input_scope (test_ui_test_matrix.UITestMatrixTests.test_ipad_accessibility_requires_explicit_input_scope) ... ok
+2026-11-14T00:24:34.6718600Z test_rotation_requires_ipad_light_profile (test_ui_test_matrix.UITestMatrixTests.test_rotation_requires_ipad_light_profile) ... ok
+2026-11-14T00:24:34.6720261Z test_unknown_scope_or_profile_fails_closed (test_ui_test_matrix.UITestMatrixTests.test_unknown_scope_or_profile_fails_closed) ... ok
+2026-11-14T00:24:34.6720970Z 
+2026-11-14T00:24:34.6721169Z ----------------------------------------------------------------------
+2026-11-14T00:24:34.6721667Z Ran 5 tests in 0.001s
+2026-11-14T00:24:34.6721849Z 
+2026-11-14T00:24:34.6721961Z OK

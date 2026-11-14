@@ -1,6 +1,62 @@
 # Simulator UI acceptance
 
-## Latest verification (2026-11-10)
+## Supplemental iPad mini and dark maximum-text verification (2026-11-14)
+
+Batch14 completes sequential mini light/Large rotation, dark maximum-text iPad rotation and bilingual input-gallery diagnostics. The default four-profile suite is preserved. Final large-iPad rotation passes include a real Settings orientation-reference precondition; cold first rotation without it remains open, and no production rotation fix is established. These focused Debug UI results do not include application unit tests or Release acceptance; the latest full four-profile acceptance remains batch13 on `fb78856` below. Exact per-run sources are in the receipt.
+
+124 original PNGs checked, 88 selected originals actually opened and retained. [Report and limits](UX-ACCEPTANCE-14.md) · [originals](evidence/batch-14/index.html) · [receipt](evidence/batch-14/verification.json) · [project memory](../PROJECT-MEMORY.md). Small-device full-window rotation does not establish system split-view/window resizing. Physical interaction, termination recovery and aesthetic acceptance remain open. No signing, Apple upload or main merge.
+
+## iPad rotation and ready-export verification (2026-11-14)
+
+Final tested source `fb78856ca48a43eb1739d5c2c6198d973a519246`, [full run 43556512255](https://github.com/betterfxb/private-moments-ios/actions/runs/43556512255): four profiles pass, with 50 unit tests and 6 main / 3 iPad / 2 each other phone UI executions. Debug/Release and Release hook exclusion pass. Phone-dark English and maximum-text English file diagnostics passed on `96e21b0`; compact-light Chinese diagnostics passed on `adac204`. After a second full attempt exposed maximum-text feedback dismissal, final-source maximum-text file diagnostics preceded this full run. Initial phone and rotation diagnostics retain their own sources; four failed runs remain archived separately.
+
+Across seven successful runs, 363 exact original PNGs checked; 166 selected originals actually opened and retained. [Report and limits](UX-ACCEPTANCE-13.md) · [originals](evidence/batch-13/index.html) · [receipt](evidence/batch-13/verification.json) · [project memory](../PROJECT-MEMORY.md). Changes concern tests/CI/tools, with production app paths unchanged. Keyboard-dismissed iPad rotation is verified in light/Large/full window; split view, other layouts, physical-device interaction and aesthetic approval remain open. No signing, Apple upload or main merge.
+
+The final full compact-light English and Chinese flows each encountered one real source-unavailable message and recovered through one explicit backup reselection. Both recovery originals were reviewed; unchanged records and exact restore/relaunch checks passed. Other profiles used no explicit recovery.
+
+## Historical full verification: Chinese files and continuity (2026-11-14)
+
+Source `7b92acbe21d0cb88e1e4378477b719fd86dd1ee3`, [run 43442608041](https://github.com/betterfxb/private-moments-ios/actions/runs/43442608041), passes all four profiles on Xcode/SDK/Simulator26.2: 50 unit tests, six main-profile UI methods, two per other profile, Debug/Release and Release hook exclusion. Chinese real system-file roundtrip is covered on compact-light; English files and bilingual galleries run on every profile. A preceding same-source Chinese focused run passes 9 backup unit tests and one UI method. All 285 PNGs across the two runs verified; 88 selected originals opened and retained. [Report, actual coverage and capture limits](UX-ACCEPTANCE-12.md) · [originals](evidence/batch-12/index.html) · [receipt](evidence/batch-12/verification.json). Application code unchanged; no signing, Apple upload or main merge. Physical-device and remaining layout gates stay open; historical results below retain their own source and scope.
+
+## Supplementary iPad maximum-text portrait gallery (2026-11-13)
+
+Source `5c0a63757a8ff3d60f5a247a69c146884f973785`, [run 43419507000](https://github.com/betterfxb/private-moments-ios/actions/runs/43419507000), passes one bilingual input-gallery UI method on iPad Pro 13-inch (M5), Xcode/Simulator26.2, light appearance and system accessibility-extra-extra-extra-large. All 60 final original PNGs opened and retained at2064×2752. Keyboard visibility assertions were corrected after two archived failures; application code remains unchanged from the full result below. No new full matrix, 50 unit tests, Release or system-file roundtrip was performed in this supplement. [Report and limits](UX-ACCEPTANCE-11.md) · [all originals](evidence/batch-11/index.html) · [receipt](evidence/batch-11/verification.json). This closes only the previously unverified iPad light/max-text portrait gallery; physical IME/accessibility and remaining layouts stay open.
+
+## Historical input and large-text verification (2026-11-13)
+
+Source `204387dbc1b2b3de135a6901a2a8907e4ad353d5`, [run 43381177893](https://github.com/betterfxb/private-moments-ios/actions/runs/43381177893), passes four profiles with 50 unit tests,5 main UI methods and2 UI methods on each other profile; Release Debug-hook exclusion verified. 267 exact-name PNGs verified and75 final originals opened. [Report](UX-ACCEPTANCE-10.md) · [originals](evidence/batch-10/index.html) · [receipt](evidence/batch-10/verification.json). This closes the earlier pending presentation validation without declaring old failed runs successful. Physical-device/IME/authentication/distribution limits remain explicit in the report.
+
+## Historical backup and lock verification (2026-11-11)
+
+Source `d4a6a83d5ab4c2d2c650bbe9309ae3e998989779`, [run 43001370010](https://github.com/betterfxb/private-moments-ios/actions/runs/43001370010), passes four profiles on Xcode26.2 / SDK26.2 / iOS26.2: 50 unit tests, five main-profile UI tests and two UI methods per other profile, with Release hook exclusion. Actual English system exporter/importer roundtrips verify preview cancellation, merge, separately confirmed replacement and exact data after relaunch. Bilingual galleries cover short export warnings and authentication cancellation recovery feedback. 219 PNGs checked; 21 selected originals opened. See [acceptance and limits](UX-ACCEPTANCE-08.md), [originals](evidence/batch-08/index.html) and [receipt](evidence/batch-08/verification.json). Physical authentication/VoiceOver, external file providers and older runtimes remain open; prior sections are historical.
+
+## Historical editing and recovery verification (2026-11-11)
+
+Source `9070f3d89def44a79ba169c9c963567caad10dbe`, [run 42900233189](https://github.com/betterfxb/private-moments-ios/actions/runs/42900233189), passes all four profiles on Xcode26.2 / SDK26.2 / iOS26.2. Compact-light includes Debug/Release builds, actual Release Simulator test-hook exclusion, 32 unit tests and four UI tests. Other profiles run a bilingual gallery including injected first-save failure, retained draft, toolbar reload and explicit retry. All 175 PNGs downloaded; 17 selected final originals opened.
+
+Details now have a reachable toolbar Edit, and the editor offers reload without losing the draft. New coverage exercises selection revert/discard, notes and exact timing through failure/relaunch. See [acceptance](UX-ACCEPTANCE-07.md), [raw evidence](evidence/batch-07/index.html) and [receipt](evidence/batch-07/verification.json). Debug UUID-only fault injection is not a physical disk-failure certification; device privacy/accessibility, older runtimes and system backup-picker flows remain separate. Historical revisions below retain their own limits.
+
+## Historical core interaction verification (2026-11-11)
+
+Source `02e4c07506ab8caa52cfb90210d9f5114ceeddd7`, [run 42885697214](https://github.com/betterfxb/private-moments-ios/actions/runs/42885697214), passes four profiles with Xcode26.2 / SDK26.2 / iOS26.2: Debug/Release, 30 unit tests and four main-profile UI tests, plus three bilingual galleries. The editor adds a reachable toolbar Save with shared validation, clean manual-entry cancellation and preserved changed/timed draft protection. Timeline has truthful filtered-empty states and one-action query/type reset with keyboard dismissal; the week menu uses shorter visible dates and Today labels all-time statistics.
+
+All 158 PNGs were downloaded and expected names checked; 17 selected final originals were opened. See [interaction acceptance](UX-ACCEPTANCE-06.md), [unmodified originals](evidence/batch-06/index.html) and [receipt](evidence/batch-06/verification.json). Native code matches the tested source; physical accessibility/privacy/feel, older runtimes and UI fault injection remain separate. Historical results below apply only to their revisions.
+
+## Historical native visual-system verification (2026-11-10)
+
+Source `dd8b6fe37274b707fadca13430bd9441eccd8c7f`, run [42828824461](https://github.com/betterfxb/private-moments-ios/actions/runs/42828824461), passed all four profiles using Xcode26.2, Simulator SDK26.2 and iOS26.2 runtime. Compact-light passes Debug/Release builds, 30 unit tests and four UI tests; the other profiles pass their bilingual gallery. All 150 PNGs were downloaded and expected capture names checked. 22 selected final-source originals were opened, including six core screens and maximum-text/date/control states. This is not manual review of every PNG or a physical-device accessibility certification.
+
+The Rose theme, grouped editor/detail, compact record anatomy, native system navigation, accessible week menu and readable calendar selection are implemented in SwiftUI. Earlier green screenshots were rejected for visible defects and corrected. [Visual acceptance](VISUAL-UPGRADE-ACCEPTANCE.md), [unmodified images and comparison](evidence/batch-05/index.html), and [verification receipt](evidence/batch-05/verification.json) identify exact evidence and limits. Historical counts below apply only to their own revisions. Signing, physical VoiceOver/privacy, and user aesthetic approval remain separate.
+
+## Historical native manual-entry verification (2026-11-10)
+
+Source `b1225b5e065e81a5847c969d68278363780de9bd`, run [42801899567](https://github.com/betterfxb/private-moments-ios/actions/runs/42801899567), passed all four profiles. Compact-light passes Debug/Release builds, 30 unit tests and all four UI tests; the other three profiles pass the bilingual gallery. The 148 exported PNGs comprise 38 compact-light, 38 compact-dark-accessibility, 36 phone-dark and 36 ipad-light captures. Logs identify Xcode 16.4, iPhoneSimulator 18.5 SDK and iOS 26.2 Simulator runtime. This is not a new-SDK matrix result.
+
+New coverage includes direct manual entry, exact minute/second editing, saved-day selection, empty-day filtering, cancel safeguards and relaunch persistence. Screenshot review rejected an earlier green run for Chinese maximum-text clipping. The final implementation uses a wrapping date row and a separate date panel at accessibility sizes, with input-frame boundary assertions. Twenty selected final-source originals were opened; this is not manual review of all 148 images. Retained unmodified images, hashes, profile details and limitations are in [the manual-entry acceptance record](MANUAL-ENTRY-ACCEPTANCE.md) and [verification receipt](evidence/batch-04/verification.json).
+
+All evidence uses isolated synthetic stores. The existing global theme remains in place; these functional checks do not establish visual approval, physical VoiceOver/privacy acceptance or distribution readiness. Historical counts below describe their own source revisions only.
+
+## Historical verification (2026-11-10, source 5fdd3cf)
 
 Complete: source `5fdd3cf`, run [42665863317](https://github.com/betterfxb/private-moments-ios/actions/runs/42665863317), overall success on attempt 2. The full compact-light suite passes Debug/Release builds, 23 unit tests and all three UI tests; the other three profiles each pass the bilingual gallery. This is six UI-test executions in total. All profiles used Xcode 16.4 and the iOS 26.2 Simulator runtime.
 
@@ -26,7 +82,7 @@ All 112 original gallery PNGs were checked against the expected capture names an
 | English Timeline title truncated at largest accessibility text | Use native inline title at accessibility sizes | Full title and search entry visible in accessibility gallery |
 | Off-screen lazy controls or partly visible gallery actions | Scroll before requiring lazy controls; fit complete capture ranges below the navigation bar; wait for stable geometry | Full kind/rating, Save, edit/delete and footer captures accepted in both languages |
 
-## Automated coverage
+## Historical automated coverage (source 5fdd3cf)
 
 The `PrivateMomentsUITests` target runs as part of `scripts/verify-mac.sh` and the GitHub macOS workflow. Coverage below describes the implemented assertions; the execution record identifies which source revisions have passed.
 

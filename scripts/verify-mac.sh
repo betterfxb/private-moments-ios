@@ -18,7 +18,7 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
     fail "Run this script on macOS with a full Xcode installation."
 fi
 
-for required_tool in xcodebuild xcode-select xcrun; do
+for required_tool in xcodebuild xcode-select xcrun python3; do
     command -v "$required_tool" >/dev/null 2>&1 || fail "Required Xcode tool not found: ${required_tool}"
 done
 
@@ -50,8 +50,57 @@ fi
 # Keep the array nonempty for macOS Bash 3.2 with `set -u`, and run on the
 # configured simulator rather than parallel clones with different UI settings.
 TEST_SCOPE_ARGUMENTS=(-parallel-testing-enabled NO)
-if [[ "${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}" == "1" ]]; then
+BACKUP_ONLY="${PRIVATE_MOMENTS_UI_BACKUP_ONLY:-0}"
+INPUT_ONLY="${PRIVATE_MOMENTS_UI_INPUT_ONLY:-0}"
+BACKUP_LANGUAGE="${PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE:-en}"
+ROTATION_ONLY="${PRIVATE_MOMENTS_UI_ROTATION_ONLY:-0}"
+IPAD_TESTS="${PRIVATE_MOMENTS_UI_IPAD_TESTS:-0}"
+ROTATION_START="${PRIVATE_MOMENTS_UI_ROTATION_START:-reference}"
+[[ "$BACKUP_ONLY" == "0" || "$BACKUP_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_BACKUP_ONLY must be 0 or 1."
+[[ "$INPUT_ONLY" == "0" || "$INPUT_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_INPUT_ONLY must be 0 or 1."
+[[ "$BACKUP_ONLY" != "1" || "$INPUT_ONLY" != "1" ]] || fail "Input and backup smoke modes are mutually exclusive."
+[[ "$BACKUP_LANGUAGE" == "en" || "$BACKUP_LANGUAGE" == "zh-Hans" ]] || fail "Backup language must be en or zh-Hans."
+[[ "$BACKUP_LANGUAGE" != "zh-Hans" || "$BACKUP_ONLY" == "1" ]] || fail "Chinese backup selection requires explicit backup smoke."
+[[ "$ROTATION_ONLY" == "0" || "$ROTATION_ONLY" == "1" ]] || fail "Rotation scope must be 0 or 1."
+[[ "$IPAD_TESTS" == "0" || "$IPAD_TESTS" == "1" ]] || fail "iPad test selection must be 0 or 1."
+[[ "$ROTATION_ONLY" != "1" || ( "$IPAD_TESTS" == "1" && "$BACKUP_ONLY" == "0" && "$INPUT_ONLY" == "0" ) ]] || fail "Rotation smoke requires iPad and excludes input/backup smoke."
+[[ "$ROTATION_START" == "reference" || "$ROTATION_START" == "cold-en" || "$ROTATION_START" == "cold-zh-Hans" ]] || fail "Rotation start must be reference, cold-en or cold-zh-Hans."
+[[ "$ROTATION_START" == "reference" || "$ROTATION_ONLY" == "1" ]] || fail "Cold rotation requires explicit rotation-only scope."
+if [[ "$ROTATION_START" != "cold-en" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadColdEnglishRotationContinuity)
+fi
+if [[ "$ROTATION_START" != "cold-zh-Hans" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadColdChineseRotationContinuity)
+fi
+if [[ "$IPAD_TESTS" == "0" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadRotationContinuity)
+fi
+if [[ "$ROTATION_ONLY" == "1" ]]; then
+    printf '\nFocused iPad rotation only; this is not full simulator acceptance.\n'
+    case "$ROTATION_START" in
+        cold-en) ROTATION_METHOD=testIPadColdEnglishRotationContinuity ;;
+        cold-zh-Hans) ROTATION_METHOD=testIPadColdChineseRotationContinuity ;;
+        reference) ROTATION_METHOD=testIPadRotationContinuity ;;
+    esac
+    printf 'Rotation start: %s; selected method: %s\n' "$ROTATION_START" "$ROTATION_METHOD"
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/"$ROTATION_METHOD")
+elif [[ "$INPUT_ONLY" == "1" ]]; then
+    printf '\nFocused input gallery only; this is not full simulator acceptance.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
+elif [[ "$BACKUP_ONLY" == "1" ]]; then
+    printf '\nFocused backup smoke only; this is not full simulator acceptance.\n'
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/BackupUXTests)
+    if [[ "$BACKUP_LANGUAGE" == "zh-Hans" ]]; then
+        TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testChineseBackupFileRoundTrip)
+    else
+        TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
+    fi
+elif [[ "${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}" == "1" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
+    if [[ "$IPAD_TESTS" == "1" ]]; then
+        TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadRotationContinuity)
+    fi
 else
 printf '\nBuilding Debug for the generic iOS Simulator destination...\n'
 xcodebuild \
@@ -73,6 +122,16 @@ xcodebuild \
     CODE_SIGNING_ALLOWED=NO \
     build
 
+printf '\nChecking the Release Simulator executable for Debug-only test hooks...\n'
+python3 - "${APP_PROJECT_DIRECTORY}/tools" "${DERIVED_DATA_DIRECTORY}/Build/Products/Release-iphonesimulator/PrivateMoments.app/PrivateMoments" <<'PY'
+from pathlib import Path
+import sys
+sys.path.insert(0, sys.argv[1])
+from distribution.archive import validate_release_test_hooks
+validate_release_test_hooks(Path(sys.argv[2]).read_bytes())
+print("Release Simulator executable excludes Debug-only UI-test hooks.")
+PY
+
 fi
 printf '\nRunning XCTest on destination: %s\n' "$SIMULATOR_DESTINATION"
 xcodebuild \
@@ -86,5 +145,14 @@ xcodebuild \
     CODE_SIGNING_ALLOWED=NO \
     test
 
-printf '\nMac simulator acceptance passed.\nXcode result bundle: %s\n' "$RESULT_BUNDLE_PATH"
+if [[ "$ROTATION_ONLY" == "1" ]]; then
+    printf '\nFocused iPad rotation passed; full regression is still required.\n'
+elif [[ "$INPUT_ONLY" == "1" ]]; then
+    printf '\nFocused input gallery passed; full regression is still required.\n'
+elif [[ "$BACKUP_ONLY" == "1" ]]; then
+    printf '\nFocused backup smoke passed; full regression is still required.\n'
+else
+    printf '\nMac simulator acceptance passed.\n'
+fi
+printf 'Xcode result bundle: %s\n' "$RESULT_BUNDLE_PATH"
 printf 'This script does not replace manual iPhone/iPad, localization, accessibility, privacy, or signing review.\n'

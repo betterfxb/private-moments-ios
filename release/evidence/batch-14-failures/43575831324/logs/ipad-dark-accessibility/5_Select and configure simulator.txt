@@ -1,0 +1,352 @@
+﻿2026-11-14T08:26:51.5787980Z ##[group]Run destination="$(xcrun simctl list devices available --json | python3 -c '
+2026-11-14T08:26:51.5788630Z [36;1mdestination="$(xcrun simctl list devices available --json | python3 -c '[0m
+2026-11-14T08:26:51.5788970Z [36;1mimport json[0m
+2026-11-14T08:26:51.5789140Z [36;1mimport os[0m
+2026-11-14T08:26:51.5789380Z [36;1mimport subprocess[0m
+2026-11-14T08:26:51.5789570Z [36;1mimport sys[0m
+2026-11-14T08:26:51.5789740Z [36;1m[0m
+2026-11-14T08:26:51.5790030Z [36;1mdevices_by_runtime = json.load(sys.stdin).get("devices", {})[0m
+2026-11-14T08:26:51.5790600Z [36;1msdk = subprocess.check_output(["xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"], text=True).strip()[0m
+2026-11-14T08:26:51.5791230Z [36;1mexpected_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + "-".join(sdk.split(".")[:2])[0m
+2026-11-14T08:26:51.5791710Z [36;1mfor runtime in sorted(devices_by_runtime, reverse=True):[0m
+2026-11-14T08:26:51.5792120Z [36;1m    if runtime != expected_runtime:[0m
+2026-11-14T08:26:51.5792430Z [36;1m        continue[0m
+2026-11-14T08:26:51.5792750Z [36;1m    devices = [d for d in devices_by_runtime[runtime] if d.get("isAvailable")][0m
+2026-11-14T08:26:51.5793150Z [36;1m    family = os.environ["SIMULATOR_FAMILY"][0m
+2026-11-14T08:26:51.5793420Z [36;1m    if family == "compact":[0m
+2026-11-14T08:26:51.5793820Z [36;1m        preferences = ["iPhone SE (3rd generation)", "iPhone 16e", "iPhone 17e", "iPhone 16", "iPhone 17"][0m
+2026-11-14T08:26:51.5794380Z [36;1m        devices = [d for name in preferences for d in devices if d["name"] == name][0m
+2026-11-14T08:26:51.5794750Z [36;1m    elif family == "ipad-mini":[0m
+2026-11-14T08:26:51.5795080Z [36;1m        devices = [d for d in devices if d["name"].startswith("iPad mini")][0m
+2026-11-14T08:26:51.5795400Z [36;1m    elif family == "ipad":[0m
+2026-11-14T08:26:51.5795700Z [36;1m        devices = [d for d in devices if d["name"].startswith("iPad")][0m
+2026-11-14T08:26:51.5796000Z [36;1m    else:[0m
+2026-11-14T08:26:51.5796270Z [36;1m        devices = [d for d in devices if d["name"].startswith("iPhone")][0m
+2026-11-14T08:26:51.5796580Z [36;1m    if devices:[0m
+2026-11-14T08:26:51.5796820Z [36;1m        device = devices[0][0m
+2026-11-14T08:26:51.5797200Z [36;1m        print("Selected: {} ({})".format(device["name"], runtime), file=sys.stderr)[0m
+2026-11-14T08:26:51.5797740Z [36;1m        print("platform=iOS Simulator,id={}".format(device["udid"]))[0m
+2026-11-14T08:26:51.5798110Z [36;1m        raise SystemExit(0)[0m
+2026-11-14T08:26:51.5798550Z [36;1mraise SystemExit("No simulator matched the pinned SDK runtime and required device profile.")[0m
+2026-11-14T08:26:51.5798970Z [36;1m')"[0m
+2026-11-14T08:26:51.5799250Z [36;1mecho "IOS_SIMULATOR_DESTINATION=$destination" >> "$GITHUB_ENV"[0m
+2026-11-14T08:26:51.5799620Z [36;1mprintf 'Selected simulator: %s\n' "$destination"[0m
+2026-11-14T08:26:51.5799980Z [36;1msimulator_id="${destination##*id=}"[0m
+2026-11-14T08:26:51.5800280Z [36;1mxcrun simctl bootstatus "$simulator_id" -b[0m
+2026-11-14T08:26:51.5800680Z [36;1mxcrun simctl ui "$simulator_id" appearance "$SIMULATOR_APPEARANCE"[0m
+2026-11-14T08:26:51.5801120Z [36;1mxcrun simctl ui "$simulator_id" content_size "$SIMULATOR_TEXT_SIZE"[0m
+2026-11-14T08:26:51.5838890Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T08:26:51.5839290Z env:
+2026-11-14T08:26:51.5839540Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T08:26:51.5840280Z   SIMULATOR_FAMILY: ipad
+2026-11-14T08:26:51.5840530Z   SIMULATOR_APPEARANCE: dark
+2026-11-14T08:26:51.5840870Z   SIMULATOR_TEXT_SIZE: accessibility-extra-extra-extra-large
+2026-11-14T08:26:51.5841220Z ##[endgroup]
+2026-11-14T08:27:34.7800720Z Selected: iPad Pro 13-inch (M5) (com.apple.CoreSimulator.SimRuntime.iOS-26-2)
+2026-11-14T08:27:34.7943110Z Selected simulator: platform=iOS Simulator,id=73C19119-B10E-4309-872E-C53EF3F0EF27
+2026-11-14T08:27:36.3784360Z Monitoring boot status for iPad Pro 13-inch (M5) (73C19119-B10E-4309-872E-C53EF3F0EF27).
+2026-11-14T08:27:36.3802120Z Booting device...
+2026-11-14T08:27:36.3903640Z [2026-11-14 08:27:36 +0000] Status=0, isTerminal=NO, Elapsed=00:00.
+2026-11-14T08:27:36.4005570Z 	Booting
+2026-11-14T08:27:36.4108550Z 
+2026-11-14T08:27:42.2573630Z [2026-11-14 08:27:42 +0000] Status=1, isTerminal=NO, Elapsed=00:05.
+2026-11-14T08:27:42.3397650Z 	Waiting on BackBoard
+2026-11-14T08:27:42.3407400Z 
+2026-11-14T08:27:46.8655790Z [2026-11-14 08:27:46 +0000] Status=2, isTerminal=NO, Elapsed=00:10.
+2026-11-14T08:27:46.9465920Z 	Waiting on Data Migration
+2026-11-14T08:27:47.1923920Z 		Reason:(null)
+2026-11-14T08:27:47.3549220Z 		Migration Elapsed:00:03 seconds
+2026-11-14T08:27:47.4372530Z 
+2026-11-14T08:27:50.5701570Z [2026-11-14 08:27:50 +0000] Status=2, isTerminal=NO, Elapsed=00:14.
+2026-11-14T08:27:50.7330810Z 	Waiting on Data Migration
+2026-11-14T08:27:50.8976610Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:27:50.9800500Z 		Migration Elapsed:00:06 seconds
+2026-11-14T08:27:51.0632910Z 
+2026-11-14T08:27:51.1452880Z [2026-11-14 08:27:50 +0000] Status=2, isTerminal=NO, Elapsed=00:14.
+2026-11-14T08:27:51.3894810Z 	Waiting on Data Migration
+2026-11-14T08:27:51.7185600Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:27:51.8787080Z 		Migration Elapsed:00:07 seconds
+2026-11-14T08:27:51.9605230Z 
+2026-11-14T08:27:52.0422320Z [2026-11-14 08:27:51 +0000] Status=2, isTerminal=NO, Elapsed=00:14.
+2026-11-14T08:27:52.1223610Z 	Waiting on Data Migration
+2026-11-14T08:27:52.2876840Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:27:52.3705370Z 		Migration Elapsed:00:07 seconds
+2026-11-14T08:27:52.5331570Z 
+2026-11-14T08:27:52.6140620Z [2026-11-14 08:27:51 +0000] Status=2, isTerminal=NO, Elapsed=00:15.
+2026-11-14T08:27:52.6955280Z 	Waiting on Data Migration
+2026-11-14T08:27:52.7779730Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:27:52.9424930Z 		Migration Elapsed:00:08 seconds
+2026-11-14T08:27:53.0254640Z 
+2026-11-14T08:27:53.3508210Z [2026-11-14 08:27:53 +0000] Status=2, isTerminal=NO, Elapsed=00:16.
+2026-11-14T08:27:54.6147030Z 	Waiting on Data Migration
+2026-11-14T08:27:54.8578540Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:27:54.9393050Z 		Migration Elapsed:00:09 seconds
+2026-11-14T08:27:55.5184350Z 
+2026-11-14T08:27:55.8456350Z [2026-11-14 08:27:55 +0000] Status=2, isTerminal=NO, Elapsed=00:19.
+2026-11-14T08:27:55.9282990Z 	Waiting on Data Migration
+2026-11-14T08:27:55.9283780Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:27:56.0942940Z 		Migration Elapsed:00:10 seconds
+2026-11-14T08:27:56.1763470Z 
+2026-11-14T08:27:56.2594870Z [2026-11-14 08:27:56 +0000] Status=2, isTerminal=NO, Elapsed=00:19.
+2026-11-14T08:27:56.3393210Z 	Waiting on Data Migration
+2026-11-14T08:27:56.5044360Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:27:56.5842930Z 		Migration Elapsed:00:12 seconds
+2026-11-14T08:27:56.6681880Z 
+2026-11-14T08:27:56.7488620Z [2026-11-14 08:27:56 +0000] Status=2, isTerminal=NO, Elapsed=00:20.
+2026-11-14T08:27:56.9149950Z 	Waiting on Data Migration
+2026-11-14T08:27:57.0791620Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:27:57.1680910Z 		Migration Elapsed:00:12 seconds
+2026-11-14T08:27:57.3314040Z 
+2026-11-14T08:27:57.4955130Z [2026-11-14 08:27:57 +0000] Status=2, isTerminal=NO, Elapsed=00:21.
+2026-11-14T08:27:57.5779620Z 	Waiting on Data Migration
+2026-11-14T08:27:57.6591880Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:27:57.7409740Z 		Migration Elapsed:00:13 seconds
+2026-11-14T08:27:57.7426200Z 
+2026-11-14T08:27:58.8885570Z [2026-11-14 08:27:58 +0000] Status=2, isTerminal=NO, Elapsed=00:22.
+2026-11-14T08:27:58.9716010Z 	Waiting on Data Migration
+2026-11-14T08:27:59.2995160Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:27:59.5453220Z 		Migration Elapsed:00:14 seconds
+2026-11-14T08:27:59.6272740Z 
+2026-11-14T08:28:00.5239580Z [2026-11-14 08:28:00 +0000] Status=2, isTerminal=NO, Elapsed=00:24.
+2026-11-14T08:28:00.5251340Z 	Waiting on Data Migration
+2026-11-14T08:28:00.6041680Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:00.6856990Z 		Migration Elapsed:00:15 seconds
+2026-11-14T08:28:00.8502150Z 
+2026-11-14T08:28:02.2385730Z [2026-11-14 08:28:01 +0000] Status=2, isTerminal=NO, Elapsed=00:25.
+2026-11-14T08:28:02.3205080Z 	Waiting on Data Migration
+2026-11-14T08:28:02.4080380Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:02.4888660Z 		Migration Elapsed:00:17 seconds
+2026-11-14T08:28:02.5709540Z 
+2026-11-14T08:28:02.8987180Z [2026-11-14 08:28:02 +0000] Status=2, isTerminal=NO, Elapsed=00:26.
+2026-11-14T08:28:03.0595750Z 	Waiting on Data Migration
+2026-11-14T08:28:03.0596600Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:03.5593020Z 		Migration Elapsed:00:18 seconds
+2026-11-14T08:28:03.6428810Z 
+2026-11-14T08:28:03.8924240Z [2026-11-14 08:28:03 +0000] Status=2, isTerminal=NO, Elapsed=00:27.
+2026-11-14T08:28:03.8925080Z 	Waiting on Data Migration
+2026-11-14T08:28:03.9747920Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:04.1383670Z 		Migration Elapsed:00:19 seconds
+2026-11-14T08:28:04.2185960Z 
+2026-11-14T08:28:04.7170530Z [2026-11-14 08:28:04 +0000] Status=2, isTerminal=NO, Elapsed=00:28.
+2026-11-14T08:28:04.7992470Z 	Waiting on Data Migration
+2026-11-14T08:28:04.8812150Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:04.9702060Z 		Migration Elapsed:00:20 seconds
+2026-11-14T08:28:05.0489000Z 
+2026-11-14T08:28:05.2141810Z [2026-11-14 08:28:05 +0000] Status=2, isTerminal=NO, Elapsed=00:28.
+2026-11-14T08:28:05.2988740Z 	Waiting on Data Migration
+2026-11-14T08:28:05.3801880Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:05.4638690Z 		Migration Elapsed:00:21 seconds
+2026-11-14T08:28:05.5474550Z 
+2026-11-14T08:28:06.6346770Z [2026-11-14 08:28:06 +0000] Status=2, isTerminal=NO, Elapsed=00:30.
+2026-11-14T08:28:06.7953120Z 	Waiting on Data Migration
+2026-11-14T08:28:06.8795060Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:07.2926050Z 		Migration Elapsed:00:22 seconds
+2026-11-14T08:28:07.3735080Z 
+2026-11-14T08:28:08.0299640Z [2026-11-14 08:28:07 +0000] Status=2, isTerminal=NO, Elapsed=00:31.
+2026-11-14T08:28:08.0314970Z 	Waiting on Data Migration
+2026-11-14T08:28:08.1106760Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:08.2769860Z 		Migration Elapsed:00:23 seconds
+2026-11-14T08:28:08.3557250Z 
+2026-11-14T08:28:08.7658940Z [2026-11-14 08:28:08 +0000] Status=2, isTerminal=NO, Elapsed=00:32.
+2026-11-14T08:28:08.8473830Z 	Waiting on Data Migration
+2026-11-14T08:28:08.9301470Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:09.0101370Z 		Migration Elapsed:00:24 seconds
+2026-11-14T08:28:09.1742110Z 
+2026-11-14T08:28:09.2572190Z [2026-11-14 08:28:09 +0000] Status=2, isTerminal=NO, Elapsed=00:32.
+2026-11-14T08:28:09.3367020Z 	Waiting on Data Migration
+2026-11-14T08:28:09.4170340Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:09.4995030Z 		Migration Elapsed:00:25 seconds
+2026-11-14T08:28:09.5800900Z 
+2026-11-14T08:28:10.0709550Z [2026-11-14 08:28:09 +0000] Status=2, isTerminal=NO, Elapsed=00:33.
+2026-11-14T08:28:10.1525200Z 	Waiting on Data Migration
+2026-11-14T08:28:10.2342020Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:10.3122900Z 		Migration Elapsed:00:26 seconds
+2026-11-14T08:28:10.3952910Z 
+2026-11-14T08:28:11.3735020Z [2026-11-14 08:28:11 +0000] Status=2, isTerminal=NO, Elapsed=00:34.
+2026-11-14T08:28:11.3735930Z 	Waiting on Data Migration
+2026-11-14T08:28:11.4565510Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:11.5370130Z 		Migration Elapsed:00:27 seconds
+2026-11-14T08:28:11.6193470Z 
+2026-11-14T08:28:12.1910550Z [2026-11-14 08:28:12 +0000] Status=2, isTerminal=NO, Elapsed=00:35.
+2026-11-14T08:28:12.1912540Z 	Waiting on Data Migration
+2026-11-14T08:28:12.2727670Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:12.3551120Z 		Migration Elapsed:00:28 seconds
+2026-11-14T08:28:12.4355960Z 
+2026-11-14T08:28:13.0112150Z [2026-11-14 08:28:12 +0000] Status=2, isTerminal=NO, Elapsed=00:36.
+2026-11-14T08:28:13.0941870Z 	Waiting on Data Migration
+2026-11-14T08:28:13.0943340Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:13.3448530Z 		Migration Elapsed:00:29 seconds
+2026-11-14T08:28:13.4257000Z 
+2026-11-14T08:28:13.9992360Z [2026-11-14 08:28:13 +0000] Status=2, isTerminal=NO, Elapsed=00:37.
+2026-11-14T08:28:14.0839860Z 	Waiting on Data Migration
+2026-11-14T08:28:14.1661220Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:14.2531870Z 		Migration Elapsed:00:30 seconds
+2026-11-14T08:28:14.3323020Z 
+2026-11-14T08:28:14.9848010Z [2026-11-14 08:28:14 +0000] Status=2, isTerminal=NO, Elapsed=00:38.
+2026-11-14T08:28:15.0619860Z 	Waiting on Data Migration
+2026-11-14T08:28:15.2353530Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:15.5554790Z 		Migration Elapsed:00:31 seconds
+2026-11-14T08:28:15.5556190Z 
+2026-11-14T08:28:15.9486190Z [2026-11-14 08:28:15 +0000] Status=2, isTerminal=NO, Elapsed=00:39.
+2026-11-14T08:28:15.9652360Z 	Waiting on Data Migration
+2026-11-14T08:28:15.9764180Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:15.9901300Z 		Migration Elapsed:00:32 seconds
+2026-11-14T08:28:16.0046520Z 
+2026-11-14T08:28:16.9057480Z [2026-11-14 08:28:16 +0000] Status=2, isTerminal=NO, Elapsed=00:40.
+2026-11-14T08:28:16.9069440Z 	Waiting on Data Migration
+2026-11-14T08:28:16.9245030Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:16.9348590Z 		Migration Elapsed:00:33 seconds
+2026-11-14T08:28:16.9455640Z 
+2026-11-14T08:28:17.8895980Z [2026-11-14 08:28:17 +0000] Status=2, isTerminal=NO, Elapsed=00:41.
+2026-11-14T08:28:17.8999450Z 	Waiting on Data Migration
+2026-11-14T08:28:17.9127450Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:17.9152500Z 		Migration Elapsed:00:34 seconds
+2026-11-14T08:28:17.9309450Z 
+2026-11-14T08:28:19.1436590Z [2026-11-14 08:28:18 +0000] Status=2, isTerminal=NO, Elapsed=00:42.
+2026-11-14T08:28:19.1557160Z 	Waiting on Data Migration
+2026-11-14T08:28:19.1690590Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:19.1823240Z 		Migration Elapsed:00:35 seconds
+2026-11-14T08:28:19.1926540Z 
+2026-11-14T08:28:19.8784210Z [2026-11-14 08:28:19 +0000] Status=2, isTerminal=NO, Elapsed=00:43.
+2026-11-14T08:28:19.8795710Z 	Waiting on Data Migration
+2026-11-14T08:28:19.8899520Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:19.9027490Z 		Migration Elapsed:00:36 seconds
+2026-11-14T08:28:19.9168310Z 
+2026-11-14T08:28:20.9666380Z [2026-11-14 08:28:20 +0000] Status=2, isTerminal=NO, Elapsed=00:44.
+2026-11-14T08:28:20.9789720Z 	Waiting on Data Migration
+2026-11-14T08:28:20.9896950Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:20.9999300Z 		Migration Elapsed:00:37 seconds
+2026-11-14T08:28:21.0102070Z 
+2026-11-14T08:28:21.9381220Z [2026-11-14 08:28:21 +0000] Status=2, isTerminal=NO, Elapsed=00:45.
+2026-11-14T08:28:21.9578670Z 	Waiting on Data Migration
+2026-11-14T08:28:21.9688060Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:21.9796790Z 		Migration Elapsed:00:38 seconds
+2026-11-14T08:28:21.9901800Z 
+2026-11-14T08:28:22.9058070Z [2026-11-14 08:28:22 +0000] Status=2, isTerminal=NO, Elapsed=00:46.
+2026-11-14T08:28:22.9186620Z 	Waiting on Data Migration
+2026-11-14T08:28:22.9371270Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:23.0294030Z 		Migration Elapsed:00:39 seconds
+2026-11-14T08:28:23.1309940Z 
+2026-11-14T08:28:23.9971070Z [2026-11-14 08:28:23 +0000] Status=2, isTerminal=NO, Elapsed=00:47.
+2026-11-14T08:28:24.0145510Z 	Waiting on Data Migration
+2026-11-14T08:28:24.0953180Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:24.0954450Z 		Migration Elapsed:00:40 seconds
+2026-11-14T08:28:24.1062290Z 
+2026-11-14T08:28:24.9090270Z [2026-11-14 08:28:24 +0000] Status=2, isTerminal=NO, Elapsed=00:48.
+2026-11-14T08:28:24.9971630Z 	Waiting on Data Migration
+2026-11-14T08:28:24.9972330Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:24.9981080Z 		Migration Elapsed:00:41 seconds
+2026-11-14T08:28:24.9981590Z 
+2026-11-14T08:28:26.2922630Z [2026-11-14 08:28:26 +0000] Status=2, isTerminal=NO, Elapsed=00:49.
+2026-11-14T08:28:26.3082500Z 	Waiting on Data Migration
+2026-11-14T08:28:26.3186350Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:26.3188470Z 		Migration Elapsed:00:42 seconds
+2026-11-14T08:28:26.3291540Z 
+2026-11-14T08:28:26.9024040Z [2026-11-14 08:28:26 +0000] Status=2, isTerminal=NO, Elapsed=00:50.
+2026-11-14T08:28:26.9126840Z 	Waiting on Data Migration
+2026-11-14T08:28:26.9230740Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:26.9331820Z 		Migration Elapsed:00:43 seconds
+2026-11-14T08:28:26.9432600Z 
+2026-11-14T08:28:27.8980630Z [2026-11-14 08:28:27 +0000] Status=2, isTerminal=NO, Elapsed=00:51.
+2026-11-14T08:28:27.9080780Z 	Waiting on Data Migration
+2026-11-14T08:28:27.9182610Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:27.9593500Z 		Migration Elapsed:00:44 seconds
+2026-11-14T08:28:27.9694970Z 
+2026-11-14T08:28:28.9436000Z [2026-11-14 08:28:28 +0000] Status=2, isTerminal=NO, Elapsed=00:52.
+2026-11-14T08:28:28.9539220Z 	Waiting on Data Migration
+2026-11-14T08:28:28.9651700Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:28.9753690Z 		Migration Elapsed:00:45 seconds
+2026-11-14T08:28:28.9854500Z 
+2026-11-14T08:28:29.9049130Z [2026-11-14 08:28:29 +0000] Status=2, isTerminal=NO, Elapsed=00:53.
+2026-11-14T08:28:29.9152280Z 	Waiting on Data Migration
+2026-11-14T08:28:29.9255170Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:29.9360250Z 		Migration Elapsed:00:46 seconds
+2026-11-14T08:28:29.9462470Z 
+2026-11-14T08:28:30.9088500Z [2026-11-14 08:28:30 +0000] Status=2, isTerminal=NO, Elapsed=00:54.
+2026-11-14T08:28:30.9190080Z 	Waiting on Data Migration
+2026-11-14T08:28:30.9295120Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:30.9373460Z 		Migration Elapsed:00:47 seconds
+2026-11-14T08:28:30.9475460Z 
+2026-11-14T08:28:31.9097050Z [2026-11-14 08:28:31 +0000] Status=2, isTerminal=NO, Elapsed=00:55.
+2026-11-14T08:28:31.9199450Z 	Waiting on Data Migration
+2026-11-14T08:28:31.9301290Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:31.9403010Z 		Migration Elapsed:00:48 seconds
+2026-11-14T08:28:31.9504170Z 
+2026-11-14T08:28:32.9003490Z [2026-11-14 08:28:32 +0000] Status=2, isTerminal=NO, Elapsed=00:56.
+2026-11-14T08:28:32.9118690Z 	Waiting on Data Migration
+2026-11-14T08:28:32.9228430Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:32.9337220Z 		Migration Elapsed:00:49 seconds
+2026-11-14T08:28:32.9421600Z 
+2026-11-14T08:28:33.9016000Z [2026-11-14 08:28:33 +0000] Status=2, isTerminal=NO, Elapsed=00:57.
+2026-11-14T08:28:33.9117950Z 	Waiting on Data Migration
+2026-11-14T08:28:33.9224960Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:33.9340420Z 		Migration Elapsed:00:50 seconds
+2026-11-14T08:28:33.9443330Z 
+2026-11-14T08:28:34.9261470Z [2026-11-14 08:28:34 +0000] Status=2, isTerminal=NO, Elapsed=00:58.
+2026-11-14T08:28:34.9365650Z 	Waiting on Data Migration
+2026-11-14T08:28:34.9474670Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:34.9587920Z 		Migration Elapsed:00:51 seconds
+2026-11-14T08:28:34.9689780Z 
+2026-11-14T08:28:35.8827020Z [2026-11-14 08:28:35 +0000] Status=2, isTerminal=NO, Elapsed=00:59.
+2026-11-14T08:28:35.8926170Z 	Waiting on Data Migration
+2026-11-14T08:28:35.9030020Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:35.9132310Z 		Migration Elapsed:00:52 seconds
+2026-11-14T08:28:35.9234080Z 
+2026-11-14T08:28:36.9091950Z [2026-11-14 08:28:36 +0000] Status=2, isTerminal=NO, Elapsed=01:00.
+2026-11-14T08:28:36.9194660Z 	Waiting on Data Migration
+2026-11-14T08:28:36.9298420Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:36.9410040Z 		Migration Elapsed:00:53 seconds
+2026-11-14T08:28:36.9448180Z 
+2026-11-14T08:28:37.8952180Z [2026-11-14 08:28:37 +0000] Status=2, isTerminal=NO, Elapsed=01:01.
+2026-11-14T08:28:37.8954800Z 	Waiting on Data Migration
+2026-11-14T08:28:37.8959520Z 		Reason:Running plugin com.apple.-0LaunchServicesMigrator (00LaunchServicesMigrator.migrator, user-agnostic)
+2026-11-14T08:28:37.8966950Z 		Migration Elapsed:00:54 seconds
+2026-11-14T08:28:37.8968670Z 
+2026-11-14T08:28:42.4497890Z [2026-11-14 08:28:42 +0000] Status=2, isTerminal=NO, Elapsed=01:05.
+2026-11-14T08:28:42.4501760Z 	Waiting on Data Migration
+2026-11-14T08:28:42.5308570Z 		Reason:Running plugin com.apple.securityd.KeychainMigrator (KeychainMigrator.migrator, user-agnostic)
+2026-11-14T08:28:42.6166760Z 		Migration Elapsed:00:55 seconds
+2026-11-14T08:28:42.7794030Z 
+2026-11-14T08:28:46.0565340Z [2026-11-14 08:28:45 +0000] Status=2, isTerminal=NO, Elapsed=01:09.
+2026-11-14T08:28:46.3083630Z 	Waiting on Data Migration
+2026-11-14T08:28:46.3939380Z 		Reason:Running plugin com.apple.managedconfiguration.migrator (MCProfile.migrator, user-agnostic)
+2026-11-14T08:28:46.4756670Z 		Migration Elapsed:00:58 seconds
+2026-11-14T08:28:46.5590050Z 
+2026-11-14T08:28:49.0285010Z [2026-11-14 08:28:48 +0000] Status=2, isTerminal=NO, Elapsed=01:12.
+2026-11-14T08:28:49.1136040Z 	Waiting on Data Migration
+2026-11-14T08:28:49.1958870Z 		Reason:Running plugin com.apple.PreferencesMigrator (PreferencesMigrator.migrator)
+2026-11-14T08:28:49.1960080Z 		Migration Elapsed:01:02 seconds
+2026-11-14T08:28:49.1960670Z 
+2026-11-14T08:28:50.8482190Z [2026-11-14 08:28:50 +0000] Status=4, isTerminal=NO, Elapsed=01:14.
+2026-11-14T08:28:50.9280610Z 	Waiting on System App
+2026-11-14T08:28:51.0147090Z 
+2026-11-14T08:28:53.1696180Z [2026-11-14 08:28:53 +0000] Status=4, isTerminal=NO, Elapsed=01:16.
+2026-11-14T08:28:53.2512380Z 	Waiting on System App
+2026-11-14T08:28:53.2512710Z 
+2026-11-14T08:28:53.9825700Z [2026-11-14 08:28:53 +0000] Status=4, isTerminal=NO, Elapsed=01:17.
+2026-11-14T08:28:53.9826750Z 	Waiting on System App
+2026-11-14T08:28:54.0644730Z 
+2026-11-14T08:28:55.2118150Z [2026-11-14 08:28:55 +0000] Status=4, isTerminal=NO, Elapsed=01:18.
+2026-11-14T08:28:55.2933020Z 	Waiting on System App
+2026-11-14T08:28:55.3758630Z 
+2026-11-14T08:28:56.0359430Z [2026-11-14 08:28:55 +0000] Status=4, isTerminal=NO, Elapsed=01:19.
+2026-11-14T08:28:56.1177950Z 	Waiting on System App
+2026-11-14T08:28:56.1181630Z 
+2026-11-14T08:28:56.6115240Z [2026-11-14 08:28:56 +0000] Status=4, isTerminal=NO, Elapsed=01:20.
+2026-11-14T08:28:56.6928540Z 	Waiting on System App
+2026-11-14T08:28:56.9393540Z 
+2026-11-14T08:28:57.3490240Z [2026-11-14 08:28:57 +0000] Status=4, isTerminal=NO, Elapsed=01:20.
+2026-11-14T08:28:57.3501710Z 	Waiting on System App
+2026-11-14T08:28:57.4308210Z 
+2026-11-14T08:28:58.4096020Z [2026-11-14 08:28:58 +0000] Status=4, isTerminal=NO, Elapsed=01:21.
+2026-11-14T08:28:58.5611340Z 	Waiting on System App
+2026-11-14T08:28:58.6946970Z 
+2026-11-14T08:28:59.6775470Z [2026-11-14 08:28:59 +0000] Status=4, isTerminal=NO, Elapsed=01:23.
+2026-11-14T08:28:59.7597770Z 	Waiting on System App
+2026-11-14T08:28:59.8392800Z 
+2026-11-14T08:29:01.2312040Z [2026-11-14 08:29:01 +0000] Status=4, isTerminal=NO, Elapsed=01:24.
+2026-11-14T08:29:01.3118090Z 	Waiting on System App
+2026-11-14T08:29:01.3981180Z 
+2026-11-14T08:29:10.1516570Z [2026-11-14 08:29:09 +0000] Status=4294967295, isTerminal=YES, Elapsed=01:33.
+2026-11-14T08:29:10.4561960Z 	Finished
+2026-11-14T08:29:10.9824390Z 

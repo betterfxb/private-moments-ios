@@ -1,0 +1,267 @@
+{
+  "sourceCommit": "dd8b6fe37274b707fadca13430bd9441eccd8c7f",
+  "runId": 42828824461,
+  "runURL": "https://github.com/betterfxb/private-moments-ios/actions/runs/42828824461",
+  "toolchain": {
+    "xcode": "26.2",
+    "simulatorSDK": "26.2",
+    "runtime": "26.2"
+  },
+  "tests": {
+    "compactLightUnitTests": 30,
+    "compactLightUITests": 4,
+    "otherProfiles": "bilingual gallery"
+  },
+  "profiles": [
+    {
+      "name": "phone-dark",
+      "jobID": 129873133017,
+      "conclusion": "success",
+      "device": "iPhone 17 Pro",
+      "exportedPNGCount": 36
+    },
+    {
+      "name": "compact-light",
+      "jobID": 129873133363,
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 38
+    },
+    {
+      "name": "compact-dark-accessibility",
+      "jobID": 129873133458,
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 40
+    },
+    {
+      "name": "ipad-light",
+      "jobID": 129873133573,
+      "conclusion": "success",
+      "device": "iPad Pro 13-inch (M5)",
+      "exportedPNGCount": 36
+    }
+  ],
+  "openedCaptures": [
+    "compact-light/Detail-top-zh-Hans",
+    "ipad-light/Detail-top-zh-Hans",
+    "compact-light/Today-saved-zh-Hans",
+    "compact-light/Manual-top-zh-Hans",
+    "compact-light/Timeline-zh-Hans",
+    "compact-light/Settings-top-zh-Hans",
+    "compact-light/Session-zh-Hans",
+    "phone-dark/Today-saved-en",
+    "phone-dark/Session-en",
+    "ipad-light/Today-saved-zh-Hans",
+    "compact-light/Manual-top-en",
+    "compact-light/Settings-top-en",
+    "compact-light/Manual-entered-en",
+    "compact-light/Recap-controls-en",
+    "compact-dark-accessibility/Manual-duration-zh-Hans",
+    "compact-dark-accessibility/Manual-date-picker-zh-Hans",
+    "compact-dark-accessibility/Week-menu-zh-Hans",
+    "compact-dark-accessibility/Recap-controls-zh-Hans",
+    "compact-dark-accessibility/Detail-controls-zh-Hans",
+    "compact-dark-accessibility/Settings-bottom-zh-Hans",
+    "compact-dark-accessibility/Detail-top-zh-Hans",
+    "compact-dark-accessibility/Recap-controls-en"
+  ],
+  "retainedUnmodifiedScreenshots": [
+    {
+      "file": "compact-light-Today-saved-zh-Hans.png",
+      "title": "首页与记录",
+      "profile": "compact-light",
+      "capture": "Today-saved-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "242e2c1a4746644c5db7e4c10ecbcae9500d0a754ef740cd57f899b29acf1fa7"
+    },
+    {
+      "file": "compact-light-Timeline-zh-Hans.png",
+      "title": "时间线",
+      "profile": "compact-light",
+      "capture": "Timeline-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "0bb2fbacb7c7a63562265abba86821b7f2253e0187dde55e16b5238082670427"
+    },
+    {
+      "file": "compact-light-Manual-top-zh-Hans.png",
+      "title": "补记编辑器",
+      "profile": "compact-light",
+      "capture": "Manual-top-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "3d075970e49edd8f13f3733bc90ee054e1855acc22f190a935341c4f14e34130"
+    },
+    {
+      "file": "compact-light-Session-zh-Hans.png",
+      "title": "进行中的计时",
+      "profile": "compact-light",
+      "capture": "Session-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "05d4b4b104aec2c521eb7660ce9a3173e3344754138051d5486f4cb1c5f0becd"
+    },
+    {
+      "file": "compact-light-Detail-top-zh-Hans.png",
+      "title": "记录详情",
+      "profile": "compact-light",
+      "capture": "Detail-top-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "44821599eb4f82d0fff9a931eb1bc61b46e86f68945d47821fcffc1945ec1131"
+    },
+    {
+      "file": "compact-light-Settings-top-zh-Hans.png",
+      "title": "设置",
+      "profile": "compact-light",
+      "capture": "Settings-top-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "ba0243bef9923c81e2cb61b0e67effe38a2f9418b50e2238d4460289161a0fb5"
+    },
+    {
+      "file": "phone-dark-Today-saved-en.png",
+      "title": "深色首页",
+      "profile": "phone-dark",
+      "capture": "Today-saved-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "b688c526f31e7eb87f071560597ddf10e50e391d3506d40b75f93b7a98168899"
+    },
+    {
+      "file": "phone-dark-Session-en.png",
+      "title": "深色计时",
+      "profile": "phone-dark",
+      "capture": "Session-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "5c2838b0be68355940790f6fb217b8cad93f50fe7fa535da8b5ff9b9619639f6"
+    },
+    {
+      "file": "ipad-light-Today-saved-zh-Hans.png",
+      "title": "iPad首页",
+      "profile": "ipad-light",
+      "capture": "Today-saved-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "0ae41241536a700b473bcd5f8fff8a744ea7b56163258a16e7d428a32dae5f6b"
+    },
+    {
+      "file": "ipad-light-Detail-top-zh-Hans.png",
+      "title": "iPad详情",
+      "profile": "ipad-light",
+      "capture": "Detail-top-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "6bbe14610c0df043f6e281bc02e5adda74de87f6a2e451980f8342b80db30122"
+    },
+    {
+      "file": "compact-dark-accessibility-Manual-duration-zh-Hans.png",
+      "title": "最大辅助字号：分钟与秒",
+      "profile": "compact-dark-accessibility",
+      "capture": "Manual-duration-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "c2913357dd776e6f23418d8202d6c512bf5b8a4f4d34e898b0c993eb6d442cc8"
+    },
+    {
+      "file": "compact-dark-accessibility-Manual-date-picker-zh-Hans.png",
+      "title": "最大辅助字号：日期选中态",
+      "profile": "compact-dark-accessibility",
+      "capture": "Manual-date-picker-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "d2d2f0196b56e0023883025129debb9c957b5e174fdf0572ea0daa41550e74b1"
+    },
+    {
+      "file": "compact-dark-accessibility-Week-menu-zh-Hans.png",
+      "title": "最大辅助字号：周日期选择",
+      "profile": "compact-dark-accessibility",
+      "capture": "Week-menu-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "fde1880ebec041116b269aa5dcde85872031306daecb7903bf16438146923464"
+    },
+    {
+      "file": "compact-dark-accessibility-Recap-controls-zh-Hans.png",
+      "title": "最大辅助字号：保存",
+      "profile": "compact-dark-accessibility",
+      "capture": "Recap-controls-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "68fbc489234601dde69b39762e0fbcdb5a8b348a1b9d5a87b07488210c0a033c"
+    },
+    {
+      "file": "compact-dark-accessibility-Detail-controls-zh-Hans.png",
+      "title": "最大辅助字号：编辑与删除",
+      "profile": "compact-dark-accessibility",
+      "capture": "Detail-controls-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "d446208731f2efe60d748bf8290512bdd81b9425d6b55a08bc71d322aa441adf"
+    },
+    {
+      "file": "compact-dark-accessibility-Settings-bottom-zh-Hans.png",
+      "title": "最大辅助字号：设置底部",
+      "profile": "compact-dark-accessibility",
+      "capture": "Settings-bottom-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "6717b0749085e934c9da1496fbd8863e83f831df6ace8833e00434614391538c"
+    }
+  ],
+  "baseline": [
+    {
+      "file": "before-Today-saved-zh-Hans.png",
+      "sourceCommit": "b1225b5e065e81a5847c969d68278363780de9bd",
+      "runId": 42801899567,
+      "sha256": "6f7d29791e92eea3f1453f73f17e663f2d44419b5d7aa9d2f667fa281ddb7c5c"
+    },
+    {
+      "file": "before-Detail-top-zh-Hans.png",
+      "sourceCommit": "b1225b5e065e81a5847c969d68278363780de9bd",
+      "runId": 42801899567,
+      "sha256": "acdb96c85b4eb9222156464c817ab0fd0aeb83f5c086c5744b8ba4baaf883a6d"
+    }
+  ],
+  "officialReferenceCheck": {
+    "appID": 6757778324,
+    "bundleID": "com.xiaoyehua.do",
+    "version": "1.4.0",
+    "screenshotCount": 10,
+    "screenshots": [
+      {
+        "index": 1,
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/40/9f/4c/409f4c3d-1b18-5a57-baae-b566b2fe133a/01-diary.png/1290x2796bb.jpg",
+        "sha256": "bbe59c962ff341c90e75356e397e41505c86bd9bafca465e7081f29086db688e",
+        "sameURLAsEarlierStudy": false
+      },
+      {
+        "index": 4,
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/8d/2c/b1/8d2cb184-c17e-f50c-0090-78c911d15743/04-detail.png/1290x2796bb.jpg",
+        "sha256": "07fe69da34d2b468d6760ef65a4e8d6067af6425ed781fa80b25dd1bd87ef141",
+        "sameURLAsEarlierStudy": false
+      },
+      {
+        "index": 7,
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/9e/c5/8b/9ec58b78-dc6a-bd42-3782-5b3cd6b82600/07-custom.png/1290x2796bb.jpg",
+        "sha256": "fca2f56879cc8b58adfa245a665f89b62e3d7453ff80788091d27fcb636945f9",
+        "sameURLAsEarlierStudy": false
+      },
+      {
+        "index": 9,
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/18/d5/8a/18d58ae6-db82-9d34-5391-f265ec4a0793/09-themes.png/1290x2796bb.jpg",
+        "sha256": "228ab896d93efab417fd5476b60f39c810045cf61868fbc59889f200f0245bcd",
+        "sameURLAsEarlierStudy": false
+      }
+    ]
+  },
+  "limits": [
+    "Selected screenshots opened, not all exported PNGs reviewed manually",
+    "Simulator evidence; physical VoiceOver/privacy lifecycle and tactile quality remain unverified",
+    "Aesthetic judgment is not user approval or proof of superiority over DO",
+    "No signing, TestFlight upload or main merge"
+  ]
+}

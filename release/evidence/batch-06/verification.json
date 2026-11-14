@@ -1,0 +1,220 @@
+{
+  "sourceCommit": "02e4c07506ab8caa52cfb90210d9f5114ceeddd7",
+  "runId": 42885697214,
+  "runURL": "https://github.com/betterfxb/private-moments-ios/actions/runs/42885697214",
+  "toolchain": {
+    "xcode": "26.2",
+    "simulatorSDK": "26.2",
+    "runtime": "26.2"
+  },
+  "runtimeEvidence": [
+    {
+      "profile": "ipad-light",
+      "jobID": 130073841624,
+      "method": "complete job log; selection step absent from run ZIP",
+      "sha256": "1f0083eac0cf10c19cbeaa8f1ae307ed24bf3eb1ecc4083b54c65d621d8ea95a"
+    },
+    {
+      "profile": "compact-light",
+      "jobID": 130073842017,
+      "method": "run ZIP selection step",
+      "sha256": "0c716c22e00b8e3ffa95a5f9e43c665041d2351583ad1e03ca8e1d5e98063ca9"
+    },
+    {
+      "profile": "phone-dark",
+      "jobID": 130073842051,
+      "method": "run ZIP selection step",
+      "sha256": "b78edecb53e2458f9dd0b9f7fb6cab137570ae890f94ddd94a551584ebb47ded"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "jobID": 130073842052,
+      "method": "run ZIP selection step",
+      "sha256": "b9c27540ca541f343ba9d76327f32b6360e75617fe0cb4b80ef2cc0687f70c3d"
+    }
+  ],
+  "tests": {
+    "compactLightUnitTests": 30,
+    "compactLightUITests": 4,
+    "otherProfiles": "bilingual gallery"
+  },
+  "profiles": [
+    {
+      "name": "ipad-light",
+      "jobID": 130073841624,
+      "conclusion": "success",
+      "device": "iPad Pro 13-inch (M5)",
+      "exportedPNGCount": 38
+    },
+    {
+      "name": "compact-light",
+      "jobID": 130073842017,
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 40
+    },
+    {
+      "name": "phone-dark",
+      "jobID": 130073842051,
+      "conclusion": "success",
+      "device": "iPhone 17 Pro",
+      "exportedPNGCount": 38
+    },
+    {
+      "name": "compact-dark-accessibility",
+      "jobID": 130073842052,
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 42
+    }
+  ],
+  "openedCaptures": [
+    "compact-dark-accessibility/Manual-top-zh-Hans",
+    "phone-dark/Manual-top-en",
+    "compact-dark-accessibility/Timeline-filter-empty-zh-Hans",
+    "compact-dark-accessibility/Week-menu-zh-Hans",
+    "compact-dark-accessibility/Week-menu-en",
+    "phone-dark/Timeline-filter-empty-zh-Hans",
+    "compact-dark-accessibility/Recap-controls-en",
+    "phone-dark/Today-summary-zh-Hans",
+    "compact-dark-accessibility/Today-summary-zh-Hans",
+    "ipad-light/Manual-top-zh-Hans",
+    "ipad-light/Timeline-filter-empty-zh-Hans",
+    "compact-light/Manual-top-zh-Hans",
+    "compact-light/Manual-top-en",
+    "compact-light/Manual-entered-en",
+    "compact-light/Today-summary-zh-Hans",
+    "compact-light/Timeline-filter-empty-zh-Hans",
+    "compact-light/Timeline-filter-empty-en"
+  ],
+  "retainedUnmodifiedScreenshots": [
+    {
+      "file": "compact-light-Manual-top-zh-Hans.png",
+      "title": "小屏中文：顶部保存",
+      "profile": "compact-light",
+      "capture": "Manual-top-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "82a8eff09f01a78ea89a9e9e5375e2785cc7007930a05720bec22eba75da138b"
+    },
+    {
+      "file": "compact-light-Manual-top-en.png",
+      "title": "小屏英文：顶部保存",
+      "profile": "compact-light",
+      "capture": "Manual-top-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "55cfc3154d0c9233a9bc2411302b2cc70fa57052042172cf6f902d895f48dc57"
+    },
+    {
+      "file": "compact-light-Manual-entered-en.png",
+      "title": "精确分钟与秒",
+      "profile": "compact-light",
+      "capture": "Manual-entered-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "15b424f7a2a8afa3ebf76e1773bf9dd2372803586400885dfe5e7ce41a0d65f8"
+    },
+    {
+      "file": "compact-light-Today-summary-zh-Hans.png",
+      "title": "统计范围标注",
+      "profile": "compact-light",
+      "capture": "Today-summary-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "9d5c5342d50a1018d99f5d2df94e0363ee7951caa2dae56add6fd0d401b671b5"
+    },
+    {
+      "file": "compact-light-Timeline-filter-empty-zh-Hans.png",
+      "title": "中文筛选空态与复位",
+      "profile": "compact-light",
+      "capture": "Timeline-filter-empty-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "1a43174f595400019abecd3003e97cf7ce1abb7c566f6d305c8df0ec01b8427d"
+    },
+    {
+      "file": "compact-light-Timeline-filter-empty-en.png",
+      "title": "英文筛选空态与复位",
+      "profile": "compact-light",
+      "capture": "Timeline-filter-empty-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "1e533765026b0ec5db51da9e53f04aea15c79ec31ee59a04edc3e54a28dd50b3"
+    },
+    {
+      "file": "phone-dark-Manual-top-en.png",
+      "title": "深色：顶部保存",
+      "profile": "phone-dark",
+      "capture": "Manual-top-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "99b0d4c97d43ef7b2384e67792c597ed97865634ae9aea5b68be6feac3dbd1af"
+    },
+    {
+      "file": "ipad-light-Manual-top-zh-Hans.png",
+      "title": "iPad：顶部保存",
+      "profile": "ipad-light",
+      "capture": "Manual-top-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "7415a289979cb381ac8156774e49633783f3b4fa34cfd28c1dbe9ec6ac4f71b8"
+    },
+    {
+      "file": "compact-dark-accessibility-Week-menu-en.png",
+      "title": "辅助字号：英文短日期",
+      "profile": "compact-dark-accessibility",
+      "capture": "Week-menu-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "003105a10968d3e0c4cd76d594d2458d45c4b60972a3973345fc4de9a348f0aa"
+    },
+    {
+      "file": "compact-dark-accessibility-Week-menu-zh-Hans.png",
+      "title": "辅助字号：中文短日期",
+      "profile": "compact-dark-accessibility",
+      "capture": "Week-menu-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "ff1a9bbf49ca17800396e1df2a0cce479c83293af93d204dbf3296bc7b904ecf"
+    },
+    {
+      "file": "compact-dark-accessibility-Manual-top-zh-Hans.png",
+      "title": "辅助字号：顶部编辑操作",
+      "profile": "compact-dark-accessibility",
+      "capture": "Manual-top-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "e61889d998172bd2403b4616d6f88dd3c364420602d4238e584a2f865b3b3ca6"
+    },
+    {
+      "file": "compact-dark-accessibility-Timeline-filter-empty-zh-Hans.png",
+      "title": "辅助字号：筛选空态（复位按钮在上方）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Timeline-filter-empty-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "5185215d4a3516fe3098068f6fa6b5962635867bc539dc719e1025f0acc41a69"
+    }
+  ],
+  "baseline": [
+    {
+      "file": "before-Manual-top-zh-Hans.png",
+      "sourceCommit": "dd8b6fe37274b707fadca13430bd9441eccd8c7f",
+      "runId": 42828824461,
+      "sha256": "3d075970e49edd8f13f3733bc90ee054e1855acc22f190a935341c4f14e34130"
+    },
+    {
+      "file": "before-Week-menu-zh-Hans.png",
+      "sourceCommit": "dd8b6fe37274b707fadca13430bd9441eccd8c7f",
+      "runId": 42828824461,
+      "sha256": "fde1880ebec041116b269aa5dcde85872031306daecb7903bf16438146923464"
+    }
+  ],
+  "limits": [
+    "Selected screenshots reviewed, not all exported PNGs",
+    "No physical VoiceOver, tactile, privacy-lifecycle or older-runtime acceptance",
+    "Save-failure alert is not UI fault-injected; storage-failure unit regression is separate",
+    "No signing, TestFlight upload or main merge"
+  ]
+}

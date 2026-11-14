@@ -1,0 +1,317 @@
+{
+  "sourceCommit": "d4a6a83d5ab4c2d2c650bbe9309ae3e998989779",
+  "sourceVerification": {
+    "runHeadSHA": "d4a6a83d5ab4c2d2c650bbe9309ae3e998989779",
+    "sourceTree": "b8f169c0361838b96c3cc59537d42b12d9c06f9b",
+    "checkoutCommitsByProfile": {
+      "compact-light": "a9a7bd9ffe78e6d0916c7013cedb16d35dc0e52d",
+      "phone-dark": "a9a7bd9ffe78e6d0916c7013cedb16d35dc0e52d",
+      "ipad-light": "a9a7bd9ffe78e6d0916c7013cedb16d35dc0e52d",
+      "compact-dark-accessibility": "a9a7bd9ffe78e6d0916c7013cedb16d35dc0e52d"
+    },
+    "checkoutTrees": {
+      "a9a7bd9ffe78e6d0916c7013cedb16d35dc0e52d": "b8f169c0361838b96c3cc59537d42b12d9c06f9b"
+    },
+    "exactTreeMatch": true
+  },
+  "runId": 43001370010,
+  "runURL": "https://github.com/betterfxb/private-moments-ios/actions/runs/43001370010",
+  "toolchain": {
+    "xcode": "26.2",
+    "simulatorSDK": "26.2",
+    "runtime": "26.2"
+  },
+  "runtimeEvidence": [
+    {
+      "profile": "compact-dark-accessibility",
+      "jobID": 130458100678,
+      "log": "build\\batch-08-cloud\\43001370010\\logs\\compact-dark-accessibility\\5_Select and configure simulator.txt",
+      "sha256": "c2e6a7f2652fe2623172cc56f02e3b1ea3de9dd7f79263b942dd6f7075881c74"
+    },
+    {
+      "profile": "ipad-light",
+      "jobID": 130458100681,
+      "log": "build\\batch-08-cloud\\43001370010\\logs\\ipad-light\\5_Select and configure simulator.txt",
+      "sha256": "3ed19a3ddcbcef6c1202a4b8b0c10ddb4e2a1e39c05620cd5b026d0013f85d9c"
+    },
+    {
+      "profile": "compact-light",
+      "jobID": 130458100720,
+      "log": "build\\batch-08-cloud\\43001370010\\logs\\compact-light\\5_Select and configure simulator.txt",
+      "sha256": "95f207cdf8c2405e56e387768eb00bfb0bb231ff6217d7f6b8a0582539a2dc2e"
+    },
+    {
+      "profile": "phone-dark",
+      "jobID": 130458100913,
+      "log": "build\\batch-08-cloud\\43001370010\\logs\\phone-dark\\5_Select and configure simulator.txt",
+      "sha256": "eed5159373d27a24ecf4a4c6b6de63f50026fdc9df13a80ca2ad60de3764adbd"
+    }
+  ],
+  "tests": {
+    "compactLightUnitTests": 50,
+    "compactLightUITests": 5,
+    "otherProfilesUITestsEach": 2,
+    "systemFileRoundTrip": "English on all four profiles; actual system file exporter/importer. No explicit source-copy reselection was needed in this final run; the bounded recovery guard remained enabled",
+    "galleryLanguages": [
+      "en",
+      "zh-Hans"
+    ],
+    "releaseSimulatorDebugHooks": "absent"
+  },
+  "profiles": [
+    {
+      "name": "compact-dark-accessibility",
+      "jobID": 130458100678,
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 57
+    },
+    {
+      "name": "ipad-light",
+      "jobID": 130458100681,
+      "conclusion": "success",
+      "device": "iPad Pro 13-inch (M5)",
+      "exportedPNGCount": 53
+    },
+    {
+      "name": "compact-light",
+      "jobID": 130458100720,
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 56
+    },
+    {
+      "name": "phone-dark",
+      "jobID": 130458100913,
+      "conclusion": "success",
+      "device": "iPhone 17 Pro",
+      "exportedPNGCount": 53
+    }
+  ],
+  "openedCaptures": [
+    "ipad-light/Backup-review-en",
+    "ipad-light/Import-files-en",
+    "ipad-light/Lock-recovery-zh-Hans",
+    "phone-dark/Backup-review-en",
+    "phone-dark/Backup-replace-en",
+    "phone-dark/Lock-recovery-zh-Hans",
+    "compact-light/Backup-warning-en",
+    "compact-light/Backup-warning-zh-Hans",
+    "compact-light/Export-files-en",
+    "compact-light/Import-files-en",
+    "compact-light/Backup-review-en",
+    "compact-light/Backup-review-controls-en",
+    "compact-light/Backup-replace-en",
+    "compact-light/Backup-restored-en",
+    "compact-dark-accessibility/Backup-warning-en",
+    "compact-dark-accessibility/Backup-warning-zh-Hans",
+    "compact-dark-accessibility/Backup-review-en",
+    "compact-dark-accessibility/Backup-review-controls-en",
+    "compact-dark-accessibility/Backup-replace-en",
+    "compact-dark-accessibility/Lock-recovery-en",
+    "compact-dark-accessibility/Lock-recovery-zh-Hans"
+  ],
+  "retainedUnmodifiedScreenshots": [
+    {
+      "file": "compact-light-Backup-warning-en.png",
+      "title": "小屏英文：导出前的短警告",
+      "profile": "compact-light",
+      "capture": "Backup-warning-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "2940455c524092463361bee7f2192cd531af423b8457406dd7c5a6c1252c6499"
+    },
+    {
+      "file": "compact-light-Backup-warning-zh-Hans.png",
+      "title": "小屏中文：导出前的短警告",
+      "profile": "compact-light",
+      "capture": "Backup-warning-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "a939882696969609c3874bd4121b9ea2b6de4dc1b8e777ac88d5e7558a207373"
+    },
+    {
+      "file": "compact-light-Export-files-en.png",
+      "title": "小屏：真实系统导出界面",
+      "profile": "compact-light",
+      "capture": "Export-files-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "962681fe9a532d8d9ee3ff521378dd934a048cf0c0019d5dff2510263a09579a"
+    },
+    {
+      "file": "compact-light-Import-files-en.png",
+      "title": "小屏：真实系统导入界面",
+      "profile": "compact-light",
+      "capture": "Import-files-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "55c5b95df2869b372b08a6e4173860196d96c1497647f9732e3cd6ed9fd6bd81"
+    },
+    {
+      "file": "compact-light-Backup-review-en.png",
+      "title": "小屏：校验后的恢复预览",
+      "profile": "compact-light",
+      "capture": "Backup-review-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "b37aa2adf0e111c77a414ad7e2b8c7ffe6e55ae9736e6f4b5740eaf6c5cbda1b"
+    },
+    {
+      "file": "compact-light-Backup-review-controls-en.png",
+      "title": "小屏：预览下方说明与固定合并操作",
+      "profile": "compact-light",
+      "capture": "Backup-review-controls-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "60d942db192de4da8659c4fa872b1452fd2530edd5ad25e444e31d307c801f67"
+    },
+    {
+      "file": "compact-light-Backup-replace-en.png",
+      "title": "小屏：替换前确认数量",
+      "profile": "compact-light",
+      "capture": "Backup-replace-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "2a4acd66ad1579f84c44d083e842245b3881b7adfd576ba53aaeb491cc1436b9"
+    },
+    {
+      "file": "compact-light-Backup-restored-en.png",
+      "title": "小屏：真实替换成功后",
+      "profile": "compact-light",
+      "capture": "Backup-restored-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "0ec85825096643f986829d2c846e60fba520074d27d322ffac9c10635ab51d5c"
+    },
+    {
+      "file": "phone-dark-Backup-review-en.png",
+      "title": "深色：恢复预览",
+      "profile": "phone-dark",
+      "capture": "Backup-review-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "95a4561e4285f6cc8bc3a1772aa58a58e0f1a442c33b0488ea9e203982a3e3e7"
+    },
+    {
+      "file": "phone-dark-Backup-replace-en.png",
+      "title": "深色：替换数量确认",
+      "profile": "phone-dark",
+      "capture": "Backup-replace-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "88e7e44b10091995c01e643d07553ece59d1d89a1620efd5191e68a5cb63f1df"
+    },
+    {
+      "file": "phone-dark-Lock-recovery-zh-Hans.png",
+      "title": "深色中文：认证后台取消后恢复",
+      "profile": "phone-dark",
+      "capture": "Lock-recovery-zh-Hans",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "5571f474dc35bb0aec75aae0fdb9a7507f20968e0dcf2c5391373049a6e5e88a"
+    },
+    {
+      "file": "ipad-light-Backup-review-en.png",
+      "title": "iPad：恢复预览",
+      "profile": "ipad-light",
+      "capture": "Backup-review-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "5ccfd55bf81ee3d3ce9ebffb299da58f134dd70f46fed65f251aab57856143d9"
+    },
+    {
+      "file": "ipad-light-Import-files-en.png",
+      "title": "iPad：真实系统文件选择器",
+      "profile": "ipad-light",
+      "capture": "Import-files-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "1abde0a09a6654cf83f8d7822f0e95b20469d5f18d783541a4cf284d435c73f9"
+    },
+    {
+      "file": "ipad-light-Lock-recovery-zh-Hans.png",
+      "title": "iPad中文：认证后台取消后恢复",
+      "profile": "ipad-light",
+      "capture": "Lock-recovery-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "7c2c9928c854b0ad5b0a8e62c4ab91c62436815b0d14a007c48cc89ab67b0f1d"
+    },
+    {
+      "file": "compact-dark-accessibility-Backup-warning-en.png",
+      "title": "最大字号英文：导出警告（正文未在同屏完整显示）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Backup-warning-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "8354b69a373f49897551c1b57f976b81d9b0518b014826282eaf1bc4efe32c57"
+    },
+    {
+      "file": "compact-dark-accessibility-Backup-warning-zh-Hans.png",
+      "title": "最大字号中文：短导出警告",
+      "profile": "compact-dark-accessibility",
+      "capture": "Backup-warning-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "5ff2533fc942c25b153b5825e6804fd41054b597159c1314a2f6ba426b3751f6"
+    },
+    {
+      "file": "compact-dark-accessibility-Backup-review-en.png",
+      "title": "最大字号：恢复预览顶部",
+      "profile": "compact-dark-accessibility",
+      "capture": "Backup-review-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "cd478dfe8ece0bb9dee0608036fbf312d2e8bb686e03ca80f165893f4f83fa13"
+    },
+    {
+      "file": "compact-dark-accessibility-Backup-review-controls-en.png",
+      "title": "最大字号：恢复说明与固定操作",
+      "profile": "compact-dark-accessibility",
+      "capture": "Backup-review-controls-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "8b6f58af48d8ac3ef800f7280aedb715dc293fe78f7a60c026776eb3a8eb6c28"
+    },
+    {
+      "file": "compact-dark-accessibility-Backup-replace-en.png",
+      "title": "最大字号：替换数量确认",
+      "profile": "compact-dark-accessibility",
+      "capture": "Backup-replace-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "c2c8abb6afee05293b0eaef1f2b49f0c96648e997fa70467005ffcc68a02e757"
+    },
+    {
+      "file": "compact-dark-accessibility-Lock-recovery-en.png",
+      "title": "最大字号英文：认证取消后恢复",
+      "profile": "compact-dark-accessibility",
+      "capture": "Lock-recovery-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "37d040373333c13fa8adf0acfbc68d16e8e5f2634d08fac886dc1f07cb513785"
+    },
+    {
+      "file": "compact-dark-accessibility-Lock-recovery-zh-Hans.png",
+      "title": "最大字号中文：认证取消后恢复",
+      "profile": "compact-dark-accessibility",
+      "capture": "Lock-recovery-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "63ec7376f3368ac5ef643def28d1789b5a8c37a8c90a36a0371c5a8c40f1c984"
+    }
+  ],
+  "sourceRecoveryEvents": [],
+  "limits": [
+    "Selected screenshots opened, not every exported PNG",
+    "English system-file roundtrip; bilingual gallery does not prove a full Chinese system-file roundtrip",
+    "Snapshot copy import and coordinated bounded reads; provider may materialize an entire file before URL delivery and the app size check",
+    "The picker stays alive while app-owned copies are coordinated into UUID temporary snapshots; normal completion/failure cleans only owned snapshots. Process termination or undelivered provider copies may leave temporaries until system cleanup; originals remain user-managed in Files",
+    "Authentication state-machine tests use a unit-only controlled adapter; Simulator request/background cancellation is not successful physical authentication",
+    "No physical VoiceOver, tactile, file-protection, external-provider or older-runtime acceptance",
+    "No 100000-record performance acceptance; SwiftData mutations remain MainActor",
+    "First-attempt provider availability is not established; all observed typed-source recovery events and explicit user reselections are retained",
+    "No signing, TestFlight upload or main merge"
+  ]
+}

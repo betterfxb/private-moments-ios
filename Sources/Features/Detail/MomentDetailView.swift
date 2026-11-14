@@ -33,9 +33,19 @@ struct MomentDetailView: View {
                 )
             }
         }
-        .background(AppColors.cream.ignoresSafeArea())
+        .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Moment details")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if let moment {
+                if #available(iOS 26.0, *) {
+                    ToolbarItem(placement: .topBarTrailing) { toolbarEdit(moment) }
+                        .sharedBackgroundVisibility(.hidden)
+                } else {
+                    ToolbarItem(placement: .topBarTrailing) { toolbarEdit(moment) }
+                }
+            }
+        }
         .confirmationDialog(
             "Delete this moment?",
             isPresented: $showingDeleteConfirmation,
@@ -48,6 +58,21 @@ struct MomentDetailView: View {
         } message: {
             Text("This removes the entry from this app's local journal. Any JSON backup you created remains unchanged.")
         }
+    }
+
+    private func toolbarEdit(_ moment: Moment) -> some View {
+        Button { onEdit(moment) } label: {
+            Label("Edit reflection", systemImage: "pencil")
+                .labelStyle(.iconOnly)
+                .font(.body.weight(.semibold))
+                .frame(minWidth: 44, minHeight: 44)
+                .background(AppColors.accentWash, in: Circle())
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(store.isStorageAvailable ? AppColors.accentText : AppColors.secondaryText)
+        .disabled(!store.isStorageAvailable)
+        .accessibilityIdentifier("detail.editToolbar")
     }
 
     @ViewBuilder
@@ -63,64 +88,71 @@ struct MomentDetailView: View {
                     )
                 }
 
-                VStack(alignment: .leading, spacing: 7) {
-                    Text("A moment to remember")
-                        .font(.system(.largeTitle, design: .serif))
-                        .foregroundStyle(AppColors.ink)
-                    Text(moment.occurredAt.formatted(date: .complete, time: .shortened))
-                        .font(.system(.subheadline, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
-                    Text(SessionClock.durationText(moment.durationSeconds))
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundStyle(AppColors.terracottaDark)
-                }
-
-                infoLayout {
-                    infoCard(title: "Type", value: moment.kind.displayName, symbol: "circle.grid.2x2")
-                    infoCard(title: "Feeling", value: moment.mood.displayName, symbol: "face.smiling")
-                }
-                infoCard(title: "Rating", value: AppLocalization.format("%lld of 5", moment.rating), symbol: "star.fill")
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Tags")
-                        .font(.system(.headline, design: .serif))
-                        .foregroundStyle(AppColors.ink)
-                    if moment.tags.isEmpty {
-                        Text("No tags added")
-                            .font(.system(.subheadline, design: .rounded))
-                            .foregroundStyle(AppColors.inkSoft)
-                    } else {
-                        Text(moment.tags.map(AppLocalization.localizedTag).joined(separator: " · "))
-                            .font(.system(.subheadline, design: .rounded))
-                            .foregroundStyle(AppColors.inkSoft)
-                    }
-                }
-
-                VStack(alignment: .leading, spacing: 9) {
-                    Label("Private note", systemImage: "lock.fill")
-                        .font(.system(.headline, design: .serif))
-                        .foregroundStyle(AppColors.terracottaDark)
-                    Group {
-                        if moment.privateNote.isEmpty {
-                            Text("No note added.")
-                                .font(.system(.body, design: .rounded))
-                                .foregroundStyle(AppColors.ink)
-                        } else {
-                            Text(moment.privateNote)
-                                .font(.system(.body, design: .rounded))
-                                .foregroundStyle(AppColors.ink)
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack(spacing: 12) {
+                        if !dynamicTypeSize.isAccessibilitySize {
+                            Image(systemName: moment.kind == .together ? "person.2.fill" : "person.fill")
+                                .font(.system(size: 22, weight: .medium))
+                                .foregroundStyle(AppColors.accentText)
+                                .frame(width: 52, height: 52)
+                                .background(AppColors.accentWash, in: RoundedRectangle(cornerRadius: 16))
+                                .accessibilityHidden(true)
+                        }
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("A moment to remember")
+                                .font(.system(.caption, design: .rounded))
+                                .foregroundStyle(AppColors.secondaryText)
+                            Text(moment.kind.displayName)
+                                .font(.system(.title2, design: .rounded).weight(.semibold))
+                                .foregroundStyle(AppColors.text)
                         }
                     }
+                    Divider()
+                    Text(SessionClock.durationText(moment.durationSeconds))
+                        .font(.system(.largeTitle, design: .rounded).weight(.semibold).monospacedDigit())
+                        .foregroundStyle(AppColors.accentText)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(moment.occurredAt.formatted(date: .complete, time: .shortened))
+                        .font(.system(.subheadline, design: .rounded))
+                        .foregroundStyle(AppColors.secondaryText)
+                }
+                .modifier(JournalPanel())
+
+                infoLayout {
+                    infoCard(title: "Feeling", value: moment.mood.displayName, symbol: moment.mood.symbol)
+                    infoCard(title: "Rating", value: AppLocalization.format("%lld of 5", moment.rating), symbol: "star.fill")
+                }
+                .fixedSize(horizontal: false, vertical: true)
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Label("Tags", systemImage: "tag")
+                        .font(.system(.headline, design: .rounded))
+                        .foregroundStyle(AppColors.accentText)
+                    Text(moment.tags.isEmpty
+                        ? AppLocalization.string("No tags added")
+                        : moment.tags.map(AppLocalization.localizedTag).joined(separator: " · "))
+                        .font(.system(.subheadline, design: .rounded))
+                        .foregroundStyle(AppColors.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .modifier(JournalPanel())
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Label("Private note", systemImage: "lock")
+                        .font(.system(.headline, design: .rounded))
+                        .foregroundStyle(AppColors.accentText)
+                    Text(moment.privateNote.isEmpty ? AppLocalization.string("No note added.") : moment.privateNote)
+                        .font(.system(.body, design: .rounded))
+                        .foregroundStyle(AppColors.text)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(14)
-                        .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
                         .textSelection(.enabled)
                         .accessibilityIdentifier("detail.note")
                         .privacySensitive()
-                    Text("Private notes are not part of sharing in this MVP.")
-                        .font(.system(.footnote, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
+                    Text("Private notes are included in exported backups.")
+                        .font(.system(.caption, design: .rounded))
+                        .foregroundStyle(AppColors.secondaryText)
                 }
+                .modifier(JournalPanel())
 
                 if store.isStorageAvailable, let errorMessage = store.errorMessage {
                     ErrorNotice(message: errorMessage)
@@ -134,7 +166,7 @@ struct MomentDetailView: View {
                         .padding(.vertical, 14)
                 }
                 .buttonStyle(.bordered)
-                .tint(AppColors.terracottaDark)
+                .tint(AppColors.accentText)
                 .disabled(!store.isStorageAvailable)
                 .accessibilityIdentifier("detail.edit")
 
@@ -142,11 +174,12 @@ struct MomentDetailView: View {
                     showingDeleteConfirmation = true
                 } label: {
                     Label("Delete this moment", systemImage: "trash")
+                        .foregroundStyle(AppColors.destructive)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                 }
-                .buttonStyle(.bordered)
-                .tint(AppColors.terracottaDark)
+                .buttonStyle(.plain)
+                .tint(AppColors.destructive)
                 .disabled(!store.isStorageAvailable)
                 .accessibilityIdentifier("detail.delete")
             }
@@ -167,16 +200,15 @@ struct MomentDetailView: View {
     private func infoCard(title: LocalizedStringKey, value: String, symbol: String) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Image(systemName: symbol)
-                .foregroundStyle(AppColors.terracotta)
+                .foregroundStyle(AppColors.accentText)
             Text(title)
                 .font(.system(.caption, design: .rounded))
-                .foregroundStyle(AppColors.inkSoft)
+                .foregroundStyle(AppColors.secondaryText)
             Text(value)
                 .font(.system(.headline, design: .rounded))
-                .foregroundStyle(AppColors.ink)
+                .foregroundStyle(AppColors.text)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .modifier(JournalPanel())
     }
 }

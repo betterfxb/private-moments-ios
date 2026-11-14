@@ -7,7 +7,7 @@ struct LiveSessionView: View {
     let onFinish: (CompletedSession) -> Void
     @State private var hasFinished = false
     @State private var showingCancelConfirmation = false
-    @ScaledMetric(relativeTo: .largeTitle) private var clockFontSize: CGFloat = 54
+    @ScaledMetric(relativeTo: .largeTitle) private var clockFontSize: CGFloat = 64
 
     var body: some View {
         GeometryReader { geometry in
@@ -24,6 +24,13 @@ struct LiveSessionView: View {
                     }
 
                     Spacer(minLength: 10)
+
+                    Image(systemName: "heart")
+                        .font(.system(size: 30, weight: .light))
+                        .foregroundStyle(AppColors.onDarkAccent)
+                        .frame(width: 72, height: 72)
+                        .background(AppColors.onDarkAccent.opacity(0.08), in: Circle())
+                        .accessibilityHidden(true)
 
                     SwiftUI.TimelineView(.periodic(from: .now, by: 1)) { _ in
                         VStack(spacing: 7) {
@@ -72,13 +79,13 @@ struct LiveSessionView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         .foregroundStyle(AppColors.onAccent)
-                        .tint(AppColors.terracotta)
+                        .tint(AppColors.accent)
                         .disabled(hasFinished)
                         .accessibilityIdentifier("session.finish")
                     }
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
 
-                    Text("Health and Watch readings are not connected in this MVP.")
+                    Text("You can add your reflection when you finish.")
                         .font(.system(.caption, design: .rounded))
                         .multilineTextAlignment(.center)
                         .foregroundStyle(AppColors.onDarkSecondary)
@@ -91,9 +98,9 @@ struct LiveSessionView: View {
                 .frame(maxWidth: .infinity)
             }
         }
-        .background(AppColors.espresso.ignoresSafeArea())
+        .background(AppColors.session.ignoresSafeArea())
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackground(AppColors.espresso, for: .navigationBar)
+        .toolbarBackground(AppColors.session, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .navigationTitle("Live session")
         .navigationBarTitleDisplayMode(.inline)
@@ -105,21 +112,20 @@ struct LiveSessionView: View {
                     .accessibilityIdentifier("session.cancel")
             }
         }
-        .tint(AppColors.blush)
+        .tint(AppColors.accentWash)
         .accessibilityAction(.escape) { showingCancelConfirmation = true }
-        .confirmationDialog(
-            "Discard this session?",
-            isPresented: $showingCancelConfirmation,
-            titleVisibility: .visible
+        .alert(
+            "Discard timer?",
+            isPresented: $showingCancelConfirmation
         ) {
-            Button("Discard session", role: .destructive) {
+            Button("Discard", role: .destructive) {
                 hasFinished = true
                 _ = sessionClock.finish()
                 dismiss()
             }
             Button("Keep going", role: .cancel) { }
         } message: {
-            Text("This timer won't be saved to your journal.")
+            Text("This timer won't be saved.")
         }
         .onDisappear {
             if !hasFinished && sessionClock.isRunning {

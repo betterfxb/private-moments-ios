@@ -1,0 +1,821 @@
+{
+  "batch": 11,
+  "scope": "supplementary-input-gallery",
+  "sourceCommit": "5c0a63757a8ff3d60f5a247a69c146884f973785",
+  "sourceTree": "795cd0e12457232052986c082b8421710f406e1d",
+  "runId": 43419507000,
+  "runURL": "https://github.com/betterfxb/private-moments-ios/actions/runs/43419507000",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 131865676010,
+      "name": "plan",
+      "conclusion": "success"
+    },
+    {
+      "id": 131865791413,
+      "name": "ipad-light-accessibility",
+      "conclusion": "success"
+    }
+  ],
+  "profile": {
+    "name": "ipad-light-accessibility",
+    "device": "iPad Pro 13-inch (M5)",
+    "runtime": "26.2",
+    "xcode": "26.2",
+    "appearance": "light",
+    "configuredSystemTextSize": "accessibility-extra-extra-extra-large",
+    "orientation": "portrait",
+    "pixelDimensions": [
+      2064,
+      2752
+    ]
+  },
+  "nativeTests": {
+    "method": "PrivateMomentsUITests/testScreenGallery",
+    "tests": 1,
+    "failures": 0,
+    "durationSeconds": 861.928,
+    "unitTestsThisRun": 0,
+    "releaseVerificationThisRun": false,
+    "systemFileRoundtripThisRun": false,
+    "locales": [
+      "en",
+      "zh-Hans"
+    ]
+  },
+  "priorFullRegression": {
+    "sourceCommit": "204387dbc1b2b3de135a6901a2a8907e4ad353d5",
+    "runId": 43381177893,
+    "unchangedPaths": [
+      "Sources",
+      "Resources",
+      "Tests",
+      "scripts",
+      "PrivateMoments.xcodeproj"
+    ],
+    "uiTestKeyboardHelperChanged": true,
+    "repeatedThisBatch": false
+  },
+  "openedOriginalCount": 60,
+  "images": [
+    {
+      "file": "images/Backup-warning-en.png",
+      "sha256": "76a1ecd079a3c14ab545131a437be96ebb1079e710605f5ca7817a6bc220d303",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/BE22DBF4-BE66-4EA5-A0CE-E9D5D25543F0.png",
+      "scene": "Backup-warning-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Backup-warning-zh-Hans.png",
+      "sha256": "a7d1191c8a30fb4e44f10fc858b7af2eb557d8d6c162ff5c68bd88ee1ba059ef",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/1DC0E730-ECDA-4A7E-ABB0-C4204D6B7C4B.png",
+      "scene": "Backup-warning-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Calendar-en.png",
+      "sha256": "6c674432843f956487c78812e85e008f069f1dfa0779b0745f4fac5111fce1da",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/0CE575F3-6F89-40D0-9AD9-2787342056C9.png",
+      "scene": "Calendar-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Calendar-zh-Hans.png",
+      "sha256": "a05071662e6152dd8ca0673c3bc9e7c5a90f22d004b6eb1227fb84f39f398e6d",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/2342ACA5-A586-4979-B611-04363890F028.png",
+      "scene": "Calendar-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Detail-controls-en.png",
+      "sha256": "6b06e24cd4e8a47d4413cff3c8082c03ecca5c840becfe40715f6afe72cfd0b5",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/81557D04-A108-4DBA-B3D8-3411AA873D5B.png",
+      "scene": "Detail-controls-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Detail-controls-zh-Hans.png",
+      "sha256": "6e59c1da787bcf0ac60395aee0983a008a1e9b771cc3d52f43a3052a675644a2",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/36B3E6F0-C79B-46B5-9090-886B96156725.png",
+      "scene": "Detail-controls-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Detail-top-en.png",
+      "sha256": "f67e42a7b2005c7e0262ad486a9a390d5c513ed72b8e3da58506d8f7b77559c5",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/998C3FF8-60AD-4EDB-B7A7-C4E69B6F1AD8.png",
+      "scene": "Detail-top-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Detail-top-zh-Hans.png",
+      "sha256": "a603739d5414072e2e75a9fd9f8240515eba6f39c001d10f91bbbe7b0d8580e3",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/33D2E35B-21F4-4281-8DFC-315538A639A7.png",
+      "scene": "Detail-top-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Lock-recovery-en.png",
+      "sha256": "54d9fb1d29072bbe2c2b94a63b56f517464b8935dc45d28073da6c3f81aedac0",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/D4FC789D-1A8A-47AA-9D7E-F97E72640BCF.png",
+      "scene": "Lock-recovery-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Lock-recovery-zh-Hans.png",
+      "sha256": "fd6c27ea16490b0b8a775f7d09a4a24397a9c18fcd3218e673c95c513b79b00b",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/AEE5AFAA-41A8-4AB3-95E6-C214B4837DCC.png",
+      "scene": "Lock-recovery-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-date-picker-en.png",
+      "sha256": "82ef5e5caa427214b268f89322ecf9ede05b17ec6ef85f6047195b60d41dfb47",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/7FF3F403-B895-4DC6-A937-B959D6938AB0.png",
+      "scene": "Manual-date-picker-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-date-picker-zh-Hans.png",
+      "sha256": "e9e5c62c8fbc38abf4a3cedc412b212c5398394be9a01fe0574930e405528eec",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/5304B6F2-CB4C-4E03-9AEB-F578B7CAAEDD.png",
+      "scene": "Manual-date-picker-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-duration-en.png",
+      "sha256": "4fc8f81fa15664d73f566d4922312b376bf9472ac3bdb6af415c3b30d0012952",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/3EF519C7-CE68-4F10-ADFB-D0E4901B037C.png",
+      "scene": "Manual-duration-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-duration-zh-Hans.png",
+      "sha256": "b7a99bc4d68ca974c2541b934a2906dce6a29525c4f97f67ca603ebd9fbd9961",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/D6B6DC45-FE0B-45A6-B2F8-8A539D9A2B96.png",
+      "scene": "Manual-duration-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-note-confirm-en.png",
+      "sha256": "e50794c7e9d07dd0d57e04bddf1bfa722a2c2ea83cdfc46d15cd78e7f6c84223",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/D775881F-EA8A-4648-B934-EACFFAA43239.png",
+      "scene": "Manual-note-confirm-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-note-confirm-zh-Hans.png",
+      "sha256": "a1c77a9af886f371615855f09a59189446409e9a9113bb8895586bf287affe61",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/D24E1B6D-8399-4500-904F-364903365CCF.png",
+      "scene": "Manual-note-confirm-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-note-keyboard-en.png",
+      "sha256": "abaa6c9249b977b28f426e2d0253578a03f53bf827e3b9a1e74f6fd86165e179",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/A49BCC9D-546F-4F66-8B3B-208C28B74A82.png",
+      "scene": "Manual-note-keyboard-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-note-keyboard-zh-Hans.png",
+      "sha256": "9775a211674082edfda1a113330aa4216517102a58e90a9c27de7281829caaa7",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/210972AF-C195-4768-B11C-80F14B99C729.png",
+      "scene": "Manual-note-keyboard-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-note-retained-en.png",
+      "sha256": "174e131c80b48d80a5a6c8746fe00b14c12baef46dd40be8f586a8cc792db8bd",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/034532D3-CE1F-4D45-9CD1-697A90E07A56.png",
+      "scene": "Manual-note-retained-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-note-retained-zh-Hans.png",
+      "sha256": "24eb162938e0ac6946a602571cbbcd637822a49ea5c94322ec80fc76fbc8b8ae",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/052F81EA-744F-4A2E-984F-36776C8FF282.png",
+      "scene": "Manual-note-retained-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-top-en.png",
+      "sha256": "28791cdc10efc3700463f1ae6a678edeadd4c2d8d34d5aae7728046a42901dda",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/47DB76C9-745F-4103-BD17-0A0954722350.png",
+      "scene": "Manual-top-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Manual-top-zh-Hans.png",
+      "sha256": "3cc05df7f3ceebfabb7e216bcec1dcade729849bc9dbd84ec6041112eb20378d",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/923D31BF-C104-4DA0-8582-94E00B37502B.png",
+      "scene": "Manual-top-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Recap-controls-en.png",
+      "sha256": "4d7e872ef2acc83f612f8e60262d79949ace605f607b414835a4e4f11ab653f2",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/5EF249D8-808B-4F1B-8941-EEA22DFFB7EF.png",
+      "scene": "Recap-controls-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Recap-controls-zh-Hans.png",
+      "sha256": "58ba1ab2c2dc8cf773b5e9597520be3f17abf623af2a000ec206967552669687",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/D27353B4-6B17-45C4-B6AF-F2CB5340F18F.png",
+      "scene": "Recap-controls-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Recap-kind-en.png",
+      "sha256": "1d4e48bedc9565fbb3835c871bf6124c00d3cf2566979a6d721bc5781b78d947",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/39424E1E-972A-4BD6-B24D-3CF6F8D4F3B3.png",
+      "scene": "Recap-kind-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Recap-kind-zh-Hans.png",
+      "sha256": "af11bead1f4d7ab684add1f086c69adf1dcd923668c2db5c9266a578969b5f35",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/E80C8650-F19B-4D81-8BAE-0002A554DF4E.png",
+      "scene": "Recap-kind-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Recap-rating-en.png",
+      "sha256": "a7156f9ec476b5c163b21cb5bb3591c5422025821869239ce32fb4d696fd864e",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/4755141D-5125-4A47-A0FD-7A0801F49C9A.png",
+      "scene": "Recap-rating-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Recap-rating-zh-Hans.png",
+      "sha256": "cce76ea76cbd2d587d0cc3e552fcdcde9af48e10bf443322f5bffaa48677cb9f",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/6A8B1F7B-AF0B-4189-A425-2785910EB72F.png",
+      "scene": "Recap-rating-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Recap-top-en.png",
+      "sha256": "e637c610433b2e84dbea247d67f634f3e1373a0b2e0f99c75ed575e30b3c5905",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/BE674D19-4D75-4F5B-A933-674014D092D7.png",
+      "scene": "Recap-top-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Recap-top-zh-Hans.png",
+      "sha256": "2605d2493047269fb361df5d7cf152bb5d6e9e229dc61cee907f06f79fbc1bef",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/B8A06A7C-259B-4892-A222-DD57E84FC591.png",
+      "scene": "Recap-top-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Save-error-en.png",
+      "sha256": "ecd2682c97d9dfec9a7d531e0bb645f60e27af91adcc756b4a6f8f8b26b9c190",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/9DED95E2-9F64-4D6C-8CEC-4270FD63C9C2.png",
+      "scene": "Save-error-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Save-error-zh-Hans.png",
+      "sha256": "e49720e2ea68d138fcd9e0a67afa90ff085f44ce10a11fb2914febeaaa9ab047",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/5783F503-2ACC-497B-BBB3-7B77E390BEED.png",
+      "scene": "Save-error-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Save-recovery-en.png",
+      "sha256": "e84348f8fa959e6f0f3d0327565bbd504c26ce63d73a21dcfa1eb938fe1b0e82",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/FC986B8C-1E6D-498C-B554-3C63C88CF58B.png",
+      "scene": "Save-recovery-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Save-recovery-zh-Hans.png",
+      "sha256": "d025be0db644f5454bb9bec1597b3db7a5bfcfd2783764eaa87c3dcf2b433bdd",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/23742867-7234-42ED-844E-4E5430142C02.png",
+      "scene": "Save-recovery-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Session-controls-en.png",
+      "sha256": "d20215e5eef13d3c06c528c596c6109152ad223b67588d48396c3c24cbcea9ca",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/BD028D7B-AA74-4AA6-B6BF-79D50D365D74.png",
+      "scene": "Session-controls-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Session-controls-zh-Hans.png",
+      "sha256": "a4dc9232f89f5c180118d70c3f713f0e699d022af19b8d269c7be484e0fea71d",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/585B93C4-6A38-4D66-939F-C5F5F07A25E4.png",
+      "scene": "Session-controls-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Session-discard-confirm-en.png",
+      "sha256": "567fe417f7e47bddb7947896a1e553397ce7b5265ced2b43452a3908dd1a6349",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/895E6B69-FD66-40FB-BE01-3E1947B3414B.png",
+      "scene": "Session-discard-confirm-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Session-discard-confirm-zh-Hans.png",
+      "sha256": "61886a620a851afe2c3118524ab0900f1b73e44169da92ae8022e84d71a9b934",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/14B52873-C85D-4276-9EB7-D597D6CF709C.png",
+      "scene": "Session-discard-confirm-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Session-en.png",
+      "sha256": "235d96e8ec4c0df9e2db0b787aa18922fe82b33a07f4266cb9d0bd02396cd876",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/697704F5-6CAA-4D60-89CF-813940F68645.png",
+      "scene": "Session-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Session-zh-Hans.png",
+      "sha256": "af85fbe036808f9e7f90e5119d405f6a591731a27c3a8934aab9c65e6786bc37",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/2813B92F-D0C9-4073-9DF8-1A53BBDD38D6.png",
+      "scene": "Session-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Settings-bottom-en.png",
+      "sha256": "681bd8c75a917acf5a155676f15d5389e71505e1265a083408d2f7c26437c004",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/3E1C3ECA-D632-4B16-A9CA-5BD9A79FBA84.png",
+      "scene": "Settings-bottom-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Settings-bottom-zh-Hans.png",
+      "sha256": "868c1caf9b15659131b7e89c4715b015bb63fe8f4e2c20797f3de98a627c23ad",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/B4A8717E-9C6B-4C25-A344-A722C8ABE79D.png",
+      "scene": "Settings-bottom-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Settings-top-en.png",
+      "sha256": "b570c1c056cc99021abeace7f515224d4762459d88849045079f16807aa450af",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/8BA2BA1C-0DD7-4B88-A258-AD83D327C787.png",
+      "scene": "Settings-top-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Settings-top-zh-Hans.png",
+      "sha256": "6b129b0982880ecacb9c2ddbb8fed163dc6392eb0579b61b35a38ff2ce09f575",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/F3A63B9B-2BB6-4FF4-82B8-19ABC98CB336.png",
+      "scene": "Settings-top-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Settings-values-en.png",
+      "sha256": "b570c1c056cc99021abeace7f515224d4762459d88849045079f16807aa450af",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/3A96B59E-CFB4-4F29-88D4-7619F3115A42.png",
+      "scene": "Settings-values-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Settings-values-zh-Hans.png",
+      "sha256": "6b129b0982880ecacb9c2ddbb8fed163dc6392eb0579b61b35a38ff2ce09f575",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/186AB953-C45F-4551-B561-244B27459CBA.png",
+      "scene": "Settings-values-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Timeline-en.png",
+      "sha256": "9bf187117b213fc154e928342d82a8d7346a157cd8eee602aa247ae8a25223bd",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/A0255415-751F-4232-ABC0-1DB7464A8D9B.png",
+      "scene": "Timeline-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Timeline-filter-empty-en.png",
+      "sha256": "cd4dee63efacda2d5f384e710e2ba64789bd8eaeb0fe334797060af8f5aed180",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/C2E827CA-D709-4F0D-B977-EF018321D122.png",
+      "scene": "Timeline-filter-empty-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Timeline-filter-empty-zh-Hans.png",
+      "sha256": "719818c4234bed13e9f870c39aebd931d99638c331ac014c964e3ac6130af471",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/4FE684CD-19AF-4159-B385-AB43F789EBC9.png",
+      "scene": "Timeline-filter-empty-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Timeline-zh-Hans.png",
+      "sha256": "5c0bbff7b4e81f4fe1f4eb47c8cd998e4d6d9cf52d4f1485c0dad4d5ae9362ca",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/7D891BA9-4894-4045-8786-3440AA2AE9D4.png",
+      "scene": "Timeline-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Today-en.png",
+      "sha256": "f80fadd412bd7862e1673c977b5cab80532710a6cea1bcdebb921523dd4764e4",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/523DA5E5-1EBE-4375-A430-BB7D2B7743A0.png",
+      "scene": "Today-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Today-filtered-en.png",
+      "sha256": "9a0887a9287bd440662e92076caf3a2c29474fcb4815bbd188d42838de5293cc",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/78E3C00A-153B-4B33-8C66-115C6FFE11FA.png",
+      "scene": "Today-filtered-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Today-filtered-zh-Hans.png",
+      "sha256": "48d4d022112bc4abdf132d5536d2cc8ba7848cc57957e4f227f88b7f128045bf",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/931B3F9C-F7DF-4102-B360-327B442B02CF.png",
+      "scene": "Today-filtered-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Today-saved-en.png",
+      "sha256": "75fee279c819e183221d4a47fa438b435b2469bcf10eb4b1b60b5baea894ae7e",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/B7FF5F69-1E19-40D3-A511-14732F81189C.png",
+      "scene": "Today-saved-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Today-saved-zh-Hans.png",
+      "sha256": "c5ab3a7a715465d7fca9219d1e88ba2c20f86f3594abcff0ca761c22f774b09d",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/953F8DF3-DCA5-48A9-BEE3-CF8B4896AB1E.png",
+      "scene": "Today-saved-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Today-summary-en.png",
+      "sha256": "05c9ee9a09b3800c6ecb11714b09229b92704d2371f347739f8b4999bf63e577",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/40B3A75D-F014-46B8-A95C-A05BE7A600BA.png",
+      "scene": "Today-summary-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Today-summary-zh-Hans.png",
+      "sha256": "7b7422fc3c558ac56d82f91424f8f931c2419fe366653b2a5cabb83bdf1ac744",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/678AF88B-30E1-497C-B4FB-FF6EE345E887.png",
+      "scene": "Today-summary-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Today-zh-Hans.png",
+      "sha256": "811fe183f5f2e9d98d23106359c985145365e3eb0a0fdc806e3402236e7cbe06",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/6C9E26FF-F4A3-4F5B-9CB1-C70468F65F22.png",
+      "scene": "Today-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Week-menu-en.png",
+      "sha256": "775731e041094b8507d57ee98775a5008f202f5aecd49787bbb464adbf1ebf9c",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/931E3525-C588-46DD-9614-D03AE4F22EC4.png",
+      "scene": "Week-menu-en",
+      "locale": "en",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    },
+    {
+      "file": "images/Week-menu-zh-Hans.png",
+      "sha256": "b84d408511e2eb624a38d5e4b31cec84858ee637b51dd2b8673b033c2067cf6b",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/99314A6E-82FC-4870-B30E-5AE2F41B3E2B.png",
+      "scene": "Week-menu-zh-Hans",
+      "locale": "zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "openedOriginal": true
+    }
+  ],
+  "textAttachments": [
+    {
+      "file": "hierarchies/08DA73EB-7264-4303-A73E-D2268362A243.txt",
+      "sha256": "1be3b7e5c657fe83624a2174a27bb3156397f0607037842d6f1b41c84c932ece",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/08DA73EB-7264-4303-A73E-D2268362A243.txt"
+    },
+    {
+      "file": "hierarchies/51368CE5-B195-43CA-B51B-7A21B01CCD28.txt",
+      "sha256": "cc7536bb975d6e9c7867fbb7eef31c9d809eeafef95fc0cb561d7b86efa2db74",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/51368CE5-B195-43CA-B51B-7A21B01CCD28.txt"
+    },
+    {
+      "file": "hierarchies/5AB111D5-C3DD-4C82-A3CA-B589CC401D9B.txt",
+      "sha256": "0090a976e50a05cc9405833effaf6d3ea0db2eeda42b324038ff33ee099252ae",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/5AB111D5-C3DD-4C82-A3CA-B589CC401D9B.txt"
+    },
+    {
+      "file": "hierarchies/7E1DA49A-7BB9-4AB6-8FB4-96BFF5850C2C.txt",
+      "sha256": "631b93509a94f2991bfd168e7630ebe317b8289abbfff6b5faa4ce35781de3bb",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/7E1DA49A-7BB9-4AB6-8FB4-96BFF5850C2C.txt"
+    },
+    {
+      "file": "hierarchies/84EF17AA-2500-4A74-AE82-28D41605E49C.txt",
+      "sha256": "bcb5fff892a824d41d64f3dd29e34fd90f9e372e4779db594273c1d829f8b2f7",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/84EF17AA-2500-4A74-AE82-28D41605E49C.txt"
+    },
+    {
+      "file": "hierarchies/90E287A5-C061-4A8E-8770-A32F6F3C1E59.txt",
+      "sha256": "730ffaece932c8ac768edf340a8d556f8d8758816854d248c919e9b7b7ba461e",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/90E287A5-C061-4A8E-8770-A32F6F3C1E59.txt"
+    },
+    {
+      "file": "hierarchies/AD616D85-E16F-452B-8951-6117DC62D7AB.txt",
+      "sha256": "1c9fea730045313624e409f762e2e8d96aab813ab4624fe949ec6e0872849a6e",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/AD616D85-E16F-452B-8951-6117DC62D7AB.txt"
+    },
+    {
+      "file": "hierarchies/FBB7C59E-DFDD-4B89-9556-7B23AF3CE47B.txt",
+      "sha256": "548728699c3f79c4b648c64ac01b0317dd4e0c8cfcfcadb0a916ceee34579c68",
+      "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/FBB7C59E-DFDD-4B89-9556-7B23AF3CE47B.txt"
+    }
+  ],
+  "download": {
+    "artifactID": 14034223695,
+    "archiveBytes": 22341966,
+    "selectedEntries": 68,
+    "verification": "Exact HTTP ranges, decompressed size, ZIP entry CRC, PNG signature and path boundaries",
+    "excluded": "Video and binary XCTest snapshots; every PNG and text attachment downloaded"
+  },
+  "manifest": {
+    "file": "manifest.json",
+    "sha256": "f2de2c539014c41b57ac606d2d578780df1a5586212dc6163c041cd06a443def",
+    "originalPath": "build/batch-09-cloud/43419507000/private-moments-ui-screenshots-ipad-light-accessibility/manifest.json"
+  },
+  "sourceLogs": [
+    {
+      "file": "logs/2_Check out source.txt",
+      "sha256": "ee6bafec6ccd4b0537eb91217613b5029e89db29713e24b8fdd64f39c575f318",
+      "originalPath": "build/batch-09-cloud/43419507000/logs/ipad-light-accessibility/2_Check out source.txt"
+    },
+    {
+      "file": "logs/4_Select and verify pinned UI toolchain.txt",
+      "sha256": "8cc17623ad0da2e9ae0416917b8b713e8fc7bb0a86f8ff0660aa13f1dd48ff69",
+      "originalPath": "build/batch-09-cloud/43419507000/logs/ipad-light-accessibility/4_Select and verify pinned UI toolchain.txt"
+    },
+    {
+      "file": "logs/5_Select and configure simulator.txt",
+      "sha256": "2b24b5eeaea43496ee60f953a57ec5b4af96d4bf9a659e7f5611d05e00cd0eb0",
+      "originalPath": "build/batch-09-cloud/43419507000/logs/ipad-light-accessibility/5_Select and configure simulator.txt"
+    },
+    {
+      "file": "logs/6_Build Debug and Release, then run XCTest.txt",
+      "sha256": "c86a1bab825869b7732f615af27e8535dc2c7fea2e18e5a8caed1cfc585b920f",
+      "originalPath": "build/batch-09-cloud/43419507000/logs/ipad-light-accessibility/6_Build Debug and Release, then run XCTest.txt"
+    },
+    {
+      "file": "logs/plan.txt",
+      "sha256": "57f07206e8f43f2e78ec41a298da126b9b40090bab5e47c2d14f04c5ebbdda6b",
+      "originalPath": "build/batch-09-cloud/43419507000/logs/plan/3_Run if [[ $INPUT_SMOKE == 1 && $BACKUP_SMOKE == 1 ]]; then.txt"
+    }
+  ],
+  "verifiedMarkers": {
+    "en": {
+      "keyboardDismissal": 2,
+      "systemSettingsHandoff": 1,
+      "fullyVisibleLockTitleAndValue": 1
+    },
+    "zh-Hans": {
+      "keyboardDismissal": 2,
+      "systemSettingsHandoff": 1,
+      "fullyVisibleLockTitleAndValue": 1
+    }
+  },
+  "diagnostics": [
+    {
+      "runId": 43410423992,
+      "sourceCommit": "86674c99dceef04e6a0db76dfe60e769624f4947",
+      "conclusion": "failure",
+      "durationSeconds": 109.27,
+      "downloadedPNGs": 5,
+      "openedPNGs": 2,
+      "openedRecordingFrames": [
+        98,
+        104,
+        106
+      ],
+      "retrospectivelyPassed": false
+    },
+    {
+      "runId": 43414522526,
+      "sourceCommit": "ee49eee54b790a992ff1101f8569b30f3c1f6126",
+      "conclusion": "failure",
+      "durationSeconds": 144.777,
+      "downloadedPNGs": 6,
+      "openedPNGs": 1,
+      "keyboard": {
+        "exists": true,
+        "hittable": false,
+        "frame": [
+          0,
+          1307,
+          1032,
+          69
+        ],
+        "firstRealKeyY": 1381,
+        "windowHeight": 1376
+      },
+      "physicalScreenshot": {
+        "file": "diagnostics/keyboard-dismissal-incomplete-en.png",
+        "sha256": "60796077152f93a8a8c49f01f74d56d339c1bc5a72ae21fcbf9743e8ddd05690",
+        "originalPath": "build/batch-09-cloud/43414522526/private-moments-ui-screenshots-ipad-light-accessibility/A27F1C7E-326E-49D2-A48F-19A79773CB0B.png"
+      },
+      "hierarchy": {
+        "file": "diagnostics/keyboard-dismissal-incomplete-en.txt",
+        "sha256": "409be595be27c51233ab38ddcb95da465d81196996c4e4c1a3e4c20cdb1f4719",
+        "originalPath": "build/batch-09-cloud/43414522526/private-moments-ui-screenshots-ipad-light-accessibility/3BD07F9C-C4B3-4DD5-8B8E-6D07C74EB805.txt"
+      },
+      "retrospectivelyPassed": false
+    }
+  ],
+  "reviewFindings": [
+    "All 60 final originals opened individually; no observed blocking overlap or action clipping in the captured states.",
+    "At maximum text size the week menu scrolls; its last visible row can be partially clipped at the menu viewport boundary.",
+    "System alert layouts have large vertical whitespace at maximum text; labels and both actions remain visible.",
+    "Long forms and English recovery body text require scrolling; not every field and keyboard must fit one screen.",
+    "This is functional and layout acceptance for one supplementary profile, not a visual redesign or user aesthetic approval."
+  ],
+  "limits": [
+    "No proof of AX/FocusState resignation; verified software keyboard visibility and subsequent actions only.",
+    "ASCII multiline typing in both UI languages does not verify Chinese IME composition.",
+    "Simulator authentication may already be rejected before background handoff; pending real authentication and successful unlock are not verified.",
+    "Physical VoiceOver, Switch Control, locked-device protection, iPad dark/max-text, landscape, split view, intermediate text sizes and older OS remain open.",
+    "Process-termination recovery, large data performance, external file providers and signed distribution remain open."
+  ],
+  "references": [
+    "https://developer.apple.com/documentation/xcuiautomation/xcuielement/ishittable",
+    "https://developer.apple.com/documentation/swiftui/focusstate/"
+  ]
+}
