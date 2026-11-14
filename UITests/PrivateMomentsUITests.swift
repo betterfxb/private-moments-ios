@@ -681,7 +681,7 @@ final class PrivateMomentsUITests: XCTestCase {
                 }
             }
         } while Date() < deadline
-        return false
+        return localFileRoots(in: app).firstMatch.exists
     }
 
     private func captureReadyExporter(action: XCUIElement, language: String, app: XCUIApplication) {
