@@ -1064,9 +1064,27 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func replaceNumber(_ field: XCUIElement, with value: String, in app: XCUIApplication) {
-        tap(field, in: app)
-        let current = field.value as? String ?? ""
+        reveal(field, in: app)
+        waitForStableFrame(field, requireHittable: true, message: "Numeric input must settle before one tap.")
+        field.tap()
+        let keyboard = app.keyboards.firstMatch
+        guard keyboard.waitForExistence(timeout: 10) else {
+            captureFailure("Numeric-keyboard-unavailable-\(field.identifier)", app)
+            return XCTFail("A single numeric-field tap must present the software keyboard.")
+        }
+        waitForStableFrame(keyboard, message: "Numeric keyboard must settle before typing.")
+        guard let current = field.value as? String else {
+            captureFailure("Numeric-value-unavailable-\(field.identifier)", app)
+            return XCTFail("Numeric input must expose its current editable value.")
+        }
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count) + value)
+        let updated = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            field.value as? String == value
+        }, object: nil)
+        guard XCTWaiter.wait(for: [updated], timeout: 5) == .completed else {
+            captureFailure("Numeric-value-mismatch-\(field.identifier)", app)
+            return XCTFail("Numeric typing must publish the exact requested value.")
+        }
     }
 
     private func checkManualNoteDraft(language: String, expanded: Bool, app: XCUIApplication) {
