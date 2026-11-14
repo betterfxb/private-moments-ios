@@ -66,10 +66,18 @@ struct MomentTimelineView: View {
                         ErrorNotice(message: errorMessage)
                     }
 
-                    Text(AppLocalization.momentCount(results.count))
-                        .font(.system(.subheadline, design: .rounded).weight(.medium))
-                        .foregroundStyle(AppColors.secondaryText)
-                        .accessibilityIdentifier("timeline.resultCount")
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Date, type, mood, or tag")
+                            .font(.system(.footnote, design: .rounded))
+                            .foregroundStyle(AppColors.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityIdentifier("timeline.searchScope")
+
+                        Text(AppLocalization.momentCount(results.count))
+                            .font(.system(.subheadline, design: .rounded).weight(.medium))
+                            .foregroundStyle(AppColors.secondaryText)
+                            .accessibilityIdentifier("timeline.resultCount")
+                    }
 
                     if hasActiveFilters {
                         Button {
@@ -122,7 +130,7 @@ struct MomentTimelineView: View {
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Your moments")
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $searchText, isPresented: $isSearchPresented, prompt: "Date, type, mood, or tag")
+        .searchable(text: $searchText, isPresented: $isSearchPresented, prompt: "Search moments")
         .task { store.reload() }
     }
 

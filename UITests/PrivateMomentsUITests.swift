@@ -120,6 +120,7 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Today-summary-\(language)", app)
             selectTab("Timeline", "时间线", language: language, app: app)
             capture("Timeline-\(language)", app)
+            checkTimelineSearch(language: language, app: app)
             // Lazy rows outside the large-text viewport are not a record count.
             let total = app.staticTexts["timeline.resultCount"]
             reveal(total, in: app)
@@ -1448,6 +1449,54 @@ final class PrivateMomentsUITests: XCTestCase {
             captureFailure("Home-action-destination-unavailable", app)
             XCTFail("A single Home action did not present its destination: \(homeDestination)")
         }
+    }
+
+    private func checkTimelineSearch(language: String, app: XCUIApplication) {
+        let scope = app.staticTexts["timeline.searchScope"]
+        revealFully(from: scope, through: scope, in: app)
+        XCTAssertEqual(scope.label, language == "en" ? "Date, type, mood, or tag" : "搜索日期、类型、感受或标签")
+        XCTAssertGreaterThan(scope.frame.height, 0)
+        XCTAssertGreaterThanOrEqual(scope.frame.minX, app.windows.firstMatch.frame.minX)
+        XCTAssertLessThanOrEqual(scope.frame.maxX, app.windows.firstMatch.frame.maxX)
+
+        let search = app.searchFields.firstMatch
+        reveal(search, in: app)
+        XCTAssertEqual(search.placeholderValue, language == "en" ? "Search moments" : "搜索记录")
+        tap(search, in: app)
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        capture("Timeline-search-ready-\(language)", app)
+
+        // ASCII queries exercise both localized interfaces without claiming IME
+        // composition coverage. The gallery's saved record has the Calm mood.
+        let query = "no-matching-mood"
+        search.typeText(query)
+        let total = app.staticTexts["timeline.resultCount"]
+        let empty = language == "en" ? "0 moments" : "0 条记录"
+        let one = language == "en" ? "1 moment" : "1 条记录"
+        let updated = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            total.exists && total.label == empty
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [updated], timeout: 10), .completed)
+        capture("Timeline-search-empty-\(language)", app)
+
+        search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: query.count) + "Calm")
+        let matched = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            total.exists && total.label == one
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [matched], timeout: 10), .completed)
+        XCTAssertEqual(search.value as? String, "Calm")
+        capture("Timeline-search-matched-\(language)", app)
+
+        tap(app.buttons["timeline.clearFilters"], in: app)
+        let cleared = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            total.exists && total.label == one && !app.keyboards.firstMatch.exists &&
+                !app.buttons["timeline.clearFilters"].exists
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [cleared], timeout: 10), .completed)
+        XCTAssertEqual(search.placeholderValue, language == "en" ? "Search moments" : "搜索记录")
+        revealFully(from: scope, through: total, in: app)
+        capture("Timeline-search-cleared-\(language)", app)
+        print("Verified short search prompt, scope, empty/matched queries and clear keyboard dismissal. Locale: \(language).")
     }
 
     private func waitForTimelineRows(_ count: Int, in app: XCUIApplication) {
