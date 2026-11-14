@@ -1,0 +1,42 @@
+﻿2026-11-14T09:31:45.7670056Z ##[group]Run if [[ "$ROTATION_SMOKE" == "1" && ( "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then
+2026-11-14T09:31:45.7670664Z [36;1mif [[ "$ROTATION_SMOKE" == "1" && ( "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then[0m
+2026-11-14T09:31:45.7671123Z [36;1m  printf 'Rotation, input and backup smoke modes are mutually exclusive.\n' >&2[0m
+2026-11-14T09:31:45.7671459Z [36;1m  exit 1[0m
+2026-11-14T09:31:45.7671629Z [36;1mfi[0m
+2026-11-14T09:31:45.7671856Z [36;1mif [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then[0m
+2026-11-14T09:31:45.7672210Z [36;1m  printf 'Input and backup smoke modes are mutually exclusive.\n' >&2[0m
+2026-11-14T09:31:45.7672530Z [36;1m  exit 1[0m
+2026-11-14T09:31:45.7672700Z [36;1mfi[0m
+2026-11-14T09:31:45.7672950Z [36;1mif [[ "$BACKUP_LANGUAGE" != "en" && "$BACKUP_LANGUAGE" != "zh-Hans" ]] ||[0m
+2026-11-14T09:31:45.7673323Z [36;1m   [[ "$BACKUP_LANGUAGE" == "zh-Hans" && "$BACKUP_SMOKE" != "1" ]]; then[0m
+2026-11-14T09:31:45.7673727Z [36;1m  printf 'Chinese backup language requires explicit backup smoke.\n' >&2[0m
+2026-11-14T09:31:45.7674098Z [36;1m  exit 1[0m
+2026-11-14T09:31:45.7674264Z [36;1mfi[0m
+2026-11-14T09:31:45.7674500Z [36;1mpython3 -m unittest discover -s tools -p 'test_ui*.py' -v[0m
+2026-11-14T09:31:45.7674933Z [36;1mmatrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"[0m
+2026-11-14T09:31:45.7675338Z [36;1mprintf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T09:31:45.7723625Z shell: /usr/bin/bash -e {0}
+2026-11-14T09:31:45.7723865Z env:
+2026-11-14T09:31:45.7724099Z   MATRIX_SCOPE: rotation
+2026-11-14T09:31:45.7724315Z   SMOKE_PROFILE: ipad-light
+2026-11-14T09:31:45.7724527Z   INPUT_SMOKE: 0
+2026-11-14T09:31:45.7724695Z   BACKUP_SMOKE: 0
+2026-11-14T09:31:45.7724864Z   BACKUP_LANGUAGE: en
+2026-11-14T09:31:45.7725048Z   ROTATION_SMOKE: 1
+2026-11-14T09:31:45.7725420Z ##[endgroup]
+2026-11-14T09:31:45.8438696Z test_existing_phone_and_ipad_selection_is_preserved (test_ui_simulator_selection.SimulatorSelectionTests.test_existing_phone_and_ipad_selection_is_preserved) ... ok
+2026-11-14T09:31:45.8447644Z test_mini_selects_a_real_mini_instead_of_first_ipad (test_ui_simulator_selection.SimulatorSelectionTests.test_mini_selects_a_real_mini_instead_of_first_ipad) ... ok
+2026-11-14T09:31:45.8464423Z test_missing_or_unavailable_mini_fails_without_fallback (test_ui_simulator_selection.SimulatorSelectionTests.test_missing_or_unavailable_mini_fails_without_fallback) ... ok
+2026-11-14T09:31:45.8473629Z test_other_runtime_does_not_substitute_for_pinned_sdk (test_ui_simulator_selection.SimulatorSelectionTests.test_other_runtime_does_not_substitute_for_pinned_sdk) ... ok
+2026-11-14T09:31:45.8482486Z test_unavailable_devices_are_excluded_before_selection (test_ui_simulator_selection.SimulatorSelectionTests.test_unavailable_devices_are_excluded_before_selection) ... ok
+2026-11-14T09:31:45.8484196Z test_existing_diagnostics_select_exactly_the_requested_profile (test_ui_test_matrix.UITestMatrixTests.test_existing_diagnostics_select_exactly_the_requested_profile) ... ok
+2026-11-14T09:31:45.8485758Z test_full_acceptance_keeps_original_profiles_and_scopes (test_ui_test_matrix.UITestMatrixTests.test_full_acceptance_keeps_original_profiles_and_scopes) ... ok
+2026-11-14T09:31:45.8487173Z test_ipad_accessibility_requires_explicit_input_scope (test_ui_test_matrix.UITestMatrixTests.test_ipad_accessibility_requires_explicit_input_scope) ... ok
+2026-11-14T09:31:45.8488367Z test_rotation_requires_ipad_light_profile (test_ui_test_matrix.UITestMatrixTests.test_rotation_requires_ipad_light_profile) ... ok
+2026-11-14T09:31:45.8489816Z test_supplemental_ipads_require_explicit_input_or_rotation (test_ui_test_matrix.UITestMatrixTests.test_supplemental_ipads_require_explicit_input_or_rotation) ... ok
+2026-11-14T09:31:45.8491055Z test_unknown_scope_or_profile_fails_closed (test_ui_test_matrix.UITestMatrixTests.test_unknown_scope_or_profile_fails_closed) ... ok
+2026-11-14T09:31:45.8491642Z 
+2026-11-14T09:31:45.8491831Z ----------------------------------------------------------------------
+2026-11-14T09:31:45.8492634Z Ran 11 tests in 0.008s
+2026-11-14T09:31:45.8492818Z 
+2026-11-14T09:31:45.8492929Z OK

@@ -1,5 +1,11 @@
 # Simulator UI acceptance
 
+## Supplemental iPad mini and dark maximum-text verification (2026-11-14)
+
+Batch14 completes sequential mini light/Large rotation, dark maximum-text iPad rotation and bilingual input-gallery diagnostics. The default four-profile suite is preserved. Final large-iPad rotation passes include a real Settings orientation-reference precondition; cold first rotation without it remains open, and no production rotation fix is established. These focused Debug UI results do not include application unit tests or Release acceptance; the latest full four-profile acceptance remains batch13 on `fb78856` below. Exact per-run sources are in the receipt.
+
+124 original PNGs checked, 88 selected originals actually opened and retained. [Report and limits](UX-ACCEPTANCE-14.md) · [originals](evidence/batch-14/index.html) · [receipt](evidence/batch-14/verification.json) · [project memory](../PROJECT-MEMORY.md). Small-device full-window rotation does not establish system split-view/window resizing. Physical interaction, termination recovery and aesthetic acceptance remain open. No signing, Apple upload or main merge.
+
 ## iPad rotation and ready-export verification (2026-11-14)
 
 Final tested source `fb78856ca48a43eb1739d5c2c6198d973a519246`, [full run 43556512255](https://github.com/betterfxb/private-moments-ios/actions/runs/43556512255): four profiles pass, with 50 unit tests and 6 main / 3 iPad / 2 each other phone UI executions. Debug/Release and Release hook exclusion pass. Phone-dark English and maximum-text English file diagnostics passed on `96e21b0`; compact-light Chinese diagnostics passed on `adac204`. After a second full attempt exposed maximum-text feedback dismissal, final-source maximum-text file diagnostics preceded this full run. Initial phone and rotation diagnostics retain their own sources; four failed runs remain archived separately.

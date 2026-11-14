@@ -1,0 +1,37 @@
+﻿2026-11-14T08:38:29.9415210Z ##[group]Run actions/upload-artifact@v7
+2026-11-14T08:38:29.9415670Z with:
+2026-11-14T08:38:29.9415950Z   name: private-moments-xcresult-ipad-dark-accessibility
+2026-11-14T08:38:29.9416440Z   path: /Users/runner/work/_temp/PrivateMoments.xcresult
+2026-11-14T08:38:29.9416800Z   if-no-files-found: ignore
+2026-11-14T08:38:29.9417040Z   retention-days: 7
+2026-11-14T08:38:29.9417300Z   compression-level: 6
+2026-11-14T08:38:29.9417460Z   overwrite: false
+2026-11-14T08:38:29.9417760Z   include-hidden-files: false
+2026-11-14T08:38:29.9418110Z   archive: true
+2026-11-14T08:38:29.9418310Z env:
+2026-11-14T08:38:29.9418600Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T08:38:29.9419060Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=73C19119-B10E-4309-872E-C53EF3F0EF27
+2026-11-14T08:38:29.9419510Z ##[endgroup]
+2026-11-14T08:38:30.8662700Z With the provided path, there will be 970 files uploaded
+2026-11-14T08:38:30.8664030Z Artifact name is valid!
+2026-11-14T08:38:30.8668780Z Root directory input is valid!
+2026-11-14T08:38:30.9749380Z Uploading artifact: private-moments-xcresult-ipad-dark-accessibility.zip
+2026-11-14T08:38:30.9772040Z Beginning upload of artifact content to blob storage
+2026-11-14T08:38:32.2283710Z Uploaded bytes 8388608
+2026-11-14T08:38:32.4510230Z Uploaded bytes 16777216
+2026-11-14T08:38:33.0532150Z Uploaded bytes 25165824
+2026-11-14T08:38:33.6311890Z Uploaded bytes 33554432
+2026-11-14T08:38:34.2572140Z Uploaded bytes 41943040
+2026-11-14T08:38:34.7076380Z Uploaded bytes 50331648
+2026-11-14T08:38:35.3175220Z Uploaded bytes 58720256
+2026-11-14T08:38:35.9280500Z Uploaded bytes 67108864
+2026-11-14T08:38:36.2397380Z Uploaded bytes 75497472
+2026-11-14T08:38:36.6889110Z Uploaded bytes 83886080
+2026-11-14T08:38:36.9834950Z Uploaded bytes 92274688
+2026-11-14T08:38:37.6027370Z Uploaded bytes 93469460
+2026-11-14T08:38:37.6570840Z Finished uploading artifact content to blob storage!
+2026-11-14T08:38:37.6619190Z SHA256 digest of uploaded artifact is 246b2ef040b8dec832e19ff7c1edb8a85fd876d0d492041d0ff7cc1ff23b6468
+2026-11-14T08:38:37.6636300Z Finalizing artifact upload
+2026-11-14T08:38:38.0924380Z Artifact private-moments-xcresult-ipad-dark-accessibility successfully finalized. Artifact ID 14106369526
+2026-11-14T08:38:38.0925470Z Artifact private-moments-xcresult-ipad-dark-accessibility has been successfully uploaded! Final size is 93469460 bytes. Artifact ID is 14106369526
+2026-11-14T08:38:38.0951000Z Artifact download URL: https://github.com/betterfxb/private-moments-ios/actions/runs/43575831324/artifacts/14106369526

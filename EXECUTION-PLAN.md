@@ -270,3 +270,13 @@ Ready-export capture now proves the real Save control before clicking it. Biling
 Seven successful runs produced 363 checked original PNGs, with 166 actually opened and retained. See [acceptance](release/UX-ACCEPTANCE-13.md), [evidence](release/evidence/batch-13/verification.json) and [portable project memory](PROJECT-MEMORY.md). Existing draft PR is retained; no main merge, signing, Apple upload or TestFlight delivery.
 
 Next order: independently scope iPad split view and additional window sizes, then further rotation appearance/text-size coverage; decide termination-recovery product behavior before implementing it; establish large-data performance baselines. Physical IME, assistive technologies, real authentication/lock protection, external providers/keyboards and older runtimes remain separate validation gates. Functional evidence does not establish the owner's aesthetic approval or superiority to DO.
+
+## Batch14: supplemental iPad interaction coverage (2026-11-14)
+
+Completed the sequential [batch14 plan](release/BATCH-14-PLAN.md): documented actual-window resize acceptance requirements, added explicit mini light/Large and dark maximum-text profiles, protected their scope/device selection, and completed native rotation/input diagnostics with original-image review. Supplements accept only input/rotation; mini must be available on the pinned runtime and never falls back to a larger iPad. The default four profiles and their selection order remain.
+
+Eleven matrix/device-selection tests, 267 script/workflow guard combinations and existing audits pass. Focused native UI diagnostics have their actual source/run boundaries in the [report](release/UX-ACCEPTANCE-14.md) and [receipt](release/evidence/batch-14/verification.json); 124 PNGs checked, 88 originals actually opened and retained. They do not replace the batch13 full four-profile result or prove system split-view/window resizing. Project memory and draft PR are updated; main/signing/Apple upload remain deferred.
+
+The final large-iPad rotation passes include a real Settings landscape/portrait reference precondition. Cold first rotation without that precondition remains open; this batch does not establish a production rotation fix.
+
+Next: independently verify dark maximum-text cold first rotation without the Settings reference precondition; establish actual system-window interaction and geometry/continuity evidence; decide unsaved-draft/timer termination-recovery behavior before implementation; add large-data benchmarks and physical-device validation. Keep visual quality and user aesthetic acceptance as separate design work.
