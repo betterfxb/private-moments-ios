@@ -119,7 +119,6 @@ final class PrivateMomentsUITests: XCTestCase {
             app.windows.firstMatch.swipeUp()
             capture("Today-summary-\(language)", app)
             selectTab("Timeline", "时间线", language: language, app: app)
-            capture("Timeline-\(language)", app)
             checkTimelineSearch(language: language, app: app)
             // Lazy rows outside the large-text viewport are not a record count.
             let total = app.staticTexts["timeline.resultCount"]
@@ -1453,11 +1452,17 @@ final class PrivateMomentsUITests: XCTestCase {
 
     private func checkTimelineSearch(language: String, app: XCUIApplication) {
         let scope = app.staticTexts["timeline.searchScope"]
-        revealFully(from: scope, through: scope, in: app)
+        let total = app.staticTexts["timeline.resultCount"]
+        let one = language == "en" ? "1 moment" : "1 条记录"
+        revealFully(from: scope, through: total, in: app)
         XCTAssertEqual(scope.label, language == "en" ? "Date, type, mood, or tag" : "搜索日期、类型、感受或标签")
+        XCTAssertEqual(total.label, one)
         XCTAssertGreaterThan(scope.frame.height, 0)
         XCTAssertGreaterThanOrEqual(scope.frame.minX, app.windows.firstMatch.frame.minX)
         XCTAssertLessThanOrEqual(scope.frame.maxX, app.windows.firstMatch.frame.maxX)
+        // A settled scroll container alone does not prove that its body has
+        // appeared. Require the actual scope/count before the first snapshot.
+        capture("Timeline-\(language)", app, stableSurface: scope)
 
         let search = app.searchFields.firstMatch
         reveal(search, in: app)
@@ -1470,9 +1475,7 @@ final class PrivateMomentsUITests: XCTestCase {
         // composition coverage. The gallery's saved record has the Calm mood.
         let query = "no-matching-mood"
         search.typeText(query)
-        let total = app.staticTexts["timeline.resultCount"]
         let empty = language == "en" ? "0 moments" : "0 条记录"
-        let one = language == "en" ? "1 moment" : "1 条记录"
         let updated = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             total.exists && total.label == empty
         }, object: nil)
