@@ -1408,7 +1408,17 @@ final class PrivateMomentsUITests: XCTestCase {
                 let start = window.coordinate(withNormalizedOffset: .zero)
                     .withOffset(CGVector(dx: scroll.frame.intersection(viewport).midX - viewport.minX,
                         dy: middle - viewport.minY))
-                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: delta)))
+                let end = start.withOffset(CGVector(dx: 0, dy: delta))
+                if app.buttons["settings.dismissBackupStatus"].exists {
+                    // A large fixed notice leaves a narrow scroll viewport.
+                    // End this normal drag at rest instead of releasing a
+                    // fast flick that can carry the target past that viewport.
+                    print("Revealing below fixed feedback. Control: \(element.identifier); frame: \(frame); usable top/bottom: \(top)/\(bottom); delta: \(delta).")
+                    start.press(forDuration: 0.05, thenDragTo: end,
+                        withVelocity: .slow, thenHoldForDuration: 0.2)
+                } else {
+                    start.press(forDuration: 0.05, thenDragTo: end)
+                }
             } else {
                 window.swipeUp()
             }

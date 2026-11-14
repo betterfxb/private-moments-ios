@@ -1,0 +1,35 @@
+﻿2026-11-14T15:18:37.8679830Z ##[group]Run actions/upload-artifact@v7
+2026-11-14T15:18:37.8680210Z with:
+2026-11-14T15:18:37.8680540Z   name: private-moments-ui-screenshots-compact-dark-accessibility
+2026-11-14T15:18:37.8681040Z   path: /Users/runner/work/_temp/PrivateMomentsUIScreenshots
+2026-11-14T15:18:37.8681380Z   if-no-files-found: ignore
+2026-11-14T15:18:37.8681580Z   retention-days: 7
+2026-11-14T15:18:37.8681740Z   compression-level: 6
+2026-11-14T15:18:37.8681900Z   overwrite: false
+2026-11-14T15:18:37.8682060Z   include-hidden-files: false
+2026-11-14T15:18:37.8682330Z   archive: true
+2026-11-14T15:18:37.8682600Z env:
+2026-11-14T15:18:37.8682890Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T15:18:37.8683680Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=A1285399-F2F4-46E9-8CF2-4AA227FF7EF3
+2026-11-14T15:18:37.8684150Z ##[endgroup]
+2026-11-14T15:18:38.4576050Z With the provided path, there will be 83 files uploaded
+2026-11-14T15:18:38.4576530Z Artifact name is valid!
+2026-11-14T15:18:38.4576810Z Root directory input is valid!
+2026-11-14T15:18:38.7111470Z Uploading artifact: private-moments-ui-screenshots-compact-dark-accessibility.zip
+2026-11-14T15:18:38.7134450Z Beginning upload of artifact content to blob storage
+2026-11-14T15:18:39.8131580Z Uploaded bytes 8388608
+2026-11-14T15:18:40.1606820Z Uploaded bytes 16777216
+2026-11-14T15:18:40.2014540Z Uploaded bytes 25165824
+2026-11-14T15:18:40.5123670Z Uploaded bytes 33554432
+2026-11-14T15:18:40.7684340Z Uploaded bytes 41943040
+2026-11-14T15:18:41.0563610Z Uploaded bytes 50331648
+2026-11-14T15:18:41.3546000Z Uploaded bytes 58720256
+2026-11-14T15:18:41.6111780Z Uploaded bytes 67108864
+2026-11-14T15:18:41.9161030Z Uploaded bytes 75497472
+2026-11-14T15:18:41.9532960Z Uploaded bytes 75663690
+2026-11-14T15:18:41.9899880Z Finished uploading artifact content to blob storage!
+2026-11-14T15:18:41.9919140Z SHA256 digest of uploaded artifact is ae2fdefadbe2585a3e280e187f0b3a0d218eeee1638fad2a1931b0c5b2999db6
+2026-11-14T15:18:41.9926940Z Finalizing artifact upload
+2026-11-14T15:18:42.3936860Z Artifact private-moments-ui-screenshots-compact-dark-accessibility successfully finalized. Artifact ID 14118688942
+2026-11-14T15:18:42.3938030Z Artifact private-moments-ui-screenshots-compact-dark-accessibility has been successfully uploaded! Final size is 75663690 bytes. Artifact ID is 14118688942
+2026-11-14T15:18:42.3942410Z Artifact download URL: https://github.com/betterfxb/private-moments-ios/actions/runs/43608392564/artifacts/14118688942

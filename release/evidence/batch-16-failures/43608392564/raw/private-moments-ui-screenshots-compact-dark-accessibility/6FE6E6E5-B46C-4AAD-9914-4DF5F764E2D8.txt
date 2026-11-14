@@ -1,0 +1,235 @@
+Attributes: Application, 0x115a142c0, pid: 10224, label: 'Private Moments'
+Element subtree:
+ →Application, 0x115a142c0, pid: 10224, label: 'Private Moments'
+    Window (Main), 0x115912ba0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x115912370, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x115912de0, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x115912220, {{-375.0, -667.0}, {1125.0, 2001.0}}
+          Other, 0x11590de00, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x115912f00, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x115913020, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x115913140, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x115913260, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x115913380, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x1159134a0, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x1159135c0, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x115914760, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x115914880, {{0.0, 20.0}, {375.0, 54.0}}, identifier: 'Settings'
+                              StaticText, 0x1159149a0, {{147.0, 29.0}, {80.5, 26.0}}, label: 'Settings'
+                            Other, 0x115914ac0, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x115914be0, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x115914d00, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x115914e20, {{0.0, 0.0}, {375.0, 667.0}}
+                                    ScrollView, 0x115914f40, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x115915060, {{0.0, -2598.0}, {375.0, 5349.0}}
+                                        StaticText, 0x115915180, {{26.0, -2576.0}, {236.0, 102.5}}, label: 'Private by default'
+                                        StaticText, 0x1159152a0, {{20.0, -2461.5}, {305.0, 133.0}}, label: 'Your space, your choice.'
+                                        StaticText, 0x1159153c0, {{20.0, -2320.5}, {335.0, 290.5}}, label: 'Your journal stays on this device. Manage its privacy and backups here.'
+                                        StaticText, 0x1159154e0, {{36.0, -1990.0}, {179.0, 102.5}}, label: 'ON THIS DEVICE'
+                                        StaticText, 0x115915600, {{45.0, -1874.5}, {188.0, 116.5}}, label: 'Local journal'
+                                        StaticText, 0x115915720, {{42.0, -1731.0}, {254.5, 116.5}}, identifier: 'settings.savedCountTitle', label: 'Saved moments'
+                                        StaticText, 0x115915840, {{36.0, -1606.5}, {22.5, 58.5}}, identifier: 'settings.savedCount', label: '1'
+                                        StaticText, 0x115915960, {{40.5, -1521.0}, {296.5, 174.5}}, label: 'No cloud sync configured'
+                                        StaticText, 0x115915a80, {{42.5, -1319.5}, {258.0, 290.5}}, label: 'Files protected while device is locked'
+                                        StaticText, 0x115915ba0, {{36.0, -1016.0}, {303.0, 459.5}}, label: 'The app requests exclusion from device backups. Use the JSON backup controls below to move records to another device.'
+                                        StaticText, 0x115915cc0, {{36.0, -500.5}, {203.5, 153.5}}, label: 'DATA MANAGEMENT'
+                                        StaticText, 0x115915de0, {{36.0, -334.0}, {296.0, 261.0}}, label: 'Create a portable JSON backup or restore one you made earlier.'
+                                        Button, 0x115915f00, {{36.0, -60.0}, {303.0, 213.5}}, identifier: 'settings.export', label: 'Export private backup'
+                                          Image, 0x115916020, {{89.0, -37.5}, {34.0, 46.0}}, identifier: 'square.and.arrow.up', label: 'Share'
+                                          StaticText, 0x115916140, {{36.0, -60.0}, {303.0, 213.5}}, label: 'Export private backup'
+                                        Button, 0x115916260, {{36.0, 166.5}, {303.0, 212.5}}, identifier: 'settings.restore', label: 'Restore from JSON'
+                                          Image, 0x115916380, {{82.0, 189.5}, {34.0, 44.5}}, identifier: 'square.and.arrow.down', label: 'Download'
+                                          StaticText, 0x1159164a0, {{36.0, 166.5}, {303.0, 212.5}}, label: 'Restore from JSON'
+                                        StaticText, 0x1159165c0, {{36.0, 392.0}, {303.0, 255.5}}, label: 'Backups include private notes. Keep the file somewhere only you can access.'
+                                        StaticText, 0x1159166e0, {{36.0, 703.5}, {208.0, 51.5}}, label: 'APP LOCK'
+                                        StaticText, 0x115916800, {{36.0, 768.0}, {291.0, 313.0}}, label: 'Use this device's Face ID, Touch ID, or passcode before opening the journal.'
+                                        Button, 0x115916920, {{36.0, 1094.0}, {303.0, 183.0}}, identifier: 'settings.lock', label: 'Lock journal, Off'
+                                          Image, 0x115916a40, {{97.0, 1099.0}, {33.0, 47.0}}, identifier: 'settings.lockTitle', label: 'Lock'
+                                          StaticText, 0x115916b60, {{97.0, 1094.0}, {187.5, 116.5}}, identifier: 'settings.lockTitle', label: 'Lock journal'
+                                          StaticText, 0x115916c80, {{90.5, 1218.5}, {67.0, 58.5}}, label: 'Off'
+                                        StaticText, 0x115916da0, {{36.0, 1290.0}, {299.5, 255.5}}, label: 'Authentication stays on this device. The app never receives biometric data.'
+                                        StaticText, 0x115916ec0, {{36.0, 1601.5}, {180.5, 51.5}}, label: 'PRIVACY'
+                                        StaticText, 0x115916fe0, {{36.0, 1666.0}, {303.0, 365.0}}, label: 'Understand what stays on this device, how authentication works, and what a backup contains.'
+                                        Button, 0x115917100, {{47.5, 2053.1}, {289.5, 116.5}}, label: 'Privacy information'
+                                          Image, 0x115917220, {{47.5, 2055.5}, {38.5, 51.5}}, identifier: 'hand.raised.fill', label: 'Block'
+                                          StaticText, 0x115917340, {{47.5, 2053.1}, {289.5, 116.5}}, label: 'Privacy information'
+                                        Button, 0x115917460, {{50.0, 2234.5}, {279.2, 187.5}}, identifier: 'settings.deleteAll', label: 'Delete all local moments'
+                                          Image, 0x115917580, {{50.0, 2235.0}, {50.5, 58.0}}, identifier: 'trash', label: 'Trash'
+                                          StaticText, 0x1159176a0, {{50.0, 2234.5}, {279.2, 187.5}}, label: 'Delete all local moments'
+                                        StaticText, 0x1159177c0, {{20.0, 2460.0}, {335.0, 261.0}}, identifier: 'settings.footer', label: 'Your backups can contain private notes. Keep them somewhere you trust.'
+                                      Other, 0x1159178e0, {{0.0, 0.0}, {375.0, 667.0}}
+                                        Other, 0x115917a00, {{0.0, 0.0}, {375.0, 128.8}}
+                                        Other, 0x115917b20, {{0.0, 519.2}, {375.0, 147.8}}
+                                      Other, 0x115917c40, {{0.0, 0.0}, {375.0, 667.0}}
+                                        Other, 0x115917d60, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Other, 0x115917e80, {{0.0, 0.0}, {375.0, 55.0}}
+                                          Other, 0x115917fa0, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x1159180c0, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Other, 0x1159181e0, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x115918300, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Other, 0x115918420, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x115918540, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x115918660, {{0.0, 0.0}, {375.0, 128.8}}
+                                        Other, 0x115918780, {{0.0, 519.2}, {375.0, 147.8}}
+                                          Image, 0x1159188a0, {{-120.0, 524.0}, {615.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x1159189c0, {{0.0, 519.2}, {375.0, 147.8}}
+                                            Other, 0x115918ae0, {{0.0, 519.2}, {375.0, 147.8}}
+                                          Other, 0x115918c00, {{0.0, 519.2}, {375.0, 147.8}}
+                                            Other, 0x115918d20, {{0.0, 519.2}, {375.0, 147.8}}
+                                            Other, 0x115918e40, {{0.0, 519.2}, {375.0, 147.8}}
+                                      Other, 0x115918f60, {{342.0, 74.0}, {30.0, 510.0}}, label: 'Vertical scroll bar, 11 pages', value: 55%
+                                        Other, 0x115919080, {{369.0, 321.5}, {3.0, 61.0}}
+                                      Other, 0x1159191a0, {{342.0, 74.0}, {30.0, 510.0}}, label: 'Vertical scroll bar, 11 pages', value: 55%
+                                        Other, 0x1159192c0, {{369.0, 321.5}, {3.0, 61.0}}
+                            Other, 0x1159193e0, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x115919500, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x115919620, {{0.0, 584.0}, {375.0, 83.0}}
+                  Other, 0x115919740, {{0.0, 0.0}, {375.0, 667.0}}
+                    TabBar, 0x115919860, {{0.0, 584.0}, {375.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x115919980, {{51.0, 584.0}, {274.0, 62.0}}
+                        Other, 0x115919aa0, {{51.0, 584.0}, {94.0, 54.0}}
+                        Other, 0x115919bc0, {{51.0, 584.0}, {274.0, 62.0}}
+                          Button, 0x115919ce0, {{55.0, 588.0}, {94.0, 54.0}}, identifier: 'heart.text.square', label: 'Today'
+                            Image, 0x115919e00, {{89.0, 595.5}, {27.0, 25.0}}, identifier: 'heart.text.square.fill', label: 'heart.text.square.fill'
+                          Button, 0x115919f20, {{141.0, 588.0}, {94.0, 54.0}}, identifier: 'calendar', label: 'Timeline'
+                            Image, 0x11591a040, {{174.0, 595.5}, {29.0, 25.0}}, identifier: 'calendar', label: 'calendar'
+                          Button, 0x11591a160, {{227.0, 588.0}, {94.0, 54.0}}, identifier: 'slider.horizontal.3', label: 'Settings', Selected
+                            Image, 0x11591a280, {{259.0, 596.0}, {29.5, 24.0}}, identifier: 'slider.horizontal.3', label: 'edit'
+                        Other, 0x11591a3a0, {{227.0, 588.0}, {94.0, 54.0}}
+                          Other, 0x11591a4c0, {{227.0, 588.0}, {94.0, 54.0}}
+                            Other, 0x11591a5e0, {{227.0, 588.0}, {94.0, 54.0}}
+                            Other, 0x11591a700, {{227.0, 588.0}, {94.0, 54.0}}
+                              Other, 0x11591a820, {{227.0, 588.0}, {94.0, 54.0}}
+                                Other, 0x11591a940, {{227.0, 588.0}, {94.0, 54.0}}
+                                  Other, 0x11591aa60, {{227.0, 588.0}, {94.0, 54.0}}
+                                Other, 0x11591ab80, {{227.0, 588.0}, {94.0, 54.0}}
+                              Other, 0x11591aca0, {{227.0, 588.0}, {94.0, 54.0}}
+                  Other, 0x11591adc0, {{0.0, 584.0}, {375.0, 83.0}}
+                    Other, 0x11591aee0, {{0.0, 584.0}, {375.0, 83.0}}
+                      Other, 0x11591b000, {{0.0, 584.0}, {375.0, 83.0}}
+                        Other, 0x11591b120, {{0.0, 584.0}, {375.0, 83.0}}
+                          Other, 0x11591b240, {{0.0, 584.0}, {375.0, 83.0}}
+                            Other, 0x11591b360, {{0.0, 584.0}, {375.0, 83.0}}
+      Other, 0x11591b480, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x11591b5a0, {{-375.0, -667.0}, {1125.0, 2001.0}}
+        Other, 0x11591b6c0, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x11591b7e0, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x11591b900, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x11591ba20, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x11591bb40, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x11591bc60, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x11591bd80, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x11591bea0, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x11591bfc0, {{261.0, 60.0}, {42.0, 36.0}}, label: 'Cancel'
+                      Other, 0x11591c0e0, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x11591c200, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x11591c320, {{0.0, 0.0}, {375.0, 667.0}}
+                            Other, 0x11591c440, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x11591c560, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x11591c680, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x11591c7a0, {{0.0, 40.0}, {375.0, 627.0}}
+                                    Button, 0x11591c8c0, {{149.5, 35.0}, {76.0, 25.0}}, label: 'Sheet Grabber', value: Expanded
+                                    Image, 0x11591c9e0, {{-150.0, -110.0}, {675.0, 927.0}}
+                                    Other, 0x11591cb00, {{0.0, 40.0}, {375.0, 627.0}}
+                                      Other, 0x11591cc20, {{0.0, 40.0}, {375.0, 627.0}}
+                                        Other, 0x11591cd40, {{0.0, 40.0}, {375.0, 627.0}}
+                                          Other, 0x11591ce60, {{0.0, 40.0}, {375.0, 627.0}}
+                                            Other, 0x11591cf80, {{0.0, 40.0}, {375.0, 627.0}}
+                                              Other, 0x11591d0a0, {{0.0, 40.0}, {375.0, 627.0}}
+                                              Other, 0x11591d1c0, {{0.0, 40.0}, {375.0, 627.0}}
+                                                Other, 0x11591d2e0, {{0.0, 40.0}, {375.0, 627.0}}
+                                                  Other, 0x11591d400, {{0.0, 40.0}, {375.0, 627.0}}
+                                                    Other, 0x11591d520, {{0.0, 40.0}, {375.0, 627.0}}
+                                                      Other, 0x11591d640, {{0.0, 40.0}, {375.0, 627.0}}
+                                                      Other, 0x11591d760, {{0.0, 40.0}, {375.0, 627.0}}, identifier: 'DOC.browsingRoot Source: com.apple.DocumentManager.RecentDocuments, Title: Recents'
+                                                        NavigationBar, 0x11591d880, {{0.0, 56.0}, {375.0, 194.0}}, identifier: 'FullDocumentManagerViewControllerNavigationBar'
+                                                          StaticText, 0x11591d9a0, {{148.0, 65.0}, {78.5, 26.0}}, label: 'Recents'
+                                                          Button, 0x11591dac0, {{261.0, 60.0}, {42.0, 36.0}}, label: 'Cancel'
+                                                          Button, 0x11591dbe0, {{319.0, 60.0}, {36.0, 36.0}}, identifier: 'OverflowBarButtonItem', label: 'More'
+                                                          SearchField, 0x11591dd00, {{16.0, 111.0}, {343.0, 124.0}}, label: 'Search', placeholderValue: 'Search'
+                                                            Image, 0x11591de20, {{28.0, 148.5}, {49.5, 48.0}}, identifier: 'magnifyingglass', label: 'Search'
+                                                        Other, 0x11591df40, {{0.0, 40.0}, {375.0, 627.0}}
+                                                          Other, 0x11591e060, {{0.0, 40.0}, {375.0, 627.0}}
+                                                            Other, 0x11591e180, {{0.0, 40.0}, {375.0, 627.0}}
+                                                              Other, 0x11591e2a0, {{0.0, 40.0}, {375.0, 627.0}}
+                                                                ScrollView, 0x11591e3c0, {{0.0, 40.0}, {375.0, 627.0}}
+                                                                  Other, 0x11591e4e0, {{0.0, 40.0}, {375.0, 627.0}}
+                                                                    Other, 0x11591e600, {{0.0, 40.0}, {375.0, 259.8}}
+                                                                    Other, 0x11591e720, {{0.0, 519.2}, {375.0, 147.8}}
+                                                                  Other, 0x11591e840, {{0.0, 40.0}, {375.0, 627.0}}
+                                                                    Other, 0x11591e960, {{0.0, 40.0}, {375.0, 259.8}}
+                                                                      Image, 0x11591ea80, {{-120.0, -215.0}, {615.0, 510.0}}, identifier: 'AdditionalDimmingOverlay'
+                                                                      Other, 0x11591eba0, {{0.0, 40.0}, {375.0, 195.0}}
+                                                                      Other, 0x11591ecc0, {{0.0, 40.0}, {375.0, 259.8}}
+                                                                        Other, 0x11591ede0, {{0.0, 40.0}, {375.0, 259.8}}
+                                                                      Other, 0x11591ef00, {{0.0, 40.0}, {375.0, 259.8}}
+                                                                        Other, 0x11591f020, {{0.0, 40.0}, {375.0, 259.8}}
+                                                                      Other, 0x11591f140, {{0.0, 40.0}, {375.0, 259.8}}
+                                                                        Other, 0x11591f260, {{0.0, 40.0}, {375.0, 259.8}}
+                                                                        Other, 0x11591f380, {{0.0, 40.0}, {375.0, 259.8}}
+                                                                    Other, 0x11591f4a0, {{0.0, 519.2}, {375.0, 147.8}}
+                                                                      Image, 0x11591f5c0, {{-120.0, 524.0}, {615.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                                                      Other, 0x11591f6e0, {{0.0, 519.2}, {375.0, 147.8}}
+                                                                        Other, 0x11591f800, {{0.0, 519.2}, {375.0, 147.8}}
+                                                                      Other, 0x11591f920, {{0.0, 519.2}, {375.0, 147.8}}
+                                                                        Other, 0x11591fa40, {{0.0, 519.2}, {375.0, 147.8}}
+                                                                        Other, 0x11591fb60, {{0.0, 519.2}, {375.0, 147.8}}
+                                                                  CollectionView, 0x11591fc80, {{0.0, 40.0}, {375.0, 627.0}}, identifier: 'File View', value: Icon Mode
+                                                                    Other, 0x11591fda0, {{0.0, 540.0}, {375.0, 44.0}}
+                                                                    Other, 0x11591fec0, {{342.0, 250.0}, {30.0, 334.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                                                      Other, 0x11591ffe0, {{369.0, 563.0}, {3.0, 38.0}}
+                                                                    Other, 0x115920100, {{342.0, 250.0}, {30.0, 334.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                                                      Other, 0x115920220, {{369.0, 563.0}, {3.0, 38.0}}
+                                                                  Other, 0x115920340, {{342.0, 250.0}, {30.0, 334.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                                                    Other, 0x115920460, {{369.0, 594.0}, {3.0, 7.0}}
+                                                                  Other, 0x115920580, {{0.0, 551.0}, {375.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                                                    Other, 0x1159206a0, {{365.0, 578.0}, {7.0, 3.0}}
+                                                                  Other, 0x1159207c0, {{342.0, 250.0}, {30.0, 334.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                                                    Other, 0x1159208e0, {{369.0, 594.0}, {3.0, 7.0}}
+                                                                  Other, 0x115920a00, {{0.0, 551.0}, {375.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                                                    Other, 0x115920b20, {{365.0, 578.0}, {7.0, 3.0}}
+                                                                Other, 0x115920c40, {{0.0, 40.0}, {375.0, 627.0}}
+                                                                  Other, 0x115920d60, {{0.0, 40.0}, {375.0, 627.0}}
+                                                                    StaticText, 0x115920e80, {{39.5, 266.0}, {296.0, 67.0}}, label: 'No Recents'
+                                                                    StaticText, 0x115920fa0, {{26.5, 336.0}, {322.0, 232.5}}, label: 'Recently opened documents will appear here.'
+                                                        Other, 0x1159210c0, {{0.0, 40.0}, {375.0, 627.0}}
+                                                          Other, 0x1159211e0, {{0.0, 40.0}, {375.0, 627.0}}
+                                                Other, 0x115921300, {{0.0, 584.0}, {375.0, 83.0}}
+                                                  Other, 0x115921420, {{0.0, 40.0}, {375.0, 627.0}}
+                                                    TabBar, 0x115921540, {{0.0, 584.0}, {375.0, 83.0}}, identifier: 'DOC.browsingModeTabBar', label: 'Tab Bar'
+                                                      Other, 0x115921660, {{51.0, 584.0}, {274.0, 62.0}}
+                                                        Other, 0x115921780, {{51.0, 584.0}, {94.0, 54.0}}
+                                                        Other, 0x1159218a0, {{51.0, 584.0}, {274.0, 62.0}}
+                                                          Button, 0x1159219c0, {{55.0, 588.0}, {94.0, 54.0}}, label: 'Recents', Selected
+                                                            Image, 0x115921ae0, {{88.0, 594.0}, {27.5, 27.5}}, identifier: 'clock.fill', label: 'clock'
+                                                          Button, 0x115921c00, {{141.0, 588.0}, {94.0, 54.0}}, label: 'Shared'
+                                                            Image, 0x115921d20, {{172.0, 593.5}, {35.0, 27.0}}, identifier: 'folder.fill.badge.person.crop', label: 'Shared Folder'
+                                                          Button, 0x115921e40, {{227.0, 588.0}, {94.0, 54.0}}, label: 'Browse'
+                                                            Image, 0x115921f60, {{258.0, 595.5}, {32.0, 25.0}}, identifier: 'folder.fill', label: 'move'
+                                                        Other, 0x115922080, {{55.0, 588.0}, {94.0, 54.0}}
+                                                          Other, 0x1159221a0, {{55.0, 588.0}, {94.0, 54.0}}
+                                                            Other, 0x1159222c0, {{55.0, 588.0}, {94.0, 54.0}}
+                                                            Other, 0x1159223e0, {{55.0, 588.0}, {94.0, 54.0}}
+                                                              Other, 0x115922500, {{55.0, 588.0}, {94.0, 54.0}}
+                                                                Other, 0x115922620, {{55.0, 588.0}, {94.0, 54.0}}
+                                                                  Other, 0x115922740, {{55.0, 588.0}, {94.0, 54.0}}
+                                                                Other, 0x115922860, {{55.0, 588.0}, {94.0, 54.0}}
+                                                              Other, 0x115922980, {{55.0, 588.0}, {94.0, 54.0}}
+                                                  Other, 0x115922aa0, {{0.0, 584.0}, {375.0, 83.0}}
+                                                    Other, 0x115922bc0, {{0.0, 584.0}, {375.0, 83.0}}
+                                                      Other, 0x115922ce0, {{0.0, 584.0}, {375.0, 83.0}}
+                                                        Other, 0x115922e00, {{0.0, 584.0}, {375.0, 83.0}}
+                                                          Other, 0x115922f20, {{0.0, 584.0}, {375.0, 83.0}}
+                                                            Other, 0x115923040, {{0.0, 584.0}, {375.0, 83.0}}
+                                                        Other, 0x115923160, {{0.0, 584.0}, {375.0, 83.0}}
+                                                          Other, 0x115923280, {{0.0, 584.0}, {375.0, 83.0}}
+    Window, 0x1159233a0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x1159234c0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x1159235e0, {{0.0, 0.0}, {375.0, 667.0}}
+Path to element:
+ →Application, 0x115a142c0, pid: 10224, label: 'Private Moments'
+Query chain:
+ →Find: Target Application 'com.example.PrivateMoments'
+  Output: {
+    Application, 0x11582fa30, pid: 10224, label: 'Private Moments'
+  }
