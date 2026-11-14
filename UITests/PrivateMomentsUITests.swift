@@ -1409,11 +1409,15 @@ final class PrivateMomentsUITests: XCTestCase {
                     .withOffset(CGVector(dx: scroll.frame.intersection(viewport).midX - viewport.minX,
                         dy: middle - viewport.minY))
                 let end = start.withOffset(CGVector(dx: 0, dy: delta))
-                if app.buttons["settings.dismissBackupStatus"].exists {
+                let fixedFeedback = app.buttons["settings.dismissBackupStatus"].exists
+                let nearTarget = abs(middle - frame.midY) <= (bottom - top) * 3
+                if fixedFeedback {
+                    print("Revealing below fixed feedback. Control: \(element.identifier); frame: \(frame); usable top/bottom: \(top)/\(bottom); delta: \(delta); precise: \(nearTarget).")
+                }
+                if fixedFeedback && nearTarget {
                     // A large fixed notice leaves a narrow scroll viewport.
                     // End this normal drag at rest instead of releasing a
                     // fast flick that can carry the target past that viewport.
-                    print("Revealing below fixed feedback. Control: \(element.identifier); frame: \(frame); usable top/bottom: \(top)/\(bottom); delta: \(delta).")
                     start.press(forDuration: 0.05, thenDragTo: end,
                         withVelocity: .slow, thenHoldForDuration: 0.2)
                 } else {
