@@ -636,12 +636,9 @@ final class PrivateMomentsUITests: XCTestCase {
         // A visible location title is not a sidebar action: tapping it can open
         // Browse and turn its unrelated More menu into Edit. Stay in a ready
         // local browser, or navigate using the actual location cell/button.
-        if !localFileRoots(in: app).firstMatch.exists {
-            guard let local = localFilesLocation(app, timeout: 15) else {
-                captureSystem("Exporter-unavailable", app)
-                return XCTFail("The native local destination is not available.")
-            }
-            local.tap()
+        guard enterLocalExportBrowser(app, timeout: 15) else {
+            captureSystem("Exporter-unavailable", app)
+            return XCTFail("The native local destination is not available.")
         }
         let root = localFileRoots(in: app).firstMatch
         guard root.waitForExistence(timeout: 15) else {
@@ -669,6 +666,22 @@ final class PrivateMomentsUITests: XCTestCase {
             surface: localFileRoots(in: app).firstMatch, enabledAction: true) else { return XCTFail("No enabled system save action") }
         captureReadyExporter(action: save, language: language, app: app)
         save.tap()
+    }
+
+    private func enterLocalExportBrowser(_ app: XCUIApplication, timeout: TimeInterval) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        repeat {
+            // The root can finish loading while a location query is pending.
+            // Recheck it instead of requiring a now-absent sidebar action.
+            if localFileRoots(in: app).firstMatch.exists { return true }
+            for location in nativeLocalLocations(in: app) {
+                if location.exists && location.isHittable && location.isEnabled {
+                    location.tap()
+                    return true
+                }
+            }
+        } while Date() < deadline
+        return false
     }
 
     private func captureReadyExporter(action: XCUIElement, language: String, app: XCUIApplication) {
