@@ -1311,8 +1311,10 @@ final class PrivateMomentsUITests: XCTestCase {
             let keyboardCoversCenter = keyboard.exists && keyboard.frame.contains(center)
             let footerTop = fixedFooterTop(ignoring: element, in: app)
             let footerCoversCenter = footerTop.map { center.y >= $0 } ?? false
+            let tabBar = app.tabBars.firstMatch
+            let tabCoversCenter = tabBar.exists && tabBar.isHittable && tabBar.frame.contains(center)
             let canTap = exists && element.isHittable && viewport.contains(center) &&
-                !keyboardCoversCenter && !footerCoversCenter
+                !keyboardCoversCenter && !footerCoversCenter && !tabCoversCenter
             // Keep visible controls on the normal fast path. Only a fixed
             // Settings result requires the extra scroll-ownership query.
             if canTap && !app.buttons["settings.dismissBackupStatus"].exists { return }
@@ -1328,7 +1330,9 @@ final class PrivateMomentsUITests: XCTestCase {
                 let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
                 var bottom = min(scroll.frame.maxY, viewport.maxY) - 12
                 if keyboard.exists { bottom = min(bottom, keyboard.frame.minY - 12) }
-                if app.tabBars.firstMatch.exists { bottom = min(bottom, app.tabBars.firstMatch.frame.minY - 12) }
+                if tabBar.exists, tabBar.isHittable, tabBar.frame.midY > viewport.midY {
+                    bottom = min(bottom, tabBar.frame.minY - 12)
+                }
                 if let footerTop { bottom = min(bottom, footerTop - 12) }
                 guard bottom > top + 44 else { return XCTFail("No usable scroll viewport for \(element)") }
                 let middle = (top + bottom) / 2
