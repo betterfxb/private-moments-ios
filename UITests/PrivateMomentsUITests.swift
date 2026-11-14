@@ -232,24 +232,27 @@ final class PrivateMomentsUITests: XCTestCase {
             "(label CONTAINS[c] 'Orientation' AND label CONTAINS[c] 'Lock') OR " +
             "label CONTAINS '锁定旋转' OR label CONTAINS '方向锁定'")
         let controls = system.buttons.matching(predicate)
-        guard controls.firstMatch.waitForExistence(timeout: 10), controls.count == 1 else {
-            captureFailure("Rotation-system-control-unavailable-\(language)", system)
-            return XCTFail("The real system rotation-lock control must be identifiable.")
-        }
-        let control = controls.firstMatch
-        waitForStableFrame(control, requireHittable: true, message: "Rotation lock control must settle.")
-        print("Observed rotation lock before setup. Locale: \(language); selected: \(control.isSelected); control: \(control.debugDescription)")
+        let controlAvailable = controls.firstMatch.waitForExistence(timeout: 10) && controls.count == 1
         captureSystem("Rotation-system-controls-\(language)", system)
-        if control.isSelected {
-            control.tap()
-            let unlocked = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                control.exists && !control.isSelected
-            }, object: nil)
-            guard XCTWaiter.wait(for: [unlocked], timeout: 10) == .completed else {
-                captureFailure("Rotation-system-unlock-unavailable-\(language)", system)
-                return XCTFail("One selected rotation-lock tap must unlock the system.")
+        if controlAvailable {
+            let control = controls.firstMatch
+            waitForStableFrame(control, requireHittable: true, message: "Rotation lock control must settle.")
+            print("Observed rotation lock before setup. Locale: \(language); selected: \(control.isSelected); control: \(control.debugDescription)")
+            if control.isSelected {
+                control.tap()
+                let unlocked = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                    control.exists && !control.isSelected
+                }, object: nil)
+                guard XCTWaiter.wait(for: [unlocked], timeout: 10) == .completed else {
+                    captureFailure("Rotation-system-unlock-unavailable-\(language)", system)
+                    return XCTFail("One selected rotation-lock tap must unlock the system.")
+                }
+                print("Unlocked actual selected rotation lock once. Locale: \(language).")
             }
-            print("Unlocked actual selected rotation lock once. Locale: \(language).")
+        } else {
+            // Hosted Simulator may expose an empty Control Center. Absence is
+            // recorded, never interpreted as unlocked or as successful rotation.
+            print("Rotation lock state unavailable. Locale: \(language); actual app geometry remains mandatory.")
         }
         XCUIDevice.shared.press(.home)
         app.activate()
@@ -387,7 +390,9 @@ final class PrivateMomentsUITests: XCTestCase {
                 (orientation.isLandscape ? frame.width > frame.height : frame.height > frame.width)
         }, object: nil)
         guard XCTWaiter.wait(for: [changed], timeout: 20) == .completed else {
+            print("Rotation failure state. Locale: \(language); stage: \(stage); requested: \(orientation.rawValue); observed device: \(XCUIDevice.shared.orientation.rawValue); app state: \(app.state.rawValue); window: \(window.frame).")
             captureFailure("Rotation-interface-unavailable-\(stage)-\(language)", app)
+            captureFailure("Rotation-system-after-unavailable-\(stage)-\(language)", XCUIApplication(bundleIdentifier: "com.apple.springboard"))
             return XCTFail("The actual app interface must rotate, not only the device orientation value.")
         }
         waitForStableFrame(window, message: "The rotated application window must settle.")
