@@ -33,15 +33,19 @@
 - 本批应用生产源码、资源、应用单元与项目配置未改。数字输入测试新增单击前稳定等待、真实键盘就绪与精确值确认，不盲目重复点击。旋转覆盖iPad浅色Large完整窗口、键盘收起后草稿／导航／暂停状态和已保存记录重启；20张双语旋转图及18次实际窗口几何核对在既有旋转定向和最终完整iPad各执行一次；较早失败完整运行的个别成功配置另记，不混入最终源码统计。EXIF显示方向与原始PNG像素尺寸分别保存，未重写原图。
 - 旧phone-dark空白导出取景见[第十二批](release/UX-ACCEPTANCE-12.md)，本批新图显示真实保存控件；旧结果不被改写。iPad浅色最大字号竖屏补充仍绑定[第十一批](release/UX-ACCEPTANCE-11.md)源码5c0a637，未在本批重新执行。
 
+## 第十五批独立冷启动旋转验收
+
+按[计划](release/BATCH-15-PLAN.md)完成，见[报告](release/UX-ACCEPTANCE-15.md)、[原图](release/evidence/batch-15/index.html)及[收据](release/evidence/batch-15/verification.json)。
+
+- [cold-en运行43588585515](https://github.com/betterfxb/private-moments-ios/actions/runs/43588585515)：源码`fbcae3f4b34055f719c2044f1adb322844349659`，方法`testIPadColdEnglishRotationContinuity`。
+- [cold-zh-Hans运行43589974794](https://github.com/betterfxb/private-moments-ios/actions/runs/43589974794)：源码`fbcae3f4b34055f719c2044f1adb322844349659`，方法`testIPadColdChineseRotationContinuity`。
+- [reference运行43591326457](https://github.com/betterfxb/private-moments-ios/actions/runs/43591326457)：源码`fbcae3f4b34055f719c2044f1adb322844349659`，方法`testIPadRotationContinuity`。
+
+独立英文与中文冷启动各在全新派发的macOS任务中仅运行一个语言方法，入口应用尚未运行，不先调用Settings参考；各9次实际应用窗口核对与10张原图。默认浅色reference双语共享流程另行回归。共42张PNG核验、42张实际打开保留；18项工具测试及801组范围保护通过。定向Debug UI，无应用单元或Release验收；最近完整四配置仍是第十三批fb78856。
+
+仅补齐指定26.2云端条件，旧失败根因仍未独立证明，不称为生产代码旋转修复或普遍稳定性证明。生产代码／应用单元／项目未改；默认四配置排除冷方法，保持原始范围。下一步真实窗口缩放、草稿／计时终止恢复策略、性能与真机；搜索提示省略和视觉质感仍需产品迭代。
+
 ## 第十四批补充适配验收
-
-<!-- batch15-current:start -->
-### 第十五批执行中
-
-按[第十五批计划](release/BATCH-15-PLAN.md)依次补齐无Settings前置的首次旋转：独立英文冷启动、独立中文冷启动、默认浅色reference回归，再归档及更新记忆。每冷语言单独新macOS任务，不把同一次双语循环的第二语言称为冷启动。新增显式rotation_start（reference／cold-en／cold-zh-Hans），只允许rotation范围；完整及其他定向排除两个冷方法，默认四配置保持。
-
-本地18项工具测试、801组脚本／工作流范围防护、Bash语法和既有审计通过；生产Sources／Resources／Tests／Xcode项目未改。当前原生结果尚待实际运行，不把第十四批有Settings参考的通过重标为本批冷启动成功。现有design目录保持未跟踪。
-<!-- batch15-current:end -->
 
 按[第十四批计划](release/BATCH-14-PLAN.md)完成，详见[报告](release/UX-ACCEPTANCE-14.md)、[原图](release/evidence/batch-14/index.html)与[收据](release/evidence/batch-14/verification.json)。默认四配置保持；新配置仅显式input／rotation可用，不允许full／backup，mini缺失不得回退为大屏。
 
@@ -52,7 +56,7 @@
 
 共124张PNG完成精确核验，88张原图实际打开并保留。工具测试11项、脚本／工作流范围防护267组及既有项目审计通过。定向方法没有应用单元／Release验收，最近完整回归仍是第十三批源码fb78856；不能把旧完整结果重标为本批受测源码。小屏全窗口与旋转均不是系统分屏／窗口缩放验收；本批计划保存实际窗口操作／几何／连续性的后续协议。
 
-最终深色及默认iPad旋转包含真实Settings横竖屏参考前置；旧冷启动首转失败根因仍未独立证明，未经该前置的深色最大字号首转还需独立复核。三次失败均单独归档，不能将后续成功解释为生产旋转故障已经修复。
+第十四批最终深色及默认iPad旋转包含真实Settings横竖屏参考前置，因此该批未覆盖独立冷启动首转；第十五批另行补齐指定26.2云端的英文／中文条件。三次旧失败仍单独归档，根因未独立证明，不能将后续成功解释为生产旋转故障已经修复。
 
 双语输入图库60张核验、24张实际打开，软件键盘下的两行ASCII备注和20字符计数保留；不等同中文IME候选验收。中英文搜索提示省略、宽屏居中留白及长错误文案需继续滚动保留为体验改进项。43577972823的SpringBoard层级观察到Other类型resize-grabber（Resize Private Moments／Bottom Right），尚未证明可见／命中／拖动／缩放，只作为后续真实窗口操作线索。
 
@@ -68,7 +72,7 @@
 ## 待办及结论边界
 
 - 第十四批补充mini浅色Large、iPad深色最大字号及默认浅色Large全窗口旋转；最终大屏运行包含Settings参考前置。键盘已收起，检查草稿／导航／暂停及已保存记录重启，不能外推为冷启动首转或分屏通过。
-- 下一步先独立复核未经Settings参考前置的深色最大字号冷启动首转，再建立实际系统分屏／窗口缩放证据，明确终止后的未保存草稿和计时恢复策略、实现及性能基准。产品恢复策略不能由测试脚本擅自假定。
+- 第十五批补齐指定26.2云端独立英文／中文冷启动旋转；旧失败根因及其他环境稳定性仍未证明。下一步建立实际系统窗口缩放证据，明确终止后的草稿／计时恢复策略，再推进性能与真机验证。产品恢复策略不能由测试脚本擅自假定。
 - 中文IME组合与候选、VoiceOver／Switch Control、成功Face ID／Touch ID及待决认证取消、锁屏文件保护、外接／浮动键盘和外部文件提供方仍需相应设备或环境。
 - 当前只验证固定Xcode／SDK／Simulator26.2；iOS17最低目标不代表所有旧系统已实测。真机、审美验收和发行材料中的发布者／Bundle ID占位仍未关闭。
 

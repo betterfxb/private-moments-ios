@@ -1,8 +1,14 @@
 # Simulator UI acceptance
 
+## Independent cold rotation verification (2026-11-14)
+
+Batch15 verifies dark maximum-text English and Chinese cold rotation in independent fresh cloud jobs, one locale/method per job and no Settings reference activation. Default light iPad reference rotation is separately regressed. 42 original PNGs checked; 42 actually opened and retained. [Report and limits](UX-ACCEPTANCE-15.md) · [originals](evidence/batch-15/index.html) · [receipt](evidence/batch-15/verification.json).
+
+Focused Debug UI only, no application units or Release acceptance. Latest full four-profile validation remains batch13/fb78856. Earlier failures retain their original provenance; later success does not prove their cause or a production fix. Real system window resizing, termination recovery, physical-device and aesthetic acceptance remain open. No signing, Apple upload or main merge.
+
 ## Supplemental iPad mini and dark maximum-text verification (2026-11-14)
 
-Batch14 completes sequential mini light/Large rotation, dark maximum-text iPad rotation and bilingual input-gallery diagnostics. The default four-profile suite is preserved. Final large-iPad rotation passes include a real Settings orientation-reference precondition; cold first rotation without it remains open, and no production rotation fix is established. These focused Debug UI results do not include application unit tests or Release acceptance; the latest full four-profile acceptance remains batch13 on `fb78856` below. Exact per-run sources are in the receipt.
+Batch14 completes sequential mini light/Large rotation, dark maximum-text iPad rotation and bilingual input-gallery diagnostics. The default four-profile suite is preserved. Final large-iPad rotation passes include a real Settings orientation-reference precondition; cold first rotation was outside that batch's coverage and is independently tested in batch15 above; no production rotation fix is established. These focused Debug UI results do not include application unit tests or Release acceptance; the latest full four-profile acceptance remains batch13 on `fb78856` below. Exact per-run sources are in the receipt.
 
 124 original PNGs checked, 88 selected originals actually opened and retained. [Report and limits](UX-ACCEPTANCE-14.md) · [originals](evidence/batch-14/index.html) · [receipt](evidence/batch-14/verification.json) · [project memory](../PROJECT-MEMORY.md). Small-device full-window rotation does not establish system split-view/window resizing. Physical interaction, termination recovery and aesthetic acceptance remain open. No signing, Apple upload or main merge.
 

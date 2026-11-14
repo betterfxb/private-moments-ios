@@ -1,8 +1,12 @@
 # Private Moments — Native iOS MVP
 
-Latest supplemental batch14 (2026-11-14): explicit iPad mini light/Large and iPad dark/maximum-text profiles, sequential rotation and input-gallery verification, plus default-iPad rotation regression. 124 PNG originals checked; 88 originals actually opened and retained. These focused Debug UI diagnostics do not include application units or Release acceptance. [Report and per-run sources](release/UX-ACCEPTANCE-14.md) · [originals](release/evidence/batch-14/index.html) · [project memory](PROJECT-MEMORY.md).
+Latest supplemental batch15 (2026-11-14): English and Simplified Chinese dark maximum-text cold rotation each run alone in a separately dispatched fresh macOS job, without activating Settings first; default light iPad reference rotation is separately regressed. 42 PNG originals checked and 42 actually opened and retained. Focused Debug UI only: no application units or Release acceptance. Default full suite excludes the new cold methods. [Report and per-run sources](release/UX-ACCEPTANCE-15.md) · [originals](release/evidence/batch-15/index.html) · [project memory](PROJECT-MEMORY.md).
 
-Final large-iPad rotation passes include a real Settings orientation-reference precondition; cold first rotation without it remains open. This batch does not establish a production rotation fix or system-window resizing.
+These runs establish only their recorded cloud conditions. Earlier rotation failure causes remain unproven; no production rotation fix or system-window resizing is claimed. Latest full four-profile validation remains batch13 on fb78856, detailed below. Draft only; no signing, Apple upload or main merge.
+
+Historical supplemental batch14 (2026-11-14): explicit iPad mini light/Large and iPad dark/maximum-text profiles, sequential rotation and input-gallery verification, plus default-iPad rotation regression. 124 PNG originals checked; 88 originals actually opened and retained. These focused Debug UI diagnostics do not include application units or Release acceptance. [Report and per-run sources](release/UX-ACCEPTANCE-14.md) · [originals](release/evidence/batch-14/index.html) · [project memory](PROJECT-MEMORY.md).
+
+Historical batch14 large-iPad rotation passes include a real Settings orientation-reference precondition; independent cold rotation is covered separately by batch15. This batch does not establish a production rotation fix or system-window resizing.
 
 Latest full four-profile validation remains batch13 source `fb78856ca48a43eb1739d5c2c6198d973a519246`, [run43556512255](https://github.com/betterfxb/private-moments-ios/actions/runs/43556512255): 50 application units, 13 UI executions, Debug/Release and Release test-hook exclusion. It is not relabeled as a batch14 full run. [Acceptance and limits](release/UX-ACCEPTANCE-13.md). Draft only; no main merge, signing or Apple upload.
 

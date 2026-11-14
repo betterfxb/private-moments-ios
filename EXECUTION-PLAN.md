@@ -277,6 +277,14 @@ Completed the sequential [batch14 plan](release/BATCH-14-PLAN.md): documented ac
 
 Eleven matrix/device-selection tests, 267 script/workflow guard combinations and existing audits pass. Focused native UI diagnostics have their actual source/run boundaries in the [report](release/UX-ACCEPTANCE-14.md) and [receipt](release/evidence/batch-14/verification.json); 124 PNGs checked, 88 originals actually opened and retained. They do not replace the batch13 full four-profile result or prove system split-view/window resizing. Project memory and draft PR are updated; main/signing/Apple upload remain deferred.
 
-The final large-iPad rotation passes include a real Settings landscape/portrait reference precondition. Cold first rotation without that precondition remains open; this batch does not establish a production rotation fix.
+The batch14 final large-iPad rotation passes include a real Settings landscape/portrait reference precondition. Cold first rotation was outside that batch's coverage and is separately tested in batch15 below; no production rotation fix is established.
 
-Next: independently verify dark maximum-text cold first rotation without the Settings reference precondition; establish actual system-window interaction and geometry/continuity evidence; decide unsaved-draft/timer termination-recovery behavior before implementation; add large-data benchmarks and physical-device validation. Keep visual quality and user aesthetic acceptance as separate design work.
+Batch14 handoff priorities were independent dark maximum-text cold first rotation, actual system-window interaction and geometry/continuity evidence, product decisions on unsaved-draft/timer termination recovery, large-data benchmarks and physical-device validation. Batch15 completes the specified cold conditions below; visual quality and user aesthetic acceptance remain separate design work.
+
+## Batch15: independent first-rotation verification (2026-11-14)
+
+Completed the sequential [plan](release/BATCH-15-PLAN.md): explicit cold-en/cold-zh-Hans scopes, script/workflow protection, separately dispatched fresh-job dark maximum-text English and Chinese native journeys, then default light reference regression and original-image review. Default four-profile acceptance excludes the new cold methods and preserves its existing coverage.
+
+Eighteen tooling tests, 729 script and 72 workflow guard combinations, Bash syntax and existing project audits pass. 42 original PNGs checked; 42 originals actually opened and retained. [Report](release/UX-ACCEPTANCE-15.md) and [receipt](release/evidence/batch-15/verification.json) retain the actual source and scope for each run. Debug UI diagnostics do not replace the batch13 complete acceptance. Production code is unchanged; earlier failure causes remain open even though these specific cold conditions pass.
+
+Next: real system-window resize interaction/geometry/continuity, unsaved-draft/timer termination-recovery product decisions, performance baseline and physical-device validation. Search placeholder truncation and visual quality remain product work. Draft PR, no main merge/signing/Apple upload.
