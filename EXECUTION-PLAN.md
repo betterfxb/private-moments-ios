@@ -4,7 +4,11 @@
 
 Run focused diagnostics and full validation serially on a branch. The workflow uses a same-ref concurrency group with cancel-in-progress: starting a second run cancels the active one. A focused input or backup success is diagnostic evidence only; final acceptance requires the full matrix and original-image review. Do not restart a functional failure unchanged to obtain a pass.
 
-## Latest full batch: Chinese files and operation continuity
+## Latest full validation: batch16 search usability
+
+The [batch16 report](release/UX-ACCEPTANCE-16.md) records the latest complete four-profile validation on `82ccfccdb3bb743a19628e10e42d54f75698c5a3`: 50 application units, 13 UI executions, Debug/Release and Release test-hook exclusion. The ordered batch16 tasks and remaining product work are recorded at the end of this plan. Earlier batches below retain their own sources and scope.
+
+## Historical full batch: Chinese files and operation continuity
 
 The [batch-twelve plan](release/BATCH-12-PLAN.md) adds an independently selectable Chinese real-file UI method, then runs focused Chinese verification and same-source four-profile acceptance serially. Source `7b92acbe21d0cb88e1e4378477b719fd86dd1ee3`, [full run 43442608041](https://github.com/betterfxb/private-moments-ios/actions/runs/43442608041), passes 50 unit tests, six main-profile UI methods, two per other profile, Debug/Release and Release test-hook exclusion. All 285 PNGs across focused and full runs checked; 88 selected originals opened. [Acceptance and limits](release/UX-ACCEPTANCE-12.md) preserve the phone-dark initial-export capture limitation, maximum-text scrolling requirements and physical-device gates. Production code, schema and resources are unchanged. No signing, Apple upload or main merge.
 
@@ -288,3 +292,11 @@ Completed the sequential [plan](release/BATCH-15-PLAN.md): explicit cold-en/cold
 Eighteen tooling tests, 729 script and 72 workflow guard combinations, Bash syntax and existing project audits pass. 42 original PNGs checked; 42 originals actually opened and retained. [Report](release/UX-ACCEPTANCE-15.md) and [receipt](release/evidence/batch-15/verification.json) retain the actual source and scope for each run. Debug UI diagnostics do not replace the batch13 complete acceptance. Production code is unchanged; earlier failure causes remain open even though these specific cold conditions pass.
 
 Next: real system-window resize interaction/geometry/continuity, unsaved-draft/timer termination-recovery product decisions, performance baseline and physical-device validation. Search placeholder truncation and visual quality remain product work. Draft PR, no main merge/signing/Apple upload.
+
+## Batch16: timeline search usability (2026-11-15)
+
+Completed the sequential [plan](release/BATCH-16-PLAN.md): localized short native search prompts, wrapping Dynamic Type scope text, bilingual empty/matched-query and clear-keyboard recovery checks, targeted dark maximum-text iPad gallery, revised maximum-text phone input and real files checks, then the corrected phone input gallery and final complete four-profile regression. Final full source is `82ccfccdb3bb743a19628e10e42d54f75698c5a3`; all five successful runs share production code. Phone input retains its own test source; its search-check functions are unchanged in the final source. Full run43667122995 passes 50 application units, 13 UI executions, Debug/Release and hook exclusion. Eighteen tooling tests and localization/project/release audits pass; publisher/account-dependent placeholders remain. The earlier failed full and files runs are retained separately and are not counted as full acceptance.
+
+539 PNG originals checked, 79 actually opened/retained with hashes and raw evidence. [Report](release/UX-ACCEPTANCE-16.md) · [receipt](release/evidence/batch-16/verification.json). Existing full iPad rotation retains the Settings reference condition; independent cold runs keep their batch15 provenance.
+
+Next: actual window resizing and continuity evidence, termination-recovery product decisions, performance/physical validation, and implementing the selected immersive visual direction under a concrete reviewed design plan. The current search refinement is a local usability change, not completion of the overall visual redesign. Draft PR/no merge/signing/Apple upload constraints remain.

@@ -1,14 +1,20 @@
 # Simulator UI acceptance
 
+## Search usability and renewed full regression (2026-11-15)
+
+Batch16 ships short Search moments / 搜索记录 prompts and a wrapping scope label. Targeted dark maximum-text iPad bilingual gallery, then revised maximum-text phone input and files diagnostics passed and were reviewed before [final full four-profile run43667122995](https://github.com/betterfxb/private-moments-ios/actions/runs/43667122995), source `82ccfccdb3bb743a19628e10e42d54f75698c5a3`: 50 application units, 13 UI executions, Debug/Release and Release test-hook exclusion. 539 PNGs checked and 79 originals actually opened/retained across five successful runs; five prior failed runs are retained separately. [Report and limits](UX-ACCEPTANCE-16.md) · [originals](evidence/batch-16/index.html) · [receipt](evidence/batch-16/verification.json).
+
+The full iPad rotation includes Settings reference preparation; batch15's cold methods remain separately sourced. ASCII search does not establish Chinese IME composition. Real window resizing, termination recovery, physical validation and selected immersive visual implementation remain open. No main merge/signing/Apple upload.
+
 ## Independent cold rotation verification (2026-11-14)
 
 Batch15 verifies dark maximum-text English and Chinese cold rotation in independent fresh cloud jobs, one locale/method per job and no Settings reference activation. Default light iPad reference rotation is separately regressed. 42 original PNGs checked; 42 actually opened and retained. [Report and limits](UX-ACCEPTANCE-15.md) · [originals](evidence/batch-15/index.html) · [receipt](evidence/batch-15/verification.json).
 
-Focused Debug UI only, no application units or Release acceptance. Latest full four-profile validation remains batch13/fb78856. Earlier failures retain their original provenance; later success does not prove their cause or a production fix. Real system window resizing, termination recovery, physical-device and aesthetic acceptance remain open. No signing, Apple upload or main merge.
+Focused Debug UI only, no application units or Release acceptance. At batch15 close, the full baseline was batch13/fb78856; the new batch16 full result is above. Earlier failures retain their original provenance; later success does not prove their cause or a production fix. Real system window resizing, termination recovery, physical-device and aesthetic acceptance remain open. No signing, Apple upload or main merge.
 
 ## Supplemental iPad mini and dark maximum-text verification (2026-11-14)
 
-Batch14 completes sequential mini light/Large rotation, dark maximum-text iPad rotation and bilingual input-gallery diagnostics. The default four-profile suite is preserved. Final large-iPad rotation passes include a real Settings orientation-reference precondition; cold first rotation was outside that batch's coverage and is independently tested in batch15 above; no production rotation fix is established. These focused Debug UI results do not include application unit tests or Release acceptance; the latest full four-profile acceptance remains batch13 on `fb78856` below. Exact per-run sources are in the receipt.
+Batch14 completes sequential mini light/Large rotation, dark maximum-text iPad rotation and bilingual input-gallery diagnostics. The default four-profile suite is preserved. Final large-iPad rotation passes include a real Settings orientation-reference precondition; cold first rotation was outside that batch's coverage and is independently tested in batch15 above; no production rotation fix is established. These focused Debug UI results do not include application unit tests or Release acceptance; the full baseline at that batch's close was batch13 on `fb78856` below. Batch16 now supplies the latest full validation above. Exact per-run sources are in the receipt.
 
 124 original PNGs checked, 88 selected originals actually opened and retained. [Report and limits](UX-ACCEPTANCE-14.md) · [originals](evidence/batch-14/index.html) · [receipt](evidence/batch-14/verification.json) · [project memory](../PROJECT-MEMORY.md). Small-device full-window rotation does not establish system split-view/window resizing. Physical interaction, termination recovery and aesthetic acceptance remain open. No signing, Apple upload or main merge.
 
