@@ -78,6 +78,11 @@ struct MomentTimelineView: View {
 
                         if hasActiveFilters {
                             Button {
+                                isSearchFocused = false
+                                if #unavailable(iOS 18.0) {
+                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                                        to: nil, from: nil, for: nil)
+                                }
                                 searchText = ""
                                 filter = .all
                                 isSearchPresented = false

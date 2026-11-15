@@ -1,0 +1,294 @@
+﻿2026-11-15T13:09:35.8240440Z ##[group]Run result_bundle="${RUNNER_TEMP}/PrivateMoments.xcresult"
+2026-11-15T13:09:35.8240930Z [36;1mresult_bundle="${RUNNER_TEMP}/PrivateMoments.xcresult"[0m
+2026-11-15T13:09:35.8241320Z [36;1mscreenshot_directory="${RUNNER_TEMP}/PrivateMomentsUIScreenshots"[0m
+2026-11-15T13:09:35.8241680Z [36;1mif [[ ! -d "$result_bundle" ]]; then[0m
+2026-11-15T13:09:35.8242030Z [36;1m  printf 'No XCTest result bundle was produced; skipping screenshot export.\n'[0m
+2026-11-15T13:09:35.8242370Z [36;1m  exit 0[0m
+2026-11-15T13:09:35.8242530Z [36;1mfi[0m
+2026-11-15T13:09:35.8242730Z [36;1mmkdir -p "$screenshot_directory"[0m
+2026-11-15T13:09:35.8243010Z [36;1mxcrun xcresulttool export attachments \[0m
+2026-11-15T13:09:35.8243260Z [36;1m  --path "$result_bundle" \[0m
+2026-11-15T13:09:35.8243500Z [36;1m  --output-path "$screenshot_directory"[0m
+2026-11-15T13:09:35.8243900Z [36;1mscreenshot_count="$(find "$screenshot_directory" -type f -iname '*.png' | wc -l | tr -d ' ')"[0m
+2026-11-15T13:09:35.8244370Z [36;1mprintf 'Exported %s PNG attachment(s).\n' "$screenshot_count"[0m
+2026-11-15T13:09:35.8286140Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T13:09:35.8286430Z env:
+2026-11-15T13:09:35.8286680Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-15T13:09:35.8288720Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=A1285399-F2F4-46E9-8CF2-4AA227FF7EF3
+2026-11-15T13:09:35.8289100Z ##[endgroup]
+2026-11-15T13:09:46.2330930Z Skipped export for AppLockUXTests/testBackgroundDiscardsLateDisableSuccess(): no matching attachments
+2026-11-15T13:09:46.2336600Z 
+2026-11-15T13:09:46.2337060Z Skipped export for AppLockUXTests/testBackgroundDiscardsLateEnableSuccess(): no matching attachments
+2026-11-15T13:09:46.2337680Z 
+2026-11-15T13:09:46.2338030Z Skipped export for AppLockUXTests/testCancelledFailedAndUnavailableAuthenticationDoNotEnableLock(): no matching attachments
+2026-11-15T13:09:46.2338530Z 
+2026-11-15T13:09:46.2338900Z Skipped export for AppLockUXTests/testConcurrentRequestStartsOnlyOneEvaluation(): no matching attachments
+2026-11-15T13:09:46.2339750Z 
+2026-11-15T13:09:46.2340050Z Skipped export for AppLockUXTests/testFailedUnlockRemainsLocked(): no matching attachments
+2026-11-15T13:09:46.2340360Z 
+2026-11-15T13:09:46.2340770Z Skipped export for AppLockUXTests/testInactivePromptDoesNotCancelButBackgroundAlwaysLocks(): no matching attachments
+2026-11-15T13:09:46.2341310Z 
+2026-11-15T13:09:46.2341670Z Skipped export for AppLockUXTests/testOldCallbackCannotUnlockOrClearANewerAttempt(): no matching attachments
+2026-11-15T13:09:46.2343080Z 
+2026-11-15T13:09:46.2343440Z Skipped export for AppLockUXTests/testOnlySuccessfulAuthenticationChangesPreferenceAndRelaunchLocks(): no matching attachments
+2026-11-15T13:09:46.2347150Z 
+2026-11-15T13:09:46.2347820Z Skipped export for BackupUXTests/testEmptyPreviewKeepsReplacementScopeExplicit(): no matching attachments
+2026-11-15T13:09:46.2348720Z 
+2026-11-15T13:09:46.2349090Z Skipped export for BackupUXTests/testFileReaderPreservesTheFullValidatedRecord(): no matching attachments
+2026-11-15T13:09:46.2349880Z 
+2026-11-15T13:09:46.2350210Z Skipped export for BackupUXTests/testFileReaderRejectsAnOversizedSparseFile(): no matching attachments
+2026-11-15T13:09:46.2350630Z 
+2026-11-15T13:09:46.2351030Z Skipped export for BackupUXTests/testFileReaderRejectsMalformedAndMissingFiles(): no matching attachments
+2026-11-15T13:09:46.2351480Z 
+2026-11-15T13:09:46.2351750Z Skipped export for BackupUXTests/testImportedCopyNeverDeletesAPrefixSibling(): no matching attachments
+2026-11-15T13:09:46.2352160Z 
+2026-11-15T13:09:46.2352520Z Skipped export for BackupUXTests/testImportedCopyNeverRecursivelyDeletesADirectory(): no matching attachments
+2026-11-15T13:09:46.2352950Z 
+2026-11-15T13:09:46.2353340Z Skipped export for BackupUXTests/testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError(): no matching attachments
+2026-11-15T13:09:46.2354190Z 
+2026-11-15T13:09:46.2354610Z Skipped export for BackupUXTests/testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames(): no matching attachments
+2026-11-15T13:09:46.2356060Z 
+2026-11-15T13:09:46.2356380Z Skipped export for BackupUXTests/testPreviewCountsActualIDOverlapAndNotes(): no matching attachments
+2026-11-15T13:09:46.2356810Z 
+2026-11-15T13:09:46.2357100Z Skipped export for MomentDateQueryTests/testDaylightSavingDaysUseCalendarBoundaries(): no matching attachments
+2026-11-15T13:09:46.2357580Z 
+2026-11-15T13:09:46.2357880Z Skipped export for MomentDateQueryTests/testMidnightBelongsOnlyToTheFollowingDay(): no matching attachments
+2026-11-15T13:09:46.2358250Z 
+2026-11-15T13:09:46.2358600Z Skipped export for MomentStoreImportTests/testFailedReplacementLeavesExistingRecordsUnchanged(): no matching attachments
+2026-11-15T13:09:46.2359000Z 
+2026-11-15T13:09:46.2359320Z Skipped export for MomentStoreImportTests/testInvalidMergeLeavesExistingRecordsUnchanged(): no matching attachments
+2026-11-15T13:09:46.2359740Z 
+2026-11-15T13:09:46.2360220Z Skipped export for MomentStoreImportTests/testMergeAddsNewRecordsAndUpdatesMatchingIDs(): no matching attachments
+2026-11-15T13:09:46.2360620Z 
+2026-11-15T13:09:46.2361600Z Skipped export for MomentStoreRecoveryTests/testConversionFailurePreservesCachedSnapshotUntilRepair(): no matching attachments
+2026-11-15T13:09:46.2362520Z 
+2026-11-15T13:09:46.2362940Z Skipped export for MomentStoreRecoveryTests/testEachPersistenceFailurePreservesSnapshotAndRequiresReload(): no matching attachments
+2026-11-15T13:09:46.2363420Z 
+2026-11-15T13:09:46.2363880Z Skipped export for MomentStoreRecoveryTests/testFirstReadFailureBlocksAllMutationsUntilSuccessfulRetry(): no matching attachments
+2026-11-15T13:09:46.2364540Z 
+2026-11-15T13:09:46.2365260Z Skipped export for MomentStoreRecoveryTests/testReadFailureKeepsCachedRecordsReadOnly(): no matching attachments
+2026-11-15T13:09:46.2365800Z 
+2026-11-15T13:09:46.2366190Z Skipped export for MomentStoreRecoveryTests/testValidationAndDuplicateBackupErrorsDoNotDisableStorage(): no matching attachments
+2026-11-15T13:09:46.2366710Z 
+2026-11-15T13:09:46.2367020Z Skipped export for MomentTimingDraftTests/testChangedTimingParticipatesInDiscardDetection(): no matching attachments
+2026-11-15T13:09:46.2367460Z 
+2026-11-15T13:09:46.2367940Z Skipped export for MomentTimingDraftTests/testFutureNewDateRejectedWithoutChangingBackupValidation(): no matching attachments
+2026-11-15T13:09:46.2368450Z 
+2026-11-15T13:09:46.2369330Z Skipped export for MomentTimingDraftTests/testMalformedOverflowAndOverLimitDurationsAreRejected(): no matching attachments
+2026-11-15T13:09:46.2369740Z 
+2026-11-15T13:09:46.2370110Z Skipped export for MomentTimingDraftTests/testNonFiniteDateRejectedAndExistingValuesTakePrecedence(): no matching attachments
+2026-11-15T13:09:46.2370640Z 
+2026-11-15T13:09:46.2371200Z Skipped export for MomentTimingDraftTests/testUntouchedShortAndLongDurationsPreserveExactSeconds(): no matching attachments
+2026-11-15T13:09:46.2371680Z 
+2026-11-15T13:09:46.2372030Z Skipped export for MomentValidationTests/testBackupRejectsDuplicateIDsBeforeRestore(): no matching attachments
+2026-11-15T13:09:46.2372420Z 
+2026-11-15T13:09:46.2373200Z Skipped export for MomentValidationTests/testBackupRejectsFilesOverSizeLimit(): no matching attachments
+2026-11-15T13:09:46.2374380Z 
+2026-11-15T13:09:46.2375330Z Skipped export for MomentValidationTests/testBackupRejectsUnknownFormatVersion(): no matching attachments
+2026-11-15T13:09:46.2375710Z 
+2026-11-15T13:09:46.2376400Z Skipped export for MomentValidationTests/testBackupRoundTripPreservesPrivateFields(): no matching attachments
+2026-11-15T13:09:46.2376810Z 
+2026-11-15T13:09:46.2377060Z Skipped export for MomentValidationTests/testNegativeDurationIsRejected(): no matching attachments
+2026-11-15T13:09:46.2377400Z 
+2026-11-15T13:09:46.2377700Z Skipped export for MomentValidationTests/testOverlongPrivateNoteIsRejected(): no matching attachments
+2026-11-15T13:09:46.2378160Z 
+2026-11-15T13:09:46.2378550Z Skipped export for MomentValidationTests/testOversizedUnicodeNoteIsRejectedEvenWhenGraphemeCountIsSmall(): no matching attachments
+2026-11-15T13:09:46.2379430Z 
+2026-11-15T13:09:46.2379810Z Skipped export for MomentValidationTests/testPrivateNoteAllowsEmptyAndExactCharacterLimit(): no matching attachments
+2026-11-15T13:09:46.2380660Z 
+2026-11-15T13:09:46.2381090Z Skipped export for MomentValidationTests/testPrivateNoteUTF8BoundaryIsIndependentOfCharacterCount(): no matching attachments
+2026-11-15T13:09:46.2381590Z 
+2026-11-15T13:09:46.2381980Z Skipped export for MomentValidationTests/testValidMomentPassesValidation(): no matching attachments
+2026-11-15T13:09:46.2382370Z 
+2026-11-15T13:09:46.2382730Z Skipped export for SemanticColorTests/testAccentAndSessionTextRemainReadableInBothAppearances(): no matching attachments
+2026-11-15T13:09:46.2383230Z 
+2026-11-15T13:09:46.2383530Z Skipped export for SemanticColorTests/testBodyAndSecondaryTextContrastOnSurfaces(): no matching attachments
+2026-11-15T13:09:46.2384130Z 
+2026-11-15T13:09:46.2384770Z Skipped export for SwiftDataRecoveryTests/testInsertFailureLeavesNoPhantomRecord(): no matching attachments
+2026-11-15T13:09:46.2385180Z 
+2026-11-15T13:09:46.2385640Z Skipped export for SwiftDataRecoveryTests/testInvalidPersistedFieldsBlockReadAndRepairRestoresAccess(): no matching attachments
+2026-11-15T13:09:46.2386120Z 
+2026-11-15T13:09:46.2386530Z Skipped export for SwiftDataRecoveryTests/testSaveFailureRollsBackEveryMutationInRealModelContext(): no matching attachments
+2026-11-15T13:09:46.2387160Z 
+2026-11-15T13:09:46.2387580Z Skipped export for UITestIsolationTests/testPrivacyPreferencesAreIsolatedByTheSameStoreUUID(): no matching attachments
+2026-11-15T13:09:46.2388510Z 
+2026-11-15T13:09:46.2389050Z Skipped export for UITestIsolationTests/testSaveFailureRequiresBothAnIsolatedStoreAndExplicitFlag(): no matching attachments
+2026-11-15T13:09:46.2389590Z 
+2026-11-15T13:09:46.2389900Z Skipped export for UITestIsolationTests/testTestStoreRequiresAValidUUID(): no matching attachments
+2026-11-15T13:09:46.2390280Z 
+2026-11-15T13:09:46.2390510Z Exported 20 attachments for: PrivateMomentsUITests/testBackupFileRoundTrip():
+2026-11-15T13:09:46.2391280Z File: 39BF935F-C1B3-4A6F-BFF7-E3620383930A.txt, suggested name: "Exporter-browser-unavailable-en-hierarchy_0_77B508FD-4DB3-4702-B484-5E0C8E63F021.txt"
+2026-11-15T13:09:46.2392670Z File: A5BC4589-8CBE-4326-84F8-330F1A6ED169.png, suggested name: "Exporter-browser-unavailable-en_0_FCC37E03-B7F1-47F3-8FB5-379A473EA85D.png"
+2026-11-15T13:09:46.2393470Z File: 0B7C642F-EDFB-490A-940D-1235151F2BFC, suggested name: "Synthesized Event 2026-11-15 at 12.37.43 PM"
+2026-11-15T13:09:46.2394230Z File: CEC590FD-D486-4A5C-89A0-A16167AB3EA2, suggested name: "Synthesized Event 2026-11-15 at 12.37.39 PM"
+2026-11-15T13:09:46.2395000Z File: 1DA2A90D-A92F-4AA6-AD77-9617DFFB7C05, suggested name: "Synthesized Event 2026-11-15 at 12.37.35 PM"
+2026-11-15T13:09:46.2396050Z File: C3DD33C8-52CA-4928-8E7D-5EB1BFBE808A, suggested name: "Synthesized Event 2026-11-15 at 12.37.29 PM"
+2026-11-15T13:09:46.2397450Z File: C5BAAD7A-0F7A-4369-8994-734907FDC1E7, suggested name: "Synthesized Event 2026-11-15 at 12.37.27 PM"
+2026-11-15T13:09:46.2398140Z File: B0BA93DE-62F4-41CD-A867-9F52BF382499, suggested name: "Synthesized Event 2026-11-15 at 12.37.24 PM"
+2026-11-15T13:09:46.2398830Z File: BF2B54E8-7B7D-4314-AC20-DE33F2EE3D8F, suggested name: "Synthesized Event 2026-11-15 at 12.37.20 PM"
+2026-11-15T13:09:46.2399540Z File: 5F023CF5-DCB2-41BE-A8A7-15CE9507BE71, suggested name: "Synthesized Event 2026-11-15 at 12.37.19 PM"
+2026-11-15T13:09:46.2400240Z File: 77449AED-F54F-4348-A54A-40023F83B4BD, suggested name: "Synthesized Event 2026-11-15 at 12.37.15 PM"
+2026-11-15T13:09:46.2400970Z File: 98B16803-31BE-4687-8EEB-479537ACCAD4, suggested name: "Synthesized Event 2026-11-15 at 12.37.09 PM"
+2026-11-15T13:09:46.2401660Z File: 8458E590-5BED-44A0-AF5F-94229481AB35, suggested name: "Synthesized Event 2026-11-15 at 12.37.03 PM"
+2026-11-15T13:09:46.2402310Z File: A54F52A3-B305-4DF3-B30B-48785C20BB1D, suggested name: "Synthesized Event 2026-11-15 at 12.37.00 PM"
+2026-11-15T13:09:46.2402930Z File: 7013F708-AD70-4872-A8F2-019C779EB4C8, suggested name: "Synthesized Event 2026-11-15 at 12.36.55 PM"
+2026-11-15T13:09:46.2404500Z File: F950C283-DF69-48BB-AD64-FCF6F9757BD7, suggested name: "Synthesized Event 2026-11-15 at 12.36.48 PM"
+2026-11-15T13:09:46.2405230Z File: F16879B5-57E0-43F9-AA12-90DE8A263C46, suggested name: "Synthesized Event 2026-11-15 at 12.36.42 PM"
+2026-11-15T13:09:46.2405970Z File: 7FFCD7AF-18E9-49FB-82AF-E6E25F03A648, suggested name: "Synthesized Event 2026-11-15 at 12.36.33 PM"
+2026-11-15T13:09:46.2406690Z File: D5DE3B90-0BC1-4991-A1E2-1F8C7FC7BCAD, suggested name: "Synthesized Event 2026-11-15 at 12.36.26 PM"
+2026-11-15T13:09:46.2407350Z File: C6336F06-7D57-4D73-B52A-F042F8FE18C8.mp4, suggested name: "Screen Recording 2026-11-15 at 12.35.32 PM.mp4"
+2026-11-15T13:09:46.2430220Z 
+2026-11-15T13:09:46.2430650Z Exported 12 attachments for: PrivateMomentsUITests/testChineseBackupFileRoundTrip():
+2026-11-15T13:09:46.2431420Z File: 55880F1B-9F4F-4A2E-B984-3A66DB754318.png, suggested name: "Backup-restored-zh-Hans_0_24D0AA44-48B3-4CC5-9AE3-E5B24FEBD5BF.png"
+2026-11-15T13:09:46.2432690Z File: CA861920-C399-498B-AB85-F33FD442C7E6.png, suggested name: "Backup-replace-zh-Hans_0_7305DC38-52E3-44DE-B011-A011C2361BD9.png"
+2026-11-15T13:09:46.2433520Z File: 366AB035-EB3D-49A0-9210-4B6724A74B57.png, suggested name: "Replace-review-zh-Hans_0_A5B16159-3134-43E1-A065-5E42FDFC802B.png"
+2026-11-15T13:09:46.2434330Z File: 5BE3AA74-CA77-4A07-81B0-37ED952A31DA.png, suggested name: "Backup-review-controls-zh-Hans_0_34C19523-E0A3-4B40-A7CB-8A34F91E737B.png"
+2026-11-15T13:09:46.2435140Z File: EB35F0DB-5649-442B-845E-F83FF0A03445.png, suggested name: "Backup-review-zh-Hans_0_EB1DE5E3-2300-492A-AF9B-8B8847E86082.png"
+2026-11-15T13:09:46.2436780Z File: 65099E22-B77F-43F7-BD3C-A9D352B48517.png, suggested name: "Import-feedback-scrolled-zh-Hans_0_03533DC1-B8DF-49E5-BD47-B7C48325B0DC.png"
+2026-11-15T13:09:46.2437570Z File: 9D00DA03-7C35-4BA2-B7DC-88EA2089DF4A.png, suggested name: "Import-cancelled-zh-Hans_0_EB760B92-D689-4760-8D0F-23C52702E98E.png"
+2026-11-15T13:09:46.2438490Z File: 2933470B-29AB-4AE1-821C-EB1CDB4890CF.txt, suggested name: "Import-files-zh-Hans-hierarchy_0_A9B0F657-B9DA-4139-8633-0D5EFB1D5685.txt"
+2026-11-15T13:09:46.2439760Z File: 9E8616BD-4D44-4396-90AB-A2840B1EA0E6.png, suggested name: "Import-files-zh-Hans_0_708738C0-B029-431F-B899-D88F63E7B453.png"
+2026-11-15T13:09:46.2440560Z File: 2E87E302-8C5D-4EDF-9D61-AAD0619F210B.png, suggested name: "Backup-exported-zh-Hans_0_FBE75BD5-7178-4D71-A8EE-8E5558C5F50E.png"
+2026-11-15T13:09:46.2441510Z File: 9B7E172F-FA34-4D70-954D-23EBA32EA89F.txt, suggested name: "Export-files-zh-Hans-hierarchy_0_5C4883E0-405C-4EEA-840A-B7478DA7F66D.txt"
+2026-11-15T13:09:46.2442290Z File: C66B83A2-A3CF-42E4-B334-B3CB413969CD.png, suggested name: "Export-files-zh-Hans_0_FFB97993-1FAC-4FD6-B486-48AD2C2655C6.png"
+2026-11-15T13:09:46.2442910Z 
+2026-11-15T13:09:46.2443150Z Exported 51 attachments for: PrivateMomentsUITests/testEditingFilteringDeletionAndRelaunch():
+2026-11-15T13:09:46.2443710Z File: B563E5E7-38B2-4894-AABF-9F38591B4A68, suggested name: "UI Snapshot 2026-11-15 at 12.47.29 PM"
+2026-11-15T13:09:46.2444340Z File: 010D06CA-12D7-4394-84F8-9C3D20306D43, suggested name: "Synthesized Event 2026-11-15 at 12.47.29 PM"
+2026-11-15T13:09:46.2444870Z File: E53AEC5D-F19F-48B7-A328-92B567D8EDF1, suggested name: "UI Snapshot 2026-11-15 at 12.47.27 PM"
+2026-11-15T13:09:46.2445870Z File: 567487DD-B0CC-4FB4-8BC0-B5945F3C8F6E, suggested name: "Synthesized Event 2026-11-15 at 12.47.27 PM"
+2026-11-15T13:09:46.2446650Z File: 7B1A8F69-867D-4FEA-A69A-4F94E9DEFCFB, suggested name: "UI Snapshot 2026-11-15 at 12.47.25 PM"
+2026-11-15T13:09:46.2447380Z File: 8E11EDAD-D86C-45F7-8237-BBBFE34FC2A8, suggested name: "Synthesized Event 2026-11-15 at 12.47.25 PM"
+2026-11-15T13:09:46.2448020Z File: 7983B94C-1B19-4063-BF35-9DFE002D604F, suggested name: "UI Snapshot 2026-11-15 at 12.47.22 PM"
+2026-11-15T13:09:46.2448550Z File: 4A8B49AA-CB02-436D-BD79-0CE85928802B, suggested name: "Synthesized Event 2026-11-15 at 12.47.22 PM"
+2026-11-15T13:09:46.2449420Z File: BCC94463-7C6F-48F2-ABD9-BA1FF3332AFA, suggested name: "UI Snapshot 2026-11-15 at 12.47.20 PM"
+2026-11-15T13:09:46.2450470Z File: 54917994-3C1E-4E7A-BBE0-90963C628EA2, suggested name: "Synthesized Event 2026-11-15 at 12.47.21 PM"
+2026-11-15T13:09:46.2451440Z File: 3A1960F4-8A9F-40C1-8D1B-90BC1B088601, suggested name: "UI Snapshot 2026-11-15 at 12.47.18 PM"
+2026-11-15T13:09:46.2452240Z File: E4B4F276-6C32-4956-9C2B-575D22A64ABC, suggested name: "Synthesized Event 2026-11-15 at 12.47.18 PM"
+2026-11-15T13:09:46.2452940Z File: 810DE60B-AA07-4BDF-97AA-1C88429EDABF, suggested name: "UI Snapshot 2026-11-15 at 12.47.15 PM"
+2026-11-15T13:09:46.2453490Z File: 10BD9626-1209-4D23-9E02-CBBA6C7A1936, suggested name: "Synthesized Event 2026-11-15 at 12.47.15 PM"
+2026-11-15T13:09:46.2454010Z File: 1B9417DC-2EC1-4297-B4E6-E887314150CB, suggested name: "UI Snapshot 2026-11-15 at 12.47.10 PM"
+2026-11-15T13:09:46.2454580Z File: 096E2F0B-E020-4193-9DC4-F5911099E272, suggested name: "Synthesized Event 2026-11-15 at 12.47.11 PM"
+2026-11-15T13:09:46.2455210Z File: 0BF1121E-F97C-4C13-A067-4705163A9B95, suggested name: "UI Snapshot 2026-11-15 at 12.46.59 PM"
+2026-11-15T13:09:46.2455780Z File: 2EA46A90-EB20-42EA-A22E-DC0726766B88, suggested name: "Synthesized Event 2026-11-15 at 12.46.59 PM"
+2026-11-15T13:09:46.2456760Z File: AEA14F8E-D9F5-4674-848A-86C27089749C, suggested name: "UI Snapshot 2026-11-15 at 12.46.56 PM"
+2026-11-15T13:09:46.2457340Z File: 72A63BEE-448B-4AA8-AC27-9C3A6E8312AA, suggested name: "Synthesized Event 2026-11-15 at 12.46.56 PM"
+2026-11-15T13:09:46.2457970Z File: 235CEC8A-B899-4A2C-855D-187462373C2A, suggested name: "UI Snapshot 2026-11-15 at 12.46.54 PM"
+2026-11-15T13:09:46.2458750Z File: 9ECD3203-B2D9-4EA9-BB93-76D8FFDD757B, suggested name: "Synthesized Event 2026-11-15 at 12.46.55 PM"
+2026-11-15T13:09:46.2459350Z File: 45DB9FA5-BA4C-4B81-8626-D6F7CA4B1E45, suggested name: "UI Snapshot 2026-11-15 at 12.46.50 PM"
+2026-11-15T13:09:46.2459880Z File: A66865F6-9760-46CB-947D-5C68DE4F96C5, suggested name: "Synthesized Event 2026-11-15 at 12.46.50 PM"
+2026-11-15T13:09:46.2461080Z File: 9BB35DDF-DD26-463E-B3FE-2BCC9B8D629B.txt, suggested name: "App UI hierarchy for com.example_0_5664370F-D0E5-43ED-8CFC-246BD06F325A.PrivateMoments"
+2026-11-15T13:09:46.2462750Z File: 9850A74F-7EC7-4A49-9249-EFC095582EE1, suggested name: "UI Snapshot 2026-11-15 at 12.46.49 PM"
+2026-11-15T13:09:46.2463420Z File: A1FF3353-5B2F-4332-8E9E-58B7F24FDBB1, suggested name: "UI Snapshot 2026-11-15 at 12.46.47 PM"
+2026-11-15T13:09:46.2464110Z File: DB5EA80F-C223-42DA-9926-7ED279DEEEE7, suggested name: "Synthesized Event 2026-11-15 at 12.46.47 PM"
+2026-11-15T13:09:46.2464730Z File: 80482BFE-A60B-4AB1-ABAC-55F41B1A991A, suggested name: "UI Snapshot 2026-11-15 at 12.46.43 PM"
+2026-11-15T13:09:46.2465470Z File: 34A73528-63E3-4B2E-A2AC-CEAA925EC39E, suggested name: "Synthesized Event 2026-11-15 at 12.46.44 PM"
+2026-11-15T13:09:46.2466020Z File: 309FC02C-CAF4-47DF-8AFC-7BF7D1BAA438, suggested name: "UI Snapshot 2026-11-15 at 12.46.41 PM"
+2026-11-15T13:09:46.2466640Z File: 28D1D023-BAC9-410E-9FBF-5847821E62A2, suggested name: "Synthesized Event 2026-11-15 at 12.46.41 PM"
+2026-11-15T13:09:46.2467190Z File: EFA216AB-7EC4-4AC4-B7F8-82C7F742750C, suggested name: "UI Snapshot 2026-11-15 at 12.46.36 PM"
+2026-11-15T13:09:46.2467750Z File: D50DF6F2-2DF2-423C-8402-7C6F7952DDFC, suggested name: "Synthesized Event 2026-11-15 at 12.46.37 PM"
+2026-11-15T13:09:46.2468860Z File: 0DB7B6AE-054A-49A0-B9A0-A5EC78EF7D80.txt, suggested name: "App UI hierarchy for com.example_0_8CD2AFEB-2E78-418C-97E4-C7EA3D323B43.PrivateMoments"
+2026-11-15T13:09:46.2470990Z File: 4637DEFB-E888-4D16-A729-61ECF2A1F1EA, suggested name: "UI Snapshot 2026-11-15 at 12.46.35 PM"
+2026-11-15T13:09:46.2472630Z File: ADB53E1E-6171-4E44-A440-FA6A2A9EACAE, suggested name: "Synthesized Event 2026-11-15 at 12.46.34 PM"
+2026-11-15T13:09:46.2474170Z File: 4436CC48-A6B2-40A4-BD5D-96D5EF96D175, suggested name: "Synthesized Event 2026-11-15 at 12.46.31 PM"
+2026-11-15T13:09:46.2475940Z File: C44EDF4D-B93B-44F1-9825-E6EF9DCB1F6B, suggested name: "Synthesized Event 2026-11-15 at 12.46.27 PM"
+2026-11-15T13:09:46.2478410Z File: 25B5F3D2-E322-49FA-A140-138CD322633B, suggested name: "Synthesized Event 2026-11-15 at 12.46.23 PM"
+2026-11-15T13:09:46.2480020Z File: EBDAFDEC-DDF1-4904-BD07-5B029A25502D, suggested name: "Synthesized Event 2026-11-15 at 12.46.20 PM"
+2026-11-15T13:09:46.2481620Z File: BBE107EC-BD3C-4771-ACC3-02D84D6E3843, suggested name: "Synthesized Event 2026-11-15 at 12.46.17 PM"
+2026-11-15T13:09:46.2483290Z File: B06E0E60-DF48-4FB6-9A93-EFDFD7D30C9A, suggested name: "Synthesized Event 2026-11-15 at 12.46.15 PM"
+2026-11-15T13:09:46.2484880Z File: EA834A77-BAB4-4CA1-9408-5856A7293DDB, suggested name: "Synthesized Event 2026-11-15 at 12.46.11 PM"
+2026-11-15T13:09:46.2486520Z File: 47BE2FD5-1B95-4D63-96FC-CEF03D7F9C56, suggested name: "Synthesized Event 2026-11-15 at 12.46.07 PM"
+2026-11-15T13:09:46.2488370Z File: A11F6693-1BD6-4A67-8389-9392D43678DE, suggested name: "Synthesized Event 2026-11-15 at 12.46.03 PM"
+2026-11-15T13:09:46.2489910Z File: 00C4A7F2-469C-494E-A3A9-696A431C03B1, suggested name: "Synthesized Event 2026-11-15 at 12.45.58 PM"
+2026-11-15T13:09:46.2491390Z File: AFE69C62-EEC2-4D96-9B55-1B9E85628AE2, suggested name: "Synthesized Event 2026-11-15 at 12.45.56 PM"
+2026-11-15T13:09:46.2493110Z File: 82DE3DED-EB2B-40FD-8B03-955EE4D3DC9F, suggested name: "Synthesized Event 2026-11-15 at 12.45.52 PM"
+2026-11-15T13:09:46.2494570Z File: EE0E1519-E78D-4512-831A-3D6582B6FA16, suggested name: "Synthesized Event 2026-11-15 at 12.45.47 PM"
+2026-11-15T13:09:46.2496250Z File: 733D6AD7-1BD5-4CB7-8165-4066815D518E.mp4, suggested name: "Screen Recording 2026-11-15 at 12.45.40 PM.mp4"
+2026-11-15T13:09:46.2497840Z 
+2026-11-15T13:09:46.2498520Z Exported 3 attachments for: PrivateMomentsUITests/testManualEntryTimingDateFilterAndPersistence():
+2026-11-15T13:09:46.2500240Z File: C8479112-BC71-4736-ABD0-17B28B2E6229.png, suggested name: "Long-detail-top-en_0_AC07B051-1AE3-49DC-9AA5-5749556DB1A9.png"
+2026-11-15T13:09:46.2502140Z File: C3162986-C472-4BE3-A410-6FFBE7C4BC8C.png, suggested name: "Today-filter-empty-en_0_76206578-4F41-4A46-8AA3-2CF645C2E015.png"
+2026-11-15T13:09:46.2504260Z File: BAD752D5-1CE9-4234-AE7D-7E146C0B8C65.png, suggested name: "Manual-entered-en_0_5829CF89-B7CC-4DA3-941E-AB88F2F6D2C5.png"
+2026-11-15T13:09:46.2505410Z 
+2026-11-15T13:09:46.2505830Z Exported 76 attachments for: PrivateMomentsUITests/testScreenGallery():
+2026-11-15T13:09:46.2507560Z File: 084BBA4D-9103-43A2-8995-18677BF8C544.txt, suggested name: "Lock-recovery-zh-Hans-hierarchy_0_A0719D39-1D1B-4F7B-B87F-72517213EFCC.txt"
+2026-11-15T13:09:46.2509510Z File: 378D5405-0BD7-4580-8449-D1E40B8B8690.png, suggested name: "Lock-recovery-zh-Hans_0_3800BCA2-B4F3-40FD-80E5-03A2538B4103.png"
+2026-11-15T13:09:46.2512000Z File: 13692A4F-83CE-4A83-9ECD-462DA5E6543C.png, suggested name: "Backup-warning-zh-Hans_0_30013571-EFA2-424E-B38B-869F0531C592.png"
+2026-11-15T13:09:46.2514120Z File: 61724E3B-AC16-42E0-AF5F-A85B425E2E8D.png, suggested name: "Settings-bottom-zh-Hans_0_1E042FFA-2003-4AF7-B069-8AE3396532AF.png"
+2026-11-15T13:09:46.3638490Z File: 3E1A3C3A-EB4D-4E77-B8E7-D55A0EE94AD2.png, suggested name: "Settings-values-zh-Hans_0_4EE73B58-A452-4A5A-907C-2041F4955C21.png"
+2026-11-15T13:09:46.3639430Z File: 42774B25-DA02-41B4-816C-32A0AA189EAA.png, suggested name: "Settings-top-zh-Hans_0_6AFC299E-FD6F-4C3E-92E8-3E44086475B9.png"
+2026-11-15T13:09:46.3640420Z File: 0D0EA843-4E0D-47B1-AA6C-A54502E21DD1.png, suggested name: "Detail-controls-zh-Hans_0_9880B2D2-EA33-49B0-81F7-83E39D5615D6.png"
+2026-11-15T13:09:46.3641230Z File: 58AC6738-0741-4B40-ABC6-88B5A79C31BB.png, suggested name: "Detail-top-zh-Hans_0_D8ACB9E2-DD59-414E-9350-F79C62E78645.png"
+2026-11-15T13:09:46.3642050Z File: C6B64904-F74B-4B07-A60C-C225BB203476.png, suggested name: "Timeline-filter-empty-zh-Hans_0_22A48140-3B6F-48DD-8301-301D085A4443.png"
+2026-11-15T13:09:46.3642840Z File: C8D831DF-9782-40A3-9C62-39A6E5AD74ED.png, suggested name: "Timeline-search-cleared-zh-Hans_0_8F662A69-A40C-4886-A8B8-5E82D78FB9D4.png"
+2026-11-15T13:09:46.3644170Z File: E809AACC-FB66-4B47-A2B0-CFBD5BB9AD86.png, suggested name: "Timeline-search-match-submitted-zh-Hans_0_C785EF1A-48D4-4EBB-92F0-30C811CC3D93.png"
+2026-11-15T13:09:46.3645030Z File: 4487C492-F410-40E2-BC91-C02F17CDC0EB.png, suggested name: "Timeline-search-matched-zh-Hans_0_027B7D27-44DB-4B1C-80CD-840E9EE83E7F.png"
+2026-11-15T13:09:46.3645870Z File: 6421A6BD-1F67-40E4-8577-DF69C67FA8DD.png, suggested name: "Timeline-search-submitted-zh-Hans_0_7FB859CC-ABE6-4FA7-AE1D-7BEAE1DEC556.png"
+2026-11-15T13:09:46.3646810Z File: 91AF5320-3C32-44BD-80DF-2E2FE78DA5EA.png, suggested name: "Timeline-search-empty-zh-Hans_0_0458A7B3-158D-4560-A8EB-839BE0D70FE1.png"
+2026-11-15T13:09:46.3647630Z File: 348A7A39-0A9A-4C58-8E95-4AF8CE214CCC.png, suggested name: "Timeline-search-ready-zh-Hans_0_9597E82A-8D62-4C6A-BEFE-25555CC1A009.png"
+2026-11-15T13:09:46.3648510Z File: 9913B7C9-8A0B-4D2A-8D4D-03ECDDF0A243.png, suggested name: "Timeline-zh-Hans_0_D7EA73EA-3C49-4705-8B61-4DCC5754C7CD.png"
+2026-11-15T13:09:46.3649270Z File: 7C175502-C1BA-401E-B357-F7E344E5A6A6.png, suggested name: "Today-summary-zh-Hans_0_E80D7E83-E50F-4122-9272-BD60F10B225E.png"
+2026-11-15T13:09:46.3649990Z File: C3F9700F-51DB-4D86-A8F5-650A2B91A74C.png, suggested name: "Today-filtered-zh-Hans_0_B7018EC3-66D4-47AD-BD9C-F467A4A65018.png"
+2026-11-15T13:09:46.3650750Z File: 663888B3-9754-4B05-A20C-3389DF383D2D.png, suggested name: "Calendar-zh-Hans_0_B1436D0C-78CC-4392-991B-4F457EE1B6E8.png"
+2026-11-15T13:09:46.3651510Z File: CD98A583-9E61-433C-908D-4AF8AF07F4CB.png, suggested name: "Today-saved-zh-Hans_0_F4A5AAF5-98FB-4A75-B379-185153BEAE6D.png"
+2026-11-15T13:09:46.3652480Z File: F4FD7DEC-08D0-4124-8274-72BED934A091.png, suggested name: "Save-recovery-zh-Hans_0_A0CBBEB7-554B-465D-942A-8E6BFBAE707B.png"
+2026-11-15T13:09:46.3653290Z File: D565C2E8-7D94-4248-AFDE-4448E2FA1352.png, suggested name: "Save-error-zh-Hans_0_3ADC3399-1C16-4EEF-8A1D-72ACFB8AB4D7.png"
+2026-11-15T13:09:46.3654100Z File: 22281169-F855-4330-9F07-B722DF1EC44E.png, suggested name: "Recap-controls-zh-Hans_0_B1F36AE6-F841-45B2-AF17-9ECC66C8725E.png"
+2026-11-15T13:09:46.3654990Z File: 84403C55-768E-444E-973A-279048318088.png, suggested name: "Recap-rating-zh-Hans_0_60917B5F-6D8F-42FA-85E0-956BE637026C.png"
+2026-11-15T13:09:46.3655730Z File: 1EA8AA38-4AE0-4587-BC71-B0CAC7E7E7EA.png, suggested name: "Recap-kind-zh-Hans_0_D1A53108-E26D-4645-89D1-6B442B6F3EBA.png"
+2026-11-15T13:09:46.3656630Z File: 3C96799A-35FC-4D63-A2A2-4CB1CA7A6370.png, suggested name: "Recap-top-zh-Hans_0_A4FF43DD-CB76-40E5-A1D6-C648551D31BC.png"
+2026-11-15T13:09:46.3657400Z File: A901E79B-837E-431A-85DE-51DD129BEA21.txt, suggested name: "Session-discard-confirm-zh-Hans-hierarchy_0_5470E159-284B-4576-9A54-CCEA147A8349.txt"
+2026-11-15T13:09:46.3658350Z File: 5F7F681F-97C9-4C59-B5FA-991F0A736B76.png, suggested name: "Session-discard-confirm-zh-Hans_0_BD5612BD-5BDF-4339-A457-92347CB807C3.png"
+2026-11-15T13:09:46.3659080Z File: C9AA9139-D06D-44E3-8E89-2891D4253845.png, suggested name: "Session-controls-zh-Hans_0_1AA873AD-1A78-449C-BA38-5790F00A124C.png"
+2026-11-15T13:09:46.3659790Z File: 2FFE6B6D-A7DC-449C-92FA-FE86A0DD821A.png, suggested name: "Session-zh-Hans_0_B09E10EC-4468-4017-B8D3-7E74FE7B4E07.png"
+2026-11-15T13:09:46.3660490Z File: B781EF94-E2D5-488E-A86B-B61ED14B9165.png, suggested name: "Manual-note-retained-zh-Hans_0_49DDE1E4-9F2F-4E8D-901E-1C5FEE453230.png"
+2026-11-15T13:09:46.3661330Z File: 919C7CB6-D240-4BA3-8D4E-ED387958A98E.txt, suggested name: "Manual-note-confirm-zh-Hans-hierarchy_0_418149D8-1EAF-47CF-AC47-8684D1853280.txt"
+2026-11-15T13:09:46.3662270Z File: 56FB955D-E90F-4F2C-A74E-BA7EEC75DFD7.png, suggested name: "Manual-note-confirm-zh-Hans_0_B582799A-91A8-41B1-B6F5-F1FCF76F1EAD.png"
+2026-11-15T13:09:46.3663110Z File: 568D36F1-C796-4C9E-8785-0381F7F437D8.txt, suggested name: "Manual-note-keyboard-zh-Hans-hierarchy_0_37109EC0-2C68-41AD-8352-1527FC31FD48.txt"
+2026-11-15T13:09:46.3664040Z File: 8B0E7983-74E7-429C-A008-D0F65A0064FE.png, suggested name: "Manual-note-keyboard-zh-Hans_0_AE1352DA-D016-41AA-A8C8-9ADB0FFDC22F.png"
+2026-11-15T13:09:46.3665070Z File: 53FA605A-7643-4506-B615-1ED41BA0AA93.png, suggested name: "Manual-duration-zh-Hans_0_54708AC7-A0CE-4742-8CC0-4A5B83185721.png"
+2026-11-15T13:09:46.3665750Z File: 5337CEB7-CD85-4FA6-92F3-56EA0A212991.png, suggested name: "Manual-top-zh-Hans_0_B40BEA8C-0364-41AA-80E5-2C73806804CD.png"
+2026-11-15T13:09:46.3666400Z File: 4733D218-57D5-4959-9B8A-18E1EC432FD6.png, suggested name: "Today-zh-Hans_0_5A6A55A7-0248-43C7-AEBD-F74F4FD3A4AC.png"
+2026-11-15T13:09:46.3667110Z File: 0F06B8FA-4BC4-48FB-A0C3-3F6B093A1F6F.txt, suggested name: "Lock-recovery-en-hierarchy_0_8723A04A-7262-45C0-8D4E-7C420E17FF9F.txt"
+2026-11-15T13:09:46.3667810Z File: EDD96371-6822-4FBE-8CB0-48002A6019CA.png, suggested name: "Lock-recovery-en_0_03436D65-A5A5-450F-BBC7-8E1EBDE67F1D.png"
+2026-11-15T13:09:46.3668490Z File: 73535481-D940-4E1C-98CC-4BB7CE82AA40.png, suggested name: "Backup-warning-en_0_93E1A06D-56E8-4A97-8EEF-92A01DC8AD42.png"
+2026-11-15T13:09:46.3669150Z File: F010142D-4C1F-4B31-8A5F-59A3864200BD.png, suggested name: "Settings-bottom-en_0_753143EC-173E-4755-9084-56B78B3C1410.png"
+2026-11-15T13:09:46.3669820Z File: 3FC2F455-1A11-408A-ABE2-2502A69A324C.png, suggested name: "Settings-values-en_0_B1259682-8DB6-4A81-91A7-254E63E311E0.png"
+2026-11-15T13:09:46.3670480Z File: F662D1B2-55A5-4CEA-9575-EAF9AAE97ED6.png, suggested name: "Settings-top-en_0_1DA19F62-54E7-4158-BA21-24D98B236EF1.png"
+2026-11-15T13:09:46.3671150Z File: 9786EFCA-AADA-45CC-8BCA-0857C8BA06A9.png, suggested name: "Detail-controls-en_0_E9869D43-EC6E-4F40-A737-3FAC52E34798.png"
+2026-11-15T13:09:46.3671950Z File: 57351C92-37CA-4BF6-89B0-765B69F889BF.png, suggested name: "Detail-top-en_0_561936FF-E234-42AF-B2E2-ACDDA830B2F0.png"
+2026-11-15T13:09:46.3672720Z File: 170AE7C8-7A3A-49EF-88CE-C9D53C040697.png, suggested name: "Timeline-filter-empty-en_0_A1DAA377-FCDB-482C-8CD0-C17197E2FA7A.png"
+2026-11-15T13:09:46.3673460Z File: 2A80E564-4CDB-4E2B-AB27-42A45D78E8AA.png, suggested name: "Timeline-search-cleared-en_0_884374D3-FAF5-4E54-8277-626A0CA41FD5.png"
+2026-11-15T13:09:46.3674310Z File: 2EAA675D-A95F-4787-8050-CB3A6ABF4A41.png, suggested name: "Timeline-search-match-submitted-en_0_5C50DDF0-1C44-4EBC-BEF9-87DDC12BF688.png"
+2026-11-15T13:09:46.3675140Z File: BB17A054-9904-479A-A0C8-697FF33951E5.png, suggested name: "Timeline-search-matched-en_0_DAB93F7C-3AA9-4402-9972-F2D940FD48A7.png"
+2026-11-15T13:09:46.3675950Z File: 9A9D50B5-4F04-4160-89FB-18CF0029E6C0.png, suggested name: "Timeline-search-submitted-en_0_06B6B6B5-AACC-4039-AC1F-0239BD36623B.png"
+2026-11-15T13:09:46.3676680Z File: 1D91A603-F4F6-441F-9268-713231D2975A.png, suggested name: "Timeline-search-empty-en_0_A4650D29-C85D-4FAC-911D-27B7D2E4DEC1.png"
+2026-11-15T13:09:46.3677460Z File: DFCAF925-FDFA-4860-B07D-B21516B545CD.png, suggested name: "Timeline-search-ready-en_0_524B9462-0AF7-455A-994F-85A2013673B7.png"
+2026-11-15T13:09:46.3678440Z File: 36B4FDB0-45FA-498E-9E74-E85F862CD39E.png, suggested name: "Timeline-en_0_D8536F74-7FE3-4D2A-9DA3-A4403287591A.png"
+2026-11-15T13:09:46.3679140Z File: D43843E8-A8F5-49C5-B20D-D8BFAA1EE8BE.png, suggested name: "Today-summary-en_0_CE376B36-B470-4B71-BDFF-B0FA7BC7E324.png"
+2026-11-15T13:09:46.3679890Z File: F7551973-22D1-4A19-AADC-EA293FBF2B5A.png, suggested name: "Today-filtered-en_0_119BBFA0-788B-4ACA-B026-9D8642372BCB.png"
+2026-11-15T13:09:46.3680600Z File: B10EBEA9-9F51-42A8-892B-5C5A5A073A90.png, suggested name: "Calendar-en_0_AAFD4B40-912A-4AE0-AB72-C7B70F09B994.png"
+2026-11-15T13:09:46.3681330Z File: B3FB8131-813B-4A13-AB66-A61D0FE9EDC0.png, suggested name: "Today-saved-en_0_1AFC6731-E322-4BE1-888D-9C2242C7B2E6.png"
+2026-11-15T13:09:46.3683280Z File: 2AB7FB7E-24F2-467A-86BA-6A8D6AA4DB5D.png, suggested name: "Save-recovery-en_0_AFE04D72-5DE4-4F7C-B1D3-163109D96A6C.png"
+2026-11-15T13:09:46.3684260Z File: 9E17000E-4486-44D6-AAEE-14CFCEDCA6DF.png, suggested name: "Save-error-en_0_64730B07-4A14-4D2B-9B89-3E46A68A4C14.png"
+2026-11-15T13:09:46.3685020Z File: 7641E579-A083-4CF1-8DB7-179876F5072B.png, suggested name: "Recap-controls-en_0_E3CD7BF1-A866-4C3B-81EB-4DA54AE13FB2.png"
+2026-11-15T13:09:46.3686140Z File: 029DD332-DFA5-4D07-BD89-54879D8AC7E6.png, suggested name: "Recap-rating-en_0_EE5470E0-C07A-4414-9064-3D3F8CC121AB.png"
+2026-11-15T13:09:46.3686910Z File: 74FD214D-9E2F-41DE-B130-2C4B7D573FEC.png, suggested name: "Recap-kind-en_0_2BA2018A-4577-44AC-8A10-7BDB2114AF18.png"
+2026-11-15T13:09:46.3687620Z File: A53EC07B-CD06-4B2D-BEF3-2EF08C336E83.png, suggested name: "Recap-top-en_0_76ED702E-CD8A-4FCC-867E-00BC72848269.png"
+2026-11-15T13:09:46.3688350Z File: 1C13FFE6-4E9A-4162-AAB2-D16CF7A5737F.txt, suggested name: "Session-discard-confirm-en-hierarchy_0_87C63213-C8AE-4D0B-89E9-F35307E2DC5B.txt"
+2026-11-15T13:09:46.3689700Z File: 31E3F21A-4B39-4B4A-A145-AB58B7FE43B3.png, suggested name: "Session-discard-confirm-en_0_D645ED47-F6B9-470A-8A19-59C24990E0AB.png"
+2026-11-15T13:09:46.3690460Z File: FC067A04-9872-44A0-902E-8847CFF85967.png, suggested name: "Session-controls-en_0_CE1818FA-4653-4D75-A799-42ECD79DEF94.png"
+2026-11-15T13:09:46.3691210Z File: EDE39554-B001-48C6-A852-04D1F8BF53F0.png, suggested name: "Session-en_0_2566789F-98E0-4D13-AAD7-0F123457B5F0.png"
+2026-11-15T13:09:46.3691940Z File: A126696D-58EC-4721-8BFE-A051A93D5048.png, suggested name: "Manual-note-retained-en_0_3243FF2B-FBC4-49EC-972C-512850C53244.png"
+2026-11-15T13:09:46.3692850Z File: 02F2A592-51B7-4330-8B39-A96E6EF53577.txt, suggested name: "Manual-note-confirm-en-hierarchy_0_B1DB360B-34D4-4FD4-BDFE-2F5ECC3821C0.txt"
+2026-11-15T13:09:46.3693730Z File: A980E39D-EC6E-4E52-99F5-0FE747729A72.png, suggested name: "Manual-note-confirm-en_0_F8820765-D163-40D2-B969-667256E9795B.png"
+2026-11-15T13:09:46.3694910Z File: 043D6B08-C67C-4E8B-A87F-A6A95B2C0B1B.txt, suggested name: "Manual-note-keyboard-en-hierarchy_0_98B66F0B-9EFF-4E01-B6B6-8A31CDD9BEA6.txt"
+2026-11-15T13:09:46.3695680Z File: 4C6D97FE-3A96-43F8-8182-44B1C6FAF165.png, suggested name: "Manual-note-keyboard-en_0_4F9F51B6-0595-471F-802F-8033FBFF658F.png"
+2026-11-15T13:09:46.3696440Z File: 506FF9A3-ECEA-47B8-AABE-E27D5314446B.png, suggested name: "Manual-duration-en_0_8B52CD24-DDAA-4277-BE15-19B4012E4EDD.png"
+2026-11-15T13:09:46.3697210Z File: C49487D5-E382-4C14-8165-086591C771E9.png, suggested name: "Manual-top-en_0_40D7E4DF-DDC4-4040-8F76-8DB6A51C9385.png"
+2026-11-15T13:09:46.3697920Z File: 1CAB538E-47EB-41E6-8590-E663F41BF9DC.png, suggested name: "Today-en_0_BEF0B717-9F10-4374-9341-1F4A37CEAD1A.png"
+2026-11-15T13:09:46.3698300Z 
+2026-11-15T13:09:46.3698620Z Skipped export for PrivateMomentsUITests/testSessionAndRecapDiscardConfirmations(): no matching attachments
+2026-11-15T13:09:46.3699040Z 
+2026-11-15T13:09:46.3699340Z Generated manifest file with attachment details: /Users/runner/work/_temp/PrivateMomentsUIScreenshots/manifest.json
+2026-11-15T13:09:46.3862860Z Exported 82 PNG attachment(s).

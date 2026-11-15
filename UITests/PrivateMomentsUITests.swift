@@ -599,6 +599,7 @@ final class PrivateMomentsUITests: XCTestCase {
         let viewport = scroll.frame.intersection(app.windows.firstMatch.frame)
         XCTAssertGreaterThan(viewport.height, app.windows.firstMatch.frame.height * 0.65,
             "A long result must not reserve almost half the screen above the scroll viewport.")
+        if backupActionsFitWithFeedback(language: language, app: app) { return }
         var drags = 0
         while drags < 3 && notice.frame.maxY > viewport.minY {
             scroll.swipeUp()
@@ -610,6 +611,29 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
         capture("Import-feedback-scrolled-\(language)", app)
         print("Verified scrollable backup feedback. Locale: \(language); viewport: \(viewport); drags: \(drags); notice: \(notice.frame).")
+    }
+
+    private func backupActionsFitWithFeedback(language: String, app: XCUIApplication) -> Bool {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return false }
+        let window = app.windows.firstMatch.frame
+        let navigation = app.navigationBars.firstMatch
+        let tab = app.tabBars.firstMatch
+        let top = navigation.exists ? navigation.frame.maxY : window.minY
+        let bottom = tab.exists && tab.frame.midY > window.midY ? tab.frame.minY : window.maxY
+        let bounds = CGRect(x: window.minX, y: top, width: window.width, height: bottom - top)
+        let actions = [app.buttons["settings.export"], app.buttons["settings.restore"], app.buttons["settings.deleteAll"]]
+        let frames = actions.map(\.frame)
+        guard zip(actions, frames).allSatisfy({ action, frame in
+            action.exists && action.isHittable && !frame.isEmpty && bounds.contains(frame)
+        }) else { return false }
+        let notice = app.staticTexts["settings.backupStatus"]
+        XCTAssertTrue(bounds.contains(notice.frame), "The complete retained message must also fit.")
+        XCTAssertTrue(frames.allSatisfy { $0.minY >= notice.frame.maxY },
+            "All backup and deletion actions must remain below the complete message.")
+        XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
+        capture("Import-feedback-all-actions-\(language)", app)
+        print("Verified backup actions fit with retained feedback. Locale: \(language); viewport: \(bounds); export: \(frames[0]); restore: \(frames[1]); delete: \(frames[2]); notice: \(notice.frame).")
+        return true
     }
 
     private func assertValueLayout(title: XCUIElement, value: XCUIElement, stacked: Bool) {
@@ -1044,6 +1068,12 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
         tap(app.buttons["timeline.clearFilters"], in: app)
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 1)
+        let keyboardGone = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !app.keyboards.firstMatch.exists
+        }, object: nil)
+        let clearResult = XCTWaiter.wait(for: [keyboardGone], timeout: 5)
+        if clearResult != .completed { captureFailure("Timeline-clear-keyboard-unavailable", app) }
+        XCTAssertEqual(clearResult, .completed)
         XCTAssertFalse(app.keyboards.firstMatch.exists, "Clearing filters should also dismiss search input.")
         tap(search, in: app)
         search.typeText(query)
@@ -1617,6 +1647,12 @@ final class PrivateMomentsUITests: XCTestCase {
         let clearedField = XCTWaiter.wait(for: [emptyField], timeout: 5)
         if clearedField != .completed { captureFailure("Timeline-native-clear-failed-\(language)", app) }
         XCTAssertEqual(clearedField, .completed)
+        // Native iPad search can release focus when its text-clear action
+        // collapses the expanded field. Resume editing with a real field tap.
+        waitForStableFrame(editingSearch, requireHittable: true,
+            message: "The cleared native search field must settle before editing resumes.")
+        editingSearch.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
         editingSearch.typeText("Calm")
         guard editingSearch.value as? String == "Calm" else {
             captureFailure("Timeline-replacement-query-incorrect-\(language)", app)

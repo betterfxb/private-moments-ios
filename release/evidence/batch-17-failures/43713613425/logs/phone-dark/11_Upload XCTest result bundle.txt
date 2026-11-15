@@ -1,0 +1,45 @@
+﻿2026-11-15T12:51:38.1017340Z ##[group]Run actions/upload-artifact@v7
+2026-11-15T12:51:38.1018160Z with:
+2026-11-15T12:51:38.1018740Z   name: private-moments-xcresult-phone-dark
+2026-11-15T12:51:38.1019670Z   path: /Users/runner/work/_temp/PrivateMoments.xcresult
+2026-11-15T12:51:38.1020470Z   if-no-files-found: ignore
+2026-11-15T12:51:38.1020990Z   retention-days: 7
+2026-11-15T12:51:38.1021490Z   compression-level: 6
+2026-11-15T12:51:38.1022030Z   overwrite: false
+2026-11-15T12:51:38.1022540Z   include-hidden-files: false
+2026-11-15T12:51:38.1048290Z   archive: true
+2026-11-15T12:51:38.1049230Z env:
+2026-11-15T12:51:38.1049970Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-15T12:51:38.1051090Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=2FEACF5E-886C-4FB8-A137-C571FBA5CF5C
+2026-11-15T12:51:38.1052190Z ##[endgroup]
+2026-11-15T12:51:38.8453450Z With the provided path, there will be 1262 files uploaded
+2026-11-15T12:51:38.8453970Z Artifact name is valid!
+2026-11-15T12:51:38.8543990Z Root directory input is valid!
+2026-11-15T12:51:38.9588820Z Uploading artifact: private-moments-xcresult-phone-dark.zip
+2026-11-15T12:51:38.9619700Z Beginning upload of artifact content to blob storage
+2026-11-15T12:51:40.0636190Z Uploaded bytes 8388608
+2026-11-15T12:51:40.4438430Z Uploaded bytes 16777216
+2026-11-15T12:51:40.7386650Z Uploaded bytes 25165824
+2026-11-15T12:51:41.1795540Z Uploaded bytes 33554432
+2026-11-15T12:51:41.5452360Z Uploaded bytes 41943040
+2026-11-15T12:51:42.0633580Z Uploaded bytes 50331648
+2026-11-15T12:51:42.1952150Z Uploaded bytes 58720256
+2026-11-15T12:51:42.5699850Z Uploaded bytes 67108864
+2026-11-15T12:51:42.8026120Z Uploaded bytes 75497472
+2026-11-15T12:51:43.1997550Z Uploaded bytes 83886080
+2026-11-15T12:51:43.4838740Z Uploaded bytes 92274688
+2026-11-15T12:51:43.9088000Z Uploaded bytes 100663296
+2026-11-15T12:51:44.3771210Z Uploaded bytes 109051904
+2026-11-15T12:51:44.6363480Z Uploaded bytes 117440512
+2026-11-15T12:51:45.0363910Z Uploaded bytes 125829120
+2026-11-15T12:51:45.4587740Z Uploaded bytes 134217728
+2026-11-15T12:51:45.9228180Z Uploaded bytes 142606336
+2026-11-15T12:51:46.3054260Z Uploaded bytes 150994944
+2026-11-15T12:51:46.6785680Z Uploaded bytes 159383552
+2026-11-15T12:51:47.4291150Z Uploaded bytes 162401018
+2026-11-15T12:51:47.4735040Z Finished uploading artifact content to blob storage!
+2026-11-15T12:51:47.4746250Z SHA256 digest of uploaded artifact is c6a3730d429a28657a2b57f3d5cea5a932a54a60a6dbf1792ed2ac5e69af6c85
+2026-11-15T12:51:47.4746970Z Finalizing artifact upload
+2026-11-15T12:51:47.8857330Z Artifact private-moments-xcresult-phone-dark successfully finalized. Artifact ID 14162422539
+2026-11-15T12:51:47.8899920Z Artifact private-moments-xcresult-phone-dark has been successfully uploaded! Final size is 162401018 bytes. Artifact ID is 14162422539
+2026-11-15T12:51:47.8901630Z Artifact download URL: https://github.com/betterfxb/private-moments-ios/actions/runs/43713613425/artifacts/14162422539
