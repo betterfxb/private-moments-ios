@@ -1643,17 +1643,32 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(title.label, language == "en" ? "No matching moments" : "没有找到匹配记录")
         XCTAssertEqual(message.label, language == "en"
             ? "Try another word or change the selected filter." : "试试其他关键词，或更改当前筛选条件。")
-        let viewport = app.windows.firstMatch.frame
-        let navigation = app.navigationBars.firstMatch
-        let top = navigation.exists ? max(viewport.minY, navigation.frame.maxY) : viewport.minY
-        let tab = app.tabBars.firstMatch
-        let bottom = tab.exists && tab.frame.midY > viewport.midY ? tab.frame.minY : viewport.maxY
-        let section = title.frame.union(message.frame)
-        let visible = !section.isEmpty && section.minY >= top && section.maxY <= bottom &&
-            section.minX >= viewport.minX && section.maxX <= viewport.maxX
-        if !visible { captureFailure("Timeline-submitted-explanation-obscured-\(language)", app) }
-        XCTAssertTrue(visible, "The full empty-result title and explanation must be visible after submission without test scrolling.")
-        print("Verified submitted explanation visibility. Locale: \(language); section: \(section); top: \(top); bottom: \(bottom).")
+        func geometry() -> (section: CGRect, top: CGFloat, bottom: CGFloat, viewport: CGRect) {
+            let viewport = app.windows.firstMatch.frame
+            let navigation = app.navigationBars.firstMatch
+            let top = navigation.exists ? max(viewport.minY, navigation.frame.maxY) : viewport.minY
+            let tab = app.tabBars.firstMatch
+            let bottom = tab.exists && tab.frame.midY > viewport.midY ? tab.frame.minY : viewport.maxY
+            return (title.frame.union(message.frame), top, bottom, viewport)
+        }
+        func isVisible(_ value: (section: CGRect, top: CGFloat, bottom: CGFloat, viewport: CGRect)) -> Bool {
+            !value.section.isEmpty && value.section.minY >= value.top && value.section.maxY <= value.bottom &&
+                value.section.minX >= value.viewport.minX && value.section.maxX <= value.viewport.maxX
+        }
+        // Keyboard disappearance can precede the product's scroll/layout
+        // update. Await the real postcondition, not a delay or a test gesture.
+        let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            title.exists && message.exists && !app.keyboards.firstMatch.exists && isVisible(geometry())
+        }, object: nil)
+        let ready = XCTWaiter.wait(for: [settled], timeout: 10)
+        let actual = geometry()
+        if ready != .completed || !isVisible(actual) {
+            print("Submitted explanation not ready. Locale: \(language); wait: \(ready.rawValue); actual: \(actual).")
+            captureFailure("Timeline-submitted-explanation-obscured-\(language)", app)
+        }
+        XCTAssertEqual(ready, .completed, "Submission must reveal the complete explanation without test scrolling.")
+        XCTAssertTrue(isVisible(actual), "The full empty-result title and explanation must stay above the bottom tabs.")
+        print("Verified submitted explanation visibility. Locale: \(language); section: \(actual.section); top: \(actual.top); bottom: \(actual.bottom).")
     }
 
     private func revealTimelineSearch(in app: XCUIApplication) -> XCUIElement {
