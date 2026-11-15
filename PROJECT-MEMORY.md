@@ -31,6 +31,8 @@
 
 远近滚动文件定向43652828407／9b74274尚未执行至新手势，在真实本机位置单击后导航根15秒未出现，9项单元通过、UI失败。原图Browse本机位置Selected，DocumentManager内部有PreventChangeAssertion超时，原因未独立证明；1张原图、17文本、完整日志共44附件封存。下一测试仅让原有90秒浏览预算贯穿侧栏和真实目录根，不重置或重复点击；完整预算仍失败时记录服务阻塞，不能盲目重跑或宣称完整回归通过。
 
+共享预算文件定向43655072648／657596b通过：9单元、1文件UI1010.612秒，9张原图全部核验及打开，重选0次；原有16次内远近滚动可到达删除，完整回路／重启精确值通过。随后完整43659541214／657596b仍实际failure，仅phone-dark图库在Done后查询已消失Keyboard触发快照No matches，文件回路通过，其他三配置成功；12张失败配置PNG核验、2张实际打开及完整失败任务日志／层级已封存。下一仅修订dismissRecapKeyboard手机等待为单次exists状态、保留5秒和iPad离屏行为；phone-dark双语输入定向通过并检查原图后再完整回归。复用旧文件定向须逐字核对去除此函数后整个UITest内容和生产路径未变，来源分列，不提前更新最近完整验收。
+
 ## 最近完整四配置验收（第十三批）
 
 第十三批按[计划](release/BATCH-13-PLAN.md)完成。最终源码`fb78856ca48a43eb1739d5c2c6198d973a519246`；[报告](release/UX-ACCEPTANCE-13.md)、[原图](release/evidence/batch-13/index.html)、[收据](release/evidence/batch-13/verification.json)包含每次运行的精确源码与实际覆盖。

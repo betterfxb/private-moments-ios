@@ -1275,13 +1275,17 @@ final class PrivateMomentsUITests: XCTestCase {
             // iPad can retain a non-hittable Keyboard with all keys below
             // the screen after dismissal. Existence is not visibility.
             let remainingKeyboard = app.keyboards.firstMatch
+            // Phone keyboards leave the hierarchy. Observe that single state
+            // instead of resolving isHittable after an existence snapshot
+            // that may already be stale during the dismissal animation.
+            if UIDevice.current.userInterfaceIdiom != .pad { return !remainingKeyboard.exists }
             return !remainingKeyboard.exists || !remainingKeyboard.isHittable
         }, object: nil)
         let result = XCTWaiter.wait(for: [closed], timeout: 5)
         if result != .completed {
-            let keyboard = app.keyboards.firstMatch
-            print("Keyboard dismissal diagnostic: locale=\(language), exists=\(keyboard.exists), frame=\(keyboard.frame), hittable=\(keyboard.isHittable), action=\(done.frame), window=\(app.windows.firstMatch.frame).")
-            print("Keyboard hierarchy after Done: \(keyboard.debugDescription)")
+            // The keyboard or its Done accessory may already have vanished.
+            // Capture the whole current screen/tree without querying them.
+            print("Keyboard dismissal diagnostic: locale=\(language), wait result=\(result).")
             captureFailure("Keyboard-dismissal-incomplete-\(language)", app)
         }
         XCTAssertEqual(result, .completed, "Done must hide the operable software keyboard after the actual tap.")
