@@ -49,7 +49,7 @@ struct SettingsView: View {
                         // Bring new feedback into view once. It remains in the
                         // scroll content, so reading it never pins a long block
                         // above every subsequent Settings action.
-                        proxy.scrollTo("settings.top", anchor: .top)
+                        proxy.scrollTo("settings.backupFeedback", anchor: .top)
                     }
                 }
         }
@@ -89,10 +89,6 @@ struct SettingsView: View {
     private var settingsScrollContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
-                if let backupStatus, backupStatus.isBrief {
-                    backupBanner(backupStatus)
-                }
-
                 VStack(alignment: .leading, spacing: 8) {
                     PrivateBadge()
                     Text("Your space, your choice.")
@@ -128,6 +124,11 @@ struct SettingsView: View {
                             onRetry: store.reload
                         )
                     }
+                }
+
+                if let backupStatus, backupStatus.isBrief {
+                    backupBanner(backupStatus)
+                        .id("settings.backupFeedback")
                 }
 
                 settingsCard(title: "DATA MANAGEMENT") {
@@ -304,7 +305,6 @@ struct SettingsView: View {
             .padding(.bottom, 30)
             .frame(maxWidth: Self.contentMaxWidth)
             .frame(maxWidth: .infinity)
-            .id("settings.top")
         }
         .accessibilityIdentifier("settings.scroll")
     }

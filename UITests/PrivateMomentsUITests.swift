@@ -1565,11 +1565,33 @@ final class PrivateMomentsUITests: XCTestCase {
         let editingSearch = revealTimelineSearch(in: app)
         tap(editingSearch, in: app)
         XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
-        editingSearch.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: query.count) + "Calm")
+        XCTAssertEqual(editingSearch.value as? String, query)
+        // A new field tap can place the insertion point inside the old query.
+        // Use its real Clear action instead of assuming the cursor is at end.
+        guard let nativeClear = nativeControl(["Clear text", "清除文本", "清除文字"], app: app,
+            timeout: 5, surface: editingSearch, enabledAction: true) else {
+            captureFailure("Timeline-native-clear-unavailable-\(language)", app)
+            return XCTFail("The actual search field must expose its native text-clear action.")
+        }
+        nativeClear.tap()
+        let emptyField = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            let value = editingSearch.value as? String
+            return value == "" || value == editingSearch.placeholderValue
+        }, object: nil)
+        let clearedField = XCTWaiter.wait(for: [emptyField], timeout: 5)
+        if clearedField != .completed { captureFailure("Timeline-native-clear-failed-\(language)", app) }
+        XCTAssertEqual(clearedField, .completed)
+        editingSearch.typeText("Calm")
+        guard editingSearch.value as? String == "Calm" else {
+            captureFailure("Timeline-replacement-query-incorrect-\(language)", app)
+            return XCTFail("Native clear followed by actual typing must produce exactly Calm.")
+        }
         let matched = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             total.exists && total.label == one
         }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [matched], timeout: 10), .completed)
+        let matchedResult = XCTWaiter.wait(for: [matched], timeout: 10)
+        if matchedResult != .completed { captureFailure("Timeline-match-update-unavailable-\(language)", app) }
+        XCTAssertEqual(matchedResult, .completed)
         XCTAssertEqual(editingSearch.value as? String, "Calm")
         assertSearchCountAboveKeyboard(total, app: app)
         capture("Timeline-search-matched-\(language)", app)
