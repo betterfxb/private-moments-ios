@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 private enum MomentFilter: String, CaseIterable, Identifiable {
     case all = "All"
@@ -17,6 +18,7 @@ struct MomentTimelineView: View {
     @State private var searchText = ""
     @State private var filter: MomentFilter = .all
     @State private var isSearchPresented = false
+    @FocusState private var isSearchFocused: Bool
 
     private var query: String { searchText.trimmingCharacters(in: .whitespacesAndNewlines) }
     private var hasActiveFilters: Bool { filter != .all || !query.isEmpty }
@@ -119,12 +121,17 @@ struct MomentTimelineView: View {
                     proxy.scrollTo("timeline.results", anchor: .top)
                 }
             }
+            .onChange(of: isSearchFocused) { _, focused in
+                if focused, store.isStorageAvailable {
+                    proxy.scrollTo("timeline.results", anchor: .top)
+                }
+            }
         }
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Your moments")
         .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $searchText, isPresented: $isSearchPresented, prompt: "Search moments")
-        .onSubmit(of: .search) { isSearchPresented = false }
+        .modifier(TimelineSearchSubmission(focus: $isSearchFocused))
         .task { store.reload() }
     }
 
@@ -193,4 +200,25 @@ private struct MomentDayGroup: Identifiable {
     let date: Date
     let moments: [Moment]
     var id: Date { date }
+}
+
+/// Ending search presentation resets the native query. Submission should only
+/// release input focus so the result and editable query remain intact.
+private struct TimelineSearchSubmission: ViewModifier {
+    var focus: FocusState<Bool>.Binding
+
+    func body(content: Content) -> some View {
+        if #available(iOS 18.0, *) {
+            content
+                .searchFocused(focus)
+                .onSubmit(of: .search) { focus.wrappedValue = false }
+        } else {
+            content.onSubmit(of: .search) {
+                // iOS 17 has no searchFocused binding. Ask the active responder
+                // to release focus without ending or clearing native search.
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                    to: nil, from: nil, for: nil)
+            }
+        }
+    }
 }

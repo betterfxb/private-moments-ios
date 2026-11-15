@@ -1554,7 +1554,10 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [submitted], timeout: 10), .completed,
             "Submitting search must hide the keyboard while preserving the zero-result query.")
         let submittedSearch = revealTimelineSearch(in: app)
-        XCTAssertEqual(submittedSearch.value as? String, query)
+        guard submittedSearch.value as? String == query else {
+            captureFailure("Timeline-query-not-retained-\(language)", app)
+            return XCTFail("The actual native search field must retain the submitted query.")
+        }
         let help = app.staticTexts[language == "en"
             ? "Try another word or change the selected filter." : "试试其他关键词，或更改当前筛选条件。"]
         revealFully(from: help, through: help, in: app)

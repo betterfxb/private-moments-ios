@@ -35,3 +35,5 @@ MomentTimelineView本地状态负责原生searchable、查询和类型筛选，M
 
 - 任务1完成：工作区仅design未跟踪，审查16批原图、搜索／Settings状态和既有文件／键盘几何断言；确认布局占位事实及上述局部修改边界。
 - 任务2完成本地检查：搜索激活时计数／结果前置，辅助筛选与完整范围保留在后方；空状态去除输入时的装饰占位，Search提交请求结束搜索激活，查询保留待实际原生断言。设置brief反馈进入同一ScrollView并在出现时滚到顶部，可滚离而不自动关闭；错误恢复动作保持。新增实际键盘上方完整计数几何、真实Search提交／空查询保留、完整说明阅读及反馈滚动归属／视口／滚离／保留断言，真实文件数据校验不减。43项现有工具测试、231键本地化、109对象项目及发行审计通过，已有Bundle ID／发布信息占位警告保留，差异检查通过。原生构建、布局和操作尚待定向验证。
+- 任务3首轮失败：[43674872279](https://github.com/betterfxb/private-moments-ios/actions/runs/43674872279)／48f0d0b于04:00:55 UTC唯一派发，实际SE3深色最大辅助字号。原生构建成功，图库452.196秒失败于Search提交后原生输入框值为Search moments占位而非no-matching-mood；之前0／1条计数几何均为y160、高58.5，键盘主体上缘451，原图也确认计数完整位于含候选栏的键盘上方。0条轮询曾完成，但不能据瞬时计数推断查询持久保留。24张PNG精确核验，3张英文时间线／ready／empty原图实际打开，完整日志／层级共52附件[封存](evidence/batch-17-failures/43674872279/verification.json)。没有提交后物理PNG，旧图不冒充提交后的现场；尚未执行到中文或文件定向。
+- 局部修正方案：Search提交只移除焦点，不再设置isSearchPresented=false（本次实际会重置原生查询）。iOS18及以上使用[searchFocused](https://developer.apple.com/documentation/swiftui/view/searchfocused(_:))绑定，重新聚焦时将计数滚至顶部；iOS17保留最小系统响应链resignFirstResponder兼容分支，不结束搜索或清空查询。查询保留断言不弱化，并在该值错误时先捕获完整屏幕和树。原26.2定向须在新源码重新执行；iOS17兼容分支仅能由构建检查，旧运行时实际交互仍未覆盖。
