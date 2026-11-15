@@ -1,0 +1,186 @@
+Attributes: Application, 0x10b48d8d0, pid: 12203, label: 'Private Moments'
+Element subtree:
+ →Application, 0x10b48d8d0, pid: 12203, label: 'Private Moments'
+    Window (Main), 0x10b48bf30, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x10b48e9c0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x10b48eae0, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x10b48e720, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x10b48e840, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x10b48ec00, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x10b48ed20, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x10b48ee40, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x10b48ef60, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x10b48f080, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x10b6bf840, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x10b6c04a0, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x10b6c0080, {{0.0, 20.0}, {375.0, 54.0}}, identifier: 'Add past moment'
+                              Other, 0x10b6bfc60, {{20.0, 24.0}, {87.5, 36.0}}, identifier: 'recap.cancel', label: 'Cancel'
+                                Other, 0x10b6a8fa0, {{20.0, 24.0}, {87.5, 36.0}}
+                                  Button, 0x10b6bf420, {{20.0, 24.0}, {87.5, 36.0}}, identifier: 'recap.cancel', label: 'Cancel'
+                              StaticText, 0x10b6a3550, {{123.5, 29.0}, {170.0, 26.0}}, label: 'Add past moment'
+                              Other, 0x10b69f420, {{311.0, 20.0}, {44.0, 44.0}}, identifier: 'recap.saveToolbar', label: 'Save privately'
+                                Other, 0x10b6bf000, {{311.0, 20.0}, {44.0, 44.0}}
+                                  Button, 0x10b692e40, {{311.0, 20.0}, {44.0, 44.0}}, identifier: 'recap.saveToolbar', label: 'Save privately', Selected
+                            Other, 0x11792dc80, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x117937710, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x1179370f0, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x117936cd0, {{0.0, 0.0}, {375.0, 667.0}}
+                                    ScrollView, 0x1179368b0, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x117935e70, {{0.0, -3002.0}, {375.0, 3649.0}}
+                                        StaticText, 0x117935a50, {{20.0, -2984.0}, {318.5, 133.0}}, label: 'A moment to remember'
+                                        StaticText, 0x117935630, {{20.0, -2845.0}, {335.0, 116.5}}, label: 'Nov 15, 2026 at 6:34 AM · 1 min'
+                                        StaticText, 0x117935210, {{36.0, -2688.5}, {223.5, 125.5}}, label: 'Date and duration'
+                                        Button, 0x11792cfe0, {{36.0, -2551.0}, {303.0, 273.0}}, identifier: 'recap.date.open', label: 'Occurrence date, November 15, 2026'
+                                          StaticText, 0x117930050, {{58.0, -2544.0}, {236.5, 125.5}}, label: 'Occurrence date'
+                                          StaticText, 0x117936290, {{58.0, -2410.5}, {245.0, 125.5}}, label: 'November 15, 2026'
+                                        StaticText, 0x1179363b0, {{36.0, -2266.0}, {218.0, 63.5}}, label: 'Start time'
+                                        DatePicker, 0x1179364d0, {{36.0, -2190.5}, {217.0, 77.5}}, identifier: 'recap.time', label: 'Start time'
+                                          Button, 0x117937f50, {{36.0, -2190.5}, {217.0, 77.5}}, label: 'Time Picker', value: 6:34 AM
+                                        Button, 0x117938070, {{36.0, -2101.0}, {265.5, 77.5}}, identifier: 'recap.yesterday', label: 'Yesterday'
+                                        StaticText, 0x117938190, {{36.0, -2011.5}, {180.0, 63.5}}, label: 'Minutes'
+                                        TextField, 0x1179382b0, {{48.0, -1932.0}, {279.0, 65.0}}, identifier: 'recap.minutes', placeholderValue: 'Minutes', value: 1
+                                        StaticText, 0x1179383d0, {{36.0, -1845.0}, {197.5, 63.5}}, label: 'Seconds'
+                                        TextField, 0x1179384f0, {{48.0, -1765.5}, {279.0, 65.0}}, identifier: 'recap.seconds', placeholderValue: 'Seconds', value: 0
+                                        StaticText, 0x117938610, {{36.0, -1634.5}, {286.5, 125.5}}, label: 'How are you feeling?'
+                                        StaticText, 0x117938730, {{36.0, -1047.0}, {283.5, 125.5}}, identifier: 'recap.kind.title', label: 'What kind of moment?'
+                                        Button, 0x117938850, {{36.0, -911.5}, {303.0, 66.5}}, identifier: 'recap.kind.Together', label: 'Together', Selected
+                                          Image, 0x117938970, {{67.5, -899.0}, {42.5, 41.5}}, identifier: 'checkmark', label: 'Selected', Selected
+                                          StaticText, 0x117938a90, {{122.8, -907.5}, {191.0, 58.5}}, label: 'Together'
+                                        Button, 0x117938bb0, {{36.0, -836.0}, {303.0, 66.5}}, identifier: 'recap.kind.Solo', label: 'Solo'
+                                          Image, 0x117938cd0, {{115.0, -825.0}, {42.5, 45.0}}, identifier: 'person', label: 'person'
+                                          StaticText, 0x117938df0, {{170.5, -832.0}, {95.5, 58.5}}, label: 'Solo'
+                                        StaticText, 0x117938f10, {{36.0, -728.5}, {224.5, 125.5}}, identifier: 'recap.rating.title', label: 'Your reflection'
+                                        StaticText, 0x117939030, {{36.0, -397.0}, {248.5, 63.5}}, label: 'A few tags'
+                                        Button, 0x117939150, {{35.5, -324.0}, {176.5, 70.5}}, identifier: 'recap.tag.Relaxed', label: 'Relaxed'
+                                        Button, 0x117939270, {{35.5, -246.5}, {234.0, 70.5}}, identifier: 'recap.tag.Connected', label: 'Connected', Selected
+                                        Button, 0x117939390, {{35.5, -169.0}, {251.5, 70.5}}, identifier: 'recap.tag.Better sleep', label: 'Better sleep'
+                                        StaticText, 0x10b6a1c90, {{36.0, -58.0}, {282.0, 63.5}}, label: 'Private note'
+                                        StaticText, 0x1179394b0, {{36.0, 29.5}, {209.5, 102.5}}, label: 'Included in backups'
+                                        TextView, 0x1179395d0, {{44.0, 149.0}, {287.0, 204.0}}, identifier: 'recap.note', label: 'Private note', value: Test draft
+Keep this, Keyboard Focused
+                                          Other, 0x10b6a3130, {{44.0, 149.0}, {0.0, 0.0}}, identifier: '_UITextSelectionRangeAdjustmentContainerView'
+                                            Other, 0x10b6b3070, {{44.0, 149.0}, {0.0, 0.0}}, identifier: 'com.apple.text.grabber.leading'
+                                              Other, 0x10b6a2d10, {{36.8, 135.5}, {16.5, 16.5}}
+                                              Other, 0x10b6a03d0, {{44.0, 149.0}, {2.0, 0.0}}
+                                            Other, 0x10b6a1870, {{44.0, 149.0}, {0.0, 0.0}}, identifier: 'com.apple.text.grabber.leading'
+                                              Other, 0x10b6a20b0, {{36.8, 135.5}, {16.5, 16.5}}
+                                              Other, 0x10b6b6a10, {{44.0, 149.0}, {2.0, 0.0}}
+                                          Other, 0x10b6a1450, {{298.0, 149.0}, {30.0, 204.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                            Other, 0x10b6b4390, {{325.0, 276.0}, {3.0, 74.0}}
+                                        StaticText, 0x10b6b47b0, {{50.0, 370.0}, {229.0, 51.5}}, identifier: 'recap.noteCount', label: 'Private note, 20 of 10,000 characters'
+                                        Button, 0x10b6b61d0, {{20.0, 461.5}, {335.0, 155.5}}, identifier: 'recap.save', label: 'Save privately'
+                                          Image, 0x10b6b5db0, {{58.0, 486.0}, {47.0, 45.5}}, identifier: 'checkmark', label: 'Selected', Selected
+                                          StaticText, 0x10b69e160, {{20.0, 461.5}, {335.0, 155.5}}, label: 'Save privately'
+                                        Other, 0x10b6a28f0, {{0.0, 0.0}, {0.0, 0.0}}
+                                        Other, 0x10b6b2030, {{0.0, 0.0}, {0.0, 0.0}}
+                                      Other, 0x10b6c3a00, {{0.0, 0.0}, {375.0, 667.0}}
+                                        Other, 0x10b6c3b20, {{0.0, 0.0}, {375.0, 128.8}}
+                                      Other, 0x10b6c3c40, {{0.0, 0.0}, {375.0, 667.0}}
+                                        Other, 0x10b6c3d60, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Image, 0x10b6c3e80, {{-120.0, -124.0}, {615.0, 248.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x10b6c3fa0, {{0.0, 0.0}, {375.0, 64.0}}
+                                          Other, 0x10b6c40c0, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x10b6c41e0, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Other, 0x10b6c4300, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x10b6c4420, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Other, 0x10b6c4540, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x10b6c4660, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x10b6c4780, {{0.0, 0.0}, {375.0, 128.8}}
+                                      Other, 0x10b6c48a0, {{342.0, 74.0}, {30.0, 285.0}}, label: 'Vertical scroll bar, 13 pages', value: 91%
+                                        Other, 0x10b6c49c0, {{369.0, 290.0}, {3.0, 46.0}}
+                                      Other, 0x10b6c4ae0, {{342.0, 74.0}, {30.0, 285.0}}, label: 'Vertical scroll bar, 13 pages', value: 91%
+                                        Other, 0x10b6c4c00, {{369.0, 290.0}, {3.0, 46.0}}
+                            Other, 0x10b6c4d20, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x10b6c4e40, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x10b6c4f60, {{0.0, 584.0}, {375.0, 83.0}}
+                  Other, 0x10b6c5080, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x10b6c51a0, {{0.0, 584.0}, {375.0, 83.0}}
+    Window, 0x10b6c52c0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x10b6c53e0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x10b6c5500, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x10b6c5620, {{0.0, 359.0}, {375.0, 308.0}}
+          Other, 0x10b6c5740, {{0.0, 359.0}, {375.0, 48.0}}
+            Other, 0x10b6c5860, {{0.0, 359.0}, {375.0, 48.0}}
+              Other, 0x10b6c5980, {{0.0, 359.0}, {375.0, 48.0}}
+                Toolbar, 0x10b6c5aa0, {{0.0, 359.0}, {375.0, 48.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                  Other, 0x10b6c5bc0, {{0.0, 359.0}, {375.0, 48.0}}
+                    Other, 0x10b6c5ce0, {{16.0, 359.0}, {343.0, 48.0}}
+                      Other, 0x10b6c5e00, {{16.0, 359.0}, {343.0, 48.0}}
+                        Other, 0x10b6c5f20, {{16.0, 359.0}, {0.0, 0.0}}
+                          Other, 0x10b6c6040, {{305.0, 356.0}, {54.0, 54.0}}
+                            Other, 0x10b6c6160, {{305.0, 356.0}, {54.0, 54.0}}
+                              Other, 0x10b6c62c0, {{310.0, 361.0}, {44.0, 44.0}}
+                                Other, 0x10b6c63e0, {{310.0, 361.0}, {44.0, 44.0}}
+                                  Other, 0x10b6c6500, {{310.0, 361.0}, {44.0, 44.0}}, identifier: 'recap.dismissKeyboard', label: 'Done'
+                                    Other, 0x10b6c6620, {{310.0, 361.0}, {44.0, 44.0}}
+                                      Button, 0x10b6c6740, {{310.0, 361.0}, {44.0, 44.0}}, identifier: 'recap.dismissKeyboard', label: 'Done'
+          Other, 0x10b6c6860, {{0.0, 407.0}, {375.0, 260.0}}, identifier: 'inputView'
+    Window, 0x10b6c6980, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x10b6c6aa0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x10b6c6bc0, {{0.0, 359.0}, {375.0, 308.0}}
+          Other, 0x10b6c6ce0, {{0.0, 359.0}, {375.0, 48.0}}
+          Other, 0x10b6c6e00, {{0.0, 407.0}, {375.0, 44.0}}, identifier: 'SystemInputAssistantView'
+            Other, 0x10b6c6f20, {{0.0, 407.0}, {375.0, 44.0}}
+              Other, 0x10b6c7040, {{0.0, 407.0}, {375.0, 44.0}}, identifier: 'CenterPageView'
+                Other, 0x10b6c7160, {{0.0, -193.0}, {375.0, 1244.0}}
+                  ScrollView, 0x10b6c7280, {{0.0, 407.0}, {375.0, 44.0}}
+                Other, 0x10b6c73a0, {{0.0, 407.0}, {375.0, 44.0}}
+                  Other, 0x10b6c74c0, {{0.0, 407.0}, {375.0, 44.0}}, label: 'Typing Predictions'
+                    Other, 0x10b6c75e0, {{0.0, 407.0}, {375.0, 44.0}}
+                      Other, 0x10b6c7700, {{0.0, 407.0}, {375.0, 44.0}}
+                        Other, 0x10b6c7820, {{0.0, 407.0}, {125.0, 44.0}}
+                        Other, 0x10b6c7940, {{125.0, 407.0}, {125.0, 44.0}}
+                        Other, 0x10b6c7a60, {{250.0, 407.0}, {125.0, 44.0}}
+          Other, 0x10b6c7b80, {{0.0, 407.0}, {375.0, 260.0}}
+            Other, 0x10b6c7ca0, {{0.0, 407.0}, {375.0, 260.0}}
+              Other, 0x10b6c7dc0, {{0.0, 407.0}, {375.0, 260.0}}
+          Other, 0x10b6c7ee0, {{0.0, 451.0}, {375.0, 216.0}}
+            Keyboard, 0x10b6c8000, {{0.0, 451.0}, {375.0, 216.0}}
+              Other, 0x10b6c8120, {{0.0, 451.0}, {375.0, 216.0}}
+                Other, 0x10b6c8240, {{0.0, 451.0}, {375.0, 216.0}}, identifier: 'UIKeyboardLayoutStar Preview'
+                  Key, 0x10b6c8360, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x10b6c8480, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x10b6c85a0, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x10b6c86c0, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x10b6c87e0, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x10b6c8900, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x10b6c8a20, {{4.5, 458.0}, {37.0, 54.0}}, label: 'Q'
+                  Key, 0x10b6c8b40, {{41.5, 458.0}, {36.5, 54.0}}, label: 'W'
+                  Key, 0x10b6c8c60, {{78.0, 458.0}, {37.0, 54.0}}, label: 'E'
+                  Key, 0x10b6c8d80, {{115.0, 458.0}, {36.5, 54.0}}, label: 'R'
+                  Key, 0x10b6c8ea0, {{151.5, 458.0}, {37.0, 54.0}}, label: 'T'
+                  Key, 0x10b6c8fc0, {{188.5, 458.0}, {37.0, 54.0}}, label: 'Y'
+                  Key, 0x10b6c90e0, {{225.5, 458.0}, {36.5, 54.0}}, label: 'U'
+                  Key, 0x10b6c9200, {{262.0, 458.0}, {37.0, 54.0}}, label: 'I'
+                  Key, 0x10b6c9320, {{299.0, 458.0}, {36.5, 54.0}}, label: 'O'
+                  Key, 0x10b6c9440, {{335.5, 458.0}, {37.0, 54.0}}, label: 'P'
+                  Key, 0x10b6c9560, {{23.0, 512.0}, {36.5, 54.0}}, label: 'A'
+                  Key, 0x10b48f1a0, {{59.5, 512.0}, {37.0, 54.0}}, label: 'S'
+                  Key, 0x1179396f0, {{96.5, 512.0}, {37.0, 54.0}}, label: 'D'
+                  Key, 0x117939810, {{133.5, 512.0}, {36.5, 54.0}}, label: 'F'
+                  Key, 0x117939930, {{170.0, 512.0}, {37.0, 54.0}}, label: 'G'
+                  Key, 0x117939a50, {{207.0, 512.0}, {36.5, 54.0}}, label: 'H'
+                  Key, 0x117939ba0, {{243.5, 512.0}, {37.0, 54.0}}, label: 'J'
+                  Key, 0x117939cc0, {{280.5, 512.0}, {37.0, 54.0}}, label: 'K'
+                  Key, 0x117939de0, {{317.5, 512.0}, {36.5, 54.0}}, label: 'L'
+                  Button, 0x117939f00, {{4.5, 566.0}, {48.0, 54.0}}, identifier: 'shift', label: 'shift', Selected
+                  Key, 0x11793a020, {{59.5, 566.0}, {37.0, 54.0}}, label: 'Z'
+                  Key, 0x11793a290, {{96.5, 566.0}, {37.0, 54.0}}, label: 'X'
+                  Key, 0x11793a3b0, {{133.5, 566.0}, {36.5, 54.0}}, label: 'C'
+                  Key, 0x11793a4d0, {{170.0, 566.0}, {37.0, 54.0}}, label: 'V'
+                  Key, 0x11793a5f0, {{207.0, 566.0}, {36.5, 54.0}}, label: 'B'
+                  Key, 0x11793a710, {{243.5, 566.0}, {37.0, 54.0}}, label: 'N'
+                  Key, 0x10b48f2c0, {{280.5, 566.0}, {37.0, 54.0}}, label: 'M'
+                  Key, 0x10b48f3e0, {{324.5, 566.0}, {48.0, 54.0}}, identifier: 'delete', label: 'delete'
+                  Key, 0x10b48f500, {{4.5, 620.0}, {46.0, 54.0}}, identifier: 'more', label: 'numbers'
+                  Button, 0x10b48f620, {{50.5, 620.0}, {46.0, 54.0}}, identifier: 'emoji', label: 'Emoji'
+                  Button, 0x10b48f740, {{96.5, 620.0}, {37.0, 54.0}}, identifier: 'dictation', label: 'Dictate'
+                  Key, 0x10b48f860, {{133.5, 620.0}, {147.0, 54.0}}, identifier: 'space', label: ' '
+                  Button, 0x10b48f980, {{280.5, 620.0}, {92.0, 54.0}}, identifier: 'Return', label: 'return'
+Path to element:
+ →Application, 0x10b48d8d0, pid: 12203, label: 'Private Moments'
+Query chain:
+ →Find: Target Application 'com.example.PrivateMoments'
+  Output: {
+    Application, 0x1179365f0, pid: 12203, label: 'Private Moments'
+  }

@@ -1542,50 +1542,9 @@ final class PrivateMomentsUITests: XCTestCase {
         assertSearchCountAboveKeyboard(total, app: app)
         capture("Timeline-search-empty-\(language)", app)
 
-        guard let submit = nativeControl(["Search", "搜索", "search"], app: app, timeout: 5,
-            surface: app.keyboards.firstMatch, enabledAction: true) else {
-            captureFailure("Timeline-submit-unavailable-\(language)", app)
-            return XCTFail("The actual software keyboard must provide its Search submission action.")
-        }
-        submit.tap()
-        let submitted = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            !app.keyboards.firstMatch.exists && total.exists && total.label == empty
-        }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [submitted], timeout: 10), .completed,
-            "Submitting search must hide the keyboard while preserving the zero-result query.")
-        let submittedSearch = app.searchFields.firstMatch
-        guard submittedSearch.value as? String == query else {
-            captureFailure("Timeline-query-not-retained-\(language)", app)
-            return XCTFail("The actual native search field must retain the submitted query.")
-        }
-        assertSubmittedEmptyStateVisible(language: language, app: app)
-        XCTAssertFalse(app.keyboards.firstMatch.exists)
-        capture("Timeline-search-submitted-\(language)", app)
+        submitEmptyTimelineSearch(query: query, expectedCount: empty, language: language, app: app)
 
-        let editingSearch = revealTimelineSearch(in: app)
-        tap(editingSearch, in: app)
-        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
-        XCTAssertEqual(editingSearch.value as? String, query)
-        // A new field tap can place the insertion point inside the old query.
-        // Use its real Clear action instead of assuming the cursor is at end.
-        guard let nativeClear = nativeControl(["Clear text", "清除文本", "清除文字"], app: app,
-            timeout: 5, surface: editingSearch, enabledAction: true) else {
-            captureFailure("Timeline-native-clear-unavailable-\(language)", app)
-            return XCTFail("The actual search field must expose its native text-clear action.")
-        }
-        nativeClear.tap()
-        let emptyField = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            let value = editingSearch.value as? String
-            return value == "" || value == editingSearch.placeholderValue
-        }, object: nil)
-        let clearedField = XCTWaiter.wait(for: [emptyField], timeout: 5)
-        if clearedField != .completed { captureFailure("Timeline-native-clear-failed-\(language)", app) }
-        XCTAssertEqual(clearedField, .completed)
-        editingSearch.typeText("Calm")
-        guard editingSearch.value as? String == "Calm" else {
-            captureFailure("Timeline-replacement-query-incorrect-\(language)", app)
-            return XCTFail("Native clear followed by actual typing must produce exactly Calm.")
-        }
+        guard let editingSearch = replaceTimelineSearchQuery(query, language: language, app: app) else { return }
         let matched = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             total.exists && total.label == one
         }, object: nil)
@@ -1595,6 +1554,8 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(editingSearch.value as? String, "Calm")
         assertSearchCountAboveKeyboard(total, app: app)
         capture("Timeline-search-matched-\(language)", app)
+
+        submitMatchedTimelineSearch(expectedCount: one, language: language, app: app)
 
         tap(app.buttons["timeline.clearFilters"], in: app)
         let cleared = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
@@ -1615,6 +1576,73 @@ final class PrivateMomentsUITests: XCTestCase {
         capture("Timeline-search-cleared-\(language)", app)
         print("Verified short search prompt, scope, empty/matched queries and clear keyboard dismissal. Locale: \(language).")
         print("Verified visible keyboard result count and query-preserving search submission. Locale: \(language).")
+    }
+
+    private func submitEmptyTimelineSearch(query: String, expectedCount: String, language: String, app: XCUIApplication) {
+        let total = app.staticTexts["timeline.resultCount"]
+        guard submitTimelineSearch(language: language, app: app) else { return }
+        let submitted = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !app.keyboards.firstMatch.exists && total.exists && total.label == expectedCount
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [submitted], timeout: 10), .completed,
+            "Submitting search must hide the keyboard while preserving the zero-result query.")
+        let submittedSearch = app.searchFields.firstMatch
+        guard submittedSearch.value as? String == query else {
+            captureFailure("Timeline-query-not-retained-\(language)", app)
+            return XCTFail("The actual native search field must retain the submitted query.")
+        }
+        assertSubmittedEmptyStateVisible(language: language, app: app)
+        XCTAssertFalse(app.keyboards.firstMatch.exists)
+        capture("Timeline-search-submitted-\(language)", app)
+    }
+
+    private func replaceTimelineSearchQuery(_ query: String, language: String, app: XCUIApplication) -> XCUIElement? {
+        let editingSearch = revealTimelineSearch(in: app)
+        tap(editingSearch, in: app)
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(editingSearch.value as? String, query)
+        // A new field tap can place the insertion point inside the old query.
+        // Use its real Clear action instead of assuming the cursor is at end.
+        guard let nativeClear = nativeControl(["Clear text", "清除文本", "清除文字"], app: app,
+            timeout: 5, surface: editingSearch, enabledAction: true) else {
+            captureFailure("Timeline-native-clear-unavailable-\(language)", app)
+            XCTFail("The actual search field must expose its native text-clear action.")
+            return nil
+        }
+        nativeClear.tap()
+        let emptyField = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            let value = editingSearch.value as? String
+            return value == "" || value == editingSearch.placeholderValue
+        }, object: nil)
+        let clearedField = XCTWaiter.wait(for: [emptyField], timeout: 5)
+        if clearedField != .completed { captureFailure("Timeline-native-clear-failed-\(language)", app) }
+        XCTAssertEqual(clearedField, .completed)
+        editingSearch.typeText("Calm")
+        guard editingSearch.value as? String == "Calm" else {
+            captureFailure("Timeline-replacement-query-incorrect-\(language)", app)
+            XCTFail("Native clear followed by actual typing must produce exactly Calm.")
+            return nil
+        }
+        return editingSearch
+    }
+
+    private func submitMatchedTimelineSearch(expectedCount: String, language: String, app: XCUIApplication) {
+        let total = app.staticTexts["timeline.resultCount"]
+        let scope = app.staticTexts["timeline.searchScope"]
+        guard submitTimelineSearch(language: language, app: app) else { return }
+        let row = app.buttons.matching(identifier: "moment.row").firstMatch
+        let recordVisible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !app.keyboards.firstMatch.exists && total.exists && total.label == expectedCount && row.exists && row.isHittable
+        }, object: nil)
+        let matchSubmitted = XCTWaiter.wait(for: [recordVisible], timeout: 10)
+        if matchSubmitted != .completed { captureFailure("Timeline-matched-result-not-revealed-\(language)", app) }
+        XCTAssertEqual(matchSubmitted, .completed, "Submitting a matching query must reveal its operable record without test scrolling.")
+        XCTAssertEqual(app.searchFields.firstMatch.value as? String, "Calm")
+        XCTAssertLessThanOrEqual(app.buttons["timeline.clearFilters"].frame.maxY, row.frame.minY,
+            "Reset controls must precede an unbounded result list, not require traversing every record.")
+        XCTAssertLessThanOrEqual(scope.frame.maxY, row.frame.minY)
+        capture("Timeline-search-match-submitted-\(language)", app)
+        print("Verified submitted matching record and controls before result list. Locale: \(language).")
     }
 
     private func assertSearchCountAboveKeyboard(_ count: XCUIElement, app: XCUIApplication) {
@@ -1643,6 +1671,22 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(title.label, language == "en" ? "No matching moments" : "没有找到匹配记录")
         XCTAssertEqual(message.label, language == "en"
             ? "Try another word or change the selected filter." : "试试其他关键词，或更改当前筛选条件。")
+        // Derive the pixel grid from this actual window capture, rather than
+        // a hardcoded device scale or the deprecated UIScreen.main context.
+        let windowFrame = app.windows.firstMatch.frame
+        let measurement = app.windows.firstMatch.screenshot().image
+        guard windowFrame.width > 0, let bitmap = measurement.cgImage else {
+            captureFailure("Timeline-pixel-measurement-unavailable-\(language)", app)
+            return XCTFail("The actual window must provide native bitmap dimensions.")
+        }
+        let bitmapWidth: Int
+        switch measurement.imageOrientation {
+        case .left, .leftMirrored, .right, .rightMirrored: bitmapWidth = bitmap.height
+        default: bitmapWidth = bitmap.width
+        }
+        let displayScale = CGFloat(bitmapWidth) / windowFrame.width
+        XCTAssertTrue(displayScale.isFinite && displayScale > 0)
+        func pixel(_ point: CGFloat) -> CGFloat { (point * displayScale).rounded() }
         func geometry() -> (section: CGRect, top: CGFloat, bottom: CGFloat, viewport: CGRect) {
             let viewport = app.windows.firstMatch.frame
             let navigation = app.navigationBars.firstMatch
@@ -1652,8 +1696,9 @@ final class PrivateMomentsUITests: XCTestCase {
             return (title.frame.union(message.frame), top, bottom, viewport)
         }
         func isVisible(_ value: (section: CGRect, top: CGFloat, bottom: CGFloat, viewport: CGRect)) -> Bool {
-            !value.section.isEmpty && value.section.minY >= value.top && value.section.maxY <= value.bottom &&
-                value.section.minX >= value.viewport.minX && value.section.maxX <= value.viewport.maxX
+            !value.section.isEmpty && !value.section.isInfinite && !value.section.isNull &&
+                pixel(value.section.minY) >= pixel(value.top) && pixel(value.section.maxY) <= pixel(value.bottom) &&
+                pixel(value.section.minX) >= pixel(value.viewport.minX) && pixel(value.section.maxX) <= pixel(value.viewport.maxX)
         }
         // Keyboard disappearance can precede the product's scroll/layout
         // update. Await the real postcondition, not a delay or a test gesture.
@@ -1668,7 +1713,18 @@ final class PrivateMomentsUITests: XCTestCase {
         }
         XCTAssertEqual(ready, .completed, "Submission must reveal the complete explanation without test scrolling.")
         XCTAssertTrue(isVisible(actual), "The full empty-result title and explanation must stay above the bottom tabs.")
-        print("Verified submitted explanation visibility. Locale: \(language); section: \(actual.section); top: \(actual.top); bottom: \(actual.bottom).")
+        print("Verified submitted explanation visibility. Locale: \(language); section: \(actual.section); top: \(actual.top); bottom: \(actual.bottom); scale: \(displayScale); viewport: \(actual.viewport).")
+    }
+
+    private func submitTimelineSearch(language: String, app: XCUIApplication) -> Bool {
+        guard let submit = nativeControl(["Search", "搜索", "search"], app: app, timeout: 5,
+            surface: app.keyboards.firstMatch, enabledAction: true) else {
+            captureFailure("Timeline-submit-unavailable-\(language)", app)
+            XCTFail("The actual software keyboard must provide its Search submission action.")
+            return false
+        }
+        submit.tap()
+        return true
     }
 
     private func revealTimelineSearch(in app: XCUIApplication) -> XCUIElement {

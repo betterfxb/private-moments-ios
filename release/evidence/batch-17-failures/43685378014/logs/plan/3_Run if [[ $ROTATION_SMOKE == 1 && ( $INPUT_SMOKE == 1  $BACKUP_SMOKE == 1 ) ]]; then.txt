@@ -1,0 +1,55 @@
+﻿2026-11-15T06:25:53.4534779Z ##[group]Run if [[ "$ROTATION_SMOKE" == "1" && ( "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then
+2026-11-15T06:25:53.4535435Z [36;1mif [[ "$ROTATION_SMOKE" == "1" && ( "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then[0m
+2026-11-15T06:25:53.4535926Z [36;1m  printf 'Rotation, input and backup smoke modes are mutually exclusive.\n' >&2[0m
+2026-11-15T06:25:53.4536270Z [36;1m  exit 1[0m
+2026-11-15T06:25:53.4536438Z [36;1mfi[0m
+2026-11-15T06:25:53.4536657Z [36;1mif [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then[0m
+2026-11-15T06:25:53.4537026Z [36;1m  printf 'Input and backup smoke modes are mutually exclusive.\n' >&2[0m
+2026-11-15T06:25:53.4537320Z [36;1m  exit 1[0m
+2026-11-15T06:25:53.4537482Z [36;1mfi[0m
+2026-11-15T06:25:53.4537722Z [36;1mif [[ "$BACKUP_LANGUAGE" != "en" && "$BACKUP_LANGUAGE" != "zh-Hans" ]] ||[0m
+2026-11-15T06:25:53.4538086Z [36;1m   [[ "$BACKUP_LANGUAGE" == "zh-Hans" && "$BACKUP_SMOKE" != "1" ]]; then[0m
+2026-11-15T06:25:53.4538452Z [36;1m  printf 'Chinese backup language requires explicit backup smoke.\n' >&2[0m
+2026-11-15T06:25:53.4538789Z [36;1m  exit 1[0m
+2026-11-15T06:25:53.4538947Z [36;1mfi[0m
+2026-11-15T06:25:53.4539276Z [36;1mif [[ "$ROTATION_START" != "reference" && "$ROTATION_START" != "cold-en" && "$ROTATION_START" != "cold-zh-Hans" ]] ||[0m
+2026-11-15T06:25:53.4539726Z [36;1m   [[ "$ROTATION_START" != "reference" && "$ROTATION_SMOKE" != "1" ]]; then[0m
+2026-11-15T06:25:53.4540174Z [36;1m  printf 'Cold rotation requires an explicit rotation-only scope and a supported locale.\n' >&2[0m
+2026-11-15T06:25:53.4540643Z [36;1m  exit 1[0m
+2026-11-15T06:25:53.4540961Z [36;1mfi[0m
+2026-11-15T06:25:53.4541201Z [36;1mpython3 -m unittest discover -s tools -p 'test_ui*.py' -v[0m
+2026-11-15T06:25:53.4541630Z [36;1mmatrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"[0m
+2026-11-15T06:25:53.4542089Z [36;1mprintf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"[0m
+2026-11-15T06:25:53.4590141Z shell: /usr/bin/bash -e {0}
+2026-11-15T06:25:53.4590562Z env:
+2026-11-15T06:25:53.4590745Z   MATRIX_SCOPE: input
+2026-11-15T06:25:53.4590962Z   SMOKE_PROFILE: compact-dark-accessibility
+2026-11-15T06:25:53.4591194Z   INPUT_SMOKE: 1
+2026-11-15T06:25:53.4591362Z   BACKUP_SMOKE: 0
+2026-11-15T06:25:53.4591533Z   BACKUP_LANGUAGE: en
+2026-11-15T06:25:53.4591703Z   ROTATION_SMOKE: 0
+2026-11-15T06:25:53.4591883Z   ROTATION_START: reference
+2026-11-15T06:25:53.4592072Z ##[endgroup]
+2026-11-15T06:25:53.5650555Z test_existing_phone_and_ipad_selection_is_preserved (test_ui_simulator_selection.SimulatorSelectionTests.test_existing_phone_and_ipad_selection_is_preserved) ... ok
+2026-11-15T06:25:53.5658962Z test_mini_selects_a_real_mini_instead_of_first_ipad (test_ui_simulator_selection.SimulatorSelectionTests.test_mini_selects_a_real_mini_instead_of_first_ipad) ... ok
+2026-11-15T06:25:53.5675058Z test_missing_or_unavailable_mini_fails_without_fallback (test_ui_simulator_selection.SimulatorSelectionTests.test_missing_or_unavailable_mini_fails_without_fallback) ... ok
+2026-11-15T06:25:53.5683303Z test_other_runtime_does_not_substitute_for_pinned_sdk (test_ui_simulator_selection.SimulatorSelectionTests.test_other_runtime_does_not_substitute_for_pinned_sdk) ... ok
+2026-11-15T06:25:53.5691414Z test_unavailable_devices_are_excluded_before_selection (test_ui_simulator_selection.SimulatorSelectionTests.test_unavailable_devices_are_excluded_before_selection) ... ok
+2026-11-15T06:25:53.5692930Z test_existing_diagnostics_select_exactly_the_requested_profile (test_ui_test_matrix.UITestMatrixTests.test_existing_diagnostics_select_exactly_the_requested_profile) ... ok
+2026-11-15T06:25:53.5694085Z test_full_acceptance_keeps_original_profiles_and_scopes (test_ui_test_matrix.UITestMatrixTests.test_full_acceptance_keeps_original_profiles_and_scopes) ... ok
+2026-11-15T06:25:53.5694987Z test_ipad_accessibility_requires_explicit_input_scope (test_ui_test_matrix.UITestMatrixTests.test_ipad_accessibility_requires_explicit_input_scope) ... ok
+2026-11-15T06:25:53.5696235Z test_rotation_requires_ipad_light_profile (test_ui_test_matrix.UITestMatrixTests.test_rotation_requires_ipad_light_profile) ... ok
+2026-11-15T06:25:53.5697032Z test_supplemental_ipads_require_explicit_input_or_rotation (test_ui_test_matrix.UITestMatrixTests.test_supplemental_ipads_require_explicit_input_or_rotation) ... ok
+2026-11-15T06:25:53.5697782Z test_unknown_scope_or_profile_fails_closed (test_ui_test_matrix.UITestMatrixTests.test_unknown_scope_or_profile_fails_closed) ... ok
+2026-11-15T06:25:53.5811816Z test_cold_rejects_missing_rotation_phone_or_conflicting_scopes (test_ui_verification_scope.VerificationScopeTests.test_cold_rejects_missing_rotation_phone_or_conflicting_scopes) ... ok
+2026-11-15T06:25:53.5840405Z test_default_full_phone_and_ipad_exclude_cold_methods (test_ui_verification_scope.VerificationScopeTests.test_default_full_phone_and_ipad_exclude_cold_methods) ... ok
+2026-11-15T06:25:53.5870020Z test_each_cold_locale_selects_exactly_one_method (test_ui_verification_scope.VerificationScopeTests.test_each_cold_locale_selects_exactly_one_method) ... ok
+2026-11-15T06:25:53.5914061Z test_gallery_input_and_backup_exclude_cold_methods (test_ui_verification_scope.VerificationScopeTests.test_gallery_input_and_backup_exclude_cold_methods) ... ok
+2026-11-15T06:25:53.5929421Z test_reference_selection_remains_bilingual_method (test_ui_verification_scope.VerificationScopeTests.test_reference_selection_remains_bilingual_method) ... ok
+2026-11-15T06:25:53.5943805Z test_unknown_rotation_start_is_rejected (test_ui_verification_scope.VerificationScopeTests.test_unknown_rotation_start_is_rejected) ... ok
+2026-11-15T06:25:53.6042790Z test_workflow_rejects_cold_without_rotation_before_allocating_macos (test_ui_verification_scope.VerificationScopeTests.test_workflow_rejects_cold_without_rotation_before_allocating_macos) ... ok
+2026-11-15T06:25:53.6043928Z 
+2026-11-15T06:25:53.6044121Z ----------------------------------------------------------------------
+2026-11-15T06:25:53.6044589Z Ran 18 tests in 0.042s
+2026-11-15T06:25:53.6044796Z 
+2026-11-15T06:25:53.6053706Z OK

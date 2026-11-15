@@ -70,6 +70,24 @@ struct MomentTimelineView: View {
                             .accessibilityIdentifier("timeline.resultCount")
                             .id("timeline.results")
 
+                        // Keep supporting controls before an unbounded result
+                        // list; the live count still comes first while typing.
+                        if isSearchPresented {
+                            searchControls
+                        }
+
+                        if hasActiveFilters {
+                            Button {
+                                searchText = ""
+                                filter = .all
+                                isSearchPresented = false
+                            } label: {
+                                Label("Clear filters", systemImage: "line.3.horizontal.decrease.circle")
+                            }
+                            .buttonStyle(SecondaryActionButtonStyle())
+                            .accessibilityIdentifier("timeline.clearFilters")
+                        }
+
                         if results.isEmpty {
                             emptyState
                         } else {
@@ -91,22 +109,7 @@ struct MomentTimelineView: View {
                                     }
                                 }
                             }
-                        }
-
-                        if hasActiveFilters {
-                            Button {
-                                searchText = ""
-                                filter = .all
-                                isSearchPresented = false
-                            } label: {
-                                Label("Clear filters", systemImage: "line.3.horizontal.decrease.circle")
-                            }
-                            .buttonStyle(SecondaryActionButtonStyle())
-                            .accessibilityIdentifier("timeline.clearFilters")
-                        }
-
-                        if isSearchPresented {
-                            searchControls
+                            .id("timeline.resultsBody")
                         }
                     }
                 }
@@ -128,9 +131,9 @@ struct MomentTimelineView: View {
                 }
             }
             .onChange(of: searchSubmissionID) { _, _ in
-                // Submission ends typing. Show the complete empty-result
-                // explanation rather than leaving its last line under tabs.
-                proxy.scrollTo(results.isEmpty ? "timeline.emptyState" : "timeline.results", anchor: .top)
+                // Submission ends typing. Reveal the explanation or record
+                // list, with filter/reset controls still available above it.
+                proxy.scrollTo(results.isEmpty ? "timeline.emptyState" : "timeline.resultsBody", anchor: .top)
             }
         }
         .background(AppColors.background.ignoresSafeArea())
