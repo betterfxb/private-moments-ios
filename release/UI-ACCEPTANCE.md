@@ -1,5 +1,9 @@
 # Simulator UI acceptance
 
+## Keyboard visibility and scrollable feedback (2026-11-16)
+
+Latest batch17 (2026-11-16): result-first search with visible keyboard counts and query-preserving submission; backup result feedback scrolls with Settings instead of shrinking its viewport. [Report](UX-ACCEPTANCE-17.md) · [originals](evidence/batch-17/index.html) · [memory](../PROJECT-MEMORY.md). Full source `9e106f37431da8a30448731271abdfccaa19a9c7`, [run43734076863](https://github.com/betterfxb/private-moments-ios/actions/runs/43734076863): 50 application units, 13 UI executions, Debug/Release and Release hook exclusion; 523 PNGs checked, 136 actually opened/retained across this batch's successful runs. Draft only; no signing, Apple upload or main merge.
+
 ## Search usability and renewed full regression (2026-11-15)
 
 Batch16 ships short Search moments / 搜索记录 prompts and a wrapping scope label. Targeted dark maximum-text iPad bilingual gallery, then revised maximum-text phone input and files diagnostics passed and were reviewed before [final full four-profile run43667122995](https://github.com/betterfxb/private-moments-ios/actions/runs/43667122995), source `82ccfccdb3bb743a19628e10e42d54f75698c5a3`: 50 application units, 13 UI executions, Debug/Release and Release test-hook exclusion. 539 PNGs checked and 79 originals actually opened/retained across five successful runs; five prior failed runs are retained separately. [Report and limits](UX-ACCEPTANCE-16.md) · [originals](evidence/batch-16/index.html) · [receipt](evidence/batch-16/verification.json).

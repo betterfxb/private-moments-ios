@@ -4,9 +4,9 @@
 
 Run focused diagnostics and full validation serially on a branch. The workflow uses a same-ref concurrency group with cancel-in-progress: starting a second run cancels the active one. A focused input or backup success is diagnostic evidence only; final acceptance requires the full matrix and original-image review. Do not restart a functional failure unchanged to obtain a pass.
 
-## Latest full validation: batch16 search usability
+## Historical full validation: batch16 search usability
 
-The [batch16 report](release/UX-ACCEPTANCE-16.md) records the latest complete four-profile validation on `82ccfccdb3bb743a19628e10e42d54f75698c5a3`: 50 application units, 13 UI executions, Debug/Release and Release test-hook exclusion. The ordered batch16 tasks and remaining product work are recorded at the end of this plan. Earlier batches below retain their own sources and scope.
+The [batch16 report](release/UX-ACCEPTANCE-16.md) records the complete four-profile validation at that batch’s close on `82ccfccdb3bb743a19628e10e42d54f75698c5a3`: 50 application units, 13 UI executions, Debug/Release and Release test-hook exclusion. The ordered batch16 tasks and remaining product work are recorded at the end of this plan. Earlier batches below retain their own sources and scope.
 
 ## Historical full batch: Chinese files and operation continuity
 
@@ -300,3 +300,9 @@ Completed the sequential [plan](release/BATCH-16-PLAN.md): localized short nativ
 539 PNG originals checked, 79 actually opened/retained with hashes and raw evidence. [Report](release/UX-ACCEPTANCE-16.md) · [receipt](release/evidence/batch-16/verification.json). Existing full iPad rotation retains the Settings reference condition; independent cold runs keep their batch15 provenance.
 
 Next: actual window resizing and continuity evidence, termination-recovery product decisions, performance/physical validation, and implementing the selected immersive visual direction under a concrete reviewed design plan. The current search refinement is a local usability change, not completion of the overall visual redesign. Draft PR/no merge/signing/Apple upload constraints remain.
+
+## Batch17: keyboard visibility and scrollable feedback (2026-11-16)
+
+Latest batch17 (2026-11-16): result-first search with visible keyboard counts and query-preserving submission; backup result feedback scrolls with Settings instead of shrinking its viewport. [Report](release/UX-ACCEPTANCE-17.md) · [originals](release/evidence/batch-17/index.html) · [memory](PROJECT-MEMORY.md). Full source `9e106f37431da8a30448731271abdfccaa19a9c7`, [run43734076863](https://github.com/betterfxb/private-moments-ios/actions/runs/43734076863): 50 application units, 13 UI executions, Debug/Release and Release hook exclusion; 523 PNGs checked, 136 actually opened/retained across this batch's successful runs. Draft only; no signing, Apple upload or main merge.
+
+Next: selected immersive visual implementation, physical/IME validation, actual window resize continuity, termination-recovery decisions and performance baselines. Preserve source/evidence boundaries and draft-only constraints.
