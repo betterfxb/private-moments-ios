@@ -19,6 +19,7 @@ struct MomentTimelineView: View {
     @State private var filter: MomentFilter = .all
     @State private var isSearchPresented = false
     @FocusState private var isSearchFocused: Bool
+    @State private var searchSubmissionID = UUID()
 
     private var query: String { searchText.trimmingCharacters(in: .whitespacesAndNewlines) }
     private var hasActiveFilters: Bool { filter != .all || !query.isEmpty }
@@ -126,12 +127,19 @@ struct MomentTimelineView: View {
                     proxy.scrollTo("timeline.results", anchor: .top)
                 }
             }
+            .onChange(of: searchSubmissionID) { _, _ in
+                // Submission ends typing. Show the complete empty-result
+                // explanation rather than leaving its last line under tabs.
+                proxy.scrollTo(results.isEmpty ? "timeline.emptyState" : "timeline.results", anchor: .top)
+            }
         }
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Your moments")
         .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $searchText, isPresented: $isSearchPresented, prompt: "Search moments")
-        .modifier(TimelineSearchSubmission(focus: $isSearchFocused))
+        .modifier(TimelineSearchSubmission(focus: $isSearchFocused) {
+            searchSubmissionID = UUID()
+        })
         .task { store.reload() }
     }
 
@@ -143,15 +151,17 @@ struct MomentTimelineView: View {
                 Text(emptyTitle)
                     .font(.system(.headline, design: .rounded).weight(.semibold))
                     .foregroundStyle(AppColors.text)
+                    .accessibilityIdentifier("timeline.emptyTitle")
                 Text(emptyMessage)
                     .font(.system(.subheadline, design: .rounded))
                     .foregroundStyle(AppColors.secondaryText)
+                    .accessibilityIdentifier("timeline.emptyMessage")
             }
             .fixedSize(horizontal: false, vertical: true)
-            .accessibilityIdentifier("timeline.emptyState")
+            .id("timeline.emptyState")
         } else {
             EmptyStateCard(title: emptyTitle, message: emptyMessage, symbol: "calendar")
-                .accessibilityIdentifier("timeline.emptyState")
+                .id("timeline.emptyState")
         }
     }
 
@@ -206,18 +216,23 @@ private struct MomentDayGroup: Identifiable {
 /// release input focus so the result and editable query remain intact.
 private struct TimelineSearchSubmission: ViewModifier {
     var focus: FocusState<Bool>.Binding
+    var onSubmit: () -> Void
 
     func body(content: Content) -> some View {
         if #available(iOS 18.0, *) {
             content
                 .searchFocused(focus)
-                .onSubmit(of: .search) { focus.wrappedValue = false }
+                .onSubmit(of: .search) {
+                    focus.wrappedValue = false
+                    onSubmit()
+                }
         } else {
             content.onSubmit(of: .search) {
                 // iOS 17 has no searchFocused binding. Ask the active responder
                 // to release focus without ending or clearing native search.
                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                     to: nil, from: nil, for: nil)
+                onSubmit()
             }
         }
     }

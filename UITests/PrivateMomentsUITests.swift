@@ -1553,14 +1553,12 @@ final class PrivateMomentsUITests: XCTestCase {
         }, object: nil)
         XCTAssertEqual(XCTWaiter.wait(for: [submitted], timeout: 10), .completed,
             "Submitting search must hide the keyboard while preserving the zero-result query.")
-        let submittedSearch = revealTimelineSearch(in: app)
+        let submittedSearch = app.searchFields.firstMatch
         guard submittedSearch.value as? String == query else {
             captureFailure("Timeline-query-not-retained-\(language)", app)
             return XCTFail("The actual native search field must retain the submitted query.")
         }
-        let help = app.staticTexts[language == "en"
-            ? "Try another word or change the selected filter." : "试试其他关键词，或更改当前筛选条件。"]
-        revealFully(from: help, through: help, in: app)
+        assertSubmittedEmptyStateVisible(language: language, app: app)
         XCTAssertFalse(app.keyboards.firstMatch.exists)
         capture("Timeline-search-submitted-\(language)", app)
 
@@ -1603,10 +1601,37 @@ final class PrivateMomentsUITests: XCTestCase {
         waitForStableFrame(count, message: "The result count must settle without test scrolling while typing.")
         let frame = count.frame
         let keyboardFrame = keyboard.frame
+        let assistant = app.otherElements["SystemInputAssistantView"].firstMatch
+        let assistantFrame = assistant.exists ? assistant.frame : .zero
+        let viewport = app.windows.firstMatch.frame
+        let inputTop = !assistantFrame.isEmpty && assistantFrame.intersects(viewport)
+            ? min(keyboardFrame.minY, assistantFrame.minY) : keyboardFrame.minY
         XCTAssertTrue(app.windows.firstMatch.frame.contains(frame))
-        XCTAssertLessThanOrEqual(frame.maxY, keyboardFrame.minY,
-            "The entire result count must stay above the actual software keyboard.")
+        XCTAssertLessThanOrEqual(frame.maxY, inputTop,
+            "The entire result count must stay above the keyboard, including its prediction/accessory strip.")
         print("Verified search count geometry. Count: \(frame); keyboard: \(keyboardFrame).")
+        print("Verified search obstruction geometry. Count: \(frame); input top: \(inputTop); assistant: \(assistantFrame).")
+    }
+
+    private func assertSubmittedEmptyStateVisible(language: String, app: XCUIApplication) {
+        // No test scrolling: explicit Search submission must reveal the whole
+        // explanation in the product, including the line above the tab bar.
+        let title = app.staticTexts["timeline.emptyTitle"]
+        let message = app.staticTexts["timeline.emptyMessage"]
+        XCTAssertEqual(title.label, language == "en" ? "No matching moments" : "没有找到匹配记录")
+        XCTAssertEqual(message.label, language == "en"
+            ? "Try another word or change the selected filter." : "试试其他关键词，或更改当前筛选条件。")
+        let viewport = app.windows.firstMatch.frame
+        let navigation = app.navigationBars.firstMatch
+        let top = navigation.exists ? max(viewport.minY, navigation.frame.maxY) : viewport.minY
+        let tab = app.tabBars.firstMatch
+        let bottom = tab.exists && tab.frame.midY > viewport.midY ? tab.frame.minY : viewport.maxY
+        let section = title.frame.union(message.frame)
+        let visible = !section.isEmpty && section.minY >= top && section.maxY <= bottom &&
+            section.minX >= viewport.minX && section.maxX <= viewport.maxX
+        if !visible { captureFailure("Timeline-submitted-explanation-obscured-\(language)", app) }
+        XCTAssertTrue(visible, "The full empty-result title and explanation must be visible after submission without test scrolling.")
+        print("Verified submitted explanation visibility. Locale: \(language); section: \(section); top: \(top); bottom: \(bottom).")
     }
 
     private func revealTimelineSearch(in app: XCUIApplication) -> XCUIElement {
