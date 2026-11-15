@@ -480,6 +480,7 @@ final class PrivateMomentsUITests: XCTestCase {
         }
         assertImportCancelled(language: language, in: app)
         capture("Import-cancelled-\(language)", app)
+        assertBackupFeedbackScrollsAway(language: language, app: app)
         // Keep this notice open to verify that Delete all clears it. The
         // Settings gallery separately checks the visible count's geometry.
         XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
@@ -587,6 +588,28 @@ final class PrivateMomentsUITests: XCTestCase {
         if !exists { captureFailure("Import-cancelled-unavailable-\(language)", app) }
         XCTAssertTrue(exists)
         assertBackupResultVisible(notice, in: app)
+    }
+
+    private func assertBackupFeedbackScrollsAway(language: String, app: XCUIApplication) {
+        let scroll = app.scrollViews["settings.scroll"]
+        let notice = app.staticTexts["settings.backupStatus"]
+        XCTAssertTrue(scroll.exists)
+        XCTAssertTrue(scroll.descendants(matching: .staticText).matching(identifier: "settings.backupStatus").firstMatch.exists,
+            "The complete result must belong to scroll content, not a fixed block outside it.")
+        let viewport = scroll.frame.intersection(app.windows.firstMatch.frame)
+        XCTAssertGreaterThan(viewport.height, app.windows.firstMatch.frame.height * 0.65,
+            "A long result must not reserve almost half the screen above the scroll viewport.")
+        var drags = 0
+        while drags < 3 && notice.frame.maxY > viewport.minY {
+            scroll.swipeUp()
+            drags += 1
+        }
+        XCTAssertLessThanOrEqual(notice.frame.maxY, viewport.minY,
+            "Normal scrolling must move the retained result out of the content viewport.")
+        XCTAssertTrue(notice.exists, "Scrolling must not dismiss or truncate the feedback.")
+        XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
+        capture("Import-feedback-scrolled-\(language)", app)
+        print("Verified scrollable backup feedback. Locale: \(language); viewport: \(viewport); drags: \(drags); notice: \(notice.frame).")
     }
 
     private func assertValueLayout(title: XCUIElement, value: XCUIElement, stacked: Bool) {
@@ -1377,7 +1400,7 @@ final class PrivateMomentsUITests: XCTestCase {
     private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
         // A returned screen retains its scroll position. Existing controls can
         // be above it; lazy controls not yet created are searched below it.
-        for _ in 0..<16 {
+        for attempt in 0..<16 {
             let exists = element.waitForExistence(timeout: 0.5)
             let window = app.windows.firstMatch
             let viewport = window.frame
@@ -1394,7 +1417,12 @@ final class PrivateMomentsUITests: XCTestCase {
                 !keyboardCoversCenter && !footerCoversCenter && !tabCoversCenter
             // Keep visible controls on the normal fast path. Only a fixed
             // Settings result requires the extra scroll-ownership query.
-            if canTap && !app.buttons["settings.dismissBackupStatus"].exists { return }
+            if canTap && !app.buttons["settings.dismissBackupStatus"].exists {
+                if element.identifier == "settings.deleteAll" {
+                    print("Verified Settings delete reachability. Scroll drags: \(attempt).")
+                }
+                return
+            }
             let scroll = scrollSurface(containing: element, in: app)
             // A fixed result banner can cover a control that still reports
             // hittable within the window. Require its center inside its own
@@ -1402,7 +1430,12 @@ final class PrivateMomentsUITests: XCTestCase {
             let hasScrollOwner = canTap && !element.identifier.isEmpty &&
                 app.scrollViews.containing(.any, identifier: element.identifier).firstMatch.exists
             let visibleContent = hasScrollOwner ? scroll.frame.intersection(viewport) : viewport
-            if canTap, visibleContent.contains(center) { return }
+            if canTap, visibleContent.contains(center) {
+                if element.identifier == "settings.deleteAll" {
+                    print("Verified Settings delete reachability. Scroll drags: \(attempt).")
+                }
+                return
+            }
             if exists, !frame.isEmpty, scroll.exists {
                 let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
                 var bottom = min(scroll.frame.maxY, viewport.maxY) - 12
@@ -1419,7 +1452,8 @@ final class PrivateMomentsUITests: XCTestCase {
                     .withOffset(CGVector(dx: scroll.frame.intersection(viewport).midX - viewport.minX,
                         dy: middle - viewport.minY))
                 let end = start.withOffset(CGVector(dx: 0, dy: delta))
-                let fixedFeedback = app.buttons["settings.dismissBackupStatus"].exists
+                let fixedFeedback = app.buttons["settings.dismissBackupStatus"].exists &&
+                    !app.scrollViews.containing(.button, identifier: "settings.dismissBackupStatus").firstMatch.exists
                 let nearTarget = abs(middle - frame.midY) <= (bottom - top) * 3
                 if fixedFeedback {
                     print("Revealing below fixed feedback. Control: \(element.identifier); frame: \(frame); usable top/bottom: \(top)/\(bottom); delta: \(delta); precise: \(nearTarget).")
@@ -1493,6 +1527,7 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(search.placeholderValue, language == "en" ? "Search moments" : "搜索记录")
         tap(search, in: app)
         XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        assertSearchCountAboveKeyboard(total, app: app)
         capture("Timeline-search-ready-\(language)", app)
 
         // ASCII queries exercise both localized interfaces without claiming IME
@@ -1504,14 +1539,38 @@ final class PrivateMomentsUITests: XCTestCase {
             total.exists && total.label == empty
         }, object: nil)
         XCTAssertEqual(XCTWaiter.wait(for: [updated], timeout: 10), .completed)
+        assertSearchCountAboveKeyboard(total, app: app)
         capture("Timeline-search-empty-\(language)", app)
 
-        search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: query.count) + "Calm")
+        guard let submit = nativeControl(["Search", "搜索", "search"], app: app, timeout: 5,
+            surface: app.keyboards.firstMatch, enabledAction: true) else {
+            captureFailure("Timeline-submit-unavailable-\(language)", app)
+            return XCTFail("The actual software keyboard must provide its Search submission action.")
+        }
+        submit.tap()
+        let submitted = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !app.keyboards.firstMatch.exists && total.exists && total.label == empty
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [submitted], timeout: 10), .completed,
+            "Submitting search must hide the keyboard while preserving the zero-result query.")
+        let submittedSearch = revealTimelineSearch(in: app)
+        XCTAssertEqual(submittedSearch.value as? String, query)
+        let help = app.staticTexts[language == "en"
+            ? "Try another word or change the selected filter." : "试试其他关键词，或更改当前筛选条件。"]
+        revealFully(from: help, through: help, in: app)
+        XCTAssertFalse(app.keyboards.firstMatch.exists)
+        capture("Timeline-search-submitted-\(language)", app)
+
+        let editingSearch = revealTimelineSearch(in: app)
+        tap(editingSearch, in: app)
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        editingSearch.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: query.count) + "Calm")
         let matched = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             total.exists && total.label == one
         }, object: nil)
         XCTAssertEqual(XCTWaiter.wait(for: [matched], timeout: 10), .completed)
-        XCTAssertEqual(search.value as? String, "Calm")
+        XCTAssertEqual(editingSearch.value as? String, "Calm")
+        assertSearchCountAboveKeyboard(total, app: app)
         capture("Timeline-search-matched-\(language)", app)
 
         tap(app.buttons["timeline.clearFilters"], in: app)
@@ -1532,6 +1591,19 @@ final class PrivateMomentsUITests: XCTestCase {
         revealFully(from: scope, through: total, in: app)
         capture("Timeline-search-cleared-\(language)", app)
         print("Verified short search prompt, scope, empty/matched queries and clear keyboard dismissal. Locale: \(language).")
+        print("Verified visible keyboard result count and query-preserving search submission. Locale: \(language).")
+    }
+
+    private func assertSearchCountAboveKeyboard(_ count: XCUIElement, app: XCUIApplication) {
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5))
+        waitForStableFrame(count, message: "The result count must settle without test scrolling while typing.")
+        let frame = count.frame
+        let keyboardFrame = keyboard.frame
+        XCTAssertTrue(app.windows.firstMatch.frame.contains(frame))
+        XCTAssertLessThanOrEqual(frame.maxY, keyboardFrame.minY,
+            "The entire result count must stay above the actual software keyboard.")
+        print("Verified search count geometry. Count: \(frame); keyboard: \(keyboardFrame).")
     }
 
     private func revealTimelineSearch(in app: XCUIApplication) -> XCUIElement {

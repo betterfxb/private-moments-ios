@@ -17,6 +17,10 @@
 - 界面支持English和简体中文，跟随iOS应用语言；记录枚举保持稳定，用户备注不自动翻译。字符串目录231键，现有项目静态审计109对象。
 - Debug UI测试使用每次独立UUID库，不重置正常日记；Release排除测试钩子。认证使用真实系统流程，不增加成功绕过路径。
 
+## 第十七批执行中
+
+用户优先要求解决大字体键盘遮挡和长提示滚动负担，按[计划](release/BATCH-17-PLAN.md)串行执行：两页面局部布局和真实交互检查 → 最大字号双语输入定向 → 最大字号英文、中文真实文件定向 → 同源码完整四配置 → 原始证据、远端与记忆读回。已完成本地43项工具测试及231键／109对象／发行审计；原生布局、提交后查询保留与反馈可见性尚未验收，不提前声称解决。最近完整结果仍是下面第十六批，不以本地检查替代云端。
+
 ## 最近完整四配置验收（第十六批）
 
 按[计划](release/BATCH-16-PLAN.md)完成，见[报告](release/UX-ACCEPTANCE-16.md)、[原图](release/evidence/batch-16/index.html)和[收据](release/evidence/batch-16/verification.json)。最终完整受测源码`82ccfccdb3bb743a19628e10e42d54f75698c5a3`。主要成功运行包括[iPad深色最大字号双语图库43596558784](https://github.com/betterfxb/private-moments-ios/actions/runs/43596558784)、[修订后手机最大字号输入43605122458](https://github.com/betterfxb/private-moments-ios/actions/runs/43605122458)、[手机真实文件回路43655072648](https://github.com/betterfxb/private-moments-ios/actions/runs/43655072648)及[最终完整四配置43667122995](https://github.com/betterfxb/private-moments-ios/actions/runs/43667122995)；每项定向通过并检查原图后才派发下一项。文件定向与Done修订后输入／完整各有独立测试来源，除Done单函数外文件验证内容未变；五项生产路径一致，手机输入搜索检查函数逐字未变。完整回归50单元、13UI、Debug／Release及Release测试钩子排除通过，文件定向的9项备份单元是额外执行而非9个新用例。

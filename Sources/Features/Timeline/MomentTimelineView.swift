@@ -44,94 +44,139 @@ struct MomentTimelineView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
-                Group {
-                    if dynamicTypeSize.isAccessibilitySize {
-                        filterPicker.pickerStyle(.menu)
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 18) {
+                    if !isSearchPresented {
+                        searchControls
+                    }
+
+                    if !store.isStorageAvailable {
+                        StorageRecoveryCard(
+                            message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
+                            onRetry: store.reload
+                        )
                     } else {
-                        filterPicker.pickerStyle(.segmented)
-                    }
-                }
-                .accessibilityHint("Filters your private records by moment type")
-                .disabled(!store.isStorageAvailable)
-
-                if !store.isStorageAvailable {
-                    StorageRecoveryCard(
-                        message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
-                        onRetry: store.reload
-                    )
-                } else {
-                    if let errorMessage = store.errorMessage {
-                        ErrorNotice(message: errorMessage)
-                    }
-
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Date, type, mood, or tag")
-                            .font(.system(.footnote, design: .rounded))
-                            .foregroundStyle(AppColors.secondaryText)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .accessibilityIdentifier("timeline.searchScope")
+                        if let errorMessage = store.errorMessage {
+                            ErrorNotice(message: errorMessage)
+                        }
 
                         Text(AppLocalization.momentCount(results.count))
                             .font(.system(.subheadline, design: .rounded).weight(.medium))
                             .foregroundStyle(AppColors.secondaryText)
                             .accessibilityIdentifier("timeline.resultCount")
-                    }
+                            .id("timeline.results")
 
-                    if hasActiveFilters {
-                        Button {
-                            searchText = ""
-                            filter = .all
-                            isSearchPresented = false
-                        } label: {
-                            Label("Clear filters", systemImage: "line.3.horizontal.decrease.circle")
-                        }
-                        .buttonStyle(SecondaryActionButtonStyle())
-                        .accessibilityIdentifier("timeline.clearFilters")
-                    }
-
-                    if results.isEmpty {
-                        EmptyStateCard(
-                            title: hasActiveFilters ? "No matching moments" : "No moments here yet",
-                            message: hasActiveFilters
-                                ? "Try another word or change the selected filter."
-                                : "Your timeline will appear here after you save a moment.",
-                            symbol: "calendar"
-                        )
-                    } else {
-                        LazyVStack(spacing: 9) {
-                            ForEach(dayGroups) { group in
-                                Text(group.date.formatted(date: .abbreviated, time: .omitted))
-                                    .font(.system(.caption, design: .rounded).weight(.semibold))
-                                    .foregroundStyle(AppColors.accentText)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.top, 8)
-                                    .accessibilityAddTraits(.isHeader)
-                                ForEach(group.moments) { moment in
-                                    Button { onOpen(moment.id) } label: {
-                                        MomentRow(moment: moment)
+                        if results.isEmpty {
+                            emptyState
+                        } else {
+                            LazyVStack(spacing: 9) {
+                                ForEach(dayGroups) { group in
+                                    Text(group.date.formatted(date: .abbreviated, time: .omitted))
+                                        .font(.system(.caption, design: .rounded).weight(.semibold))
+                                        .foregroundStyle(AppColors.accentText)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.top, 8)
+                                        .accessibilityAddTraits(.isHeader)
+                                    ForEach(group.moments) { moment in
+                                        Button { onOpen(moment.id) } label: {
+                                            MomentRow(moment: moment)
+                                        }
+                                        .buttonStyle(.plain)
+                                        .accessibilityHint("Opens the private details for this moment")
+                                        .accessibilityIdentifier("moment.row")
                                     }
-                                    .buttonStyle(.plain)
-                                    .accessibilityHint("Opens the private details for this moment")
-                                    .accessibilityIdentifier("moment.row")
                                 }
                             }
                         }
+
+                        if hasActiveFilters {
+                            Button {
+                                searchText = ""
+                                filter = .all
+                                isSearchPresented = false
+                            } label: {
+                                Label("Clear filters", systemImage: "line.3.horizontal.decrease.circle")
+                            }
+                            .buttonStyle(SecondaryActionButtonStyle())
+                            .accessibilityIdentifier("timeline.clearFilters")
+                        }
+
+                        if isSearchPresented {
+                            searchControls
+                        }
                     }
                 }
+                .padding(.horizontal, AppSpacing.page)
+                .padding(.top, 16)
+                .padding(.bottom, 28)
+                .frame(maxWidth: 700)
+                .frame(maxWidth: .infinity)
             }
-            .padding(.horizontal, AppSpacing.page)
-            .padding(.top, 16)
-            .padding(.bottom, 28)
-            .frame(maxWidth: 700)
-            .frame(maxWidth: .infinity)
+            .scrollDismissesKeyboard(.interactively)
+            .onChange(of: isSearchPresented) { _, presented in
+                if presented, store.isStorageAvailable {
+                    proxy.scrollTo("timeline.results", anchor: .top)
+                }
+            }
         }
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Your moments")
         .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $searchText, isPresented: $isSearchPresented, prompt: "Search moments")
+        .onSubmit(of: .search) { isSearchPresented = false }
         .task { store.reload() }
+    }
+
+    @ViewBuilder
+    private var emptyState: some View {
+        if isSearchPresented {
+            // Give results priority over decorative artwork while typing.
+            VStack(alignment: .leading, spacing: 8) {
+                Text(emptyTitle)
+                    .font(.system(.headline, design: .rounded).weight(.semibold))
+                    .foregroundStyle(AppColors.text)
+                Text(emptyMessage)
+                    .font(.system(.subheadline, design: .rounded))
+                    .foregroundStyle(AppColors.secondaryText)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityIdentifier("timeline.emptyState")
+        } else {
+            EmptyStateCard(title: emptyTitle, message: emptyMessage, symbol: "calendar")
+                .accessibilityIdentifier("timeline.emptyState")
+        }
+    }
+
+    private var emptyTitle: LocalizedStringKey {
+        hasActiveFilters ? "No matching moments" : "No moments here yet"
+    }
+
+    private var emptyMessage: LocalizedStringKey {
+        hasActiveFilters
+            ? "Try another word or change the selected filter."
+            : "Your timeline will appear here after you save a moment."
+    }
+
+    @ViewBuilder
+    private var searchControls: some View {
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                filterPicker.pickerStyle(.menu)
+            } else {
+                filterPicker.pickerStyle(.segmented)
+            }
+        }
+        .accessibilityHint("Filters your private records by moment type")
+        .disabled(!store.isStorageAvailable)
+
+        if store.isStorageAvailable {
+            Text("Date, type, mood, or tag")
+                .font(.system(.footnote, design: .rounded))
+                .foregroundStyle(AppColors.secondaryText)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("timeline.searchScope")
+        }
     }
 
     private var filterPicker: some View {

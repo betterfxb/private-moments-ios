@@ -42,12 +42,16 @@ struct SettingsView: View {
     private var isWorking: Bool { isPreparingBackup || isReadingBackup }
 
     var body: some View {
-        VStack(spacing: 0) {
-            if let backupStatus, backupStatus.isBrief {
-                backupBanner(backupStatus)
-            }
+        ScrollViewReader { proxy in
             settingsScrollContent
-                .frame(maxHeight: .infinity)
+                .onChange(of: backupStatus) { _, status in
+                    if status?.isBrief == true {
+                        // Bring new feedback into view once. It remains in the
+                        // scroll content, so reading it never pins a long block
+                        // above every subsequent Settings action.
+                        proxy.scrollTo("settings.top", anchor: .top)
+                    }
+                }
         }
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Settings")
@@ -85,6 +89,10 @@ struct SettingsView: View {
     private var settingsScrollContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
+                if let backupStatus, backupStatus.isBrief {
+                    backupBanner(backupStatus)
+                }
+
                 VStack(alignment: .leading, spacing: 8) {
                     PrivateBadge()
                     Text("Your space, your choice.")
@@ -296,7 +304,9 @@ struct SettingsView: View {
             .padding(.bottom, 30)
             .frame(maxWidth: Self.contentMaxWidth)
             .frame(maxWidth: .infinity)
+            .id("settings.top")
         }
+        .accessibilityIdentifier("settings.scroll")
     }
 
     private var valueLayout: AnyLayout {
@@ -323,7 +333,6 @@ struct SettingsView: View {
             }
         }
         .modifier(JournalPanel())
-        .padding(.horizontal, AppSpacing.page)
         .padding(.vertical, 8)
         .frame(maxWidth: Self.contentMaxWidth)
         .fixedSize(horizontal: false, vertical: true)
