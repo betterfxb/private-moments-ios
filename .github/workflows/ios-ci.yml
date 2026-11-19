@@ -7,6 +7,10 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
+      use_intel_runner:
+        description: Use the standard Intel macOS runner when ARM64 capacity is unavailable
+        type: boolean
+        default: false
       backup_smoke:
         description: Run selected-profile backup unit and file flow (not full acceptance)
         type: boolean
@@ -101,7 +105,7 @@ jobs:
   build-and-test:
     needs: plan
     name: ${{ matrix.profile }}
-    runs-on: macos-15
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.use_intel_runner && 'macos-15-intel' || 'macos-15' }}
     timeout-minutes: ${{ matrix.timeout_minutes }}
     strategy:
       fail-fast: false
