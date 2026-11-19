@@ -424,7 +424,9 @@ final class PrivateMomentsUITests: XCTestCase {
         let before = window.frame
         let delta = targetWidth - before.width
         let source = handle.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-        source.press(forDuration: 0.10, thenDragTo: source.withOffset(CGVector(dx: delta, dy: 0)),
+        // In this simulator's Windowed Apps mode the window resizes about its
+        // center: the right edge moves the drag distance, and the left mirrors it.
+        source.press(forDuration: 0.10, thenDragTo: source.withOffset(CGVector(dx: delta / 2, dy: 0)),
                      withVelocity: .slow, thenHoldForDuration: 0.10)
         let resized = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             window.exists && (window.frame.width - before.width) * (delta > 0 ? 1 : -1) >= 48
