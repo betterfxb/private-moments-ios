@@ -1,6 +1,6 @@
 # Private Moments 项目记忆
 
-更新日期：2026-11-16（Asia/Tokyo）。这是可随仓库迁移的工程记忆；验收事实以对应源码、原始运行及证据收据为准，不能以文档最新提交替代受测源码。
+更新日期：2026-11-20（Asia/Tokyo）。源码、原始运行及证据收据共同确定验收范围。记录文档的提交可与实际受测源码不同。
 
 ## 项目与约束
 
@@ -17,7 +17,17 @@
 - 界面支持English和简体中文，跟随iOS应用语言；记录枚举保持稳定，用户备注不自动翻译。字符串目录231键，现有项目静态审计109对象。
 - Debug UI测试使用每次独立UUID库，不重置正常日记；Release排除测试钩子。认证使用真实系统流程，不增加成功绕过路径。
 
-## 最近完整四配置验收（第十七批）
+## 第十八批首页、操作体验与性能验收
+
+仓库开发分支已实现原生暖色沉浸扉页、双语空态及有记录首页、备份入口精简、删除命中区、iPad 窗口和数据连续性回归、1,000 条合成数据基线以及明确终止规则。完整四配置的受测源码为 `7c90b26c50a39f072f92eda83ed62e7136037a49`，[运行 44543961473](https://github.com/betterfxb/private-moments-ios/actions/runs/44543961473)。51 项应用单元、14/15 次 UI 及无签名 Debug／Release 检查通过，唯一失败为浅色小屏英文 Files 定位。两次无执行器的小屏尝试和一次无执行器的 iPad 尝试有独立状态，重跑只替换未执行的配置。
+
+修订源码 `3602f3096d42a008df0d95a16f6fa6a5c9f0b4d3` 把最大字号首页日期缩成一行，补录完整高于标签栏，设置首屏直接显示已保存数量。英文 Files 测试等真实目录或稳定的系统侧栏，仍保留实际文件结果。英文常规字号定向 [44574843556](https://github.com/betterfxb/private-moments-ios/actions/runs/44574843556) 在标准 Intel 通过，零显式重选。最大字号 Intel [44581949391](https://github.com/betterfxb/private-moments-ios/actions/runs/44581949391) 在初始化时超时，未执行用例。ARM64 同源码 [44588232445](https://github.com/betterfxb/private-moments-ios/actions/runs/44588232445) 通过双语图库及新增首屏断言，[44594842249](https://github.com/betterfxb/private-moments-ios/actions/runs/44594842249) 通过最大字号真实 Files 回路，零显式重选。命中区在常规 iPad 原生实测高 49.5 点，真实点按文字上方内边距打开删除确认。
+
+独立系统窗口 [44541077629](https://github.com/betterfxb/private-moments-ios/actions/runs/44541077629) 是真实 iPadOS Windowed Apps 拖柄验证，宽度 1032／784／516 点。备注两行、3 分 8 秒和 44 × 44 点保存目标均保留，详情一次返回、暂停原秒数保留。已保存的记录重启后可读。未保存草稿仅在当前进程存在，进程退出时会停止会话计时，界面提供双语提示。
+
+千条 M1 模拟器中位数为启动 4.240 秒、滚动 3.513 秒、输入到唯一结果 1.844 秒，包含 XCTest 驱动时间。千条 JSON 编码／解码为 6.349／5.190 毫秒中位数，文件大小 323,919 字节。源、执行器、样本与限制见[第十八批报告](release/UX-ACCEPTANCE-18.md)。后续可从[最大字号原图收据](release/evidence/batch-18/44588232445/verification.json)、[窗口原图收据](release/evidence/batch-18/44541077629/verification.json)和[四配置收据](release/evidence/batch-18/44543961473/verification.json)复核。
+
+## 第十七批历史完整四配置验收
 
 按[计划](release/BATCH-17-PLAN.md)完成，见[报告](release/UX-ACCEPTANCE-17.md)、[原图](release/evidence/batch-17/index.html)及[收据](release/evidence/batch-17/verification.json)。完整受测源码`9e106f37431da8a30448731271abdfccaa19a9c7`，运行43734076863；50应用单元、13次UI执行、Debug／Release及Release测试钩子排除通过。iPad常规Large字号双语输入／英文文件，以及SE最大辅助字号双语输入、英文和中文真实文件定向各有独立运行来源，先原图检查才进入下一项。43项本地工具测试及231键／109对象／发行材料审计通过，原始占位警告保留。
 
@@ -106,7 +116,7 @@
 ## 待办及结论边界
 
 - 第十四批补充mini浅色Large、iPad深色最大字号及默认浅色Large全窗口旋转；最终大屏运行包含Settings参考前置。键盘已收起，检查草稿／导航／暂停及已保存记录重启，不能外推为冷启动首转或分屏通过。
-- 第十五批补齐指定26.2云端独立英文／中文冷启动旋转；旧失败根因及其他环境稳定性仍未证明。下一步建立实际系统窗口缩放证据，明确终止后的草稿／计时恢复策略，再推进性能与真机验证。产品恢复策略不能由测试脚本擅自假定。
+- 第十五批补齐指定26.2云端独立英文／中文冷启动旋转。第十八批验证单窗口真实缩放、进程终止与合成数据性能。并行双窗口、多任务搭配和真机极小窗口仍待独立验证。未来改变私密草稿落盘或跨进程计时，应先决定隐私和存储契约。
 - 中文IME组合与候选、VoiceOver／Switch Control、成功Face ID／Touch ID及待决认证取消、锁屏文件保护、外接／浮动键盘和外部文件提供方仍需相应设备或环境。
 - 当前只验证固定Xcode／SDK／Simulator26.2；iOS17最低目标不代表所有旧系统已实测。真机、审美验收和发行材料中的发布者／Bundle ID占位仍未关闭。
 

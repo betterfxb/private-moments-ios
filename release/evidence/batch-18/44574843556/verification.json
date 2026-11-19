@@ -1,0 +1,137 @@
+{
+  "batch": 18,
+  "runId": "44574843556",
+  "sourceCommit": "3602f3096d42a008df0d95a16f6fa6a5c9f0b4d3",
+  "scope": "backup-compact",
+  "jobHistory": [
+    {
+      "name": "plan",
+      "jobId": 135739435772,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "compact-light",
+      "jobId": 135739958475,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    }
+  ],
+  "conclusion": "success",
+  "native": {
+    "compact-light": {
+      "jobId": 135739958475,
+      "runAttempt": 1,
+      "unitPassed": [
+        [
+          "BackupUXTests",
+          "testEmptyPreviewKeepsReplacementScopeExplicit",
+          "0.005"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderPreservesTheFullValidatedRecord",
+          "0.044"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderRejectsAnOversizedSparseFile",
+          "0.033"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderRejectsMalformedAndMissingFiles",
+          "0.017"
+        ],
+        [
+          "BackupUXTests",
+          "testImportedCopyNeverDeletesAPrefixSibling",
+          "0.006"
+        ],
+        [
+          "BackupUXTests",
+          "testImportedCopyNeverRecursivelyDeletesADirectory",
+          "0.009"
+        ],
+        [
+          "BackupUXTests",
+          "testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError",
+          "0.399"
+        ],
+        [
+          "BackupUXTests",
+          "testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames",
+          "0.034"
+        ],
+        [
+          "BackupUXTests",
+          "testPreviewCountsActualIDOverlapAndNotes",
+          "0.003"
+        ]
+      ],
+      "uiPassed": [
+        [
+          "testBackupFileRoundTrip",
+          "971.115"
+        ]
+      ],
+      "testFailed": [],
+      "testErrors": [],
+      "unsignedRelease": false,
+      "filesReselected": [],
+      "targetMeasurements": [],
+      "resizing": [],
+      "interactionPerformance": {},
+      "backupPerformance": {}
+    }
+  },
+  "originalImageCount": 10,
+  "retainedImages": [
+    {
+      "profile": "compact-light",
+      "name": "Export-files-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "ebc11a6bad8008acf2cd81a42599537247d3384239fc58fa5c1ace446708127b",
+      "path": "compact-light/Export-files-en.png",
+      "exportedAttachment": "F2CBAABE-5200-4AF5-AF60-19551DDFAF77.png",
+      "hierarchy": {
+        "path": "compact-light/Export-files-en-hierarchy.txt",
+        "sha256": "d1b748cf0c803bf7a5ff9223938ef700327ff5c8868936e018b57d3e9f4056eb"
+      }
+    },
+    {
+      "profile": "compact-light",
+      "name": "Import-cancelled-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "43ac33f41286fd22de04cec89a19e27aabfbe811a11a22dd09daec9f6ee0aae7",
+      "path": "compact-light/Import-cancelled-en.png",
+      "exportedAttachment": "F2D61E2C-7647-48FA-A727-9DA3033A5890.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Backup-replace-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "083a05c91cc7740051358fd8859640a2c7764e1463e310cb9255126c148fe44d",
+      "path": "compact-light/Backup-replace-en.png",
+      "exportedAttachment": "5FCB4C76-F19D-4A47-BFD7-C5DEBC3C68B7.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Backup-restored-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "e5c6b61744e32751828516ddbb1d0fdb95a80e7c4e15a48f60057e40d9fac4ce",
+      "path": "compact-light/Backup-restored-en.png",
+      "exportedAttachment": "A187220C-4D17-4F72-96CE-5B1B0C150CD9.png"
+    }
+  ]
+}

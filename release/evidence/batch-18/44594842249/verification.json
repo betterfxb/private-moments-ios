@@ -1,0 +1,137 @@
+{
+  "batch": 18,
+  "runId": "44594842249",
+  "sourceCommit": "3602f3096d42a008df0d95a16f6fa6a5c9f0b4d3",
+  "scope": "backup-ax",
+  "jobHistory": [
+    {
+      "name": "plan",
+      "jobId": 135810240266,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "compact-dark-accessibility",
+      "jobId": 135810536592,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    }
+  ],
+  "conclusion": "success",
+  "native": {
+    "compact-dark-accessibility": {
+      "jobId": 135810536592,
+      "runAttempt": 1,
+      "unitPassed": [
+        [
+          "BackupUXTests",
+          "testEmptyPreviewKeepsReplacementScopeExplicit",
+          "0.002"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderPreservesTheFullValidatedRecord",
+          "0.027"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderRejectsAnOversizedSparseFile",
+          "0.011"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderRejectsMalformedAndMissingFiles",
+          "0.008"
+        ],
+        [
+          "BackupUXTests",
+          "testImportedCopyNeverDeletesAPrefixSibling",
+          "0.002"
+        ],
+        [
+          "BackupUXTests",
+          "testImportedCopyNeverRecursivelyDeletesADirectory",
+          "0.001"
+        ],
+        [
+          "BackupUXTests",
+          "testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError",
+          "0.013"
+        ],
+        [
+          "BackupUXTests",
+          "testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames",
+          "0.023"
+        ],
+        [
+          "BackupUXTests",
+          "testPreviewCountsActualIDOverlapAndNotes",
+          "0.001"
+        ]
+      ],
+      "uiPassed": [
+        [
+          "testBackupFileRoundTrip",
+          "595.642"
+        ]
+      ],
+      "testFailed": [],
+      "testErrors": [],
+      "unsignedRelease": false,
+      "filesReselected": [],
+      "targetMeasurements": [],
+      "resizing": [],
+      "interactionPerformance": {},
+      "backupPerformance": {}
+    }
+  },
+  "originalImageCount": 10,
+  "retainedImages": [
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Export-files-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "18217890e52927a547ce858706d6ded848eeeac636ff2f74c12708887b9bf019",
+      "path": "compact-dark-accessibility/Export-files-en.png",
+      "exportedAttachment": "2A88E229-64D4-4D12-A94D-4176F7810D47.png",
+      "hierarchy": {
+        "path": "compact-dark-accessibility/Export-files-en-hierarchy.txt",
+        "sha256": "b006638c29adc6603379b167d389b4d792b6a35e2e82cb3efcdde6603f5734e8"
+      }
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Import-cancelled-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "580badce96d512efef811820a20c1ff4b2f1e7ab4a04b16e840634f8ce25d450",
+      "path": "compact-dark-accessibility/Import-cancelled-en.png",
+      "exportedAttachment": "B3C9F830-D741-40EF-BFF2-73165F06C210.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Import-feedback-scrolled-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "07e8b8d3e5d51b46a3b45fd0633f6df9d7f8e21a4daffafefc9841b1dd8060d3",
+      "path": "compact-dark-accessibility/Import-feedback-scrolled-en.png",
+      "exportedAttachment": "790841DD-36EB-47EC-B64D-1BA590CFB963.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Backup-restored-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "0c5208dcf751ceff1dd79dd419cb46ec8218a7ca601692d039a3d9601182e84e",
+      "path": "compact-dark-accessibility/Backup-restored-en.png",
+      "exportedAttachment": "0922A60E-4325-425B-8E62-D12E70727B70.png"
+    }
+  ]
+}
