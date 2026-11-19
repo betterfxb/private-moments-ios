@@ -89,14 +89,16 @@ struct SettingsView: View {
     private var settingsScrollContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
-                VStack(alignment: .leading, spacing: 8) {
-                    PrivateBadge()
-                    Text("Your space, your choice.")
-                        .font(.system(.title2, design: .rounded).weight(.semibold))
-                        .foregroundStyle(AppColors.text)
-                    Text("Your journal stays on this device. Manage its privacy and backups here.")
-                        .font(.system(.subheadline, design: .rounded))
-                        .foregroundStyle(AppColors.secondaryText)
+                if !dynamicTypeSize.isAccessibilitySize {
+                    VStack(alignment: .leading, spacing: 8) {
+                        PrivateBadge()
+                        Text("Your space, your choice.")
+                            .font(.system(.title2, design: .rounded).weight(.semibold))
+                            .foregroundStyle(AppColors.text)
+                        Text("Your journal stays on this device. Manage its privacy and backups here.")
+                            .font(.system(.subheadline, design: .rounded))
+                            .foregroundStyle(AppColors.secondaryText)
+                    }
                 }
 
                 settingsCard(title: "ON THIS DEVICE") {

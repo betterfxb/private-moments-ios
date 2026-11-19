@@ -106,9 +106,14 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertTrue(start.isHittable, "The primary action must be usable on the first screen.")
             XCTAssertLessThan(start.frame.maxY, app.buttons["today.addRecord"].frame.minY,
                 "The cover should present the primary action before the secondary action.")
-            capture("Today-\(language)", app)
             let weekMenu = app.buttons["today.weekMenu"]
             let usesAccessibilityLayout = weekMenu.exists
+            if usesAccessibilityLayout {
+                let add = app.buttons["today.addRecord"]
+                XCTAssertTrue(add.isHittable)
+                assertAboveBottomTabBar(add, message: "The full add-past action must fit on the first screen.", app: app)
+            }
+            capture("Today-\(language)", app)
             if weekMenu.exists {
                 tap(weekMenu, in: app)
                 capture("Week-menu-\(language)", app)
@@ -204,6 +209,10 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Settings-top-\(language)", app)
             let countTitle = app.staticTexts["settings.savedCountTitle"]
             let countValue = app.staticTexts["settings.savedCount"]
+            if usesAccessibilityLayout {
+                assertAboveBottomTabBar(countTitle, message: "Settings should initially show the saved-record label.", app: app)
+                assertAboveBottomTabBar(countValue, message: "Settings should initially show the saved-record count.", app: app)
+            }
             revealFully(from: countTitle, through: countValue, in: app)
             capture("Settings-values-\(language)", app)
             XCTAssertEqual(countTitle.label, language == "en" ? "Saved moments" : "已保存的记录")
@@ -818,6 +827,16 @@ final class PrivateMomentsUITests: XCTestCase {
         return true
     }
 
+    private func assertAboveBottomTabBar(_ element: XCUIElement, message: String, app: XCUIApplication,
+                                         file: StaticString = #filePath, line: UInt = #line) {
+        let window = app.windows.firstMatch.frame
+        let tabBar = app.tabBars.firstMatch
+        let bottom = tabBar.exists && tabBar.frame.midY > window.midY ? tabBar.frame.minY : window.maxY
+        let frame = element.frame
+        XCTAssertTrue(element.exists && !frame.isEmpty && window.contains(frame) && frame.maxY <= bottom,
+                      "\(message) Element: \(frame); unobstructed bottom: \(bottom).", file: file, line: line)
+    }
+
     private func assertValueLayout(title: XCUIElement, value: XCUIElement, stacked: Bool) {
         XCTAssertTrue(title.exists)
         XCTAssertTrue(value.exists)
@@ -965,18 +984,31 @@ final class PrivateMomentsUITests: XCTestCase {
 
     private func enterLocalExportBrowser(_ app: XCUIApplication, timeout: TimeInterval) -> Bool {
         let deadline = Date().addingTimeInterval(timeout)
+        let root = localFileRoots(in: app).firstMatch
+        let window = app.windows.firstMatch
+        var previousLocationFrame: CGRect?
         repeat {
-            // The root can finish loading while a location query is pending.
-            // Recheck it instead of requiring a now-absent sidebar action.
-            if localFileRoots(in: app).firstMatch.exists { return true }
-            for location in nativeLocalLocations(in: app) {
-                if location.exists && location.isHittable && location.isEnabled {
-                    location.tap()
-                    return true
-                }
+            if root.exists { return true }
+            guard let location = nativeLocalLocations(in: app).first(where: {
+                $0.exists && $0.isHittable && $0.isEnabled
+            }) else {
+                previousLocationFrame = nil
+                continue
             }
+            let frame = location.frame
+            let bounds = window.frame
+            // Files can navigate to the local root while this temporary
+            // sidebar row is being resolved. Confirm it has settled and let a
+            // ready provider win before tapping a live screen coordinate.
+            if root.exists { return true }
+            if frame == previousLocationFrame, !frame.isEmpty, bounds.contains(frame) {
+                window.coordinate(withNormalizedOffset: .zero)
+                    .withOffset(CGVector(dx: frame.midX - bounds.minX, dy: frame.midY - bounds.minY)).tap()
+                return true
+            }
+            previousLocationFrame = frame
         } while Date() < deadline
-        return localFileRoots(in: app).firstMatch.exists
+        return root.exists
     }
 
     private func captureReadyExporter(action: XCUIElement, language: String, app: XCUIApplication) {

@@ -18,7 +18,11 @@ struct TodayView: View {
     }
 
     private var todayLabel: String {
-        Date.now.formatted(.dateTime.weekday(.wide).month(.wide).day())
+        if dynamicTypeSize.isAccessibilitySize {
+            Date.now.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())
+        } else {
+            Date.now.formatted(.dateTime.weekday(.wide).month(.wide).day())
+        }
     }
 
     private var weekSummary: [WeekdayCount] {
