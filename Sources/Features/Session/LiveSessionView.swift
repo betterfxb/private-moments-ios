@@ -50,7 +50,7 @@ struct LiveSessionView: View {
                         .accessibilityLabel(AppLocalization.format("Session duration %@", SessionClock.clockText(sessionClock.elapsedSeconds)))
                     }
 
-                    Text("Take the time you need.\nYou can finish whenever you like.")
+                    Text("Force-quitting the app ends this timer.")
                         .font(.system(.body, design: .rounded))
                         .multilineTextAlignment(.center)
                         .foregroundStyle(AppColors.onDarkSecondary)

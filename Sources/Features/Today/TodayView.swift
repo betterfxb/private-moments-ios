@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TodayView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(MomentStore.self) private var store
     @Environment(\.scenePhase) private var scenePhase
     @Binding var selectedDate: Date?
@@ -36,169 +37,208 @@ struct TodayView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: AppSpacing.section) {
-                VStack(alignment: .leading, spacing: 6) {
-                    if dynamicTypeSize.isAccessibilitySize {
-                        brandTitle
-                            .font(.system(.title, design: .rounded).weight(.bold))
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    adaptiveLayout {
-                        Text(todayLabel)
-                            .font(.system(.caption, design: .rounded))
-                            .foregroundStyle(AppColors.secondaryText)
-                        Spacer(minLength: 0)
-                        PrivateBadge()
-                    }
-                }
-
-                if store.isStorageAvailable {
-                    weekSelector
-                }
-
-                adaptiveLayout {
-                    Button(action: onStart) {
-                        Label("Start a moment", systemImage: "play.fill")
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(minHeight: 44)
-                    }
-                    .buttonStyle(PrimaryActionButtonStyle())
-                    .disabled(!store.isStorageAvailable)
-                    .accessibilityIdentifier("today.startMoment")
-                    .accessibilityHint(store.isStorageAvailable
-                        ? "Starts a private session timer"
-                        : "Load your journal before starting a record.")
-
-                    Button { onAddRecord(min(selectedDate ?? .now, .now)) } label: {
-                        Label("Add past moment", systemImage: "square.and.pencil")
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(minHeight: 44)
-                    }
-                    .buttonStyle(SecondaryActionButtonStyle())
-                    .disabled(!store.isStorageAvailable)
-                    .accessibilityIdentifier("today.addRecord")
-                    .accessibilityHint("Adds a record without starting the timer")
-                }
-
-                if !store.isStorageAvailable {
-                    StorageRecoveryCard(
-                        message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
-                        onRetry: store.reload
-                    )
-                } else {
-                    if let errorMessage = store.errorMessage { ErrorNotice(message: errorMessage) }
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        adaptiveLayout {
-                            Text(selectedDate.map { $0.formatted(date: .abbreviated, time: .omitted) } ?? AppLocalization.string("Recent moments"))
-                                .font(.system(.headline, design: .rounded).weight(.semibold))
-                                .foregroundStyle(AppColors.text)
-                            Spacer(minLength: 0)
-                            Text(AppLocalization.format("%lld saved", selectedDate == nil ? store.moments.count : visibleMoments.count))
-                                .font(.system(.caption, design: .rounded))
-                                .foregroundStyle(AppColors.secondaryText)
-                        }
-                        if selectedDate != nil {
-                            Button("Show recent moments") { selectedDate = nil }
-                                .font(.subheadline)
-                                .frame(minHeight: 44)
-                                .accessibilityIdentifier("today.clearDateFilter")
-                        }
-                        if visibleMoments.isEmpty {
-                            EmptyStateCard(
-                                title: selectedDate == nil ? "No moments here yet" : "No moments on this day",
-                                message: selectedDate == nil
-                                    ? "Your timeline will appear here after you save a moment."
-                                    : "Choose another day or add a past moment.",
-                                symbol: "heart"
-                            )
-                        } else {
-                            LazyVStack(spacing: 10) {
-                                ForEach(visibleMoments) { moment in
-                                    Button { onOpen(moment.id) } label: { MomentRow(moment: moment) }
-                                        .buttonStyle(.plain)
-                                        .accessibilityHint("Opens the private details for this moment")
-                                        .accessibilityIdentifier("moment.row")
-                                }
-                            }
-                        }
-                    }
-
-                    Text("All-time overview")
-                        .font(.system(.headline, design: .rounded).weight(.semibold))
-                        .foregroundStyle(AppColors.text)
-                        .accessibilityAddTraits(.isHeader)
-                        .accessibilityIdentifier("today.overviewScope")
-                    adaptiveLayout {
-                        summaryTile(
-                            value: store.averageDurationMinutes.map { AppLocalization.format("%lld min", $0) } ?? "—",
-                            title: "Average"
-                        )
-                        summaryTile(value: store.mostCommonMood?.displayName ?? "—", title: "Most common mood")
-                    }
-                }
+            VStack(spacing: 0) {
+                cover
+                journal
+                    .padding(.top, -18)
             }
-            .padding(.horizontal, AppSpacing.page)
-            .padding(.top, 16)
-            .padding(.bottom, 30)
-            .frame(maxWidth: 700)
-            .frame(maxWidth: .infinity)
         }
-        .background(AppColors.background.ignoresSafeArea())
+        .background(AppColors.homePaper.ignoresSafeArea())
         .navigationTitle(dynamicTypeSize.isAccessibilitySize ? LocalizedStringKey("Today") : LocalizedStringKey(""))
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(AppColors.homeCover, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .onChange(of: scenePhase) { _, phase in
             if phase != .active { showingDatePicker = false }
         }
         .toolbar {
-            if !dynamicTypeSize.isAccessibilitySize {
-                if #available(iOS 26.0, *) {
-                    ToolbarItem(placement: .topBarLeading) { toolbarBrand }
-                        .sharedBackgroundVisibility(.hidden)
-                } else {
-                    ToolbarItem(placement: .topBarLeading) { toolbarBrand }
-                }
-            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     dateToView = selectedDate ?? .now
                     showingDatePicker = true
                 } label: { Label("View a day", systemImage: "calendar") }
+                .tint(AppColors.homeCoverAction)
                 .disabled(!store.isStorageAvailable)
                 .accessibilityIdentifier("today.chooseDate")
             }
         }
         .sheet(isPresented: $showingDatePicker) {
-            NavigationStack {
-                ScrollView {
-                    Button("Today") { dateToView = .now }
-                        .buttonStyle(.bordered)
-                        .accessibilityIdentifier("today.selectToday")
-                        .padding(.top)
-                    DatePicker("View a day", selection: $dateToView, displayedComponents: .date)
-                        .datePickerStyle(.graphical)
-                        .tint(AppColors.controlTint)
-                        .padding()
-                        .frame(maxWidth: 520)
-                        .frame(maxWidth: .infinity)
+            calendarSheet
+        }
+        .task { store.reload() }
+    }
+
+    private var cover: some View {
+        VStack(spacing: 10) {
+            Text(todayLabel)
+                .font(.system(.caption, design: .rounded).weight(.medium))
+                .foregroundStyle(AppColors.homeCoverSecondary)
+            Text("Private Moments")
+                .font(.system(dynamicTypeSize.isAccessibilitySize ? .title2 : .largeTitle, design: .serif).weight(.medium))
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("today.brand")
+            if !dynamicTypeSize.isAccessibilitySize && verticalSizeClass != .compact && store.isStorageAvailable {
+                Text("A moment to keep for yourself.")
+                    .font(.system(.body, design: .serif))
+                    .foregroundStyle(AppColors.homeCoverSecondary)
+                coverArtwork
+            }
+
+            VStack(spacing: 4) {
+                Button(action: onStart) {
+                    Text("Start a moment")
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                .navigationTitle("View a day")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { showingDatePicker = false }
+                .buttonStyle(TodayCoverActionStyle(isPrimary: true))
+                .accessibilityIdentifier("today.startMoment")
+                .accessibilityHint(store.isStorageAvailable
+                    ? "Starts a private session timer"
+                    : "Load your journal before starting a record.")
+
+                Button { onAddRecord(min(selectedDate ?? .now, .now)) } label: {
+                    Text("Add past moment")
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .buttonStyle(TodayCoverActionStyle(isPrimary: false))
+                .accessibilityIdentifier("today.addRecord")
+                .accessibilityHint("Adds a record without starting the timer")
+            }
+            .frame(maxWidth: 380)
+            .disabled(!store.isStorageAvailable)
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .multilineTextAlignment(.center)
+        .foregroundStyle(AppColors.homeCoverText)
+        .padding(.horizontal, AppSpacing.page)
+        .padding(.top, 12)
+        .padding(.bottom, 32)
+        .frame(maxWidth: .infinity)
+        .background {
+            RadialGradient(colors: [AppColors.homeCoverGlow, AppColors.homeCover],
+                           center: .center, startRadius: 12, endRadius: 275)
+        }
+    }
+
+    private var coverArtwork: some View {
+        ZStack {
+            ForEach(0..<2) { index in
+                Capsule()
+                    .fill(LinearGradient(colors: [AppColors.homeCoverAction, AppColors.homeCoverGlow],
+                                         startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .overlay { Capsule().strokeBorder(AppColors.homeCoverText.opacity(0.3)) }
+                    .frame(width: 48, height: 78)
+                    .rotationEffect(.degrees(index == 0 ? -25 : 20))
+                    .offset(x: index == 0 ? -18 : 17, y: index == 0 ? -3 : 4)
+            }
+        }
+        .frame(width: 120, height: 99)
+        .accessibilityHidden(true)
+    }
+
+    private var journal: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.section) {
+            if !store.isStorageAvailable {
+                StorageRecoveryCard(
+                    message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
+                    onRetry: store.reload
+                )
+            } else {
+                if let errorMessage = store.errorMessage { ErrorNotice(message: errorMessage) }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    adaptiveLayout {
+                        Text(selectedDate.map { $0.formatted(date: .abbreviated, time: .omitted) } ?? AppLocalization.string("Recent moments"))
+                            .font(.system(.headline, design: .rounded).weight(.semibold))
+                            .foregroundStyle(AppColors.text)
+                        Spacer(minLength: 0)
+                        Text(AppLocalization.format("%lld saved", selectedDate == nil ? store.moments.count : visibleMoments.count))
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundStyle(AppColors.secondaryText)
                     }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Show day") {
-                            selectedDate = dateToView
-                            showingDatePicker = false
+                    if selectedDate != nil {
+                        Button("Show recent moments") { selectedDate = nil }
+                            .font(.subheadline)
+                            .frame(minHeight: 44)
+                            .accessibilityIdentifier("today.clearDateFilter")
+                    }
+                    if visibleMoments.isEmpty {
+                        EmptyStateCard(
+                            title: selectedDate == nil ? "No moments here yet" : "No moments on this day",
+                            message: selectedDate == nil
+                                ? "Your timeline will appear here after you save a moment."
+                                : "Choose another day or add a past moment.",
+                            symbol: "heart"
+                        )
+                    } else {
+                        LazyVStack(spacing: 10) {
+                            ForEach(visibleMoments) { moment in
+                                Button { onOpen(moment.id) } label: { MomentRow(moment: moment) }
+                                    .buttonStyle(.plain)
+                                    .accessibilityHint("Opens the private details for this moment")
+                                    .accessibilityIdentifier("moment.row")
+                            }
                         }
-                        .accessibilityIdentifier("today.applyDate")
                     }
+                }
+
+                weekSelector
+
+                Text("All-time overview")
+                    .font(.system(.headline, design: .rounded).weight(.semibold))
+                    .foregroundStyle(AppColors.text)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("today.overviewScope")
+                adaptiveLayout {
+                    summaryTile(
+                        value: store.averageDurationMinutes.map { AppLocalization.format("%lld min", $0) } ?? "—",
+                        title: "Average"
+                    )
+                    summaryTile(value: store.mostCommonMood?.displayName ?? "—", title: "Most common mood")
+                }
+                PrivateBadge()
+            }
+        }
+        .padding(.horizontal, AppSpacing.page)
+        .padding(.top, 22)
+        .padding(.bottom, 30)
+        .frame(maxWidth: 700)
+        .frame(maxWidth: .infinity)
+        .background {
+            UnevenRoundedRectangle(topLeadingRadius: 26, topTrailingRadius: 26)
+                .fill(AppColors.homePaper)
+        }
+    }
+
+    private var calendarSheet: some View {
+        NavigationStack {
+            ScrollView {
+                Button("Today") { dateToView = .now }
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("today.selectToday")
+                    .padding(.top)
+                DatePicker("View a day", selection: $dateToView, displayedComponents: .date)
+                    .datePickerStyle(.graphical)
+                    .tint(AppColors.controlTint)
+                    .padding()
+                    .frame(maxWidth: 520)
+                    .frame(maxWidth: .infinity)
+            }
+            .navigationTitle("View a day")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { showingDatePicker = false }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Show day") {
+                        selectedDate = dateToView
+                        showingDatePicker = false
+                    }
+                    .accessibilityIdentifier("today.applyDate")
                 }
             }
         }
-        .task { store.reload() }
     }
 
     @ViewBuilder
@@ -232,19 +272,6 @@ struct TodayView: View {
         } else {
             weekGrid
         }
-    }
-
-    private var brandTitle: some View {
-        Text("Private Moments")
-            .foregroundStyle(AppColors.accentText)
-            .accessibilityAddTraits(.isHeader)
-            .accessibilityIdentifier("today.brand")
-    }
-
-    private var toolbarBrand: some View {
-        brandTitle
-            .font(.system(.title2, design: .rounded).weight(.bold))
-            .fixedSize(horizontal: true, vertical: false)
     }
 
     private var weekGrid: some View {
@@ -311,6 +338,23 @@ struct TodayView: View {
         dynamicTypeSize.isAccessibilitySize
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
             : AnyLayout(HStackLayout(spacing: 10))
+    }
+}
+
+private struct TodayCoverActionStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+    let isPrimary: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(isPrimary ? .headline : .subheadline, design: .rounded).weight(.semibold))
+            .foregroundStyle(isPrimary ? AppColors.homeCoverActionText : AppColors.homeCoverText)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .frame(maxWidth: .infinity, minHeight: isPrimary ? 50 : 44)
+            .background(isPrimary ? AppColors.homeCoverAction : .clear, in: Capsule())
+            .contentShape(Rectangle())
+            .opacity(!isEnabled ? 0.55 : (configuration.isPressed ? 0.78 : 1))
     }
 }
 

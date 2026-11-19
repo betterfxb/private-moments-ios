@@ -31,7 +31,8 @@ def execute(block, values):
     # Remove inherited task flags so a developer's shell cannot change the case.
     environment = {k: v for k, v in os.environ.items()
                    if not k.startswith('PRIVATE_MOMENTS_UI_') and k not in {
-                       'ROTATION_SMOKE', 'ROTATION_START', 'INPUT_SMOKE', 'BACKUP_SMOKE', 'BACKUP_LANGUAGE'}}
+                       'ROTATION_SMOKE', 'ROTATION_START', 'INPUT_SMOKE', 'BACKUP_SMOKE', 'BACKUP_LANGUAGE',
+                       'SMOKE_PROFILE'}}
     environment.update(values)
     return subprocess.run([BASH, '-c', 'set -euo pipefail\nfail() { printf "%s\\n" "$1" >&2; exit 1; }\n' + block],
                           env=environment, text=True, capture_output=True, timeout=15)
@@ -64,6 +65,16 @@ class VerificationScopeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('-only-testing:' + PREFIX + REFERENCE, result.stdout.splitlines())
 
+    def test_window_resize_is_an_explicit_ipad_diagnostic(self):
+        method = PREFIX + 'testIPadWindowResizeContinuity'
+        focused = self.script('window-resize', PRIVATE_MOMENTS_UI_ROTATION_ONLY='1', PRIVATE_MOMENTS_UI_IPAD_TESTS='1')
+        self.assertEqual(focused.returncode, 0, focused.stderr)
+        self.assertEqual([line for line in focused.stdout.splitlines() if line.startswith('-only-testing:')],
+                         ['-only-testing:' + method])
+        self.assertIn('-skip-testing:' + method, self.script().stdout.splitlines())
+        self.assertNotEqual(self.script('window-resize', PRIVATE_MOMENTS_UI_ROTATION_ONLY='1').returncode, 0)
+        self.assertNotEqual(self.script('window-resize', PRIVATE_MOMENTS_UI_IPAD_TESTS='1').returncode, 0)
+
     def test_cold_rejects_missing_rotation_phone_or_conflicting_scopes(self):
         for start in ['cold-en', 'cold-zh-Hans']:
             for flags in [{}, {'PRIVATE_MOMENTS_UI_ROTATION_ONLY': '1'},
@@ -86,10 +97,10 @@ class VerificationScopeTests(unittest.TestCase):
             self.assertIn('-skip-testing:' + PREFIX + CHINESE, result.stdout.splitlines())
 
     def test_workflow_rejects_cold_without_rotation_before_allocating_macos(self):
-        for start in ['reference', 'cold-en', 'cold-zh-Hans', 'unknown']:
+        for start in ['reference', 'cold-en', 'cold-zh-Hans', 'window-resize', 'unknown']:
             for rotation in ['0', '1']:
                 result = execute(GUARD, dict(ROTATION_START=start, ROTATION_SMOKE=rotation,
-                                           INPUT_SMOKE='0', BACKUP_SMOKE='0', BACKUP_LANGUAGE='en'))
+                                           INPUT_SMOKE='0', BACKUP_SMOKE='0', BACKUP_LANGUAGE='en', SMOKE_PROFILE='ipad-light'))
                 expected = start != 'unknown' and (start == 'reference' or rotation == '1')
                 self.assertEqual(result.returncode == 0, expected, result.stderr)
 

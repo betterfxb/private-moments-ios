@@ -4,6 +4,31 @@ import UIKit
 import SwiftData
 @testable import PrivateMoments
 
+final class JournalPerformanceBaselineTests: XCTestCase {
+    func testSyntheticBackupCodecBaseline() throws {
+        let reference = Date(timeIntervalSince1970: 1_700_000_000)
+        for count in [100, 1_000] {
+            let fixture = (0..<count).map { index in
+                Moment(occurredAt: reference.addingTimeInterval(-Double(index) * 3_600),
+                       durationSeconds: 60 + index % 300, mood: .calm, rating: 4,
+                       privateNote: "Synthetic English and simplified Chinese test text. 合成测试文本。")
+            }
+            // Warm up the codec before collecting individual samples.
+            XCTAssertEqual(try MomentBackupCodec.decode(MomentBackupCodec.encode(fixture)).moments, fixture)
+            for sample in 1...3 {
+                let encodeStarted = ProcessInfo.processInfo.systemUptime
+                let data = try MomentBackupCodec.encode(fixture)
+                let decodeStarted = ProcessInfo.processInfo.systemUptime
+                let decoded = try MomentBackupCodec.decode(data)
+                let ended = ProcessInfo.processInfo.systemUptime
+                XCTAssertEqual(decoded.moments, fixture)
+                print("Performance backup count=\(count) sample=\(sample) bytes=\(data.count) "
+                    + "encodeSeconds=\(decodeStarted - encodeStarted) decodeSeconds=\(ended - decodeStarted)")
+            }
+        }
+    }
+}
+
 final class BackupUXTests: XCTestCase {
     func testPreviewCountsActualIDOverlapAndNotes() {
         let first = makeRecoveryMoment()

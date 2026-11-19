@@ -21,6 +21,13 @@ enum AppColors {
     static let onDark = Color(uiColor: color(0xFFF5F9))
     static let onDarkSecondary = Color(uiColor: color(0xCCB8C5))
     static let onDarkAccent = Color(uiColor: color(0xF3A5BE))
+    static let homeCover = adaptive(light: 0x352923, dark: 0x2A201C)
+    static let homeCoverGlow = adaptive(light: 0x604336, dark: 0x4D3429)
+    static let homeCoverText = Color(uiColor: color(0xFFF1E1))
+    static let homeCoverSecondary = Color(uiColor: color(0xDEC6B2))
+    static let homeCoverAction = Color(uiColor: color(0xEBC9AE))
+    static let homeCoverActionText = Color(uiColor: color(0x372820))
+    static let homePaper = adaptive(light: 0xFAF3EB, dark: 0x1D1816)
 
     private static func color(_ hex: UInt32) -> UIColor {
         UIColor(red: CGFloat((hex >> 16) & 255) / 255,

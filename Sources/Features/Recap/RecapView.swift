@@ -211,6 +211,9 @@ struct RecapView: View {
             Text(AppLocalization.format("%@ · %@", timing.occurredAt.formatted(date: .abbreviated, time: .shortened), SessionClock.durationText((try? timing.durationSeconds()) ?? durationSeconds)))
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(AppColors.secondaryText)
+            Text("Unsaved changes are lost if you force-quit the app.")
+                .font(.system(.footnote, design: .rounded))
+                .foregroundStyle(AppColors.secondaryText)
         }
     }
 

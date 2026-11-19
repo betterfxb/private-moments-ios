@@ -37,6 +37,7 @@ enum PrivateStoreFactory {
     }
     #endif
 
+    @MainActor
     static func makeContainer() throws -> ModelContainer {
         let fileManager = FileManager.default
         let applicationSupport = try fileManager.url(
@@ -88,6 +89,13 @@ enum PrivateStoreFactory {
             configurations: [configuration]
         )
 
+        #if DEBUG
+        if uiTestStoreIdentifier() != nil,
+           ProcessInfo.processInfo.arguments.contains("-pm-ui-test-performance-fixture") {
+            try seedPerformanceFixture(in: container)
+        }
+        #endif
+
         // Apply protection to store files created by SwiftData as well as the containing directory.
         let fileURLs = (try? fileManager.contentsOfDirectory(
             at: directory,
@@ -104,4 +112,22 @@ enum PrivateStoreFactory {
         }
         return container
     }
+
+    #if DEBUG
+    @MainActor
+    private static func seedPerformanceFixture(in container: ModelContainer) throws {
+        let context = container.mainContext
+        guard try context.fetchCount(FetchDescriptor<MomentEntity>()) == 0 else { return }
+        let latest = Date.now.addingTimeInterval(-60)
+        let moments = (0..<1_000).map { index in
+            Moment(occurredAt: latest.addingTimeInterval(-Double(index) * 3_600),
+                   durationSeconds: 60 + index % 300,
+                   mood: .calm,
+                   rating: 4,
+                   tags: index == 0 ? ["baseline-target"] : [],
+                   privateNote: "synthetic-fixture")
+        }
+        try SwiftDataMomentRepository(modelContext: context).mergeAll(moments)
+    }
+    #endif
 }

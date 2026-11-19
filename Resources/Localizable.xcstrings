@@ -9,6 +9,8 @@
     "Reading backup…": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "正在读取备份…"}}}},
     "Authenticating…": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "正在验证…"}}}},
     "Backup": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "备份"}}}},
+    "Export backup": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "导出备份"}}}},
+    "Restore backup": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "恢复备份"}}}},
     "Export": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "导出"}}}},
     "Includes private notes.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "包含私密备注。"}}}},
     "Import cancelled. Records unchanged.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "已取消导入，记录未改动。"}}}},
@@ -35,6 +37,7 @@
     "All-time overview": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "全部记录概览"}}}},
     "Clear filters": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "清除筛选"}}}},
     "Private Moments": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "私密时刻"}}}},
+    "A moment to keep for yourself.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "把这一刻，留给自己。"}}}},
     "Starts a private session timer": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "开始私密计时"}}}},
     "Load your journal before starting a record.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "请先读取本机记录，再开始记录。"}}}},
     "You can add your reflection when you finish.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "结束后，可以慢慢写下此刻的感受。"}}}},
@@ -328,26 +331,6 @@
         }
       }
     },
-    "Create a portable JSON backup or restore one you made earlier.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "创建 JSON 备份，或恢复之前导出的记录。"
-          }
-        }
-      }
-    },
-    "DATA MANAGEMENT": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "数据管理"
-          }
-        }
-      }
-    },
     "Date, type, mood, or tag": {
       "localizations": {
         "zh-Hans": {
@@ -444,16 +427,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "已用时"
-          }
-        }
-      }
-    },
-    "Export private backup": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导出私密备份"
           }
         }
       }
@@ -858,16 +831,6 @@
         }
       }
     },
-    "Restore from JSON": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "从 JSON 恢复"
-          }
-        }
-      }
-    },
     "Resume": {
       "localizations": {
         "zh-Hans": {
@@ -968,16 +931,8 @@
         }
       }
     },
-    "Take the time you need.\nYou can finish whenever you like.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "按照自己的节奏来。\n准备好后，随时可以结束。"
-          }
-        }
-      }
-    },
+    "Force-quitting the app ends this timer.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "强制退出应用会结束计时。"}}}},
+    "Unsaved changes are lost if you force-quit the app.": {"localizations": {"zh-Hans": {"stringUnit": {"state": "translated", "value": "强制退出应用会丢失尚未保存的修改。"}}}},
     "The app couldn't open its local journal. Your existing entries have not been intentionally deleted.": {
       "localizations": {
         "zh-Hans": {

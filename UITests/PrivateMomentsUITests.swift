@@ -28,7 +28,58 @@ final class PrivateMomentsUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
-    // The CI profile controls device, system appearance, and system text size.
+    func testLargeJournalInteractionBaseline() throws {
+        let app = makeApp()
+        let arguments = app.launchArguments
+        app.launchArguments.append("-pm-ui-test-performance-fixture")
+        app.launch()
+        XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 30))
+        selectTab("Timeline", "时间线", language: "en", app: app)
+        let count = app.staticTexts["timeline.resultCount"]
+        let fullCountLabels = ["1,000 moments", "1000 moments"]
+        XCTAssertTrue(fullCountLabels.contains(count.label), "Unexpected fixture count: \(count.label)")
+        app.terminate()
+        app.launchArguments = arguments
+
+        // Seed setup and termination stay outside the recorded launch time.
+        // UI measurements include XCTest events and accessibility polling.
+        for sample in 1...3 {
+            let launchStarted = ProcessInfo.processInfo.systemUptime
+            app.launch()
+            XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 30))
+            print("Performance UI count=1000 sample=\(sample) launchReadySeconds=\(ProcessInfo.processInfo.systemUptime - launchStarted)")
+
+            selectTab("Timeline", "时间线", language: "en", app: app)
+            XCTAssertTrue(fullCountLabels.contains(count.label), "Unexpected fixture count: \(count.label)")
+            let rows = app.buttons.matching(identifier: "moment.row")
+            let firstRow = rows.firstMatch
+            XCTAssertTrue(firstRow.isHittable)
+            let firstFrame = firstRow.frame
+            let firstLabel = firstRow.label
+            let scroll = app.scrollViews.firstMatch
+            let scrollStarted = ProcessInfo.processInfo.systemUptime
+            scroll.swipeUp()
+            let visibleRow = try XCTUnwrap(rows.allElementsBoundByIndex.first(where: \.isHittable))
+            XCTAssertTrue(visibleRow.label != firstLabel || visibleRow.frame != firstFrame,
+                          "A scroll sample must move a result or expose another result.")
+            print("Performance UI count=1000 sample=\(sample) scrollGestureSeconds=\(ProcessInfo.processInfo.systemUptime - scrollStarted)")
+            scroll.swipeDown()
+            let search = app.searchFields.firstMatch
+            reveal(search, in: app)
+            search.tap()
+            XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+            let searchStarted = ProcessInfo.processInfo.systemUptime
+            search.typeText("baseline-target")
+            let matching = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in count.label == "1 moment" },
+                                                       object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [matching], timeout: 15), .completed)
+            XCTAssertEqual(search.value as? String, "baseline-target")
+            print("Performance UI count=1000 sample=\(sample) searchTypingToMatchSeconds=\(ProcessInfo.processInfo.systemUptime - searchStarted)")
+            app.terminate()
+        }
+    }
+
+    // The CI profile sets device, appearance and text size.
     // Each locale gets a separate persistent test store; no normal journal is reset.
     func testScreenGallery() throws {
         for language in ["en", "zh-Hans"] {
@@ -52,6 +103,9 @@ final class PrivateMomentsUITests: XCTestCase {
                 XCTAssertLessThanOrEqual(action.frame.maxX, app.windows.firstMatch.frame.maxX, "Home action is clipped on the right.")
                 XCTAssertGreaterThanOrEqual(action.frame.height, 44, "Home action needs an accessible target height.")
             }
+            XCTAssertTrue(start.isHittable, "The primary action must be usable on the first screen.")
+            XCTAssertLessThan(start.frame.maxY, app.buttons["today.addRecord"].frame.minY,
+                "The cover should present the primary action before the secondary action.")
             capture("Today-\(language)", app)
             let weekMenu = app.buttons["today.weekMenu"]
             let usesAccessibilityLayout = weekMenu.exists
@@ -110,6 +164,10 @@ final class PrivateMomentsUITests: XCTestCase {
                 revealFully(from: app.staticTexts["today.brand"], through: app.staticTexts["today.brand"], in: app)
             }
             capture("Today-saved-\(language)", app)
+            let savedRow = app.buttons.matching(identifier: "moment.row").firstMatch
+            reveal(savedRow, in: app)
+            XCTAssertTrue(savedRow.isHittable, "A saved record must be reachable below the cover.")
+            capture("Today-record-\(language)", app, stableSurface: savedRow)
             tap(app.buttons["today.chooseDate"], in: app)
             capture("Calendar-\(language)", app)
             tap(app.buttons["today.applyDate"], in: app)
@@ -265,6 +323,106 @@ final class PrivateMomentsUITests: XCTestCase {
         app.activate()
         XCTAssertTrue(app.wait(for: .runningForeground, timeout: 10))
         XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
+    }
+
+    func testIPadWindowResizeContinuity() throws {
+        XCTAssertEqual(UIDevice.current.userInterfaceIdiom, .pad)
+        let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+        settings.launch()
+        let multitasking = settings.staticTexts["Multitasking & Gestures"].firstMatch
+        if !multitasking.isHittable {
+            let sidebar = settings.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.16, dy: 0.33))
+            sidebar.press(forDuration: 0.05, thenDragTo: sidebar.withOffset(CGVector(dx: 0, dy: 260)))
+            let search = settings.searchFields.firstMatch
+            guard search.waitForExistence(timeout: 8), search.isHittable else {
+                captureFailure("Window-resize-settings-unavailable", settings)
+                return XCTFail("Could not reach system Settings search for Multitasking & Gestures.")
+            }
+            search.tap()
+            search.typeText("Multitasking")
+        }
+        guard multitasking.waitForExistence(timeout: 8), multitasking.isHittable else {
+            captureFailure("Window-resize-multitasking-unavailable", settings)
+            return XCTFail("System multitasking settings are unavailable.")
+        }
+        multitasking.tap()
+        let windowed = settings.staticTexts["Windowed Apps"].firstMatch
+        guard windowed.waitForExistence(timeout: 8), windowed.isHittable else {
+            captureFailure("Windowed-apps-unavailable", settings)
+            return XCTFail("Could not turn on the public system Windowed Apps mode.")
+        }
+        windowed.tap()
+
+        let app = makeApp()
+        app.launch()
+        let window = app.windows.firstMatch
+        waitForStableFrame(window, message: "The real app window must settle before resizing.")
+        let wide = window.frame
+        XCTAssertGreaterThanOrEqual(wide.width, 700, "A wide starting window is required.")
+        tap(app.buttons["today.addRecord"], in: app)
+        replaceNumber(app.textFields["recap.minutes"], with: "3", in: app)
+        dismissRecapKeyboard(language: "en", app: app)
+        replaceNumber(app.textFields["recap.seconds"], with: "8", in: app)
+        dismissRecapKeyboard(language: "en", app: app)
+        let note = app.textViews["recap.note"]
+        tap(note, in: app)
+        note.typeText(rotationNote)
+        dismissRecapKeyboard(language: "en", app: app)
+        captureSystem("Window-resize-wide", app)
+
+        let medium = try resizeIPadWindow(app, targetWidth: wide.width * 0.76, name: "medium")
+        assertRotationDraft(app)
+        let narrow = try resizeIPadWindow(app, targetWidth: wide.width * 0.50, name: "narrow")
+        assertRotationDraft(app)
+        XCTAssertGreaterThanOrEqual(wide.width - medium.width, 48)
+        XCTAssertGreaterThanOrEqual(medium.width - narrow.width, 48)
+
+        tap(app.buttons["recap.saveToolbar"], in: app)
+        selectTab("Timeline", "时间线", language: "en", app: app)
+        tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
+        _ = try resizeIPadWindow(app, targetWidth: wide.width, name: "detail-wide")
+        XCTAssertEqual(app.staticTexts["detail.note"].label, rotationNote)
+        goBack(app)
+        XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, "1 moment")
+
+        selectTab("Today", "今天", language: "en", app: app)
+        tap(app.buttons["today.startMoment"], in: app)
+        let pause = app.buttons["session.pauseResume"]
+        tap(pause, in: app)
+        XCTAssertEqual(pause.label, "Resume")
+        _ = try resizeIPadWindow(app, targetWidth: narrow.width, name: "paused-narrow")
+        XCTAssertEqual(pause.label, "Resume")
+        XCTAssertTrue(pause.isHittable)
+    }
+
+    private func resizeIPadWindow(_ app: XCUIApplication, targetWidth: CGFloat, name: String) throws -> CGRect {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let handle = springboard.descendants(matching: .any).matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Resize Private Moments")
+        ).firstMatch
+        guard handle.waitForExistence(timeout: 8), handle.isHittable else {
+            captureFailure("Window-resize-handle-unavailable-\(name)", springboard)
+            throw NSError(domain: "PrivateMoments.WindowVerification", code: 1,
+                          userInfo: [NSLocalizedDescriptionKey: "System window handle could not receive a drag."])
+        }
+        let window = app.windows.firstMatch
+        let before = window.frame
+        let delta = targetWidth - before.width
+        let source = handle.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        source.press(forDuration: 0.10, thenDragTo: source.withOffset(CGVector(dx: delta, dy: 0)),
+                     withVelocity: .slow, thenHoldForDuration: 0.10)
+        let resized = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            window.exists && (window.frame.width - before.width) * (delta > 0 ? 1 : -1) >= 48
+        }, object: nil)
+        guard XCTWaiter.wait(for: [resized], timeout: 10) == .completed else {
+            captureFailure("Window-resize-no-geometry-change-\(name)", app)
+            throw NSError(domain: "PrivateMoments.WindowVerification", code: 2,
+                          userInfo: [NSLocalizedDescriptionKey: "Window width did not change from \(before) toward \(targetWidth)."])
+        }
+        waitForStableFrame(window, message: "The resized system window must settle.")
+        print("System window resize \(name): \(before) → \(window.frame).")
+        captureSystem("Window-resize-\(name)", app)
+        return window.frame
     }
 
     private func createRotatingDraft(language: String, app: XCUIApplication) {
@@ -484,7 +642,13 @@ final class PrivateMomentsUITests: XCTestCase {
         // Keep this notice open to verify that Delete all clears it. The
         // Settings gallery separately checks the visible count's geometry.
         XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
-        tap(app.buttons["settings.deleteAll"], in: app)
+        let delete = app.buttons["settings.deleteAll"]
+        revealFully(from: delete, through: delete, in: app)
+        XCTAssertGreaterThanOrEqual(delete.frame.height, 44, "Delete needs a full-height touch target.")
+        // Tap within the padded row, above the label. Only the confirmation
+        // should open; the separate confirmation below still performs deletion.
+        delete.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0))
+            .withOffset(CGVector(dx: 0, dy: 8)).tap()
         let confirmDelete = app.buttons[english ? "Delete all moments" : "删除所有记录"]
         guard confirmDelete.waitForExistence(timeout: 10), confirmDelete.isHittable else {
             captureFailure("Delete-confirmation-unavailable", app)
@@ -994,6 +1158,45 @@ final class PrivateMomentsUITests: XCTestCase {
         hierarchy.name = name + "-hierarchy"
         hierarchy.lifetime = .keepAlways
         add(hierarchy)
+    }
+
+    func testTerminationPreservesOnlyExplicitlySavedRecords() throws {
+        let app = makeApp()
+        app.launch()
+        let start = app.buttons["today.startMoment"]
+        let add = app.buttons["today.addRecord"]
+        tap(start, in: app)
+        tap(app.buttons["session.finish"], in: app)
+        let note = app.textViews["recap.note"]
+        tap(note, in: app)
+        note.typeText("Explicitly saved synthetic note")
+        dismissRecapKeyboard(language: "en", app: app)
+        tap(app.buttons["recap.saveToolbar"], in: app)
+
+        tap(add, in: app)
+        tap(note, in: app)
+        note.typeText("Unsaved synthetic draft")
+        XCTAssertEqual(note.value as? String, "Unsaved synthetic draft")
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(start.waitForExistence(timeout: 15))
+        XCTAssertFalse(note.exists)
+        selectTab("Timeline", "时间线", language: "en", app: app)
+        XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, "1 moment")
+        tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
+        XCTAssertEqual(app.staticTexts["detail.note"].label, "Explicitly saved synthetic note")
+
+        goBack(app)
+        selectTab("Today", "今天", language: "en", app: app)
+        tap(start, in: app)
+        reveal(app.buttons["session.pauseResume"], in: app)
+        XCTAssertEqual(app.buttons["session.pauseResume"].label, "Pause")
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(start.waitForExistence(timeout: 15))
+        XCTAssertFalse(app.buttons["session.pauseResume"].exists)
+        selectTab("Timeline", "时间线", language: "en", app: app)
+        XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, "1 moment")
     }
 
     func testSessionAndRecapDiscardConfirmations() throws {

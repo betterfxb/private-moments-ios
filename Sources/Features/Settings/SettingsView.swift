@@ -131,10 +131,7 @@ struct SettingsView: View {
                         .id("settings.backupFeedback")
                 }
 
-                settingsCard(title: "DATA MANAGEMENT") {
-                    Text("Create a portable JSON backup or restore one you made earlier.")
-                        .font(.system(.footnote, design: .rounded))
-                        .foregroundStyle(AppColors.secondaryText)
+                settingsCard(title: "Backups") {
                     if let backupStatus, !backupStatus.isBrief {
                         backupFeedback(backupStatus)
                     }
@@ -144,7 +141,7 @@ struct SettingsView: View {
                     } label: {
                         Group {
                             if isPreparingBackup { ProgressView("Preparing backup…") }
-                            else { Label("Export private backup", systemImage: "square.and.arrow.up") }
+                            else { Label("Export backup", systemImage: "square.and.arrow.up") }
                         }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
@@ -173,7 +170,7 @@ struct SettingsView: View {
                     Button(action: beginBackupImport) {
                         Group {
                             if isReadingBackup { ProgressView("Reading backup…") }
-                            else { Label("Restore from JSON", systemImage: "square.and.arrow.down") }
+                            else { Label("Restore backup", systemImage: "square.and.arrow.down") }
                         }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
@@ -283,6 +280,8 @@ struct SettingsView: View {
                         .foregroundStyle(AppColors.destructive)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .tint(AppColors.destructive)

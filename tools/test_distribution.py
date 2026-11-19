@@ -214,7 +214,8 @@ class ArchiveValidationTests(unittest.TestCase):
             self.inspect()
 
     def test_debug_store_hook_cannot_ship_in_release(self):
-        for marker in [b"-pm-ui-test-store", b"PrivateMoments-UITests", b"-pm-ui-test-fail-save-once"]:
+        for marker in [b"-pm-ui-test-store", b"PrivateMoments-UITests", b"-pm-ui-test-fail-save-once",
+                       b"-pm-ui-test-performance-fixture"]:
             with self.subTest(marker=marker):
                 (self.app / "PrivateMoments").write_bytes(b"synthetic " + marker + b" binary")
                 with self.assertRaises(DistributionError):
