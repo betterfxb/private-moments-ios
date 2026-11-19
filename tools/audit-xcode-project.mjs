@@ -254,6 +254,10 @@ for (const config of configurationSettings(appTarget, objects)) {
     const deviceFamilies = String(settings.TARGETED_DEVICE_FAMILY ?? "").split(",");
     assert(deviceFamilies.includes("1") && deviceFamilies.includes("2"), `${label} must include iPhone and iPad device families.`);
     assert(settings.GENERATE_INFOPLIST_FILE === "YES", `${label} must generate an Info.plist.`);
+    const ipadOrientations = String(settings.INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad ?? "").split(/\s+/);
+    assert(["Portrait", "PortraitUpsideDown", "LandscapeLeft", "LandscapeRight"].every(
+        (orientation) => ipadOrientations.includes(`UIInterfaceOrientation${orientation}`),
+    ), `${label} must declare all iPad orientations for system window resizing.`);
     assert(settings.SWIFT_EMIT_LOC_STRINGS === "YES", `${label} must emit localization strings.`);
     assert(settings.ASSETCATALOG_COMPILER_APPICON_NAME === "AppIcon", `${label} must select the AppIcon asset catalog set.`);
     if (String(settings.PRODUCT_BUNDLE_IDENTIFIER ?? "").startsWith("com.example.")) {

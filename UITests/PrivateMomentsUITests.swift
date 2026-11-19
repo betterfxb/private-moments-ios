@@ -370,19 +370,26 @@ final class PrivateMomentsUITests: XCTestCase {
         dismissRecapKeyboard(language: "en", app: app)
         captureSystem("Window-resize-wide", app)
 
-        let medium = try resizeIPadWindow(app, targetWidth: wide.width * 0.76, name: "medium")
+        let firstWindow = try resizeIPadWindow(app, targetWidth: wide.width * 0.76, name: "first-drag")
+        // Leaving maximized mode can land on the system's default floating size.
+        // Measure that step, then use the floating grabber to reach medium width.
+        let medium = firstWindow.width > wide.width * 0.86
+            ? try resizeIPadWindow(app, targetWidth: wide.width * 0.76, name: "medium")
+            : firstWindow
         assertRotationDraft(app)
         let narrow = try resizeIPadWindow(app, targetWidth: wide.width * 0.50, name: "narrow")
         assertRotationDraft(app)
-        XCTAssertGreaterThanOrEqual(wide.width - medium.width, 48)
+        XCTAssertTrue((wide.width * 0.65...wide.width * 0.86).contains(medium.width))
+        XCTAssertLessThanOrEqual(narrow.width, wide.width * 0.60)
         XCTAssertGreaterThanOrEqual(medium.width - narrow.width, 48)
 
         tap(app.buttons["recap.saveToolbar"], in: app)
         selectTab("Timeline", "时间线", language: "en", app: app)
         tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
-        _ = try resizeIPadWindow(app, targetWidth: wide.width, name: "detail-wide")
+        let detailWide = try resizeIPadWindow(app, targetWidth: wide.width, name: "detail-wide")
+        XCTAssertGreaterThanOrEqual(detailWide.width, wide.width * 0.85)
         XCTAssertEqual(app.staticTexts["detail.note"].label, rotationNote)
-        goBack(app)
+        returnFromRotatingDetail(app)
         XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, "1 moment")
 
         selectTab("Today", "今天", language: "en", app: app)
@@ -390,8 +397,16 @@ final class PrivateMomentsUITests: XCTestCase {
         let pause = app.buttons["session.pauseResume"]
         tap(pause, in: app)
         XCTAssertEqual(pause.label, "Resume")
-        _ = try resizeIPadWindow(app, targetWidth: narrow.width, name: "paused-narrow")
+        let duration = app.descendants(matching: .any).matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Session duration ")
+        ).firstMatch
+        XCTAssertTrue(duration.exists)
+        let pausedDuration = duration.label
+        let pausedNarrow = try resizeIPadWindow(app, targetWidth: narrow.width, name: "paused-narrow")
+        XCTAssertLessThanOrEqual(pausedNarrow.width, wide.width * 0.60)
+        XCTAssertEqual(duration.label, pausedDuration)
         XCTAssertEqual(pause.label, "Resume")
+        reveal(pause, in: app)
         XCTAssertTrue(pause.isHittable)
     }
 
@@ -458,6 +473,7 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(app.textViews["recap.note"].value as? String, rotationNote)
         let save = app.buttons["recap.saveToolbar"]
         XCTAssertTrue(save.isEnabled && save.isHittable)
+        print("Draft save target: \(save.frame.size) in window \(app.windows.firstMatch.frame.size).")
         assertToolbarTarget(save)
     }
 
