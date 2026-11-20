@@ -30,15 +30,21 @@ struct MomentTimelineView: View {
     private var results: [Moment] {
         #if DEBUG
         let started = TimelinePerformance.start()
+        #endif
+        let currentQuery = query
+        let currentFilter = filter
+        let moments = store.moments
+        #if DEBUG
         defer {
             if let started {
-                TimelinePerformance.logger.notice("filter input=\(store.moments.count, privacy: .public) queryLength=\(query.count, privacy: .public) ms=\(TimelinePerformance.elapsed(since: started), privacy: .public)")
+                TimelinePerformance.logger.notice("filter input=\(moments.count, privacy: .public) queryLength=\(currentQuery.count, privacy: .public) ms=\(TimelinePerformance.elapsed(since: started), privacy: .public)")
             }
         }
         #endif
-        return store.moments.filter { moment in
-            let matchesKind = filter == .all || moment.kind.rawValue == filter.rawValue
-            guard matchesKind, !query.isEmpty else { return matchesKind }
+        guard currentFilter != .all || !currentQuery.isEmpty else { return moments }
+        return moments.filter { moment in
+            let matchesKind = currentFilter == .all || moment.kind.rawValue == currentFilter.rawValue
+            guard matchesKind, !currentQuery.isEmpty else { return matchesKind }
             let searchable = [
                 moment.occurredAt.formatted(date: .abbreviated, time: .shortened),
                 moment.mood.rawValue,
@@ -46,12 +52,11 @@ struct MomentTimelineView: View {
                 moment.kind.rawValue,
                 moment.kind.displayName
             ] + moment.tags.flatMap { [$0, AppLocalization.localizedTag($0)] }
-            return searchable.joined(separator: " ").localizedCaseInsensitiveContains(query)
+            return searchable.joined(separator: " ").localizedCaseInsensitiveContains(currentQuery)
         }
     }
 
-    private var dayGroups: [MomentDayGroup] {
-        let matches = results
+    private func dayGroups(for matches: [Moment]) -> [MomentDayGroup] {
         #if DEBUG
         let started = TimelinePerformance.start()
         defer {
@@ -80,11 +85,12 @@ struct MomentTimelineView: View {
                             onRetry: store.reload
                         )
                     } else {
+                        let matches = results
                         if let errorMessage = store.errorMessage {
                             ErrorNotice(message: errorMessage)
                         }
 
-                        Text(AppLocalization.momentCount(results.count))
+                        Text(AppLocalization.momentCount(matches.count))
                             .font(.system(.subheadline, design: .rounded).weight(.medium))
                             .foregroundStyle(AppColors.secondaryText)
                             .accessibilityIdentifier("timeline.resultCount")
@@ -113,11 +119,11 @@ struct MomentTimelineView: View {
                             .accessibilityIdentifier("timeline.clearFilters")
                         }
 
-                        if results.isEmpty {
+                        if matches.isEmpty {
                             emptyState
                         } else {
                             LazyVStack(spacing: 9) {
-                                ForEach(dayGroups) { group in
+                                ForEach(dayGroups(for: matches)) { group in
                                     Text(group.date.formatted(date: .abbreviated, time: .omitted))
                                         .font(.system(.caption, design: .rounded).weight(.semibold))
                                         .foregroundStyle(AppColors.accentText)

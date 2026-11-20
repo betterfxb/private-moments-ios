@@ -87,6 +87,13 @@ final class PrivateMomentsUITests: XCTestCase {
 
         let result = app.buttons.matching(identifier: "moment.row").firstMatch
         let total = app.staticTexts["timeline.resultCount"]
+        func assertCount(_ count: String, for query: String) {
+            let updated = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                !app.keyboards.firstMatch.exists && total.exists && total.label == count
+            }, object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [updated], timeout: 10), .completed, "Search result for \(query)")
+        }
+
         func searchFor(_ query: String, count: String) {
             let clear = app.buttons["timeline.clearFilters"]
             if clear.exists { tap(clear, in: app) }
@@ -96,10 +103,17 @@ final class PrivateMomentsUITests: XCTestCase {
             field.typeText(query)
             XCTAssertEqual(field.value as? String, query)
             guard submitTimelineSearch(language: "en", app: app) else { return }
-            let updated = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                !app.keyboards.firstMatch.exists && total.exists && total.label == count
-            }, object: nil)
-            XCTAssertEqual(XCTWaiter.wait(for: [updated], timeout: 10), .completed, "Search result for \(query)")
+            assertCount(count, for: query)
+        }
+
+        func assertAfterReturning(query: String, count: String) {
+            XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 10))
+            let field = app.searchFields.firstMatch
+            if field.exists, field.value as? String == query {
+                assertCount(count, for: query)
+            } else {
+                searchFor(query, count: count)
+            }
         }
 
         searchFor("Calm", count: "1 moment")
@@ -109,18 +123,13 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["recap.saveToolbar"], in: app)
         XCTAssertTrue(app.staticTexts["Happy"].waitForExistence(timeout: 10))
         goBack(app)
-        searchFor("Calm", count: "0 moments")
+        assertAfterReturning(query: "Calm", count: "0 moments")
         XCTAssertFalse(result.exists)
         searchFor("Happy", count: "1 moment")
         tap(result, in: app)
         tap(app.buttons["detail.delete"], in: app)
         tap(app.buttons["Delete moment"], in: app)
-        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 10))
-        if app.searchFields.firstMatch.value as? String == "Happy" {
-            XCTAssertEqual(total.label, "0 moments")
-        } else {
-            searchFor("Happy", count: "0 moments")
-        }
+        assertAfterReturning(query: "Happy", count: "0 moments")
         XCTAssertFalse(result.exists)
     }
 
