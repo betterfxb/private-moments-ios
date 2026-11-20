@@ -31,7 +31,7 @@ def execute(block, values):
     # Remove inherited task flags so a developer's shell cannot change the case.
     environment = {k: v for k, v in os.environ.items()
                    if not k.startswith('PRIVATE_MOMENTS_UI_') and k not in {
-                       'ROTATION_SMOKE', 'ROTATION_START', 'INPUT_SMOKE', 'BACKUP_SMOKE', 'BACKUP_LANGUAGE',
+                       'ROTATION_SMOKE', 'ROTATION_START', 'INPUT_SMOKE', 'BACKUP_SMOKE', 'BACKUP_LANGUAGE', 'PERFORMANCE_SMOKE',
                        'SMOKE_PROFILE'}}
     environment.update(values)
     return subprocess.run([BASH, '-c', 'set -euo pipefail\nfail() { printf "%s\\n" "$1" >&2; exit 1; }\n' + block],
@@ -41,6 +41,20 @@ def execute(block, values):
 class VerificationScopeTests(unittest.TestCase):
     def script(self, start='reference', **values):
         return execute(SELECTION, dict(PRIVATE_MOMENTS_UI_ROTATION_START=start, **values))
+
+    def test_performance_selects_only_the_real_app_workload(self):
+        result = self.script(PRIVATE_MOMENTS_UI_PERFORMANCE_ONLY='1')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
+                         ['-only-testing:' + PREFIX + 'testLargeJournalInteractionBaseline'])
+        for flags in [{'PRIVATE_MOMENTS_UI_INPUT_ONLY': '1'}, {'PRIVATE_MOMENTS_UI_BACKUP_ONLY': '1'},
+                      {'PRIVATE_MOMENTS_UI_IPAD_TESTS': '1', 'PRIVATE_MOMENTS_UI_ROTATION_ONLY': '1'}]:
+            self.assertNotEqual(self.script(PRIVATE_MOMENTS_UI_PERFORMANCE_ONLY='1', **flags).returncode, 0)
+        for profile in ['compact-light', 'phone-dark']:
+            result = execute(GUARD, dict(ROTATION_START='reference', ROTATION_SMOKE='0', INPUT_SMOKE='0',
+                                         BACKUP_SMOKE='0', BACKUP_LANGUAGE='en', PERFORMANCE_SMOKE='1',
+                                         SMOKE_PROFILE=profile))
+            self.assertEqual(result.returncode == 0, profile == 'compact-light', result.stderr)
 
     def test_each_cold_locale_selects_exactly_one_method(self):
         for start, expected, excluded in [('cold-en', ENGLISH, CHINESE), ('cold-zh-Hans', CHINESE, ENGLISH)]:

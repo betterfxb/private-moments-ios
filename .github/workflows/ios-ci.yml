@@ -26,6 +26,10 @@ on:
         description: Run selected-profile input gallery only (not full acceptance)
         type: boolean
         default: false
+      performance_smoke:
+        description: Measure the 1,000-record timeline on the compact-light profile
+        type: boolean
+        default: false
       rotation_smoke:
         description: Run a focused system-window or rotation check on a supported iPad
         type: boolean
@@ -69,9 +73,10 @@ jobs:
       - uses: actions/checkout@v7
       - id: matrix
         env:
-          MATRIX_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.rotation_smoke && 'rotation' || github.event_name == 'workflow_dispatch' && inputs.input_smoke && 'input' || github.event_name == 'workflow_dispatch' && inputs.backup_smoke && 'backup' || 'full' }}
+          MATRIX_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.rotation_smoke && 'rotation' || github.event_name == 'workflow_dispatch' && (inputs.input_smoke || inputs.performance_smoke) && 'input' || github.event_name == 'workflow_dispatch' && inputs.backup_smoke && 'backup' || 'full' }}
           SMOKE_PROFILE: ${{ inputs.backup_smoke_profile || 'compact-light' }}
           INPUT_SMOKE: ${{ inputs.input_smoke && '1' || '0' }}
+          PERFORMANCE_SMOKE: ${{ inputs.performance_smoke && '1' || '0' }}
           BACKUP_SMOKE: ${{ inputs.backup_smoke && '1' || '0' }}
           BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
           ROTATION_SMOKE: ${{ inputs.rotation_smoke && '1' || '0' }}
@@ -83,6 +88,10 @@ jobs:
           fi
           if [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then
             printf 'Input and backup smoke modes are mutually exclusive.\n' >&2
+            exit 1
+          fi
+          if [[ "${PERFORMANCE_SMOKE:-0}" == "1" && ( "$SMOKE_PROFILE" != "compact-light" || "$ROTATION_SMOKE" == "1" || "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then
+            printf 'Performance smoke requires compact-light and excludes other smoke modes.\n' >&2
             exit 1
           fi
           if [[ "$BACKUP_LANGUAGE" != "en" && "$BACKUP_LANGUAGE" != "zh-Hans" ]] ||
@@ -181,6 +190,7 @@ jobs:
           PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.backup_smoke && '1' || '0' }}
           PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
           PRIVATE_MOMENTS_UI_INPUT_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_PERFORMANCE_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.performance_smoke && '1' || '0' }}
           PRIVATE_MOMENTS_UI_ROTATION_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.rotation_smoke && '1' || '0' }}
           PRIVATE_MOMENTS_UI_ROTATION_START: ${{ inputs.rotation_start || 'reference' }}
           PRIVATE_MOMENTS_UI_IPAD_TESTS: ${{ startsWith(matrix.family, 'ipad') && '1' || '0' }}

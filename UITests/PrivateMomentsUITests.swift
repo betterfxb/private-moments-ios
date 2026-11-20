@@ -39,7 +39,7 @@ final class PrivateMomentsUITests: XCTestCase {
         let fullCountLabels = ["1,000 moments", "1000 moments"]
         XCTAssertTrue(fullCountLabels.contains(count.label), "Unexpected fixture count: \(count.label)")
         app.terminate()
-        app.launchArguments = arguments
+        app.launchArguments = arguments + ["-pm-ui-test-performance-trace"]
 
         // Seed setup and termination stay outside the recorded launch time.
         // UI measurements include XCTest events and accessibility polling.

@@ -52,12 +52,15 @@ fi
 TEST_SCOPE_ARGUMENTS=(-parallel-testing-enabled NO)
 BACKUP_ONLY="${PRIVATE_MOMENTS_UI_BACKUP_ONLY:-0}"
 INPUT_ONLY="${PRIVATE_MOMENTS_UI_INPUT_ONLY:-0}"
+PERFORMANCE_ONLY="${PRIVATE_MOMENTS_UI_PERFORMANCE_ONLY:-0}"
 BACKUP_LANGUAGE="${PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE:-en}"
 ROTATION_ONLY="${PRIVATE_MOMENTS_UI_ROTATION_ONLY:-0}"
 IPAD_TESTS="${PRIVATE_MOMENTS_UI_IPAD_TESTS:-0}"
 ROTATION_START="${PRIVATE_MOMENTS_UI_ROTATION_START:-reference}"
 [[ "$BACKUP_ONLY" == "0" || "$BACKUP_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_BACKUP_ONLY must be 0 or 1."
 [[ "$INPUT_ONLY" == "0" || "$INPUT_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_INPUT_ONLY must be 0 or 1."
+[[ "$PERFORMANCE_ONLY" == "0" || "$PERFORMANCE_ONLY" == "1" ]] || fail "Performance scope must be 0 or 1."
+[[ "$PERFORMANCE_ONLY" != "1" || ( "$INPUT_ONLY" == "0" && "$BACKUP_ONLY" == "0" && "$ROTATION_ONLY" == "0" && "$IPAD_TESTS" == "0" ) ]] || fail "Performance smoke requires a phone and excludes other smoke modes."
 [[ "$BACKUP_ONLY" != "1" || "$INPUT_ONLY" != "1" ]] || fail "Input and backup smoke modes are mutually exclusive."
 [[ "$BACKUP_LANGUAGE" == "en" || "$BACKUP_LANGUAGE" == "zh-Hans" ]] || fail "Backup language must be en or zh-Hans."
 [[ "$BACKUP_LANGUAGE" != "zh-Hans" || "$BACKUP_ONLY" == "1" ]] || fail "Chinese backup selection requires explicit backup smoke."
@@ -92,6 +95,9 @@ if [[ "$ROTATION_ONLY" == "1" ]]; then
     esac
     printf 'Rotation start: %s; selected method: %s\n' "$ROTATION_START" "$ROTATION_METHOD"
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/"$ROTATION_METHOD")
+elif [[ "$PERFORMANCE_ONLY" == "1" ]]; then
+    printf '\nFocused 1,000-record timeline measurement.\n'
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testLargeJournalInteractionBaseline)
 elif [[ "$INPUT_ONLY" == "1" ]]; then
     printf '\nFocused input gallery only; this is not full simulator acceptance.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)

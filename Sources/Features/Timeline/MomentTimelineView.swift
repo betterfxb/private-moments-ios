@@ -1,5 +1,8 @@
 import SwiftUI
 import UIKit
+#if DEBUG
+import OSLog
+#endif
 
 private enum MomentFilter: String, CaseIterable, Identifiable {
     case all = "All"
@@ -25,7 +28,15 @@ struct MomentTimelineView: View {
     private var hasActiveFilters: Bool { filter != .all || !query.isEmpty }
 
     private var results: [Moment] {
-        store.moments.filter { moment in
+        #if DEBUG
+        let started = TimelinePerformance.start()
+        defer {
+            if let started {
+                TimelinePerformance.logger.notice("filter input=\(store.moments.count, privacy: .public) queryLength=\(query.count, privacy: .public) ms=\(TimelinePerformance.elapsed(since: started), privacy: .public)")
+            }
+        }
+        #endif
+        return store.moments.filter { moment in
             let matchesKind = filter == .all || moment.kind.rawValue == filter.rawValue
             guard matchesKind, !query.isEmpty else { return matchesKind }
             let searchable = [
@@ -40,8 +51,17 @@ struct MomentTimelineView: View {
     }
 
     private var dayGroups: [MomentDayGroup] {
+        let matches = results
+        #if DEBUG
+        let started = TimelinePerformance.start()
+        defer {
+            if let started {
+                TimelinePerformance.logger.notice("group matches=\(matches.count, privacy: .public) queryLength=\(query.count, privacy: .public) ms=\(TimelinePerformance.elapsed(since: started), privacy: .public)")
+            }
+        }
+        #endif
         let calendar = Calendar.current
-        return Dictionary(grouping: results, by: { calendar.startOfDay(for: $0.occurredAt) })
+        return Dictionary(grouping: matches, by: { calendar.startOfDay(for: $0.occurredAt) })
             .map { MomentDayGroup(date: $0.key, moments: $0.value) }
             .sorted { $0.date > $1.date }
     }
@@ -124,6 +144,9 @@ struct MomentTimelineView: View {
                 .frame(maxWidth: 700)
                 .frame(maxWidth: .infinity)
             }
+            #if DEBUG
+            .modifier(TimelineScrollTiming())
+            #endif
             .scrollDismissesKeyboard(.interactively)
             .onChange(of: isSearchPresented) { _, presented in
                 if presented, store.isStorageAvailable {
@@ -213,6 +236,39 @@ struct MomentTimelineView: View {
         .accessibilityIdentifier("timeline.filter")
     }
 }
+
+#if DEBUG
+private enum TimelinePerformance {
+    static let enabled = PrivateStoreFactory.uiTestStoreIdentifier() != nil
+        && ProcessInfo.processInfo.arguments.contains("-pm-ui-test-performance-trace")
+    static let logger = Logger(subsystem: "PrivateMoments", category: "timeline-performance")
+
+    static func start() -> TimeInterval? { enabled ? ProcessInfo.processInfo.systemUptime : nil }
+
+    static func elapsed(since start: TimeInterval) -> Double {
+        (ProcessInfo.processInfo.systemUptime - start) * 1_000
+    }
+}
+
+private struct TimelineScrollTiming: ViewModifier {
+    @State private var scrollStarted: TimeInterval?
+
+    func body(content: Content) -> some View {
+        if #available(iOS 18.0, *), TimelinePerformance.enabled {
+            content.onScrollPhaseChange { _, phase in
+                if phase == .interacting, scrollStarted == nil {
+                    scrollStarted = TimelinePerformance.start()
+                } else if phase == .idle, let started = scrollStarted {
+                    TimelinePerformance.logger.notice("scroll settledMs=\(TimelinePerformance.elapsed(since: started), privacy: .public)")
+                    scrollStarted = nil
+                }
+            }
+        } else {
+            content
+        }
+    }
+}
+#endif
 
 private struct MomentDayGroup: Identifiable {
     let date: Date
