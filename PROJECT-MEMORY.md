@@ -1,6 +1,6 @@
 # Private Moments 项目记忆
 
-更新日期：2026-11-20（Asia/Tokyo）。源码、原始运行及证据收据共同确定验收范围。记录文档的提交可与实际受测源码不同。
+更新日期：2026-11-21（Asia/Tokyo）。源码、原始运行及证据收据共同确定验收范围。记录文档的提交可与实际受测源码不同。
 
 ## 项目与约束
 
@@ -14,8 +14,17 @@
 
 - RootView持有MomentStore、SessionClock、Today／Timeline独立导航路径和选中标签；RecapView保存表单草稿，持久化只在明确保存时完成。
 - SwiftData本机数据、显式schema V1、禁止托管CloudKit同步；JSON备份是用户主动导出，包含备注且未加密。不要把“本机优先”解释成已实现云同步或跨设备服务。
-- 界面支持English和简体中文，跟随iOS应用语言；记录枚举保持稳定，用户备注不自动翻译。字符串目录231键，现有项目静态审计109对象。
+- 界面支持英语和简体中文，跟随 iOS 应用语言。记录枚举保持稳定，用户备注保留原文。字符串目录 236 键，Xcode 项目审计 111 对象。
 - Debug UI测试使用每次独立UUID库，不重置正常日记；Release排除测试钩子。认证使用真实系统流程，不增加成功绕过路径。
+
+## 第十九批 iPad 输入、时间线与本周回顾
+
+按 iPad 真实窗口操作、时间线应用内测量、本周回顾、四配置回归的顺序完成。最新完整验证为源码 `8e526c8372374c13400ec26426e94dc6a8786e1e` 的[四配置 44760783402](https://github.com/betterfxb/private-moments-ios/actions/runs/44760783402)。54 应用单元、20 UI、无签名 Debug／Release 和 Release 测试钩子排除通过。四个配置均通过真实英文 Files，常规小屏另通过真实中文 Files。浅色 iPad 在应用显示来源不可用、记录数保持后重选一次并通过。导出 400 张 PNG，48 张相关原图核验，40 张实际打开并归档。详见[第十九批报告](release/UX-ACCEPTANCE-19.md)及[最终收据](release/evidence/batch-19/44760783402/verification.json)。
+
+- [iPad 44729533351](https://github.com/betterfxb/private-moments-ios/actions/runs/44729533351)在深色最大字号和实际软件键盘下，经系统右上角拖柄把宽度从 630 点缩至 513 点。原两行备注可读，保存按钮可点，点击后读回同样备注。源码 `3261023b94904433d28e09925b566fad1d730e27`，五张物理原图和层级已封存。
+- [性能基线 44733233790](https://github.com/betterfxb/private-moments-ios/actions/runs/44733233790)与[优化 44735712091](https://github.com/betterfxb/private-moments-ios/actions/runs/44735712091)同为小屏浅色，三次真实搜索和滚动。页面在每次渲染复用一个筛选结果，完整查询的过滤次数 3 降为 1，应用内过滤和分组中位数 22.387 降至 9.960 ms。XCTest 从输入到匹配和应用滚动停止的中位数在这两轮未见改善。感受编辑、删除及查询一致性两次通过。隔离测试日志只有阶段、计时、条数和长度。
+- [本周回顾复验 44744158226](https://github.com/betterfxb/private-moments-ios/actions/runs/44744158226)五项日期测试及一个双语端到端 UI 方法通过。Today 周选择区之后进入，本地日历使用半开周界，显示实际日期、记录数和感受分布，点记录进入现有详情。英文最大字号用短日期和短列表标题将首条带回首屏，回顾列表用撑满版式并与日期左对齐。保留两种语言在相同设备、主题、字号和数据量的原图。使用 Geek Design Engineering 原生验收流程，视觉是工程走查，用户审美反馈仍以实际评阅为准。
+- [首轮 44746110865](https://github.com/betterfxb/private-moments-ios/actions/runs/44746110865)保留三项失败。浅色 iPad 与常规小屏各遇英文系统空白面板，最大字号入口测试只滚到按钮中心，遮挡断言失败。随后只调整 UI 测试的整控件滚动及原 90 秒内的就绪轮询，同源码先通过[iPad Files 44753981032](https://github.com/betterfxb/private-moments-ios/actions/runs/44753981032)和[最大字号回顾 44758268628](https://github.com/betterfxb/private-moments-ios/actions/runs/44758268628)，再通过上述完整矩阵。系统空白的根因仍待独立证据。真机 Files、VoiceOver 朗读、物理键盘及端到端性能仍待验证。
 
 ## 第十八批首页、操作体验与性能验收
 

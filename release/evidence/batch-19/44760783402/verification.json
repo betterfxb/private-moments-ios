@@ -1,0 +1,983 @@
+{
+  "batch": 19,
+  "runId": "44760783402",
+  "sourceCommit": "8e526c8372374c13400ec26426e94dc6a8786e1e",
+  "scope": "full",
+  "jobHistory": [
+    {
+      "name": "plan",
+      "jobId": 136372422320,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "ipad-light",
+      "jobId": 136372579654,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "compact-light",
+      "jobId": 136372579663,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "phone-dark",
+      "jobId": 136372579679,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "compact-dark-accessibility",
+      "jobId": 136372579760,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    }
+  ],
+  "conclusion": "success",
+  "native": {
+    "compact-light": {
+      "jobId": 136372579663,
+      "runAttempt": 1,
+      "unitPassed": [
+        [
+          "AppLockUXTests",
+          "testBackgroundDiscardsLateDisableSuccess",
+          "0.020"
+        ],
+        [
+          "AppLockUXTests",
+          "testBackgroundDiscardsLateEnableSuccess",
+          "0.009"
+        ],
+        [
+          "AppLockUXTests",
+          "testCancelledFailedAndUnavailableAuthenticationDoNotEnableLock",
+          "0.008"
+        ],
+        [
+          "AppLockUXTests",
+          "testConcurrentRequestStartsOnlyOneEvaluation",
+          "0.008"
+        ],
+        [
+          "AppLockUXTests",
+          "testFailedUnlockRemainsLocked",
+          "0.008"
+        ],
+        [
+          "AppLockUXTests",
+          "testInactivePromptDoesNotCancelButBackgroundAlwaysLocks",
+          "0.009"
+        ],
+        [
+          "AppLockUXTests",
+          "testOldCallbackCannotUnlockOrClearANewerAttempt",
+          "0.014"
+        ],
+        [
+          "AppLockUXTests",
+          "testOnlySuccessfulAuthenticationChangesPreferenceAndRelaunchLocks",
+          "0.007"
+        ],
+        [
+          "BackupUXTests",
+          "testEmptyPreviewKeepsReplacementScopeExplicit",
+          "0.002"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderPreservesTheFullValidatedRecord",
+          "0.070"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderRejectsAnOversizedSparseFile",
+          "0.033"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderRejectsMalformedAndMissingFiles",
+          "0.011"
+        ],
+        [
+          "BackupUXTests",
+          "testImportedCopyNeverDeletesAPrefixSibling",
+          "0.002"
+        ],
+        [
+          "BackupUXTests",
+          "testImportedCopyNeverRecursivelyDeletesADirectory",
+          "0.005"
+        ],
+        [
+          "BackupUXTests",
+          "testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError",
+          "0.609"
+        ],
+        [
+          "BackupUXTests",
+          "testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames",
+          "0.037"
+        ],
+        [
+          "BackupUXTests",
+          "testPreviewCountsActualIDOverlapAndNotes",
+          "0.001"
+        ],
+        [
+          "JournalPerformanceBaselineTests",
+          "testSyntheticBackupCodecBaseline",
+          "0.147"
+        ],
+        [
+          "MomentDateQueryTests",
+          "testDaylightSavingDaysUseCalendarBoundaries",
+          "0.004"
+        ],
+        [
+          "MomentDateQueryTests",
+          "testMidnightBelongsOnlyToTheFollowingDay",
+          "0.225"
+        ],
+        [
+          "MomentDateQueryTests",
+          "testWeekReviewShowsEmptyAndSingleRecord",
+          "0.002"
+        ],
+        [
+          "MomentDateQueryTests",
+          "testWeekReviewUsesLocalMidnightAcrossDaylightSaving",
+          "0.002"
+        ],
+        [
+          "MomentDateQueryTests",
+          "testWeekReviewUsesLocalYearBoundaryAndCountsOnlyIncludedMoods",
+          "0.002"
+        ],
+        [
+          "MomentStoreImportTests",
+          "testFailedReplacementLeavesExistingRecordsUnchanged",
+          "0.011"
+        ],
+        [
+          "MomentStoreImportTests",
+          "testInvalidMergeLeavesExistingRecordsUnchanged",
+          "0.008"
+        ],
+        [
+          "MomentStoreImportTests",
+          "testMergeAddsNewRecordsAndUpdatesMatchingIDs",
+          "0.003"
+        ],
+        [
+          "MomentStoreRecoveryTests",
+          "testConversionFailurePreservesCachedSnapshotUntilRepair",
+          "0.009"
+        ],
+        [
+          "MomentStoreRecoveryTests",
+          "testEachPersistenceFailurePreservesSnapshotAndRequiresReload",
+          "0.003"
+        ],
+        [
+          "MomentStoreRecoveryTests",
+          "testFirstReadFailureBlocksAllMutationsUntilSuccessfulRetry",
+          "0.030"
+        ],
+        [
+          "MomentStoreRecoveryTests",
+          "testReadFailureKeepsCachedRecordsReadOnly",
+          "0.001"
+        ],
+        [
+          "MomentStoreRecoveryTests",
+          "testValidationAndDuplicateBackupErrorsDoNotDisableStorage",
+          "0.028"
+        ],
+        [
+          "MomentTimingDraftTests",
+          "testChangedTimingParticipatesInDiscardDetection",
+          "0.003"
+        ],
+        [
+          "MomentTimingDraftTests",
+          "testFutureNewDateRejectedWithoutChangingBackupValidation",
+          "0.039"
+        ],
+        [
+          "MomentTimingDraftTests",
+          "testMalformedOverflowAndOverLimitDurationsAreRejected",
+          "0.001"
+        ],
+        [
+          "MomentTimingDraftTests",
+          "testNonFiniteDateRejectedAndExistingValuesTakePrecedence",
+          "0.002"
+        ],
+        [
+          "MomentTimingDraftTests",
+          "testUntouchedShortAndLongDurationsPreserveExactSeconds",
+          "0.001"
+        ],
+        [
+          "MomentValidationTests",
+          "testBackupRejectsDuplicateIDsBeforeRestore",
+          "0.001"
+        ],
+        [
+          "MomentValidationTests",
+          "testBackupRejectsFilesOverSizeLimit",
+          "0.007"
+        ],
+        [
+          "MomentValidationTests",
+          "testBackupRejectsUnknownFormatVersion",
+          "0.003"
+        ],
+        [
+          "MomentValidationTests",
+          "testBackupRoundTripPreservesPrivateFields",
+          "0.003"
+        ],
+        [
+          "MomentValidationTests",
+          "testNegativeDurationIsRejected",
+          "0.002"
+        ],
+        [
+          "MomentValidationTests",
+          "testOverlongPrivateNoteIsRejected",
+          "0.003"
+        ],
+        [
+          "MomentValidationTests",
+          "testOversizedUnicodeNoteIsRejectedEvenWhenGraphemeCountIsSmall",
+          "0.007"
+        ],
+        [
+          "MomentValidationTests",
+          "testPrivateNoteAllowsEmptyAndExactCharacterLimit",
+          "0.001"
+        ],
+        [
+          "MomentValidationTests",
+          "testPrivateNoteUTF8BoundaryIsIndependentOfCharacterCount",
+          "0.004"
+        ],
+        [
+          "MomentValidationTests",
+          "testValidMomentPassesValidation",
+          "0.001"
+        ],
+        [
+          "SemanticColorTests",
+          "testAccentAndSessionTextRemainReadableInBothAppearances",
+          "0.002"
+        ],
+        [
+          "SemanticColorTests",
+          "testBodyAndSecondaryTextContrastOnSurfaces",
+          "0.002"
+        ],
+        [
+          "SwiftDataRecoveryTests",
+          "testInsertFailureLeavesNoPhantomRecord",
+          "0.018"
+        ],
+        [
+          "SwiftDataRecoveryTests",
+          "testInvalidPersistedFieldsBlockReadAndRepairRestoresAccess",
+          "0.049"
+        ],
+        [
+          "SwiftDataRecoveryTests",
+          "testSaveFailureRollsBackEveryMutationInRealModelContext",
+          "0.027"
+        ],
+        [
+          "UITestIsolationTests",
+          "testPrivacyPreferencesAreIsolatedByTheSameStoreUUID",
+          "0.007"
+        ],
+        [
+          "UITestIsolationTests",
+          "testSaveFailureRequiresBothAnIsolatedStoreAndExplicitFlag",
+          "0.002"
+        ],
+        [
+          "UITestIsolationTests",
+          "testTestStoreRequiresAValidUUID",
+          "0.052"
+        ]
+      ],
+      "uiPassed": [
+        [
+          "testBackupFileRoundTrip",
+          "528.922"
+        ],
+        [
+          "testChineseBackupFileRoundTrip",
+          "431.931"
+        ],
+        [
+          "testEditingFilteringDeletionAndRelaunch",
+          "182.035"
+        ],
+        [
+          "testLargeJournalInteractionBaseline",
+          "102.582"
+        ],
+        [
+          "testManualEntryTimingDateFilterAndPersistence",
+          "423.115"
+        ],
+        [
+          "testScreenGallery",
+          "947.376"
+        ],
+        [
+          "testSessionAndRecapDiscardConfirmations",
+          "55.604"
+        ],
+        [
+          "testTerminationPreservesOnlyExplicitlySavedRecords",
+          "116.555"
+        ],
+        [
+          "testTimelineSearchReflectsEditAndDeletion",
+          "97.424"
+        ],
+        [
+          "testWeekReviewShowsLocalRecords",
+          "156.619"
+        ]
+      ],
+      "testFailed": [],
+      "testErrors": [],
+      "unsignedRelease": true,
+      "filesReselected": [],
+      "targetMeasurements": [],
+      "resizing": [],
+      "interactionPerformance": {
+        "launchReadySeconds": {
+          "samples": [
+            6.2546615416665645,
+            6.374561624999842,
+            6.080362458333639
+          ],
+          "median": 6.2546615416665645
+        },
+        "scrollGestureSeconds": {
+          "samples": [
+            3.816253791666668,
+            4.077468208333357,
+            4.15581633333295
+          ],
+          "median": 4.077468208333357
+        },
+        "searchTypingToMatchSeconds": {
+          "samples": [
+            2.2812465000001794,
+            2.206779583333173,
+            2.953912916666468
+          ],
+          "median": 2.2812465000001794
+        }
+      },
+      "backupPerformance": {
+        "100": [
+          {
+            "bytes": 32439,
+            "encodeSeconds": 0.000973291666696241,
+            "decodeSeconds": 0.001316541666710691
+          },
+          {
+            "bytes": 32439,
+            "encodeSeconds": 0.00103445833326532,
+            "decodeSeconds": 0.0006704583333885239
+          },
+          {
+            "bytes": 32439,
+            "encodeSeconds": 0.000761249999982283,
+            "decodeSeconds": 0.0006119166666849196
+          }
+        ],
+        "1000": [
+          {
+            "bytes": 323919,
+            "encodeSeconds": 0.018827791666694793,
+            "decodeSeconds": 0.012026125000033971
+          },
+          {
+            "bytes": 323919,
+            "encodeSeconds": 0.012794166666708406,
+            "decodeSeconds": 0.015187416666663012
+          },
+          {
+            "bytes": 323919,
+            "encodeSeconds": 0.021547624999925574,
+            "decodeSeconds": 0.015016916666695579
+          }
+        ]
+      }
+    },
+    "phone-dark": {
+      "jobId": 136372579679,
+      "runAttempt": 1,
+      "unitPassed": [],
+      "uiPassed": [
+        [
+          "testBackupFileRoundTrip",
+          "373.603"
+        ],
+        [
+          "testScreenGallery",
+          "978.340"
+        ],
+        [
+          "testWeekReviewShowsLocalRecords",
+          "156.124"
+        ]
+      ],
+      "testFailed": [],
+      "testErrors": [],
+      "unsignedRelease": false,
+      "filesReselected": [],
+      "targetMeasurements": [],
+      "resizing": [],
+      "interactionPerformance": {},
+      "backupPerformance": {}
+    },
+    "ipad-light": {
+      "jobId": 136372579654,
+      "runAttempt": 1,
+      "unitPassed": [],
+      "uiPassed": [
+        [
+          "testBackupFileRoundTrip",
+          "504.757"
+        ],
+        [
+          "testIPadRotationContinuity",
+          "575.676"
+        ],
+        [
+          "testScreenGallery",
+          "776.800"
+        ],
+        [
+          "testWeekReviewShowsLocalRecords",
+          "117.804"
+        ]
+      ],
+      "testFailed": [],
+      "testErrors": [],
+      "unsignedRelease": false,
+      "filesReselected": [
+        "2026-11-20T15:26:48.5056290Z Explicit system backup reselection 1; local record count unchanged. Reason: source-unavailable."
+      ],
+      "targetMeasurements": [
+        [
+          "(44.0, 44.0)",
+          "(1376.0, 1032.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1032.0, 1376.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1376.0, 1032.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1032.0, 1376.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1376.0, 1032.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1032.0, 1376.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1376.0, 1032.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1032.0, 1376.0)"
+        ]
+      ],
+      "resizing": [],
+      "interactionPerformance": {},
+      "backupPerformance": {}
+    },
+    "compact-dark-accessibility": {
+      "jobId": 136372579760,
+      "runAttempt": 1,
+      "unitPassed": [],
+      "uiPassed": [
+        [
+          "testBackupFileRoundTrip",
+          "969.504"
+        ],
+        [
+          "testScreenGallery",
+          "1637.769"
+        ],
+        [
+          "testWeekReviewShowsLocalRecords",
+          "259.299"
+        ]
+      ],
+      "testFailed": [],
+      "testErrors": [],
+      "unsignedRelease": false,
+      "filesReselected": [],
+      "targetMeasurements": [],
+      "resizing": [],
+      "interactionPerformance": {},
+      "backupPerformance": {}
+    }
+  },
+  "verifiedSelectedImageCount": 48,
+  "visualReview": {
+    "status": "passed",
+    "reviewedPNGCount": 40,
+    "compared": "Current warm native design, previous matched one-record state, and final native light/dark/dynamic type."
+  },
+  "exportedPNGCountsByProfile": {
+    "compact-light": 103,
+    "phone-dark": 90,
+    "ipad-light": 113,
+    "compact-dark-accessibility": 94
+  },
+  "exportedPNGCount": 400,
+  "retainedImages": [
+    {
+      "profile": "compact-light",
+      "name": "Week-review-entry-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "b7012e7ebc50826a04c8f6e869a0612c0683148fe38d6c64e780147e62e586b4",
+      "path": "compact-light/Week-review-entry-en.png",
+      "exportedAttachment": "4FDCDC62-00E6-44F4-AC8F-A43B26B96874.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Week-review-empty-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "6fcbdbb21476ec0d60fd1deacf289055d12933e52a5ba972bf475c5660fd5763",
+      "path": "compact-light/Week-review-empty-en.png",
+      "exportedAttachment": "B74E7D3C-7D76-4C79-B8E9-4ABFAF64C14E.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Week-review-single-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "56d43411cf1cd2d39c4e38ad1a5de78602149f31e7c7e13deb922b63e6e756a8",
+      "path": "compact-light/Week-review-single-en.png",
+      "exportedAttachment": "EBBD03DB-0947-4805-B634-0B440D2F4903.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Week-review-record-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "56d43411cf1cd2d39c4e38ad1a5de78602149f31e7c7e13deb922b63e6e756a8",
+      "path": "compact-light/Week-review-record-en.png",
+      "exportedAttachment": "DBE29491-44C9-4667-A29C-1D125D1ED197.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Week-review-entry-zh-Hans",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "588ce9d42d3b58c8da3c12ebe2289caa4b120767fe9629e7903e897a89523dc4",
+      "path": "compact-light/Week-review-entry-zh-Hans.png",
+      "exportedAttachment": "2D995C7D-3233-4B6F-BF3A-03330FAAAA20.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Week-review-empty-zh-Hans",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "d4a6efad90438b8ab22a75fd6aefdecc80237d3f6ebf91d1a3d9e44d4bc39b64",
+      "path": "compact-light/Week-review-empty-zh-Hans.png",
+      "exportedAttachment": "3FE4C5BF-2DD0-4A01-8F13-E5D5C3D1A1EB.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Week-review-single-zh-Hans",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "8190de5075c854587d7233a1b19fc088f222df52e39dd344d4e1fa524b06c488",
+      "path": "compact-light/Week-review-single-zh-Hans.png",
+      "exportedAttachment": "4FFF4824-E1CA-4184-A1DE-B9670A8C5FD7.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Week-review-record-zh-Hans",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "8190de5075c854587d7233a1b19fc088f222df52e39dd344d4e1fa524b06c488",
+      "path": "compact-light/Week-review-record-zh-Hans.png",
+      "exportedAttachment": "A16AFDF3-B292-4435-9540-A84646DC22FC.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Export-files-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "f99282b17ea6ca43691745453bdb71789b80890d9008830a51395828fc178f87",
+      "path": "compact-light/Export-files-en.png",
+      "exportedAttachment": "A5B7F757-FD72-41CA-941F-7DD25085CF3D.png",
+      "hierarchy": {
+        "path": "compact-light/Export-files-en-hierarchy.txt",
+        "sha256": "d33dc60b33b9f74bb93037c4f4325bb97a593228237046b32b3013142bba1566"
+      }
+    },
+    {
+      "profile": "compact-light",
+      "name": "Backup-restored-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "c85247a12f2be069a8b26beb762f1c11c3fab90bc48b2ebc5e82137718980ccb",
+      "path": "compact-light/Backup-restored-en.png",
+      "exportedAttachment": "A92D2311-4462-4AB7-8163-C4DE036D0C49.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Week-review-entry-en",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "2a5a8c48c11cfd54b2c940d856485327dcb483b79698ee470b90913d59794045",
+      "path": "phone-dark/Week-review-entry-en.png",
+      "exportedAttachment": "0899FCAB-673C-43DD-9C91-113DC12650DD.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Week-review-empty-en",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "c54c0e7c48d54149fff475384a477c5f79a6815d2bd7be7ff3783f21429648ca",
+      "path": "phone-dark/Week-review-empty-en.png",
+      "exportedAttachment": "E5A5A9AB-7E84-4B93-ADC1-6D7E9AC85FE9.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Week-review-single-en",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "f1552a4750d009865dca6fc15d64a2784e4db41d05c437254fe83bef82a0119b",
+      "path": "phone-dark/Week-review-single-en.png",
+      "exportedAttachment": "2B695F20-3453-4C54-95A0-5C66764CA472.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Week-review-record-en",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "f1552a4750d009865dca6fc15d64a2784e4db41d05c437254fe83bef82a0119b",
+      "path": "phone-dark/Week-review-record-en.png",
+      "exportedAttachment": "8551FA1F-15EB-475A-A9CA-BD697E18B869.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Week-review-entry-zh-Hans",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "17fc81b6a1f919f78860e84b15c18ba0f1ae6c2c942293ca37f512d860ccd3e9",
+      "path": "phone-dark/Week-review-entry-zh-Hans.png",
+      "exportedAttachment": "F2FF4E99-F9F8-4ED3-85CD-EDD7A6D8C75E.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Week-review-empty-zh-Hans",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "d151954999a6fff5ee629cedb77467ab58c0292a6f17abda9773ef843d662e6b",
+      "path": "phone-dark/Week-review-empty-zh-Hans.png",
+      "exportedAttachment": "35014E53-A1E3-4FCA-B67F-B2826BF9468E.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Week-review-single-zh-Hans",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "1d7fb1bd7066c4e64e02ea3781ba41f6af0259bea0d5ff3876ef4e84aca1c06e",
+      "path": "phone-dark/Week-review-single-zh-Hans.png",
+      "exportedAttachment": "5580A583-6D5C-42EC-AD2F-4202A84BAA63.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Week-review-record-zh-Hans",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "1d7fb1bd7066c4e64e02ea3781ba41f6af0259bea0d5ff3876ef4e84aca1c06e",
+      "path": "phone-dark/Week-review-record-zh-Hans.png",
+      "exportedAttachment": "E1680F21-B130-4061-82F4-EF981153C443.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Export-files-en",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "0294086af66d978e363526ea12c5b71de03563a2ae8a8e64572cd034ab73979e",
+      "path": "phone-dark/Export-files-en.png",
+      "exportedAttachment": "68757460-8A30-437C-ACFF-59B65717A389.png",
+      "hierarchy": {
+        "path": "phone-dark/Export-files-en-hierarchy.txt",
+        "sha256": "8ab8824d1a8336396c9efb5e2cbc669dc0357adbfbc4910dbbe31bc6624e5633"
+      }
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Backup-restored-en",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "81aba4895cf07108c2f1fd84b7a67322ad2b66d18c95b8d7d3152f1610407a78",
+      "path": "phone-dark/Backup-restored-en.png",
+      "exportedAttachment": "C1B9E111-31C8-49A8-A9DD-C14C5E3A9C0B.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Week-review-entry-en",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "e32517ab6b57301bb97a92248fe4d657a99e134d3bc18e520b3cc40f7f8f488e",
+      "path": "ipad-light/Week-review-entry-en.png",
+      "exportedAttachment": "9C473DCF-AABA-451F-B275-41EC720284C2.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Week-review-empty-en",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "bd4b18035bb315b9d8ac6afab711c4a401830e7c2e236755ad7d81441b3c02a2",
+      "path": "ipad-light/Week-review-empty-en.png",
+      "exportedAttachment": "E6AC9C98-168D-4B07-AC7C-7F617043A693.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Week-review-single-en",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "42547ce9dc85cfeb820f619abe844772a7a7dfbf94c480460e78e328e95f3942",
+      "path": "ipad-light/Week-review-single-en.png",
+      "exportedAttachment": "06271621-300D-4040-89DC-49891EC2F01A.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Week-review-record-en",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "42547ce9dc85cfeb820f619abe844772a7a7dfbf94c480460e78e328e95f3942",
+      "path": "ipad-light/Week-review-record-en.png",
+      "exportedAttachment": "E0F6918C-E53A-40D4-B52F-750E5AAC6A20.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Week-review-entry-zh-Hans",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "be73f25d07071112b29273c4abc467f174110fd87b56d5557cd45f6861cd4499",
+      "path": "ipad-light/Week-review-entry-zh-Hans.png",
+      "exportedAttachment": "1D129731-B083-4E7E-813F-017A5AE70D2F.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Week-review-empty-zh-Hans",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "616e3664e5cd9fc61c2da8a266e70138ebef2261aaa4e900babea674aa59ff3c",
+      "path": "ipad-light/Week-review-empty-zh-Hans.png",
+      "exportedAttachment": "B86BFE2D-5CF6-451A-9CE9-4E2D96B1AB62.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Week-review-single-zh-Hans",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "2f6710aeeed335a4fb38e5e1d1e074b4bf798096d0aee8430068717905e2d6b9",
+      "path": "ipad-light/Week-review-single-zh-Hans.png",
+      "exportedAttachment": "84573A98-3E00-43E2-8746-7A0A72D60B01.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Week-review-record-zh-Hans",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "2f6710aeeed335a4fb38e5e1d1e074b4bf798096d0aee8430068717905e2d6b9",
+      "path": "ipad-light/Week-review-record-zh-Hans.png",
+      "exportedAttachment": "5450AAE8-BCCB-4474-8E67-A3C70C7093EC.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Export-files-en",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "98c26543a6c12db21ade290b318faa6630ef17a959152f990ebcf669dd702511",
+      "path": "ipad-light/Export-files-en.png",
+      "exportedAttachment": "08097582-6BC5-4470-B2DB-D0B4611FA5BA.png",
+      "hierarchy": {
+        "path": "ipad-light/Export-files-en-hierarchy.txt",
+        "sha256": "e97f5b1028ceb10e1139d1fb4a74f4f158c4cc0537b340d751260a6d81725783"
+      }
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Backup-restored-en",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "a003b4e4506ce11e1fea21af87848e20698e828c6cfffc73308bf836f69e10e0",
+      "path": "ipad-light/Backup-restored-en.png",
+      "exportedAttachment": "9CE93D32-2ECC-4020-80D8-535BECF1298F.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Week-review-entry-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "3d4dc6b82c661fefe7cda8b63bdeac21666dd112c75a43926e56d27a4f2fc105",
+      "path": "compact-dark-accessibility/Week-review-entry-en.png",
+      "exportedAttachment": "FBE3626F-BFD9-4D11-9E4E-97083DA3E5ED.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Week-review-empty-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "8b1d1f95707024425bb9b1e8bb0e33b3b0c34837c000bf566ec0eabd3a2ce845",
+      "path": "compact-dark-accessibility/Week-review-empty-en.png",
+      "exportedAttachment": "E26F6120-AEB1-4F29-BE4B-082B7680AD41.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Week-review-single-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "f5412a6f1e08161658a7bb922f89a09cf43c20da9c0d0f51f069251d79f1e1ad",
+      "path": "compact-dark-accessibility/Week-review-single-en.png",
+      "exportedAttachment": "0CB80A73-439A-4902-B661-0D33FC7AA1AF.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Week-review-record-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "b5a0cae20c41bb46793d308ea45694a9cbc3d92cdad4478fb495b8ef91918e89",
+      "path": "compact-dark-accessibility/Week-review-record-en.png",
+      "exportedAttachment": "A76E61AF-D456-461E-8548-FCD761D22ACD.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Week-review-entry-zh-Hans",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "9a3293db397fd071e14a2cdba9f45924221860cb7a2916e605401801c26c653f",
+      "path": "compact-dark-accessibility/Week-review-entry-zh-Hans.png",
+      "exportedAttachment": "91389210-85C8-46EB-81B9-6D333A598F30.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Week-review-empty-zh-Hans",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "5c04deea54de50cfacefc89c6bb90e2f30430ee451b180f5d67b798628069ab3",
+      "path": "compact-dark-accessibility/Week-review-empty-zh-Hans.png",
+      "exportedAttachment": "ACBB68A3-94B7-4471-942B-049E55695FF6.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Week-review-single-zh-Hans",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "b6ff3c1d5cacf5f1804ab7f13f10c8ef96a88fa2ed39be8fdfc6aad3c4d4df3b",
+      "path": "compact-dark-accessibility/Week-review-single-zh-Hans.png",
+      "exportedAttachment": "5F6FDBE0-A0CB-4C23-A6A1-28BAE09627F0.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Week-review-record-zh-Hans",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "9897756db12eaffd18d351a7e06809a4099983dc1c22454d18c6dc00c85affd2",
+      "path": "compact-dark-accessibility/Week-review-record-zh-Hans.png",
+      "exportedAttachment": "90D753FB-5C89-476B-BA89-EE3E2315EBEA.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Export-files-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "f7b5d2708296b8695bc134df7adc2339888a353cc574a244b58b36d6d59c8d2b",
+      "path": "compact-dark-accessibility/Export-files-en.png",
+      "exportedAttachment": "81D6D20E-347F-479E-B425-A6CB13524E7B.png",
+      "hierarchy": {
+        "path": "compact-dark-accessibility/Export-files-en-hierarchy.txt",
+        "sha256": "4b4fd07571635c97c95ad4fcc803651526941f6f5172983bf0fa599699946a51"
+      }
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Backup-restored-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "54314b4ab01b00063999e90b6139d280369a4ed3e488469475e6af2c65c0a6bb",
+      "path": "compact-dark-accessibility/Backup-restored-en.png",
+      "exportedAttachment": "854FF324-CA2F-4D72-A21E-1154E2A845E8.png"
+    }
+  ]
+}
