@@ -335,32 +335,7 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     func testIPadWindowResizeContinuity() throws {
-        XCTAssertEqual(UIDevice.current.userInterfaceIdiom, .pad)
-        let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
-        settings.launch()
-        let multitasking = settings.staticTexts["Multitasking & Gestures"].firstMatch
-        if !multitasking.isHittable {
-            let sidebar = settings.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.16, dy: 0.33))
-            sidebar.press(forDuration: 0.05, thenDragTo: sidebar.withOffset(CGVector(dx: 0, dy: 260)))
-            let search = settings.searchFields.firstMatch
-            guard search.waitForExistence(timeout: 8), search.isHittable else {
-                captureFailure("Window-resize-settings-unavailable", settings)
-                return XCTFail("Could not reach system Settings search for Multitasking & Gestures.")
-            }
-            search.tap()
-            search.typeText("Multitasking")
-        }
-        guard multitasking.waitForExistence(timeout: 8), multitasking.isHittable else {
-            captureFailure("Window-resize-multitasking-unavailable", settings)
-            return XCTFail("System multitasking settings are unavailable.")
-        }
-        multitasking.tap()
-        let windowed = settings.staticTexts["Windowed Apps"].firstMatch
-        guard windowed.waitForExistence(timeout: 8), windowed.isHittable else {
-            captureFailure("Windowed-apps-unavailable", settings)
-            return XCTFail("Could not turn on the public system Windowed Apps mode.")
-        }
-        windowed.tap()
+        guard enableIPadWindowedApps() else { return }
 
         let app = makeApp()
         app.launch()
@@ -419,23 +394,117 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertTrue(pause.isHittable)
     }
 
-    private func resizeIPadWindow(_ app: XCUIApplication, targetWidth: CGFloat, name: String) throws -> CGRect {
+    func testIPadWindowResizeWithKeyboard() throws {
+        guard enableIPadWindowedApps() else { return }
+        let app = makeApp()
+        app.launch()
+        let window = app.windows.firstMatch
+        waitForStableFrame(window, message: "The real app window must settle before resizing.")
+        let wide = window.frame
+        XCTAssertGreaterThanOrEqual(wide.width, 700)
+        tap(app.buttons["today.addRecord"], in: app)
+        XCTAssertTrue(app.buttons["recap.date.open"].exists, "The form must use its accessibility text layout.")
+
+        let start = try resizeIPadWindow(app, targetWidth: wide.width * 0.61, name: "keyboard-entry",
+                                         targetHeight: wide.height * 0.66)
+        XCTAssertLessThanOrEqual(start.width, wide.width * 0.68)
+        let note = app.textViews["recap.note"]
+        tap(note, in: app)
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)
+        note.typeText(rotationNote)
+        XCTAssertEqual(note.value as? String, rotationNote)
+        XCTAssertTrue(keyboard.isHittable)
+        captureSystem("Window-keyboard-before-drag", app)
+
+        let narrowed = try resizeIPadWindow(app, targetWidth: wide.width * 0.49, name: "keyboard-narrow",
+                                            keyboard: keyboard)
+        XCTAssertLessThanOrEqual(narrowed.width, wide.width * 0.58)
+        XCTAssertEqual(note.value as? String, rotationNote)
+        if !keyboard.isHittable {
+            print("The system dismissed the software keyboard during the window drag.")
+            tap(note, in: app)
+        }
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)
+        XCTAssertEqual(note.value as? String, rotationNote)
+        let save = app.buttons["recap.saveToolbar"]
+        XCTAssertTrue(save.isEnabled && save.isHittable && window.frame.contains(save.frame))
+        XCTAssertFalse(save.frame.intersects(keyboard.frame), "The keyboard must leave Save unobstructed.")
+        assertToolbarTarget(save)
+        captureSystem("Window-keyboard-save-reachable", app)
+        save.tap()
+
+        selectTab("Timeline", "时间线", language: "en", app: app)
+        XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, "1 moment")
+        tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
+        let savedNote = app.staticTexts["detail.note"]
+        reveal(savedNote, in: app)
+        XCTAssertEqual(savedNote.label, rotationNote)
+        captureSystem("Window-keyboard-saved-note", app)
+    }
+
+    private func enableIPadWindowedApps() -> Bool {
+        XCTAssertEqual(UIDevice.current.userInterfaceIdiom, .pad)
+        let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+        settings.launch()
+        let multitasking = settings.staticTexts["Multitasking & Gestures"].firstMatch
+        if !multitasking.isHittable {
+            let sidebar = settings.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.16, dy: 0.33))
+            sidebar.press(forDuration: 0.05, thenDragTo: sidebar.withOffset(CGVector(dx: 0, dy: 260)))
+            let search = settings.searchFields.firstMatch
+            guard search.waitForExistence(timeout: 8), search.isHittable else {
+                captureFailure("Window-resize-settings-unavailable", settings)
+                XCTFail("Could not reach system Settings search for Multitasking & Gestures.")
+                return false
+            }
+            search.tap()
+            search.typeText("Multitasking")
+        }
+        guard multitasking.waitForExistence(timeout: 8), multitasking.isHittable else {
+            captureFailure("Window-resize-multitasking-unavailable", settings)
+            XCTFail("System multitasking settings are unavailable.")
+            return false
+        }
+        multitasking.tap()
+        let windowed = settings.staticTexts["Windowed Apps"].firstMatch
+        guard windowed.waitForExistence(timeout: 8), windowed.isHittable else {
+            captureFailure("Windowed-apps-unavailable", settings)
+            XCTFail("Could not turn on the public system Windowed Apps mode.")
+            return false
+        }
+        windowed.tap()
+        return true
+    }
+
+    private func resizeIPadWindow(_ app: XCUIApplication, targetWidth: CGFloat, name: String,
+                                  targetHeight: CGFloat? = nil, keyboard: XCUIElement? = nil) throws -> CGRect {
+        let window = app.windows.firstMatch
+        let before = window.frame
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let handle = springboard.descendants(matching: .any).matching(
             NSPredicate(format: "label BEGINSWITH %@", "Resize Private Moments")
         ).firstMatch
-        guard handle.waitForExistence(timeout: 8), handle.isHittable else {
-            captureFailure("Window-resize-handle-unavailable-\(name)", springboard)
-            throw NSError(domain: "PrivateMoments.WindowVerification", code: 1,
-                          userInfo: [NSLocalizedDescriptionKey: "System window handle could not receive a drag."])
+        let source: XCUICoordinate
+        if let keyboard, keyboard.isHittable,
+           !handle.exists || !handle.isHittable || handle.frame.intersects(keyboard.frame) {
+            // iPadOS also supports resizing from the top-right corner when
+            // the software keyboard covers the usual bottom-right handle.
+            source = window.coordinate(withNormalizedOffset: CGVector(dx: 1, dy: 0))
+                .withOffset(CGVector(dx: -3, dy: 3))
+            print("Resizing \(name) from the uncovered top-right corner.")
+        } else {
+            guard handle.waitForExistence(timeout: 8), handle.isHittable else {
+                captureFailure("Window-resize-handle-unavailable-\(name)", springboard)
+                throw NSError(domain: "PrivateMoments.WindowVerification", code: 1,
+                              userInfo: [NSLocalizedDescriptionKey: "System window handle could not receive a drag."])
+            }
+            source = handle.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         }
-        let window = app.windows.firstMatch
-        let before = window.frame
         let delta = targetWidth - before.width
-        let source = handle.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let verticalDelta = (targetHeight ?? before.height) - before.height
         // In this simulator's Windowed Apps mode the window resizes about its
         // center: the right edge moves the drag distance, and the left mirrors it.
-        source.press(forDuration: 0.10, thenDragTo: source.withOffset(CGVector(dx: delta / 2, dy: 0)),
+        source.press(forDuration: 0.10, thenDragTo: source.withOffset(CGVector(dx: delta / 2, dy: verticalDelta / 2)),
                      withVelocity: .slow, thenHoldForDuration: 0.10)
         let resized = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             window.exists && (window.frame.width - before.width) * (delta > 0 ? 1 : -1) >= 48

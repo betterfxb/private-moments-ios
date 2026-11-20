@@ -39,6 +39,7 @@ on:
           - cold-en
           - cold-zh-Hans
           - window-resize
+          - window-resize-keyboard
       backup_smoke_profile:
         description: Device profile for focused diagnosis (ignored by full acceptance)
         type: choice
@@ -89,13 +90,17 @@ jobs:
             printf 'Chinese backup language requires explicit backup smoke.\n' >&2
             exit 1
           fi
-          if [[ "$ROTATION_START" != "reference" && "$ROTATION_START" != "cold-en" && "$ROTATION_START" != "cold-zh-Hans" && "$ROTATION_START" != "window-resize" ]] ||
+          if [[ "$ROTATION_START" != "reference" && "$ROTATION_START" != "cold-en" && "$ROTATION_START" != "cold-zh-Hans" && "$ROTATION_START" != "window-resize" && "$ROTATION_START" != "window-resize-keyboard" ]] ||
              [[ "$ROTATION_START" != "reference" && "$ROTATION_SMOKE" != "1" ]]; then
             printf 'Cold rotation and window resizing require explicit iPad diagnostics and a supported scenario.\n' >&2
             exit 1
           fi
           if [[ "$ROTATION_START" == "window-resize" && "$SMOKE_PROFILE" != "ipad-light" ]]; then
             printf 'Window resizing requires the ipad-light profile.\n' >&2
+            exit 1
+          fi
+          if [[ "$ROTATION_START" == "window-resize-keyboard" && "$SMOKE_PROFILE" != "ipad-dark-accessibility" ]]; then
+            printf 'Keyboard window resizing requires the ipad-dark-accessibility profile.\n' >&2
             exit 1
           fi
           python3 -m unittest discover -s tools -p 'test_ui*.py' -v

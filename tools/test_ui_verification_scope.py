@@ -75,6 +75,20 @@ class VerificationScopeTests(unittest.TestCase):
         self.assertNotEqual(self.script('window-resize', PRIVATE_MOMENTS_UI_ROTATION_ONLY='1').returncode, 0)
         self.assertNotEqual(self.script('window-resize', PRIVATE_MOMENTS_UI_IPAD_TESTS='1').returncode, 0)
 
+    def test_window_resize_with_keyboard_uses_the_accessibility_ipad_profile(self):
+        method = PREFIX + 'testIPadWindowResizeWithKeyboard'
+        focused = self.script('window-resize-keyboard', PRIVATE_MOMENTS_UI_ROTATION_ONLY='1', PRIVATE_MOMENTS_UI_IPAD_TESTS='1')
+        self.assertEqual(focused.returncode, 0, focused.stderr)
+        self.assertEqual([line for line in focused.stdout.splitlines() if line.startswith('-only-testing:')],
+                         ['-only-testing:' + method])
+        self.assertIn('-skip-testing:' + method, self.script().stdout.splitlines())
+        for profile in ['ipad-dark-accessibility', 'ipad-light', 'compact-dark-accessibility']:
+            with self.subTest(profile=profile):
+                outcome = execute(GUARD, dict(ROTATION_START='window-resize-keyboard', ROTATION_SMOKE='1',
+                                               INPUT_SMOKE='0', BACKUP_SMOKE='0', BACKUP_LANGUAGE='en',
+                                               SMOKE_PROFILE=profile))
+                self.assertEqual(outcome.returncode == 0, profile == 'ipad-dark-accessibility', outcome.stderr)
+
     def test_cold_rejects_missing_rotation_phone_or_conflicting_scopes(self):
         for start in ['cold-en', 'cold-zh-Hans']:
             for flags in [{}, {'PRIVATE_MOMENTS_UI_ROTATION_ONLY': '1'},

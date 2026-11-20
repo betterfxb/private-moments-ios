@@ -64,10 +64,13 @@ ROTATION_START="${PRIVATE_MOMENTS_UI_ROTATION_START:-reference}"
 [[ "$ROTATION_ONLY" == "0" || "$ROTATION_ONLY" == "1" ]] || fail "Rotation scope must be 0 or 1."
 [[ "$IPAD_TESTS" == "0" || "$IPAD_TESTS" == "1" ]] || fail "iPad test selection must be 0 or 1."
 [[ "$ROTATION_ONLY" != "1" || ( "$IPAD_TESTS" == "1" && "$BACKUP_ONLY" == "0" && "$INPUT_ONLY" == "0" ) ]] || fail "Rotation smoke requires iPad and excludes input/backup smoke."
-[[ "$ROTATION_START" == "reference" || "$ROTATION_START" == "cold-en" || "$ROTATION_START" == "cold-zh-Hans" || "$ROTATION_START" == "window-resize" ]] || fail "Rotation start must be reference, cold-en, cold-zh-Hans or window-resize."
+[[ "$ROTATION_START" == "reference" || "$ROTATION_START" == "cold-en" || "$ROTATION_START" == "cold-zh-Hans" || "$ROTATION_START" == "window-resize" || "$ROTATION_START" == "window-resize-keyboard" ]] || fail "Rotation start must be reference, cold-en, cold-zh-Hans, window-resize or window-resize-keyboard."
 [[ "$ROTATION_START" == "reference" || "$ROTATION_ONLY" == "1" ]] || fail "Cold rotation and window resizing require explicit iPad diagnostics."
 if [[ "$ROTATION_START" != "window-resize" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadWindowResizeContinuity)
+fi
+if [[ "$ROTATION_START" != "window-resize-keyboard" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadWindowResizeWithKeyboard)
 fi
 if [[ "$ROTATION_START" != "cold-en" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadColdEnglishRotationContinuity)
@@ -84,6 +87,7 @@ if [[ "$ROTATION_ONLY" == "1" ]]; then
         cold-en) ROTATION_METHOD=testIPadColdEnglishRotationContinuity ;;
         cold-zh-Hans) ROTATION_METHOD=testIPadColdChineseRotationContinuity ;;
         window-resize) ROTATION_METHOD=testIPadWindowResizeContinuity ;;
+        window-resize-keyboard) ROTATION_METHOD=testIPadWindowResizeWithKeyboard ;;
         reference) ROTATION_METHOD=testIPadRotationContinuity ;;
     esac
     printf 'Rotation start: %s; selected method: %s\n' "$ROTATION_START" "$ROTATION_METHOD"
