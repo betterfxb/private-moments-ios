@@ -1,0 +1,30 @@
+﻿2026-11-13T14:05:58.8475920Z ##[group]Run if [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then
+2026-11-13T14:05:58.8476550Z [36;1mif [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then[0m
+2026-11-13T14:05:58.8477360Z [36;1m  printf 'Input and backup smoke modes are mutually exclusive.\n' >&2[0m
+2026-11-13T14:05:58.8477762Z [36;1m  exit 1[0m
+2026-11-13T14:05:58.8477960Z [36;1mfi[0m
+2026-11-13T14:05:58.8478339Z [36;1mif [[ "$BACKUP_LANGUAGE" != "en" && "$BACKUP_LANGUAGE" != "zh-Hans" ]] ||[0m
+2026-11-13T14:05:58.8478830Z [36;1m   [[ "$BACKUP_LANGUAGE" == "zh-Hans" && "$BACKUP_SMOKE" != "1" ]]; then[0m
+2026-11-13T14:05:58.8479321Z [36;1m  printf 'Chinese backup language requires explicit backup smoke.\n' >&2[0m
+2026-11-13T14:05:58.8479738Z [36;1m  exit 1[0m
+2026-11-13T14:05:58.8479926Z [36;1mfi[0m
+2026-11-13T14:05:58.8480255Z [36;1mpython3 -m unittest discover -s tools -p 'test_ui_test_matrix.py' -v[0m
+2026-11-13T14:05:58.8480889Z [36;1mmatrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"[0m
+2026-11-13T14:05:58.8481521Z [36;1mprintf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"[0m
+2026-11-13T14:05:58.8537322Z shell: /usr/bin/bash -e {0}
+2026-11-13T14:05:58.8537628Z env:
+2026-11-13T14:05:58.8537828Z   MATRIX_SCOPE: backup
+2026-11-13T14:05:58.8538075Z   SMOKE_PROFILE: compact-light
+2026-11-13T14:05:58.8538320Z   INPUT_SMOKE: 0
+2026-11-13T14:05:58.8538524Z   BACKUP_SMOKE: 1
+2026-11-13T14:05:58.8538732Z   BACKUP_LANGUAGE: zh-Hans
+2026-11-13T14:05:58.8538961Z ##[endgroup]
+2026-11-13T14:05:58.9662236Z test_existing_diagnostics_select_exactly_the_requested_profile (test_ui_test_matrix.UITestMatrixTests.test_existing_diagnostics_select_exactly_the_requested_profile) ... ok
+2026-11-13T14:05:58.9664765Z test_full_acceptance_keeps_original_profiles_and_scopes (test_ui_test_matrix.UITestMatrixTests.test_full_acceptance_keeps_original_profiles_and_scopes) ... ok
+2026-11-13T14:05:58.9666770Z test_ipad_accessibility_requires_explicit_input_scope (test_ui_test_matrix.UITestMatrixTests.test_ipad_accessibility_requires_explicit_input_scope) ... ok
+2026-11-13T14:05:58.9668692Z test_unknown_scope_or_profile_fails_closed (test_ui_test_matrix.UITestMatrixTests.test_unknown_scope_or_profile_fails_closed) ... ok
+2026-11-13T14:05:58.9669550Z 
+2026-11-13T14:05:58.9669796Z ----------------------------------------------------------------------
+2026-11-13T14:05:58.9670419Z Ran 4 tests in 0.000s
+2026-11-13T14:05:58.9670655Z 
+2026-11-13T14:05:58.9670774Z OK

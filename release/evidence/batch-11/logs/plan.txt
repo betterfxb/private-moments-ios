@@ -1,0 +1,24 @@
+﻿2026-11-13T11:45:05.0582276Z ##[group]Run if [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then
+2026-11-13T11:45:05.0582853Z [36;1mif [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then[0m
+2026-11-13T11:45:05.0583308Z [36;1m  printf 'Input and backup smoke modes are mutually exclusive.\n' >&2[0m
+2026-11-13T11:45:05.0583646Z [36;1m  exit 1[0m
+2026-11-13T11:45:05.0583879Z [36;1mfi[0m
+2026-11-13T11:45:05.0584201Z [36;1mpython3 -m unittest discover -s tools -p 'test_ui_test_matrix.py' -v[0m
+2026-11-13T11:45:05.0584680Z [36;1mmatrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"[0m
+2026-11-13T11:45:05.0585194Z [36;1mprintf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"[0m
+2026-11-13T11:45:05.0607189Z shell: /usr/bin/bash -e {0}
+2026-11-13T11:45:05.0607491Z env:
+2026-11-13T11:45:05.0607742Z   MATRIX_SCOPE: input
+2026-11-13T11:45:05.0608036Z   SMOKE_PROFILE: ipad-light-accessibility
+2026-11-13T11:45:05.0608356Z   INPUT_SMOKE: 1
+2026-11-13T11:45:05.0608589Z   BACKUP_SMOKE: 0
+2026-11-13T11:45:05.0608919Z ##[endgroup]
+2026-11-13T11:45:05.1089353Z test_existing_diagnostics_select_exactly_the_requested_profile (test_ui_test_matrix.UITestMatrixTests.test_existing_diagnostics_select_exactly_the_requested_profile) ... ok
+2026-11-13T11:45:05.1090424Z test_full_acceptance_keeps_original_profiles_and_scopes (test_ui_test_matrix.UITestMatrixTests.test_full_acceptance_keeps_original_profiles_and_scopes) ... ok
+2026-11-13T11:45:05.1091308Z test_ipad_accessibility_requires_explicit_input_scope (test_ui_test_matrix.UITestMatrixTests.test_ipad_accessibility_requires_explicit_input_scope) ... ok
+2026-11-13T11:45:05.1092186Z test_unknown_scope_or_profile_fails_closed (test_ui_test_matrix.UITestMatrixTests.test_unknown_scope_or_profile_fails_closed) ... ok
+2026-11-13T11:45:05.1092707Z 
+2026-11-13T11:45:05.1092839Z ----------------------------------------------------------------------
+2026-11-13T11:45:05.1093225Z Ran 4 tests in 0.000s
+2026-11-13T11:45:05.1093377Z 
+2026-11-13T11:45:05.1093461Z OK

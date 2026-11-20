@@ -1,0 +1,40 @@
+Failed to synthesize event: Neither element nor any descendant has keyboard focus. Event dispatch snapshot: TextField, {{48.0, 434.7}, {135.0, 22.0}}, identifier: 'recap.minutes', placeholderValue: 'Minutes', value: 0
+Element debug description:
+Attributes: TextField, 0x10597f0a0, {{48.0, 434.7}, {135.0, 22.0}}, identifier: 'recap.minutes', placeholderValue: 'Minutes', value: 0
+Element subtree:
+ →TextField, 0x10597f0a0, {{48.0, 434.7}, {135.0, 22.0}}, identifier: 'recap.minutes', placeholderValue: 'Minutes', value: 0
+Path to element:
+ →Application, 0x10595c8a0, pid: 15247, label: 'Private Moments'
+  ↳Window (Main), 0x105932390, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x10598a590, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x10598b670, {{0.0, 0.0}, {402.0, 874.0}}
+     ↳Other, 0x10598a8f0, {{0.0, 0.0}, {402.0, 874.0}}
+      ↳Other, 0x10596c5d0, {{0.0, 0.0}, {402.0, 874.0}}
+       ↳Other, 0x10598b9d0, {{0.0, 0.0}, {402.0, 874.0}}
+        ↳Other, 0x10598b2f0, {{0.0, 0.0}, {402.0, 874.0}}
+         ↳Other, 0x10598ea20, {{0.0, 0.0}, {402.0, 874.0}}
+          ↳Other, 0x10598c410, {{0.0, 0.0}, {402.0, 874.0}}
+           ↳Other, 0x10598bd40, {{0.0, 0.0}, {402.0, 874.0}}
+            ↳Other, 0x10598c0a0, {{0.0, 0.0}, {402.0, 874.0}}
+             ↳Other, 0x10598ce90, {{0.0, 0.0}, {402.0, 874.0}}
+              ↳Other, 0x10595fca0, {{0.0, 0.0}, {402.0, 874.0}}
+               ↳Other, 0x105960010, {{0.0, 0.0}, {402.0, 874.0}}
+                ↳Other, 0x105960d90, {{0.0, 0.0}, {402.0, 874.0}}
+                 ↳Other, 0x10594fb80, {{0.0, 0.0}, {402.0, 874.0}}
+                  ↳ScrollView, 0x1059610f0, {{0.0, 0.0}, {402.0, 874.0}}
+                   ↳Other, 0x105931970, {{0.0, 116.0}, {402.0, 1306.0}}
+                    ↳TextField, 0x10597f0a0, {{48.0, 434.7}, {135.0, 22.0}}, identifier: 'recap.minutes', placeholderValue: 'Minutes', value: 0
+Query chain:
+ →Find: Target Application 'com.example.PrivateMoments'
+  Output: {
+    Application, 0x105a7eae0, pid: 15247, label: 'Private Moments'
+  }
+  ↪︎Find: Descendants matching type TextField
+    Output: {
+      TextField, 0x105abcf60, {{48.0, 434.7}, {135.0, 22.0}}, identifier: 'recap.minutes', placeholderValue: 'Minutes', value: 0
+      TextField, 0x105abd080, {{219.0, 434.7}, {135.0, 22.0}}, identifier: 'recap.seconds', placeholderValue: 'Seconds', value: 0
+    }
+    ↪︎Find: Elements matching predicate '"recap.minutes" IN identifiers'
+      Output: {
+        TextField, 0x105ab6d90, {{48.0, 434.7}, {135.0, 22.0}}, identifier: 'recap.minutes', placeholderValue: 'Minutes', value: 0
+      }

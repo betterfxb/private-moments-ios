@@ -1,0 +1,851 @@
+{
+  "run": {
+    "id": 44760783402,
+    "name": "iOS validation",
+    "node_id": "WFR_kwLOVdw1Os8AAAAKa_NaKg",
+    "head_branch": "feat/native-manual-entry",
+    "head_sha": "8e526c8372374c13400ec26426e94dc6a8786e1e",
+    "path": ".github/workflows/ios-ci.yml",
+    "display_title": "iOS validation",
+    "run_number": 167,
+    "event": "workflow_dispatch",
+    "status": "completed",
+    "conclusion": "success",
+    "workflow_id": 402468865,
+    "check_suite_id": 121155377764,
+    "check_suite_node_id": "CS_kwDOVdw1Os8AAAAcNWxaZA",
+    "url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/runs/44760783402",
+    "html_url": "https://github.com/betterfxb/private-moments-ios/actions/runs/44760783402",
+    "pull_requests": [
+      {
+        "url": "https://api.github.com/repos/betterfxb/private-moments-ios/pulls/1",
+        "id": 5239095224,
+        "number": 1,
+        "head": {
+          "ref": "feat/native-manual-entry",
+          "sha": "8e526c8372374c13400ec26426e94dc6a8786e1e",
+          "repo": {
+            "id": 1440494906,
+            "url": "https://api.github.com/repos/betterfxb/private-moments-ios",
+            "name": "private-moments-ios"
+          }
+        },
+        "base": {
+          "ref": "main",
+          "sha": "84e03539df1d20d4eaa5d3a38b681f9eef47c07d",
+          "repo": {
+            "id": 1440494906,
+            "url": "https://api.github.com/repos/betterfxb/private-moments-ios",
+            "name": "private-moments-ios"
+          }
+        }
+      }
+    ],
+    "created_at": "2026-11-20T15:11:32Z",
+    "updated_at": "2026-11-20T16:18:40Z",
+    "actor": {
+      "login": "betterfxb",
+      "id": 143243588,
+      "node_id": "U_kgDOCIm5RA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/143243588?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/betterfxb",
+      "html_url": "https://github.com/betterfxb",
+      "followers_url": "https://api.github.com/users/betterfxb/followers",
+      "following_url": "https://api.github.com/users/betterfxb/following{/other_user}",
+      "gists_url": "https://api.github.com/users/betterfxb/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/betterfxb/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/betterfxb/subscriptions",
+      "organizations_url": "https://api.github.com/users/betterfxb/orgs",
+      "repos_url": "https://api.github.com/users/betterfxb/repos",
+      "events_url": "https://api.github.com/users/betterfxb/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/betterfxb/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-20T15:11:32Z",
+    "triggering_actor": {
+      "login": "betterfxb",
+      "id": 143243588,
+      "node_id": "U_kgDOCIm5RA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/143243588?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/betterfxb",
+      "html_url": "https://github.com/betterfxb",
+      "followers_url": "https://api.github.com/users/betterfxb/followers",
+      "following_url": "https://api.github.com/users/betterfxb/following{/other_user}",
+      "gists_url": "https://api.github.com/users/betterfxb/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/betterfxb/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/betterfxb/subscriptions",
+      "organizations_url": "https://api.github.com/users/betterfxb/orgs",
+      "repos_url": "https://api.github.com/users/betterfxb/repos",
+      "events_url": "https://api.github.com/users/betterfxb/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/betterfxb/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/runs/44760783402/jobs",
+    "logs_url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/runs/44760783402/logs",
+    "check_suite_url": "https://api.github.com/repos/betterfxb/private-moments-ios/check-suites/121155377764",
+    "artifacts_url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/runs/44760783402/artifacts",
+    "cancel_url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/runs/44760783402/cancel",
+    "rerun_url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/runs/44760783402/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/workflows/402468865",
+    "head_commit": {
+      "id": "8e526c8372374c13400ec26426e94dc6a8786e1e",
+      "tree_id": "a39f25d65e43e495eb9f3484aca53fd8d7d75f46",
+      "message": "Wait for entire review controls and native Files readiness [skip ci]",
+      "timestamp": "2026-11-20T14:29:25Z",
+      "author": {
+        "name": "fengxiangbo",
+        "email": "fengxiangbo@ctvit.com.cn"
+      },
+      "committer": {
+        "name": "fengxiangbo",
+        "email": "fengxiangbo@ctvit.com.cn"
+      }
+    },
+    "repository": {
+      "id": 1440494906,
+      "node_id": "R_kgDOVdw1Og",
+      "name": "private-moments-ios",
+      "full_name": "betterfxb/private-moments-ios",
+      "private": false,
+      "owner": {
+        "login": "betterfxb",
+        "id": 143243588,
+        "node_id": "U_kgDOCIm5RA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/143243588?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/betterfxb",
+        "html_url": "https://github.com/betterfxb",
+        "followers_url": "https://api.github.com/users/betterfxb/followers",
+        "following_url": "https://api.github.com/users/betterfxb/following{/other_user}",
+        "gists_url": "https://api.github.com/users/betterfxb/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/betterfxb/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/betterfxb/subscriptions",
+        "organizations_url": "https://api.github.com/users/betterfxb/orgs",
+        "repos_url": "https://api.github.com/users/betterfxb/repos",
+        "events_url": "https://api.github.com/users/betterfxb/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/betterfxb/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/betterfxb/private-moments-ios",
+      "description": null,
+      "fork": false,
+      "url": "https://api.github.com/repos/betterfxb/private-moments-ios",
+      "forks_url": "https://api.github.com/repos/betterfxb/private-moments-ios/forks",
+      "keys_url": "https://api.github.com/repos/betterfxb/private-moments-ios/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/betterfxb/private-moments-ios/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/betterfxb/private-moments-ios/teams",
+      "hooks_url": "https://api.github.com/repos/betterfxb/private-moments-ios/hooks",
+      "issue_events_url": "https://api.github.com/repos/betterfxb/private-moments-ios/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/betterfxb/private-moments-ios/events",
+      "assignees_url": "https://api.github.com/repos/betterfxb/private-moments-ios/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/betterfxb/private-moments-ios/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/betterfxb/private-moments-ios/tags",
+      "blobs_url": "https://api.github.com/repos/betterfxb/private-moments-ios/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/betterfxb/private-moments-ios/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/betterfxb/private-moments-ios/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/betterfxb/private-moments-ios/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/betterfxb/private-moments-ios/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/betterfxb/private-moments-ios/languages",
+      "stargazers_url": "https://api.github.com/repos/betterfxb/private-moments-ios/stargazers",
+      "contributors_url": "https://api.github.com/repos/betterfxb/private-moments-ios/contributors",
+      "subscribers_url": "https://api.github.com/repos/betterfxb/private-moments-ios/subscribers",
+      "subscription_url": "https://api.github.com/repos/betterfxb/private-moments-ios/subscription",
+      "commits_url": "https://api.github.com/repos/betterfxb/private-moments-ios/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/betterfxb/private-moments-ios/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/betterfxb/private-moments-ios/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/betterfxb/private-moments-ios/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/betterfxb/private-moments-ios/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/betterfxb/private-moments-ios/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/betterfxb/private-moments-ios/merges",
+      "archive_url": "https://api.github.com/repos/betterfxb/private-moments-ios/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/betterfxb/private-moments-ios/downloads",
+      "issues_url": "https://api.github.com/repos/betterfxb/private-moments-ios/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/betterfxb/private-moments-ios/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/betterfxb/private-moments-ios/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/betterfxb/private-moments-ios/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/betterfxb/private-moments-ios/labels{/name}",
+      "releases_url": "https://api.github.com/repos/betterfxb/private-moments-ios/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/betterfxb/private-moments-ios/deployments"
+    },
+    "head_repository": {
+      "id": 1440494906,
+      "node_id": "R_kgDOVdw1Og",
+      "name": "private-moments-ios",
+      "full_name": "betterfxb/private-moments-ios",
+      "private": false,
+      "owner": {
+        "login": "betterfxb",
+        "id": 143243588,
+        "node_id": "U_kgDOCIm5RA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/143243588?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/betterfxb",
+        "html_url": "https://github.com/betterfxb",
+        "followers_url": "https://api.github.com/users/betterfxb/followers",
+        "following_url": "https://api.github.com/users/betterfxb/following{/other_user}",
+        "gists_url": "https://api.github.com/users/betterfxb/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/betterfxb/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/betterfxb/subscriptions",
+        "organizations_url": "https://api.github.com/users/betterfxb/orgs",
+        "repos_url": "https://api.github.com/users/betterfxb/repos",
+        "events_url": "https://api.github.com/users/betterfxb/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/betterfxb/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/betterfxb/private-moments-ios",
+      "description": null,
+      "fork": false,
+      "url": "https://api.github.com/repos/betterfxb/private-moments-ios",
+      "forks_url": "https://api.github.com/repos/betterfxb/private-moments-ios/forks",
+      "keys_url": "https://api.github.com/repos/betterfxb/private-moments-ios/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/betterfxb/private-moments-ios/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/betterfxb/private-moments-ios/teams",
+      "hooks_url": "https://api.github.com/repos/betterfxb/private-moments-ios/hooks",
+      "issue_events_url": "https://api.github.com/repos/betterfxb/private-moments-ios/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/betterfxb/private-moments-ios/events",
+      "assignees_url": "https://api.github.com/repos/betterfxb/private-moments-ios/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/betterfxb/private-moments-ios/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/betterfxb/private-moments-ios/tags",
+      "blobs_url": "https://api.github.com/repos/betterfxb/private-moments-ios/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/betterfxb/private-moments-ios/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/betterfxb/private-moments-ios/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/betterfxb/private-moments-ios/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/betterfxb/private-moments-ios/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/betterfxb/private-moments-ios/languages",
+      "stargazers_url": "https://api.github.com/repos/betterfxb/private-moments-ios/stargazers",
+      "contributors_url": "https://api.github.com/repos/betterfxb/private-moments-ios/contributors",
+      "subscribers_url": "https://api.github.com/repos/betterfxb/private-moments-ios/subscribers",
+      "subscription_url": "https://api.github.com/repos/betterfxb/private-moments-ios/subscription",
+      "commits_url": "https://api.github.com/repos/betterfxb/private-moments-ios/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/betterfxb/private-moments-ios/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/betterfxb/private-moments-ios/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/betterfxb/private-moments-ios/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/betterfxb/private-moments-ios/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/betterfxb/private-moments-ios/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/betterfxb/private-moments-ios/merges",
+      "archive_url": "https://api.github.com/repos/betterfxb/private-moments-ios/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/betterfxb/private-moments-ios/downloads",
+      "issues_url": "https://api.github.com/repos/betterfxb/private-moments-ios/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/betterfxb/private-moments-ios/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/betterfxb/private-moments-ios/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/betterfxb/private-moments-ios/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/betterfxb/private-moments-ios/labels{/name}",
+      "releases_url": "https://api.github.com/repos/betterfxb/private-moments-ios/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/betterfxb/private-moments-ios/deployments"
+    }
+  },
+  "jobs": {
+    "total_count": 5,
+    "jobs": [
+      {
+        "id": 136372422320,
+        "run_id": 44760783402,
+        "workflow_name": "iOS validation",
+        "head_branch": "feat/native-manual-entry",
+        "run_url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/runs/44760783402",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVdw1Os8AAAAfwG4GsA",
+        "head_sha": "8e526c8372374c13400ec26426e94dc6a8786e1e",
+        "url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/jobs/136372422320",
+        "html_url": "https://github.com/betterfxb/private-moments-ios/actions/runs/44760783402/job/136372422320",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-20T15:11:34Z",
+        "started_at": "2026-11-20T15:11:36Z",
+        "completed_at": "2026-11-20T15:11:50Z",
+        "name": "plan",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-20T15:11:37Z",
+            "completed_at": "2026-11-20T15:11:37Z"
+          },
+          {
+            "name": "Run actions/checkout@v7",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-20T15:11:37Z",
+            "completed_at": "2026-11-20T15:11:47Z"
+          },
+          {
+            "name": "Run if [[ \"$ROTATION_SMOKE\" == \"1\" && ( \"$INPUT_SMOKE\" == \"1\" || \"$BACKUP_SMOKE\" == \"1\" ) ]]; then",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-20T15:11:47Z",
+            "completed_at": "2026-11-20T15:11:48Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v7",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-11-20T15:11:48Z",
+            "completed_at": "2026-11-20T15:11:48Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-11-20T15:11:48Z",
+            "completed_at": "2026-11-20T15:11:48Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/betterfxb/private-moments-ios/check-runs/136372422320",
+        "labels": [
+          "ubuntu-latest"
+        ],
+        "runner_id": 1000001442,
+        "runner_name": "GitHub Actions 1000001442",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 136372579654,
+        "run_id": 44760783402,
+        "workflow_name": "iOS validation",
+        "head_branch": "feat/native-manual-entry",
+        "run_url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/runs/44760783402",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVdw1Os8AAAAfwHBtRg",
+        "head_sha": "8e526c8372374c13400ec26426e94dc6a8786e1e",
+        "url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/jobs/136372579654",
+        "html_url": "https://github.com/betterfxb/private-moments-ios/actions/runs/44760783402/job/136372579654",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-20T15:11:50Z",
+        "started_at": "2026-11-20T15:11:54Z",
+        "completed_at": "2026-11-20T15:57:00Z",
+        "name": "ipad-light",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-20T15:11:55Z",
+            "completed_at": "2026-11-20T15:11:56Z"
+          },
+          {
+            "name": "Check out source",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-20T15:11:56Z",
+            "completed_at": "2026-11-20T15:12:12Z"
+          },
+          {
+            "name": "Run project audits",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-20T15:12:12Z",
+            "completed_at": "2026-11-20T15:12:13Z"
+          },
+          {
+            "name": "Select and verify pinned UI toolchain",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-11-20T15:12:13Z",
+            "completed_at": "2026-11-20T15:12:19Z"
+          },
+          {
+            "name": "Select and configure simulator",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-11-20T15:12:19Z",
+            "completed_at": "2026-11-20T15:16:31Z"
+          },
+          {
+            "name": "Build Debug and Release, then run XCTest",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-11-20T15:16:32Z",
+            "completed_at": "2026-11-20T15:55:16Z"
+          },
+          {
+            "name": "Read backup flow diagnostics",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-11-20T15:55:16Z",
+            "completed_at": "2026-11-20T15:55:49Z"
+          },
+          {
+            "name": "Read compiled orientation metadata",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-11-20T15:55:49Z",
+            "completed_at": "2026-11-20T15:55:50Z"
+          },
+          {
+            "name": "Export XCTest UI screenshots",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-11-20T15:55:50Z",
+            "completed_at": "2026-11-20T15:56:09Z"
+          },
+          {
+            "name": "Upload XCTest UI screenshots",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-11-20T15:56:09Z",
+            "completed_at": "2026-11-20T15:56:14Z"
+          },
+          {
+            "name": "Upload XCTest result bundle",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-11-20T15:56:14Z",
+            "completed_at": "2026-11-20T15:56:32Z"
+          },
+          {
+            "name": "Post Check out source",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 22,
+            "started_at": "2026-11-20T15:56:32Z",
+            "completed_at": "2026-11-20T15:56:34Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 23,
+            "started_at": "2026-11-20T15:56:34Z",
+            "completed_at": "2026-11-20T15:56:56Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/betterfxb/private-moments-ios/check-runs/136372579654",
+        "labels": [
+          "macos-15"
+        ],
+        "runner_id": 1000001445,
+        "runner_name": "GitHub Actions 1000001445",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 136372579663,
+        "run_id": 44760783402,
+        "workflow_name": "iOS validation",
+        "head_branch": "feat/native-manual-entry",
+        "run_url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/runs/44760783402",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVdw1Os8AAAAfwHBtTw",
+        "head_sha": "8e526c8372374c13400ec26426e94dc6a8786e1e",
+        "url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/jobs/136372579663",
+        "html_url": "https://github.com/betterfxb/private-moments-ios/actions/runs/44760783402/job/136372579663",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-20T15:11:50Z",
+        "started_at": "2026-11-20T15:11:54Z",
+        "completed_at": "2026-11-20T16:18:39Z",
+        "name": "compact-light",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-20T15:11:55Z",
+            "completed_at": "2026-11-20T15:11:57Z"
+          },
+          {
+            "name": "Check out source",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-20T15:11:57Z",
+            "completed_at": "2026-11-20T15:12:17Z"
+          },
+          {
+            "name": "Run project audits",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-20T15:12:17Z",
+            "completed_at": "2026-11-20T15:12:18Z"
+          },
+          {
+            "name": "Select and verify pinned UI toolchain",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-11-20T15:12:18Z",
+            "completed_at": "2026-11-20T15:12:25Z"
+          },
+          {
+            "name": "Select and configure simulator",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-11-20T15:12:25Z",
+            "completed_at": "2026-11-20T15:16:38Z"
+          },
+          {
+            "name": "Build Debug and Release, then run XCTest",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-11-20T15:16:38Z",
+            "completed_at": "2026-11-20T16:17:05Z"
+          },
+          {
+            "name": "Read backup flow diagnostics",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-11-20T16:17:05Z",
+            "completed_at": "2026-11-20T16:17:31Z"
+          },
+          {
+            "name": "Read compiled orientation metadata",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-11-20T16:17:31Z",
+            "completed_at": "2026-11-20T16:17:31Z"
+          },
+          {
+            "name": "Export XCTest UI screenshots",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-11-20T16:17:31Z",
+            "completed_at": "2026-11-20T16:17:51Z"
+          },
+          {
+            "name": "Upload XCTest UI screenshots",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-11-20T16:17:51Z",
+            "completed_at": "2026-11-20T16:17:56Z"
+          },
+          {
+            "name": "Upload XCTest result bundle",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-11-20T16:17:56Z",
+            "completed_at": "2026-11-20T16:18:20Z"
+          },
+          {
+            "name": "Post Check out source",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 22,
+            "started_at": "2026-11-20T16:18:20Z",
+            "completed_at": "2026-11-20T16:18:21Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 23,
+            "started_at": "2026-11-20T16:18:21Z",
+            "completed_at": "2026-11-20T16:18:36Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/betterfxb/private-moments-ios/check-runs/136372579663",
+        "labels": [
+          "macos-15"
+        ],
+        "runner_id": 1000001444,
+        "runner_name": "GitHub Actions 1000001444",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 136372579679,
+        "run_id": 44760783402,
+        "workflow_name": "iOS validation",
+        "head_branch": "feat/native-manual-entry",
+        "run_url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/runs/44760783402",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVdw1Os8AAAAfwHBtXw",
+        "head_sha": "8e526c8372374c13400ec26426e94dc6a8786e1e",
+        "url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/jobs/136372579679",
+        "html_url": "https://github.com/betterfxb/private-moments-ios/actions/runs/44760783402/job/136372579679",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-20T15:11:50Z",
+        "started_at": "2026-11-20T15:11:53Z",
+        "completed_at": "2026-11-20T15:45:55Z",
+        "name": "phone-dark",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-20T15:11:53Z",
+            "completed_at": "2026-11-20T15:11:54Z"
+          },
+          {
+            "name": "Check out source",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-20T15:11:54Z",
+            "completed_at": "2026-11-20T15:12:10Z"
+          },
+          {
+            "name": "Run project audits",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-20T15:12:10Z",
+            "completed_at": "2026-11-20T15:12:10Z"
+          },
+          {
+            "name": "Select and verify pinned UI toolchain",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-11-20T15:12:10Z",
+            "completed_at": "2026-11-20T15:12:15Z"
+          },
+          {
+            "name": "Select and configure simulator",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-11-20T15:12:15Z",
+            "completed_at": "2026-11-20T15:15:42Z"
+          },
+          {
+            "name": "Build Debug and Release, then run XCTest",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-11-20T15:15:42Z",
+            "completed_at": "2026-11-20T15:44:39Z"
+          },
+          {
+            "name": "Read backup flow diagnostics",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-11-20T15:44:39Z",
+            "completed_at": "2026-11-20T15:45:01Z"
+          },
+          {
+            "name": "Read compiled orientation metadata",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-11-20T15:45:01Z",
+            "completed_at": "2026-11-20T15:45:01Z"
+          },
+          {
+            "name": "Export XCTest UI screenshots",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-11-20T15:45:01Z",
+            "completed_at": "2026-11-20T15:45:09Z"
+          },
+          {
+            "name": "Upload XCTest UI screenshots",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-11-20T15:45:09Z",
+            "completed_at": "2026-11-20T15:45:13Z"
+          },
+          {
+            "name": "Upload XCTest result bundle",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-11-20T15:45:13Z",
+            "completed_at": "2026-11-20T15:45:30Z"
+          },
+          {
+            "name": "Post Check out source",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 22,
+            "started_at": "2026-11-20T15:45:30Z",
+            "completed_at": "2026-11-20T15:45:31Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 23,
+            "started_at": "2026-11-20T15:45:31Z",
+            "completed_at": "2026-11-20T15:45:53Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/betterfxb/private-moments-ios/check-runs/136372579679",
+        "labels": [
+          "macos-15"
+        ],
+        "runner_id": 1000001446,
+        "runner_name": "GitHub Actions 1000001446",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 136372579760,
+        "run_id": 44760783402,
+        "workflow_name": "iOS validation",
+        "head_branch": "feat/native-manual-entry",
+        "run_url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/runs/44760783402",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVdw1Os8AAAAfwHBtsA",
+        "head_sha": "8e526c8372374c13400ec26426e94dc6a8786e1e",
+        "url": "https://api.github.com/repos/betterfxb/private-moments-ios/actions/jobs/136372579760",
+        "html_url": "https://github.com/betterfxb/private-moments-ios/actions/runs/44760783402/job/136372579760",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-20T15:11:50Z",
+        "started_at": "2026-11-20T15:11:53Z",
+        "completed_at": "2026-11-20T16:18:37Z",
+        "name": "compact-dark-accessibility",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-20T15:11:54Z",
+            "completed_at": "2026-11-20T15:11:55Z"
+          },
+          {
+            "name": "Check out source",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-20T15:11:55Z",
+            "completed_at": "2026-11-20T15:12:31Z"
+          },
+          {
+            "name": "Run project audits",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-20T15:12:31Z",
+            "completed_at": "2026-11-20T15:12:32Z"
+          },
+          {
+            "name": "Select and verify pinned UI toolchain",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-11-20T15:12:32Z",
+            "completed_at": "2026-11-20T15:12:37Z"
+          },
+          {
+            "name": "Select and configure simulator",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-11-20T15:12:37Z",
+            "completed_at": "2026-11-20T15:15:35Z"
+          },
+          {
+            "name": "Build Debug and Release, then run XCTest",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-11-20T15:15:35Z",
+            "completed_at": "2026-11-20T16:16:54Z"
+          },
+          {
+            "name": "Read backup flow diagnostics",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-11-20T16:16:54Z",
+            "completed_at": "2026-11-20T16:17:32Z"
+          },
+          {
+            "name": "Read compiled orientation metadata",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-11-20T16:17:32Z",
+            "completed_at": "2026-11-20T16:17:32Z"
+          },
+          {
+            "name": "Export XCTest UI screenshots",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-11-20T16:17:32Z",
+            "completed_at": "2026-11-20T16:17:51Z"
+          },
+          {
+            "name": "Upload XCTest UI screenshots",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-11-20T16:17:51Z",
+            "completed_at": "2026-11-20T16:17:55Z"
+          },
+          {
+            "name": "Upload XCTest result bundle",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-11-20T16:17:55Z",
+            "completed_at": "2026-11-20T16:18:19Z"
+          },
+          {
+            "name": "Post Check out source",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 22,
+            "started_at": "2026-11-20T16:18:19Z",
+            "completed_at": "2026-11-20T16:18:21Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 23,
+            "started_at": "2026-11-20T16:18:21Z",
+            "completed_at": "2026-11-20T16:18:34Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/betterfxb/private-moments-ios/check-runs/136372579760",
+        "labels": [
+          "macos-15"
+        ],
+        "runner_id": 1000001443,
+        "runner_name": "GitHub Actions 1000001443",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      }
+    ]
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "sourceCommit": "b1225b5e065e81a5847c969d68278363780de9bd",
+  "runId": 42801899567,
+  "runURL": "https://github.com/betterfxb/private-moments-ios/actions/runs/42801899567",
+  "pullRequest": "https://github.com/betterfxb/private-moments-ios/pull/1",
+  "profiles": [
+    {
+      "name": "compact-dark-accessibility",
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 38
+    },
+    {
+      "name": "compact-light",
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 38
+    },
+    {
+      "name": "ipad-light",
+      "conclusion": "success",
+      "device": "iPad Pro 13-inch (M5)",
+      "exportedPNGCount": 36
+    },
+    {
+      "name": "phone-dark",
+      "conclusion": "success",
+      "device": "iPhone 17 Pro",
+      "exportedPNGCount": 36
+    }
+  ],
+  "retainedUnmodifiedScreenshots": [
+    {
+      "file": "manual-compact-zh.png",
+      "profile": "compact-light",
+      "capture": "Manual-top-zh-Hans",
+      "sha256": "dcdf5683c686bb311dcef2038dea5512571651865b1f8492cd87e8aef3e9eae6",
+      "width": 750,
+      "height": 1334
+    },
+    {
+      "file": "manual-accessible-zh.png",
+      "profile": "compact-dark-accessibility",
+      "capture": "Manual-duration-zh-Hans",
+      "sha256": "de7766bc9e70b0d73522fc56031e43467e98c353b54b0955834877defd6b985a",
+      "width": 750,
+      "height": 1334
+    },
+    {
+      "file": "date-panel-accessible-zh.png",
+      "profile": "compact-dark-accessibility",
+      "capture": "Manual-date-picker-zh-Hans",
+      "sha256": "71196b741c3800b8cfe7ec5052dfd70984fa0b44b33df7dc011dfad893abfc81",
+      "width": 750,
+      "height": 1334
+    }
+  ],
+  "limits": [
+    "Simulator evidence; not physical device acceptance",
+    "No global visual-theme approval",
+    "No signing, TestFlight upload or main-branch merge"
+  ],
+  "toolchain": {
+    "xcode": "16.4",
+    "simulatorSDK": "18.5",
+    "simulatorRuntime": "26.2"
+  },
+  "compactLightTests": {
+    "unit": 30,
+    "ui": 4,
+    "failures": 0
+  },
+  "targetedOpenedCaptures": [
+    "ipad-light/Manual-top-zh-Hans",
+    "ipad-light/Calendar-zh-Hans",
+    "ipad-light/Today-filtered-zh-Hans",
+    "ipad-light/Manual-top-en",
+    "ipad-light/Calendar-en",
+    "phone-dark/Manual-top-zh-Hans",
+    "phone-dark/Calendar-zh-Hans",
+    "phone-dark/Today-filtered-zh-Hans",
+    "compact-dark-accessibility/Manual-top-zh-Hans",
+    "compact-dark-accessibility/Manual-duration-zh-Hans",
+    "compact-dark-accessibility/Manual-date-picker-zh-Hans",
+    "compact-dark-accessibility/Calendar-zh-Hans",
+    "compact-dark-accessibility/Manual-duration-en",
+    "compact-dark-accessibility/Manual-date-picker-en",
+    "compact-dark-accessibility/Recap-controls-en",
+    "compact-dark-accessibility/Recap-controls-zh-Hans",
+    "compact-light/Manual-top-zh-Hans",
+    "compact-light/Calendar-zh-Hans",
+    "compact-light/Manual-entered-en",
+    "compact-light/Today-filter-empty-en"
+  ],
+  "reviewScope": "Selected final-source originals opened; not a manual review of all 148 exported PNGs."
+}

@@ -1,0 +1,75 @@
+{
+  "batch": 18,
+  "runId": "44526820906",
+  "sourceCommit": "ae5e60a8afb64cff53422401f0be78452978f0af",
+  "scope": "resize",
+  "conclusion": "failure",
+  "native": {
+    "ipad-light": {
+      "unitPassed": [],
+      "uiPassed": [],
+      "testFailed": [
+        [
+          "-[PrivateMomentsUITests.PrivateMomentsUITests testIPadWindowResizeContinuity]",
+          "270.723"
+        ]
+      ],
+      "testErrors": [
+        "/Users/runner/work/private-moments-ios/private-moments-ios/UITests/PrivateMomentsUITests.swift:461: error: -[PrivateMomentsUITests.PrivateMomentsUITests testIPadWindowResizeContinuity] : XCTAssertGreaterThanOrEqual failed: (\"40.29069867441865\") is less than (\"44.0\")"
+      ],
+      "unsignedRelease": false,
+      "filesReselected": [],
+      "targetMeasurements": [],
+      "resizing": [
+        [
+          "medium",
+          [
+            0.0,
+            0.0,
+            1032.0,
+            1376.0
+          ],
+          [
+            44.0,
+            58.5,
+            945.0,
+            1260.0
+          ]
+        ]
+      ],
+      "interactionPerformance": {},
+      "backupPerformance": {}
+    }
+  },
+  "originalImageCount": 2,
+  "retainedImages": [
+    {
+      "profile": "ipad-light",
+      "name": "Window-resize-wide",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "c9fef5f7e48e7d1c5c75beabebcf88a683cca139840c2b00612b8fcedefbeaf3",
+      "path": "ipad-light/Window-resize-wide.png",
+      "exportedAttachment": "6DE3486A-6318-4526-89B7-F70E7EA7D7F6.png",
+      "hierarchy": {
+        "path": "ipad-light/Window-resize-wide-hierarchy.txt",
+        "sha256": "7c9a238b365497ce89325053fc58186d3ff89b2aecd9e47a5d6665ac878e32cd"
+      }
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Window-resize-medium",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "e06c1af2cee7f302d0cf822abf7d2e729886c6047e74984adc890232b11de7c8",
+      "path": "ipad-light/Window-resize-medium.png",
+      "exportedAttachment": "81C7496D-4964-4743-905B-973BB5B5C743.png",
+      "hierarchy": {
+        "path": "ipad-light/Window-resize-medium-hierarchy.txt",
+        "sha256": "732b93ec8a36d988e260a9fc50fded4b04f396932f04b9632c8da94fe24cdc9c"
+      }
+    }
+  ]
+}

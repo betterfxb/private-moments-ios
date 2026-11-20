@@ -1,0 +1,218 @@
+﻿2026-11-15T06:25:38.5778716Z Current runner version: '2.338.2'
+2026-11-15T06:25:38.5804292Z ##[group]Runner Image Provisioner
+2026-11-15T06:25:38.5805092Z Hosted Compute Agent
+2026-11-15T06:25:38.5805604Z Version: 20261103.629
+2026-11-15T06:25:38.5806118Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-15T06:25:38.5806834Z Build Date: 2026-11-03T17:26:59Z
+2026-11-15T06:25:38.5807574Z Worker ID: {0f93da62-a7a5-4874-af1e-0f0e93ab9054}
+2026-11-15T06:25:38.5808374Z Region: eastus2
+2026-11-15T06:25:38.5809053Z Cloud: Azure
+2026-11-15T06:25:38.5809666Z ##[endgroup]
+2026-11-15T06:25:38.5811289Z ##[group]Operating System
+2026-11-15T06:25:38.5812058Z Ubuntu
+2026-11-15T06:25:38.5812816Z 26.04.1
+2026-11-15T06:25:38.5813709Z LTS
+2026-11-15T06:25:38.5814369Z ##[endgroup]
+2026-11-15T06:25:38.5815280Z ##[group]Runner Image
+2026-11-15T06:25:38.5816127Z Image: ubuntu-26.04
+2026-11-15T06:25:38.5816980Z Version: 20261111.196.1
+2026-11-15T06:25:38.5818551Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261111.196/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-15T06:25:38.5820562Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261111.196
+2026-11-15T06:25:38.5821743Z ##[endgroup]
+2026-11-15T06:25:38.5823286Z ##[group]GITHUB_TOKEN Permissions
+2026-11-15T06:25:38.5825213Z Contents: read
+2026-11-15T06:25:38.5825820Z Metadata: read
+2026-11-15T06:25:38.5826301Z ##[endgroup]
+2026-11-15T06:25:38.5828003Z Secret source: Actions
+2026-11-15T06:25:38.5828905Z Cache mode: write
+2026-11-15T06:25:38.5829791Z Prepare workflow directory
+2026-11-15T06:25:38.6199633Z Prepare all required actions
+2026-11-15T06:25:38.6256338Z Getting action download info
+2026-11-15T06:25:38.7900524Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-11-15T06:25:39.0133297Z Complete job name: plan
+2026-11-15T06:25:39.0937747Z ##[group]Run actions/checkout@v7
+2026-11-15T06:25:39.0938453Z with:
+2026-11-15T06:25:39.0938864Z   repository: betterfxb/private-moments-ios
+2026-11-15T06:25:39.0941973Z   token: ***
+2026-11-15T06:25:39.0942354Z   ssh-strict: true
+2026-11-15T06:25:39.0942741Z   ssh-user: git
+2026-11-15T06:25:39.0943282Z   persist-credentials: true
+2026-11-15T06:25:39.0943724Z   clean: true
+2026-11-15T06:25:39.0944117Z   sparse-checkout-cone-mode: true
+2026-11-15T06:25:39.0944565Z   fetch-depth: 1
+2026-11-15T06:25:39.0944943Z   fetch-tags: false
+2026-11-15T06:25:39.0945560Z   show-progress: true
+2026-11-15T06:25:39.0945955Z   lfs: false
+2026-11-15T06:25:39.0946325Z   submodules: false
+2026-11-15T06:25:39.0946718Z   set-safe-directory: true
+2026-11-15T06:25:39.0947145Z   allow-unsafe-pr-checkout: false
+2026-11-15T06:25:39.0947783Z ##[endgroup]
+2026-11-15T06:25:39.6680956Z Syncing repository: betterfxb/private-moments-ios
+2026-11-15T06:25:39.6683491Z ##[group]Getting Git version info
+2026-11-15T06:25:39.6684806Z Working directory is '/home/runner/work/private-moments-ios/private-moments-ios'
+2026-11-15T06:25:39.6686448Z [command]/usr/bin/git version
+2026-11-15T06:25:39.6701627Z git version 2.56.1
+2026-11-15T06:25:39.6718908Z ##[endgroup]
+2026-11-15T06:25:39.6731885Z Temporarily overriding HOME='/home/runner/work/_temp/1c77a2af-3576-4c04-9025-82fd6ca7cd64' before making global git config changes
+2026-11-15T06:25:39.6734770Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-15T06:25:39.6738833Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/private-moments-ios/private-moments-ios
+2026-11-15T06:25:39.6802288Z Deleting the contents of '/home/runner/work/private-moments-ios/private-moments-ios'
+2026-11-15T06:25:39.6806389Z ##[group]Determining repository object format
+2026-11-15T06:25:39.6808335Z ##[endgroup]
+2026-11-15T06:25:39.6809660Z ##[group]Initializing the repository
+2026-11-15T06:25:39.6812049Z [command]/usr/bin/git init /home/runner/work/private-moments-ios/private-moments-ios
+2026-11-15T06:25:39.7026385Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-15T06:25:39.7027791Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-15T06:25:39.7028966Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-15T06:25:39.7029595Z hint: call:
+2026-11-15T06:25:39.7029955Z hint:
+2026-11-15T06:25:39.7030539Z hint: 	git config --global init.defaultBranch <name>
+2026-11-15T06:25:39.7031147Z hint:
+2026-11-15T06:25:39.7031670Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-15T06:25:39.7032483Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-15T06:25:39.7033518Z hint:
+2026-11-15T06:25:39.7034136Z hint: 	git branch -m <name>
+2026-11-15T06:25:39.7034817Z hint:
+2026-11-15T06:25:39.7035663Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-15T06:25:39.7047516Z Initialized empty Git repository in /home/runner/work/private-moments-ios/private-moments-ios/.git/
+2026-11-15T06:25:39.7055843Z [command]/usr/bin/git remote add origin https://github.com/betterfxb/private-moments-ios
+2026-11-15T06:25:39.7106363Z ##[endgroup]
+2026-11-15T06:25:39.7107128Z ##[group]Disabling automatic garbage collection
+2026-11-15T06:25:39.7109252Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-15T06:25:39.7140235Z ##[endgroup]
+2026-11-15T06:25:39.7141377Z ##[group]Setting up auth
+2026-11-15T06:25:39.7141893Z Removing SSH command configuration
+2026-11-15T06:25:39.7146207Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-15T06:25:39.7175846Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-15T06:25:39.8245946Z Removing HTTP extra header
+2026-11-15T06:25:39.8251657Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-15T06:25:39.8281013Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-15T06:25:39.8517774Z Removing includeIf entries pointing to credentials config files
+2026-11-15T06:25:39.8521794Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-15T06:25:39.8558264Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-15T06:25:39.8791342Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-af9dd59b-cd7a-476b-9d21-87834a0b64be.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-15T06:25:39.8825447Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/private-moments-ios/private-moments-ios/.git.path /home/runner/work/_temp/git-credentials-af9dd59b-cd7a-476b-9d21-87834a0b64be.config
+2026-11-15T06:25:39.8854506Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/private-moments-ios/private-moments-ios/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-af9dd59b-cd7a-476b-9d21-87834a0b64be.config
+2026-11-15T06:25:39.8889363Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-af9dd59b-cd7a-476b-9d21-87834a0b64be.config
+2026-11-15T06:25:39.8920607Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-af9dd59b-cd7a-476b-9d21-87834a0b64be.config
+2026-11-15T06:25:39.8945615Z ##[endgroup]
+2026-11-15T06:25:39.8946281Z ##[group]Fetching the repository
+2026-11-15T06:25:39.8952514Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +04ae10fa7ef0285d968cbd3303f039f3da77ddd3:refs/remotes/origin/feat/native-manual-entry
+2026-11-15T06:25:52.2792548Z From https://github.com/betterfxb/private-moments-ios
+2026-11-15T06:25:52.2793848Z  * [new ref]         04ae10fa7ef0285d968cbd3303f039f3da77ddd3 -> origin/feat/native-manual-entry
+2026-11-15T06:25:52.2802152Z [command]/usr/bin/git branch --list --remote origin/feat/native-manual-entry
+2026-11-15T06:25:52.2832059Z   origin/feat/native-manual-entry
+2026-11-15T06:25:52.2838685Z [command]/usr/bin/git rev-parse refs/remotes/origin/feat/native-manual-entry
+2026-11-15T06:25:52.2860685Z 04ae10fa7ef0285d968cbd3303f039f3da77ddd3
+2026-11-15T06:25:52.2864199Z ##[endgroup]
+2026-11-15T06:25:52.2864805Z ##[group]Determining the checkout info
+2026-11-15T06:25:52.2865635Z ##[endgroup]
+2026-11-15T06:25:52.2869374Z [command]/usr/bin/git sparse-checkout disable
+2026-11-15T06:25:52.2922606Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-15T06:25:52.2950310Z ##[group]Checking out the ref
+2026-11-15T06:25:52.2954828Z [command]/usr/bin/git checkout --progress --force -B feat/native-manual-entry refs/remotes/origin/feat/native-manual-entry
+2026-11-15T06:25:53.3086961Z Updating files:  92% (2010/2184)
+2026-11-15T06:25:53.3188066Z Updating files:  93% (2032/2184)
+2026-11-15T06:25:53.3253558Z Updating files:  94% (2053/2184)
+2026-11-15T06:25:53.3350011Z Updating files:  95% (2075/2184)
+2026-11-15T06:25:53.3452797Z Updating files:  96% (2097/2184)
+2026-11-15T06:25:53.3555736Z Updating files:  97% (2119/2184)
+2026-11-15T06:25:53.3598298Z Updating files:  98% (2141/2184)
+2026-11-15T06:25:53.3609228Z Updating files:  99% (2163/2184)
+2026-11-15T06:25:53.3609642Z Updating files: 100% (2184/2184)
+2026-11-15T06:25:53.3609986Z Updating files: 100% (2184/2184), done.
+2026-11-15T06:25:53.3645589Z Switched to a new branch 'feat/native-manual-entry'
+2026-11-15T06:25:53.3651270Z branch 'feat/native-manual-entry' set up to track 'origin/feat/native-manual-entry'.
+2026-11-15T06:25:53.3736258Z ##[endgroup]
+2026-11-15T06:25:53.4278339Z [command]/usr/bin/git log -1 --format=%H
+2026-11-15T06:25:53.4304271Z 04ae10fa7ef0285d968cbd3303f039f3da77ddd3
+2026-11-15T06:25:53.4534790Z ##[group]Run if [[ "$ROTATION_SMOKE" == "1" && ( "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then
+2026-11-15T06:25:53.4535439Z [36;1mif [[ "$ROTATION_SMOKE" == "1" && ( "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then[0m
+2026-11-15T06:25:53.4535928Z [36;1m  printf 'Rotation, input and backup smoke modes are mutually exclusive.\n' >&2[0m
+2026-11-15T06:25:53.4536273Z [36;1m  exit 1[0m
+2026-11-15T06:25:53.4536441Z [36;1mfi[0m
+2026-11-15T06:25:53.4536659Z [36;1mif [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then[0m
+2026-11-15T06:25:53.4537028Z [36;1m  printf 'Input and backup smoke modes are mutually exclusive.\n' >&2[0m
+2026-11-15T06:25:53.4537322Z [36;1m  exit 1[0m
+2026-11-15T06:25:53.4537484Z [36;1mfi[0m
+2026-11-15T06:25:53.4537724Z [36;1mif [[ "$BACKUP_LANGUAGE" != "en" && "$BACKUP_LANGUAGE" != "zh-Hans" ]] ||[0m
+2026-11-15T06:25:53.4538088Z [36;1m   [[ "$BACKUP_LANGUAGE" == "zh-Hans" && "$BACKUP_SMOKE" != "1" ]]; then[0m
+2026-11-15T06:25:53.4538492Z [36;1m  printf 'Chinese backup language requires explicit backup smoke.\n' >&2[0m
+2026-11-15T06:25:53.4538791Z [36;1m  exit 1[0m
+2026-11-15T06:25:53.4538949Z [36;1mfi[0m
+2026-11-15T06:25:53.4539279Z [36;1mif [[ "$ROTATION_START" != "reference" && "$ROTATION_START" != "cold-en" && "$ROTATION_START" != "cold-zh-Hans" ]] ||[0m
+2026-11-15T06:25:53.4539728Z [36;1m   [[ "$ROTATION_START" != "reference" && "$ROTATION_SMOKE" != "1" ]]; then[0m
+2026-11-15T06:25:53.4540177Z [36;1m  printf 'Cold rotation requires an explicit rotation-only scope and a supported locale.\n' >&2[0m
+2026-11-15T06:25:53.4540645Z [36;1m  exit 1[0m
+2026-11-15T06:25:53.4540963Z [36;1mfi[0m
+2026-11-15T06:25:53.4541203Z [36;1mpython3 -m unittest discover -s tools -p 'test_ui*.py' -v[0m
+2026-11-15T06:25:53.4541632Z [36;1mmatrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"[0m
+2026-11-15T06:25:53.4542091Z [36;1mprintf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"[0m
+2026-11-15T06:25:53.4590175Z shell: /usr/bin/bash -e {0}
+2026-11-15T06:25:53.4590565Z env:
+2026-11-15T06:25:53.4590747Z   MATRIX_SCOPE: input
+2026-11-15T06:25:53.4590965Z   SMOKE_PROFILE: compact-dark-accessibility
+2026-11-15T06:25:53.4591196Z   INPUT_SMOKE: 1
+2026-11-15T06:25:53.4591364Z   BACKUP_SMOKE: 0
+2026-11-15T06:25:53.4591536Z   BACKUP_LANGUAGE: en
+2026-11-15T06:25:53.4591705Z   ROTATION_SMOKE: 0
+2026-11-15T06:25:53.4591885Z   ROTATION_START: reference
+2026-11-15T06:25:53.4592074Z ##[endgroup]
+2026-11-15T06:25:53.5650575Z test_existing_phone_and_ipad_selection_is_preserved (test_ui_simulator_selection.SimulatorSelectionTests.test_existing_phone_and_ipad_selection_is_preserved) ... ok
+2026-11-15T06:25:53.5658971Z test_mini_selects_a_real_mini_instead_of_first_ipad (test_ui_simulator_selection.SimulatorSelectionTests.test_mini_selects_a_real_mini_instead_of_first_ipad) ... ok
+2026-11-15T06:25:53.5675092Z test_missing_or_unavailable_mini_fails_without_fallback (test_ui_simulator_selection.SimulatorSelectionTests.test_missing_or_unavailable_mini_fails_without_fallback) ... ok
+2026-11-15T06:25:53.5683308Z test_other_runtime_does_not_substitute_for_pinned_sdk (test_ui_simulator_selection.SimulatorSelectionTests.test_other_runtime_does_not_substitute_for_pinned_sdk) ... ok
+2026-11-15T06:25:53.5691419Z test_unavailable_devices_are_excluded_before_selection (test_ui_simulator_selection.SimulatorSelectionTests.test_unavailable_devices_are_excluded_before_selection) ... ok
+2026-11-15T06:25:53.5692933Z test_existing_diagnostics_select_exactly_the_requested_profile (test_ui_test_matrix.UITestMatrixTests.test_existing_diagnostics_select_exactly_the_requested_profile) ... ok
+2026-11-15T06:25:53.5694088Z test_full_acceptance_keeps_original_profiles_and_scopes (test_ui_test_matrix.UITestMatrixTests.test_full_acceptance_keeps_original_profiles_and_scopes) ... ok
+2026-11-15T06:25:53.5695220Z test_ipad_accessibility_requires_explicit_input_scope (test_ui_test_matrix.UITestMatrixTests.test_ipad_accessibility_requires_explicit_input_scope) ... ok
+2026-11-15T06:25:53.5696240Z test_rotation_requires_ipad_light_profile (test_ui_test_matrix.UITestMatrixTests.test_rotation_requires_ipad_light_profile) ... ok
+2026-11-15T06:25:53.5697036Z test_supplemental_ipads_require_explicit_input_or_rotation (test_ui_test_matrix.UITestMatrixTests.test_supplemental_ipads_require_explicit_input_or_rotation) ... ok
+2026-11-15T06:25:53.5697785Z test_unknown_scope_or_profile_fails_closed (test_ui_test_matrix.UITestMatrixTests.test_unknown_scope_or_profile_fails_closed) ... ok
+2026-11-15T06:25:53.5811839Z test_cold_rejects_missing_rotation_phone_or_conflicting_scopes (test_ui_verification_scope.VerificationScopeTests.test_cold_rejects_missing_rotation_phone_or_conflicting_scopes) ... ok
+2026-11-15T06:25:53.5840419Z test_default_full_phone_and_ipad_exclude_cold_methods (test_ui_verification_scope.VerificationScopeTests.test_default_full_phone_and_ipad_exclude_cold_methods) ... ok
+2026-11-15T06:25:53.5870081Z test_each_cold_locale_selects_exactly_one_method (test_ui_verification_scope.VerificationScopeTests.test_each_cold_locale_selects_exactly_one_method) ... ok
+2026-11-15T06:25:53.5914074Z test_gallery_input_and_backup_exclude_cold_methods (test_ui_verification_scope.VerificationScopeTests.test_gallery_input_and_backup_exclude_cold_methods) ... ok
+2026-11-15T06:25:53.5929433Z test_reference_selection_remains_bilingual_method (test_ui_verification_scope.VerificationScopeTests.test_reference_selection_remains_bilingual_method) ... ok
+2026-11-15T06:25:53.5943816Z test_unknown_rotation_start_is_rejected (test_ui_verification_scope.VerificationScopeTests.test_unknown_rotation_start_is_rejected) ... ok
+2026-11-15T06:25:53.6042809Z test_workflow_rejects_cold_without_rotation_before_allocating_macos (test_ui_verification_scope.VerificationScopeTests.test_workflow_rejects_cold_without_rotation_before_allocating_macos) ... ok
+2026-11-15T06:25:53.6043933Z 
+2026-11-15T06:25:53.6044125Z ----------------------------------------------------------------------
+2026-11-15T06:25:53.6044640Z Ran 18 tests in 0.042s
+2026-11-15T06:25:53.6044799Z 
+2026-11-15T06:25:53.6053720Z OK
+2026-11-15T06:25:53.6615496Z Post job cleanup.
+2026-11-15T06:25:53.7323679Z [command]/usr/bin/git version
+2026-11-15T06:25:53.7370375Z git version 2.56.1
+2026-11-15T06:25:53.7400460Z Temporarily overriding HOME='/home/runner/work/_temp/f18015c1-41d6-4358-84b7-55ff4efc3820' before making global git config changes
+2026-11-15T06:25:53.7401629Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-15T06:25:53.7405004Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/private-moments-ios/private-moments-ios
+2026-11-15T06:25:53.7436221Z Removing SSH command configuration
+2026-11-15T06:25:53.7441308Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-15T06:25:53.7472187Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-15T06:25:53.7748931Z Removing HTTP extra header
+2026-11-15T06:25:53.7760173Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-15T06:25:53.7799522Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-15T06:25:53.8079709Z Removing includeIf entries pointing to credentials config files
+2026-11-15T06:25:53.8085798Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-15T06:25:53.8110254Z includeif.gitdir:/home/runner/work/private-moments-ios/private-moments-ios/.git.path
+2026-11-15T06:25:53.8110854Z includeif.gitdir:/home/runner/work/private-moments-ios/private-moments-ios/.git/worktrees/*.path
+2026-11-15T06:25:53.8111265Z includeif.gitdir:/github/workspace/.git.path
+2026-11-15T06:25:53.8111557Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-15T06:25:53.8117011Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/private-moments-ios/private-moments-ios/.git.path
+2026-11-15T06:25:53.8137985Z /home/runner/work/_temp/git-credentials-af9dd59b-cd7a-476b-9d21-87834a0b64be.config
+2026-11-15T06:25:53.8146329Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/private-moments-ios/private-moments-ios/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-af9dd59b\-cd7a\-476b\-9d21\-87834a0b64be\.config
+2026-11-15T06:25:53.8178797Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/private-moments-ios/private-moments-ios/.git/worktrees/*.path
+2026-11-15T06:25:53.8200131Z /home/runner/work/_temp/git-credentials-af9dd59b-cd7a-476b-9d21-87834a0b64be.config
+2026-11-15T06:25:53.8216749Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/private-moments-ios/private-moments-ios/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-af9dd59b\-cd7a\-476b\-9d21\-87834a0b64be\.config
+2026-11-15T06:25:53.8244442Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-11-15T06:25:53.8264080Z /github/runner_temp/git-credentials-af9dd59b-cd7a-476b-9d21-87834a0b64be.config
+2026-11-15T06:25:53.8270486Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-af9dd59b\-cd7a\-476b\-9d21\-87834a0b64be\.config
+2026-11-15T06:25:53.8297867Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-15T06:25:53.8317423Z /github/runner_temp/git-credentials-af9dd59b-cd7a-476b-9d21-87834a0b64be.config
+2026-11-15T06:25:53.8323610Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-af9dd59b\-cd7a\-476b\-9d21\-87834a0b64be\.config
+2026-11-15T06:25:53.8352166Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-15T06:25:53.8586848Z Removing credentials config '/home/runner/work/_temp/git-credentials-af9dd59b-cd7a-476b-9d21-87834a0b64be.config'
+2026-11-15T06:25:53.8717801Z Evaluate and set job outputs
+2026-11-15T06:25:53.8723746Z Set output 'matrix'
+2026-11-15T06:25:53.8725239Z Cleaning up orphan processes

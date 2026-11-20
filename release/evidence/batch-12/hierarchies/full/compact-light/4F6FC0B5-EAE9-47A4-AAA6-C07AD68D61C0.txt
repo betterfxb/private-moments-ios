@@ -1,0 +1,123 @@
+Attributes: Application, 0x11372e650, pid: 90278, label: 'Private Moments'
+Element subtree:
+ →Application, 0x11372e650, pid: 90278, label: 'Private Moments'
+    Window (Main), 0x11373d2a0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x11373d660, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x113738330, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x113738690, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x11373d3c0, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x11373d4e0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x113738450, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x113738570, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x1137432c0, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x1137433e0, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x113743500, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x113743620, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x113743740, {{0.0, 20.0}, {375.0, 54.0}}, identifier: 'Settings'
+                              StaticText, 0x113743860, {{154.0, 31.5}, {66.5, 21.0}}, label: 'Settings'
+                            Other, 0x113743980, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x113743aa0, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x113743bc0, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x113743ce0, {{0.0, 0.0}, {375.0, 667.0}}
+                                    ScrollView, 0x113743e00, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x113743f20, {{0.0, -307.5}, {375.0, 1264.0}}
+                                        StaticText, 0x113744040, {{21.5, -285.5}, {119.5, 14.5}}, label: 'Private by default'
+                                        StaticText, 0x113744160, {{20.0, -259.0}, {243.5, 26.5}}, label: 'Your space, your choice.'
+                                        StaticText, 0x113744280, {{20.0, -224.5}, {297.5, 38.0}}, label: 'Your journal stays on this device. Manage its privacy and backups here.'
+                                        StaticText, 0x1137443a0, {{36.0, -146.5}, {99.0, 14.5}}, label: 'ON THIS DEVICE'
+                                        StaticText, 0x1137444c0, {{39.0, -119.0}, {105.5, 18.0}}, label: 'Local journal'
+                                        StaticText, 0x1137445e0, {{38.0, -74.5}, {131.0, 18.0}}, identifier: 'settings.savedCountTitle', label: 'Saved moments'
+                                        StaticText, 0x113744700, {{331.5, -74.5}, {7.5, 18.0}}, identifier: 'settings.savedCount', label: '1'
+                                        StaticText, 0x113744820, {{37.5, -30.0}, {198.5, 18.0}}, label: 'No cloud sync configured'
+                                        StaticText, 0x113744940, {{38.0, 15.5}, {267.0, 18.0}}, label: 'Files protected while device is locked'
+                                        StaticText, 0x113744a60, {{36.0, 46.5}, {299.0, 46.5}}, label: 'The app requests exclusion from device backups. Use the JSON backup controls below to move records to another device.'
+                                        StaticText, 0x113744b80, {{36.0, 149.0}, {124.0, 14.5}}, label: 'DATA MANAGEMENT'
+                                        StaticText, 0x113744ca0, {{36.0, 176.5}, {298.5, 34.0}}, label: 'Create a portable JSON backup or restore one you made earlier.'
+                                        Button, 0x113744dc0, {{36.0, 223.5}, {303.0, 58.5}}, identifier: 'settings.export', label: 'Export private backup'
+                                          Image, 0x113744ee0, {{104.0, 243.5}, {13.5, 18.0}}, identifier: 'square.and.arrow.up', label: 'Share'
+                                          StaticText, 0x113745000, {{36.0, 223.5}, {303.0, 58.5}}, label: 'Export private backup'
+                                        Button, 0x113745120, {{36.0, 295.0}, {303.0, 58.0}}, identifier: 'settings.restore', label: 'Restore from JSON'
+                                          Image, 0x113745240, {{112.5, 315.0}, {13.5, 17.5}}, identifier: 'square.and.arrow.down', label: 'Download'
+                                          StaticText, 0x113745360, {{36.0, 295.0}, {303.0, 58.0}}, label: 'Restore from JSON'
+                                        StaticText, 0x113745480, {{36.0, 366.0}, {243.0, 30.5}}, label: 'Backups include private notes. Keep the file somewhere only you can access.'
+                                        StaticText, 0x1137455a0, {{36.0, 452.5}, {61.5, 14.5}}, label: 'APP LOCK'
+                                        StaticText, 0x1137456c0, {{36.0, 480.0}, {285.5, 34.0}}, label: 'Use this device's Face ID, Touch ID, or passcode before opening the journal.'
+                                        Button, 0x1137457e0, {{36.0, 527.0}, {303.0, 44.0}}, identifier: 'settings.lock', label: 'Lock journal, Off'
+                                          Image, 0x113745900, {{38.0, 541.5}, {10.0, 14.5}}, identifier: 'settings.lockTitle', label: 'Lock'
+                                          StaticText, 0x113745a20, {{38.0, 540.0}, {101.0, 18.0}}, identifier: 'settings.lockTitle', label: 'Lock journal'
+                                          StaticText, 0x113745b40, {{317.5, 540.0}, {21.5, 18.0}}, label: 'Off'
+                                        StaticText, 0x113745c60, {{36.0, 584.0}, {280.5, 30.5}}, label: 'Authentication stays on this device. The app never receives biometric data.'
+                                        StaticText, 0x113745d80, {{36.0, 670.5}, {53.5, 14.5}}, label: 'PRIVACY'
+                                        StaticText, 0x113745ea0, {{36.0, 698.0}, {297.5, 34.0}}, label: 'Understand what stays on this device, how authentication works, and what a backup contains.'
+                                        Button, 0x113745fc0, {{39.5, 753.1}, {150.5, 18.0}}, label: 'Privacy information'
+                                          Image, 0x1137460e0, {{39.5, 754.0}, {12.0, 16.0}}, identifier: 'hand.raised.fill', label: 'Block'
+                                          StaticText, 0x113746200, {{39.5, 753.1}, {150.5, 18.0}}, label: 'Privacy information'
+                                        Button, 0x113746320, {{82.5, 834.0}, {211.8, 20.5}}, identifier: 'settings.deleteAll', label: 'Delete all local moments'
+                                          Image, 0x113746440, {{82.5, 834.0}, {16.5, 18.5}}, identifier: 'trash', label: 'Trash'
+                                          StaticText, 0x113746560, {{82.5, 834.0}, {211.8, 20.5}}, label: 'Delete all local moments'
+                                        StaticText, 0x113746680, {{20.0, 892.5}, {304.0, 34.0}}, identifier: 'settings.footer', label: 'Your backups can contain private notes. Keep them somewhere you trust.'
+                                      Other, 0x1137467a0, {{0.0, 0.0}, {375.0, 667.0}}
+                                        Other, 0x1137468c0, {{0.0, 0.0}, {375.0, 128.8}}
+                                        Other, 0x1137469e0, {{0.0, 519.2}, {375.0, 147.8}}
+                                      Other, 0x113746b00, {{0.0, 0.0}, {375.0, 667.0}}
+                                        Other, 0x113746c20, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Other, 0x113746d40, {{0.0, 0.0}, {375.0, 52.5}}
+                                          Other, 0x113746e60, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x113746f80, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Other, 0x1137470a0, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x1137471c0, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Other, 0x1137472e0, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x113747400, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x113747520, {{0.0, 0.0}, {375.0, 128.8}}
+                                        Other, 0x113747640, {{0.0, 519.2}, {375.0, 147.8}}
+                                          Image, 0x113747760, {{-120.0, 524.0}, {615.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x113747880, {{0.0, 519.2}, {375.0, 147.8}}
+                                            Other, 0x1137479a0, {{0.0, 519.2}, {375.0, 147.8}}
+                                          Other, 0x113747ac0, {{0.0, 519.2}, {375.0, 147.8}}
+                                            Other, 0x113747be0, {{0.0, 519.2}, {375.0, 147.8}}
+                                            Other, 0x113747d00, {{0.0, 519.2}, {375.0, 147.8}}
+                                      Other, 0x113747e20, {{342.0, 74.0}, {30.0, 510.0}}, label: 'Vertical scroll bar, 3 pages', value: 51%
+                                        Other, 0x113747f40, {{369.0, 212.5}, {3.0, 236.5}}
+                                      Other, 0x113748060, {{342.0, 74.0}, {30.0, 510.0}}, label: 'Vertical scroll bar, 3 pages', value: 51%
+                                        Other, 0x113748180, {{369.0, 212.5}, {3.0, 236.5}}
+                            Other, 0x1137482a0, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x1137483c0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x1137484e0, {{0.0, 584.0}, {375.0, 83.0}}
+                  Other, 0x113748650, {{0.0, 0.0}, {375.0, 667.0}}
+                    TabBar, 0x113748770, {{0.0, 584.0}, {375.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x113748890, {{51.0, 584.0}, {274.0, 62.0}}
+                        Other, 0x1137489b0, {{51.0, 584.0}, {94.0, 54.0}}
+                        Other, 0x113748ad0, {{51.0, 584.0}, {274.0, 62.0}}
+                          Button, 0x113748bf0, {{55.0, 588.0}, {94.0, 54.0}}, identifier: 'heart.text.square', label: 'Today'
+                            Image, 0x113748d10, {{89.0, 595.5}, {27.0, 25.0}}, identifier: 'heart.text.square.fill', label: 'heart.text.square.fill'
+                          Button, 0x113748e30, {{141.0, 588.0}, {94.0, 54.0}}, identifier: 'calendar', label: 'Timeline'
+                            Image, 0x113748f50, {{174.0, 595.5}, {29.0, 25.0}}, identifier: 'calendar', label: 'calendar'
+                          Button, 0x113749070, {{227.0, 588.0}, {94.0, 54.0}}, identifier: 'slider.horizontal.3', label: 'Settings', Selected
+                            Image, 0x113749190, {{259.0, 596.0}, {29.5, 24.0}}, identifier: 'slider.horizontal.3', label: 'edit'
+                        Other, 0x1137492b0, {{227.0, 588.0}, {94.0, 54.0}}
+                          Other, 0x1137493d0, {{227.0, 588.0}, {94.0, 54.0}}
+                            Other, 0x1137494f0, {{227.0, 588.0}, {94.0, 54.0}}
+                            Other, 0x113749610, {{227.0, 588.0}, {94.0, 54.0}}
+                              Other, 0x113749730, {{227.0, 588.0}, {94.0, 54.0}}
+                                Other, 0x113749850, {{227.0, 588.0}, {94.0, 54.0}}
+                                  Other, 0x113749970, {{227.0, 588.0}, {94.0, 54.0}}
+                                Other, 0x113749a90, {{227.0, 588.0}, {94.0, 54.0}}
+                              Other, 0x1134c0340, {{227.0, 588.0}, {94.0, 54.0}}
+                  Other, 0x1134c0d50, {{0.0, 584.0}, {375.0, 83.0}}
+                    Other, 0x1134bff20, {{0.0, 584.0}, {375.0, 83.0}}
+                      Other, 0x1134c1bd0, {{0.0, 584.0}, {375.0, 83.0}}
+                        Other, 0x1134c3970, {{0.0, 584.0}, {375.0, 83.0}}
+                          Other, 0x1134c3a90, {{0.0, 584.0}, {375.0, 83.0}}
+                            Other, 0x1134c3bb0, {{0.0, 584.0}, {375.0, 83.0}}
+                        Other, 0x1134c3cd0, {{0.0, 584.0}, {375.0, 83.0}}
+                          Other, 0x1134c3df0, {{0.0, 584.0}, {375.0, 83.0}}
+    Window, 0x1134c3f10, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x1134c4030, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x1134c4150, {{0.0, 0.0}, {375.0, 667.0}}
+Path to element:
+ →Application, 0x11372e650, pid: 90278, label: 'Private Moments'
+Query chain:
+ →Find: Target Application 'com.example.PrivateMoments'
+  Output: {
+    Application, 0x11361b740, pid: 90278, label: 'Private Moments'
+  }

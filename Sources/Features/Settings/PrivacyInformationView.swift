@@ -7,17 +7,17 @@ struct PrivacyInformationView: View {
                 VStack(alignment: .leading, spacing: 9) {
                     Label("Stored locally", systemImage: "iphone")
                         .font(.system(.caption, design: .rounded).weight(.semibold))
-                        .foregroundStyle(AppColors.terracottaDark)
+                        .foregroundStyle(AppColors.accentText)
                     Text("Your entries stay on this device")
-                        .font(.system(.largeTitle, design: .serif))
-                        .foregroundStyle(AppColors.ink)
+                        .font(.system(.title2, design: .rounded).weight(.semibold))
+                        .foregroundStyle(AppColors.text)
                     Text("Records you create are kept in this app's local storage.")
                         .font(.system(.body, design: .rounded))
-                        .foregroundStyle(AppColors.inkSoft)
+                        .foregroundStyle(AppColors.secondaryText)
                 }
                 .padding(18)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+                .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
 
                 infoCard(
                     title: "What is stored",
@@ -54,7 +54,7 @@ struct PrivacyInformationView: View {
             .frame(maxWidth: 680)
             .frame(maxWidth: .infinity)
         }
-        .background(AppColors.cream.ignoresSafeArea())
+        .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Privacy information")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -62,16 +62,16 @@ struct PrivacyInformationView: View {
     private func infoCard(title: LocalizedStringKey, body: LocalizedStringKey) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
-                .font(.system(.title3, design: .serif).weight(.semibold))
-                .foregroundStyle(AppColors.ink)
+                .font(.system(.title3, design: .rounded).weight(.semibold))
+                .foregroundStyle(AppColors.text)
             Text(body)
                 .font(.system(.subheadline, design: .rounded))
-                .foregroundStyle(AppColors.inkSoft)
+                .foregroundStyle(AppColors.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppColors.paper, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: AppRadius.card).stroke(AppColors.line.opacity(0.8), lineWidth: 1))
+        .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: AppRadius.card).stroke(AppColors.separator.opacity(0.8), lineWidth: 1))
     }
 }

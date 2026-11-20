@@ -12,6 +12,32 @@ enum PrivateMomentsMigrationPlan: SchemaMigrationPlan {
 }
 
 enum PrivateStoreFactory {
+    static func makePreferences(arguments: [String] = ProcessInfo.processInfo.arguments) -> UserDefaults {
+        #if DEBUG
+        if let identifier = uiTestStoreIdentifier(arguments: arguments) {
+            guard let defaults = UserDefaults(suiteName: "PrivateMoments-UITests." + identifier.uuidString) else {
+                preconditionFailure("Could not create isolated UI-test preferences.")
+            }
+            return defaults
+        }
+        #endif
+        return .standard
+    }
+
+    #if DEBUG
+    static func uiTestStoreIdentifier(arguments: [String] = ProcessInfo.processInfo.arguments) -> UUID? {
+        guard let index = arguments.firstIndex(of: "-pm-ui-test-store"),
+              arguments.indices.contains(index + 1) else { return nil }
+        return UUID(uuidString: arguments[index + 1])
+    }
+
+    static func uiTestSaveFailureEnabled(arguments: [String] = ProcessInfo.processInfo.arguments) -> Bool {
+        uiTestStoreIdentifier(arguments: arguments) != nil
+            && arguments.contains("-pm-ui-test-fail-save-once")
+    }
+    #endif
+
+    @MainActor
     static func makeContainer() throws -> ModelContainer {
         let fileManager = FileManager.default
         let applicationSupport = try fileManager.url(
@@ -24,10 +50,7 @@ enum PrivateStoreFactory {
         #if DEBUG
         // UI tests use their own persistent sandbox. Relaunch tests reuse the UUID;
         // no test setup erases or opens the normal journal.
-        let arguments = ProcessInfo.processInfo.arguments
-        if let index = arguments.firstIndex(of: "-pm-ui-test-store"),
-           arguments.indices.contains(index + 1),
-           let identifier = UUID(uuidString: arguments[index + 1]) {
+        if let identifier = uiTestStoreIdentifier() {
             directory = applicationSupport
                 .appendingPathComponent("PrivateMoments-UITests", isDirectory: true)
                 .appendingPathComponent(identifier.uuidString, isDirectory: true)
@@ -66,6 +89,13 @@ enum PrivateStoreFactory {
             configurations: [configuration]
         )
 
+        #if DEBUG
+        if uiTestStoreIdentifier() != nil,
+           ProcessInfo.processInfo.arguments.contains("-pm-ui-test-performance-fixture") {
+            try seedPerformanceFixture(in: container)
+        }
+        #endif
+
         // Apply protection to store files created by SwiftData as well as the containing directory.
         let fileURLs = (try? fileManager.contentsOfDirectory(
             at: directory,
@@ -82,4 +112,22 @@ enum PrivateStoreFactory {
         }
         return container
     }
+
+    #if DEBUG
+    @MainActor
+    private static func seedPerformanceFixture(in container: ModelContainer) throws {
+        let context = container.mainContext
+        guard try context.fetchCount(FetchDescriptor<MomentEntity>()) == 0 else { return }
+        let latest = Date.now.addingTimeInterval(-60)
+        let moments = (0..<1_000).map { index in
+            Moment(occurredAt: latest.addingTimeInterval(-Double(index) * 3_600),
+                   durationSeconds: 60 + index % 300,
+                   mood: .calm,
+                   rating: 4,
+                   tags: index == 0 ? ["baseline-target"] : [],
+                   privateNote: "synthetic-fixture")
+        }
+        try SwiftDataMomentRepository(modelContext: context).mergeAll(moments)
+    }
+    #endif
 }

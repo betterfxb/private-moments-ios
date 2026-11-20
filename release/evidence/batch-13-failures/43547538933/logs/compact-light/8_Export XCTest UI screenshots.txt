@@ -1,0 +1,46 @@
+﻿2026-11-14T02:52:18.9708840Z ##[group]Run result_bundle="${RUNNER_TEMP}/PrivateMoments.xcresult"
+2026-11-14T02:52:18.9709400Z [36;1mresult_bundle="${RUNNER_TEMP}/PrivateMoments.xcresult"[0m
+2026-11-14T02:52:18.9709790Z [36;1mscreenshot_directory="${RUNNER_TEMP}/PrivateMomentsUIScreenshots"[0m
+2026-11-14T02:52:18.9710120Z [36;1mif [[ ! -d "$result_bundle" ]]; then[0m
+2026-11-14T02:52:18.9710480Z [36;1m  printf 'No XCTest result bundle was produced; skipping screenshot export.\n'[0m
+2026-11-14T02:52:18.9710810Z [36;1m  exit 0[0m
+2026-11-14T02:52:18.9710940Z [36;1mfi[0m
+2026-11-14T02:52:18.9711100Z [36;1mmkdir -p "$screenshot_directory"[0m
+2026-11-14T02:52:18.9711360Z [36;1mxcrun xcresulttool export attachments \[0m
+2026-11-14T02:52:18.9711600Z [36;1m  --path "$result_bundle" \[0m
+2026-11-14T02:52:18.9711830Z [36;1m  --output-path "$screenshot_directory"[0m
+2026-11-14T02:52:18.9712220Z [36;1mscreenshot_count="$(find "$screenshot_directory" -type f -iname '*.png' | wc -l | tr -d ' ')"[0m
+2026-11-14T02:52:18.9712680Z [36;1mprintf 'Exported %s PNG attachment(s).\n' "$screenshot_count"[0m
+2026-11-14T02:52:19.0402430Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:52:19.0402720Z env:
+2026-11-14T02:52:19.0402970Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T02:52:19.0403710Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=A1285399-F2F4-46E9-8CF2-4AA227FF7EF3
+2026-11-14T02:52:19.0404130Z ##[endgroup]
+2026-11-14T02:52:24.6823070Z Skipped export for BackupUXTests/testEmptyPreviewKeepsReplacementScopeExplicit(): no matching attachments
+2026-11-14T02:52:24.6918060Z 
+2026-11-14T02:52:24.7026870Z Skipped export for BackupUXTests/testFileReaderPreservesTheFullValidatedRecord(): no matching attachments
+2026-11-14T02:52:24.7219970Z 
+2026-11-14T02:52:24.7322250Z Skipped export for BackupUXTests/testFileReaderRejectsAnOversizedSparseFile(): no matching attachments
+2026-11-14T02:52:24.7423920Z 
+2026-11-14T02:52:24.7524850Z Skipped export for BackupUXTests/testFileReaderRejectsMalformedAndMissingFiles(): no matching attachments
+2026-11-14T02:52:24.7631730Z 
+2026-11-14T02:52:24.7787460Z Skipped export for BackupUXTests/testImportedCopyNeverDeletesAPrefixSibling(): no matching attachments
+2026-11-14T02:52:24.7920280Z 
+2026-11-14T02:52:24.8021780Z Skipped export for BackupUXTests/testImportedCopyNeverRecursivelyDeletesADirectory(): no matching attachments
+2026-11-14T02:52:24.8122490Z 
+2026-11-14T02:52:24.8253140Z Skipped export for BackupUXTests/testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError(): no matching attachments
+2026-11-14T02:52:24.8255760Z 
+2026-11-14T02:52:24.8412300Z Skipped export for BackupUXTests/testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames(): no matching attachments
+2026-11-14T02:52:24.8514220Z 
+2026-11-14T02:52:24.8616280Z Skipped export for BackupUXTests/testPreviewCountsActualIDOverlapAndNotes(): no matching attachments
+2026-11-14T02:52:24.8719100Z 
+2026-11-14T02:52:24.8897260Z Exported 6 attachments for: PrivateMomentsUITests/testChineseBackupFileRoundTrip():
+2026-11-14T02:52:24.8999210Z File: 5B6FF6BA-DE44-4035-AABA-6725B3BA86E1.txt, suggested name: "Numeric-value-mismatch-recap_0_2FCEFB32-6980-446C-A342-4B26CDE5F179.minutes-hierarchy"
+2026-11-14T02:52:24.9100090Z File: 28F69C5D-931C-4662-951B-595BB19F6E64.png, suggested name: "Numeric-value-mismatch-recap_0_61AAC296-F4BB-429E-92C3-88D7A8A64C1A.minutes"
+2026-11-14T02:52:24.9203320Z File: 7069680C-E1C9-4EDA-849C-B9FE7969CB22, suggested name: "Synthesized Event 2026-11-14 at 02.50.14 AM"
+2026-11-14T02:52:24.9302640Z File: 25FAE31F-E141-46BD-8EE2-DDCC7BBB6DB8, suggested name: "Synthesized Event 2026-11-14 at 02.49.59 AM"
+2026-11-14T02:52:24.9434840Z File: FCA868BC-103F-4B12-BD4F-859F2DA3C2A8, suggested name: "Synthesized Event 2026-11-14 at 02.49.51 AM"
+2026-11-14T02:52:24.9535490Z File: 07C936ED-84D6-434C-BBAC-A75DA04DA410.mp4, suggested name: "Screen Recording 2026-11-14 at 02.49.34 AM.mp4"
+2026-11-14T02:52:24.9635100Z 
+2026-11-14T02:52:24.9736460Z Generated manifest file with attachment details: /Users/runner/work/_temp/PrivateMomentsUIScreenshots/manifest.json
+2026-11-14T02:52:24.9837050Z Exported 1 PNG attachment(s).

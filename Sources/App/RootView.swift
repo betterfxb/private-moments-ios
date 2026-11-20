@@ -3,8 +3,10 @@ import SwiftUI
 
 private enum AppRoute: Hashable {
     case session
+    case manual(startedAt: Date)
     case recap(startedAt: Date, durationSeconds: Int, editingID: UUID?)
     case detail(id: UUID)
+    case weekReview
 }
 
 private enum AppTab: Hashable {
@@ -20,12 +22,26 @@ struct RootView: View {
     @State private var todayPath: [AppRoute] = []
     @State private var timelinePath: [AppRoute] = []
     @State private var selectedTab: AppTab = .today
+    @State private var selectedTodayDate: Date?
     @Environment(AppLockController.self) private var privacyLock
     @Environment(\.scenePhase) private var scenePhase
     @State private var isSceneShielded = true
 
     init(modelContext: ModelContext) {
-        let repository = SwiftDataMomentRepository(modelContext: modelContext)
+        var saveChanges: @MainActor (ModelContext) throws -> Void = { try $0.save() }
+        #if DEBUG
+        if PrivateStoreFactory.uiTestSaveFailureEnabled() {
+            var shouldFail = true
+            saveChanges = { context in
+                if shouldFail {
+                    shouldFail = false
+                    throw CocoaError(.fileWriteUnknown)
+                }
+                try context.save()
+            }
+        }
+        #endif
+        let repository = SwiftDataMomentRepository(modelContext: modelContext, saveChanges: saveChanges)
         _store = State(initialValue: MomentStore(repository: repository))
     }
 
@@ -34,11 +50,14 @@ struct RootView: View {
             TabView(selection: $selectedTab) {
                 navigationStack(path: $todayPath) {
                     TodayView(
+                        selectedDate: $selectedTodayDate,
                         onStart: {
                             sessionClock.startFresh()
                             todayPath.append(.session)
                         },
-                        onOpen: { id in todayPath.append(.detail(id: id)) }
+                        onOpen: { id in todayPath.append(.detail(id: id)) },
+                        onAddRecord: { date in todayPath.append(.manual(startedAt: date)) },
+                        onOpenWeekReview: { todayPath.append(.weekReview) }
                     )
                 }
                 .tabItem { Label("Today", systemImage: "heart.text.square") }
@@ -63,11 +82,12 @@ struct RootView: View {
                     .zIndex(1)
             }
         }
-        .tint(AppColors.terracottaDark)
+        .tint(AppColors.accentText)
         .onAppear { isSceneShielded = scenePhase != .active }
         .onChange(of: scenePhase) { _, newPhase in
             isSceneShielded = newPhase != .active
             if newPhase != .active { privacyLock.lockForBackground() }
+            if newPhase == .background { privacyLock.cancelAuthenticationForBackground() }
         }
     }
 
@@ -87,6 +107,17 @@ struct RootView: View {
     @ViewBuilder
     private func destination(for route: AppRoute, path: Binding<[AppRoute]>) -> some View {
         switch route {
+        case .manual(let startedAt):
+            RecapView(
+                durationSeconds: 0,
+                startedAt: startedAt,
+                isManualEntry: true,
+                onCancel: { finishRecap(editingID: nil, path: path) },
+                onSaved: { moment in
+                    finishRecap(editingID: nil, path: path)
+                    selectedTodayDate = moment.occurredAt
+                }
+            )
         case .session:
             LiveSessionView { completed in
                 path.wrappedValue.append(.recap(
@@ -102,8 +133,10 @@ struct RootView: View {
                 startedAt: startedAt,
                 existingMoment: existing,
                 onCancel: { finishRecap(editingID: editingID, path: path) },
-                onSaved: { finishRecap(editingID: editingID, path: path) }
+                onSaved: { _ in finishRecap(editingID: editingID, path: path, didSave: true) }
             )
+        case .weekReview:
+            WeekReviewView { id in path.wrappedValue.append(.detail(id: id)) }
         case .detail(let id):
             MomentDetailView(
                 momentID: id,
@@ -119,10 +152,11 @@ struct RootView: View {
         }
     }
 
-    private func finishRecap(editingID: UUID?, path: Binding<[AppRoute]>) {
+    private func finishRecap(editingID: UUID?, path: Binding<[AppRoute]>, didSave: Bool = false) {
         if editingID != nil {
             pop(path)
         } else {
+            if didSave { selectedTodayDate = nil }
             selectedTab = .today
             path.wrappedValue.removeAll()
         }

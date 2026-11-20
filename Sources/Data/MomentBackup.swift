@@ -1,8 +1,10 @@
 import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
+import OSLog
+import Darwin
 
-struct MomentBackupEnvelope: Codable {
+struct MomentBackupEnvelope: Codable, Sendable {
     let formatVersion: Int
     let createdAt: Date
     let moments: [Moment]
@@ -14,7 +16,168 @@ struct MomentBackupEnvelope: Codable {
     }
 }
 
+struct BackupImportSummary {
+    let totalCount: Int
+    let newCount: Int
+    let updatedCount: Int
+    let noteCount: Int
+    let localCount: Int
+    let removedCount: Int
+
+    init(backup: MomentBackupEnvelope, existing: [Moment]) {
+        let localIDs = Set(existing.map(\.id))
+        let importedIDs = Set(backup.moments.map(\.id))
+        totalCount = backup.moments.count
+        newCount = importedIDs.subtracting(localIDs).count
+        updatedCount = importedIDs.intersection(localIDs).count
+        noteCount = backup.moments.filter { !$0.privateNote.isEmpty }.count
+        localCount = existing.count
+        removedCount = localIDs.subtracting(importedIDs).count
+    }
+}
+
+enum MomentBackupFileReader {
+    private static let logger = Logger(subsystem: "com.example.PrivateMoments", category: "backup")
+
+    static func readPickerSnapshot(_ url: URL) throws -> MomentBackupEnvelope {
+        // Only consume a copy already imported into this app. Never move a
+        // user-owned original or depend on the provider's shared Inbox name.
+        guard try isOwnedImportedFile(url) else { throw CocoaError(.fileReadNoPermission) }
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(
+            "PrivateMoments-Import-" + UUID().uuidString, isDirectory: true
+        )
+        let snapshot = folder.appendingPathComponent("backup.json")
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false,
+            attributes: [.protectionKey: FileProtectionType.complete])
+        defer { cleanSnapshot(snapshot, folder: folder) }
+        try excludeFromBackup(folder)
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        let coordinator = NSFileCoordinator()
+        var coordinationError: NSError?
+        var moved: Result<Void, Error>?
+        coordinator.coordinate(writingItemAt: url, options: .forMoving,
+            writingItemAt: snapshot, options: [], error: &coordinationError) { source, destination in
+            moved = Result {
+                guard try isOwnedImportedFile(source) else { throw CocoaError(.fileReadNoPermission) }
+                let attributes = try FileManager.default.attributesOfItem(atPath: source.path)
+                try FileManager.default.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: source.path)
+                try excludeFromBackup(source)
+                if let size = attributes[.size] as? NSNumber, size.intValue > MomentBackupCodec.maximumFileSize {
+                    throw MomentBackupError.fileTooLarge
+                }
+                coordinator.item(at: source, willMoveTo: destination)
+                do { try FileManager.default.moveItem(at: source, to: destination) }
+                catch {
+                    coordinator.item(at: source, didMoveTo: source)
+                    if isMissingFile(error), !FileManager.default.fileExists(atPath: source.path) {
+                        throw MomentBackupError.sourceUnavailable(error)
+                    }
+                    throw error
+                }
+                coordinator.item(at: source, didMoveTo: destination)
+            }
+        }
+        if let coordinationError {
+            if isMissingFile(coordinationError), !FileManager.default.fileExists(atPath: url.path) {
+                throw MomentBackupError.sourceUnavailable(coordinationError)
+            }
+            throw coordinationError
+        }
+        guard let moved else { throw CocoaError(.fileReadUnknown) }
+        try moved.get()
+        return try read(snapshot)
+    }
+
+    private static func excludeFromBackup(_ url: URL) throws {
+        var target = url
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        try target.setResourceValues(values)
+    }
+
+    private static func isMissingFile(_ error: Error) -> Bool {
+        guard let error = error as? CocoaError else { return false }
+        return error.code == .fileReadNoSuchFile || error.code == .fileNoSuchFile
+    }
+
+    private static func cleanSnapshot(_ url: URL, folder: URL) {
+        // Each path is a fresh UUID owned by this operation. Neither syscall
+        // can recursively delete a directory or remove the provider original.
+        for (item, directory) in [(url, false), (folder, true)] {
+            let failure = item.withUnsafeFileSystemRepresentation { path -> Int32 in
+                guard let path else { return EINVAL }
+                let result = directory ? Darwin.rmdir(path) : Darwin.unlink(path)
+                return result == 0 || errno == ENOENT ? 0 : errno
+            }
+            if failure != 0 {
+                logger.error("Backup snapshot cleanup failed: POSIX \(failure, privacy: .private)")
+            }
+        }
+    }
+
+    private static func isOwnedImportedFile(_ url: URL) throws -> Bool {
+        guard url.isFileURL else { return false }
+        let file = url.standardizedFileURL.resolvingSymlinksInPath().pathComponents
+        var roots = [FileManager.default.temporaryDirectory]
+        if let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            roots.append(documents.appendingPathComponent("Inbox", isDirectory: true))
+        }
+        let ownedPath = roots.contains { root in
+            let components = root.standardizedFileURL.resolvingSymlinksInPath().pathComponents
+            return file.count > components.count && file.starts(with: components)
+        }
+        guard ownedPath else { return false }
+        // Do not change attributes of directories or symbolic links.
+        do {
+            let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+            return attributes[.type] as? FileAttributeType == .typeRegular
+        } catch {
+            if isMissingFile(error) { throw MomentBackupError.sourceUnavailable(error) }
+            throw error
+        }
+    }
+
+    static func read(_ url: URL) throws -> MomentBackupEnvelope {
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        var coordinationError: NSError?
+        var result: Result<MomentBackupEnvelope, Error>?
+        NSFileCoordinator().coordinate(readingItemAt: url, options: [], error: &coordinationError) { coordinatedURL in
+            result = Result { try readContents(coordinatedURL) }
+        }
+        if let coordinationError { throw coordinationError }
+        guard let result else { throw CocoaError(.fileReadUnknown) }
+        return try result.get()
+    }
+
+    private static func readContents(_ url: URL) throws -> MomentBackupEnvelope {
+        if let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
+           let size = attributes[.size] as? NSNumber,
+           size.intValue > MomentBackupCodec.maximumFileSize {
+            throw MomentBackupError.fileTooLarge
+        }
+        let handle = try FileHandle(forReadingFrom: url)
+        var data = Data()
+        do {
+            while data.count <= MomentBackupCodec.maximumFileSize {
+                let remaining = MomentBackupCodec.maximumFileSize + 1 - data.count
+                let part = try handle.read(upToCount: min(64 * 1024, remaining)) ?? Data()
+                if part.isEmpty { break }
+                data.append(part)
+            }
+            try handle.close()
+        } catch {
+            // Preserve the primary read error if cleanup also fails.
+            try? handle.close()
+            throw error
+        }
+        return try MomentBackupCodec.decode(data)
+    }
+}
+
 enum MomentBackupError: LocalizedError {
+    case sourceUnavailable(Error)
     case unsupportedVersion(Int)
     case invalidFormat
     case fileTooLarge
@@ -23,6 +186,8 @@ enum MomentBackupError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
+        case .sourceUnavailable:
+            return AppLocalization.string("Couldn't access that backup. Your records are unchanged.")
         case .unsupportedVersion(let version):
             return AppLocalization.format("This backup uses an unsupported format version (%lld).", version)
         case .invalidFormat:

@@ -1,0 +1,726 @@
+{
+  "batch": 18,
+  "runId": "44543961473",
+  "sourceCommit": "7c90b26c50a39f072f92eda83ed62e7136037a49",
+  "scope": "full",
+  "jobHistory": [
+    {
+      "name": "plan",
+      "jobId": 135629420309,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "phone-dark",
+      "jobId": 135629721656,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "ipad-light",
+      "jobId": 135629721690,
+      "attempt": 1,
+      "conclusion": "cancelled",
+      "gotRunner": false
+    },
+    {
+      "name": "compact-dark-accessibility",
+      "jobId": 135629721714,
+      "attempt": 1,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "compact-light",
+      "jobId": 135629721946,
+      "attempt": 1,
+      "conclusion": "cancelled",
+      "gotRunner": false
+    },
+    {
+      "name": "compact-light",
+      "jobId": 135672263302,
+      "attempt": 2,
+      "conclusion": "cancelled",
+      "gotRunner": false
+    },
+    {
+      "name": "ipad-light",
+      "jobId": 135672263779,
+      "attempt": 2,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "compact-dark-accessibility",
+      "jobId": 135672266505,
+      "attempt": 2,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "plan",
+      "jobId": 135672353254,
+      "attempt": 2,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "phone-dark",
+      "jobId": 135672360424,
+      "attempt": 2,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "compact-light",
+      "jobId": 135700879222,
+      "attempt": 3,
+      "conclusion": "failure",
+      "gotRunner": true
+    },
+    {
+      "name": "plan",
+      "jobId": 135700879592,
+      "attempt": 3,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "ipad-light",
+      "jobId": 135700881643,
+      "attempt": 3,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "phone-dark",
+      "jobId": 135700881795,
+      "attempt": 3,
+      "conclusion": "success",
+      "gotRunner": true
+    },
+    {
+      "name": "compact-dark-accessibility",
+      "jobId": 135700882054,
+      "attempt": 3,
+      "conclusion": "success",
+      "gotRunner": true
+    }
+  ],
+  "conclusion": "failure",
+  "native": {
+    "compact-light": {
+      "jobId": 135700879222,
+      "runAttempt": 3,
+      "unitPassed": [
+        [
+          "AppLockUXTests",
+          "testBackgroundDiscardsLateDisableSuccess",
+          "0.004"
+        ],
+        [
+          "AppLockUXTests",
+          "testBackgroundDiscardsLateEnableSuccess",
+          "0.003"
+        ],
+        [
+          "AppLockUXTests",
+          "testCancelledFailedAndUnavailableAuthenticationDoNotEnableLock",
+          "0.004"
+        ],
+        [
+          "AppLockUXTests",
+          "testConcurrentRequestStartsOnlyOneEvaluation",
+          "0.003"
+        ],
+        [
+          "AppLockUXTests",
+          "testFailedUnlockRemainsLocked",
+          "0.003"
+        ],
+        [
+          "AppLockUXTests",
+          "testInactivePromptDoesNotCancelButBackgroundAlwaysLocks",
+          "0.003"
+        ],
+        [
+          "AppLockUXTests",
+          "testOldCallbackCannotUnlockOrClearANewerAttempt",
+          "0.003"
+        ],
+        [
+          "AppLockUXTests",
+          "testOnlySuccessfulAuthenticationChangesPreferenceAndRelaunchLocks",
+          "0.035"
+        ],
+        [
+          "BackupUXTests",
+          "testEmptyPreviewKeepsReplacementScopeExplicit",
+          "0.001"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderPreservesTheFullValidatedRecord",
+          "0.023"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderRejectsAnOversizedSparseFile",
+          "0.016"
+        ],
+        [
+          "BackupUXTests",
+          "testFileReaderRejectsMalformedAndMissingFiles",
+          "0.007"
+        ],
+        [
+          "BackupUXTests",
+          "testImportedCopyNeverDeletesAPrefixSibling",
+          "0.001"
+        ],
+        [
+          "BackupUXTests",
+          "testImportedCopyNeverRecursivelyDeletesADirectory",
+          "0.001"
+        ],
+        [
+          "BackupUXTests",
+          "testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError",
+          "0.085"
+        ],
+        [
+          "BackupUXTests",
+          "testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames",
+          "0.015"
+        ],
+        [
+          "BackupUXTests",
+          "testPreviewCountsActualIDOverlapAndNotes",
+          "0.000"
+        ],
+        [
+          "JournalPerformanceBaselineTests",
+          "testSyntheticBackupCodecBaseline",
+          "0.074"
+        ],
+        [
+          "MomentDateQueryTests",
+          "testDaylightSavingDaysUseCalendarBoundaries",
+          "0.001"
+        ],
+        [
+          "MomentDateQueryTests",
+          "testMidnightBelongsOnlyToTheFollowingDay",
+          "0.001"
+        ],
+        [
+          "MomentStoreImportTests",
+          "testFailedReplacementLeavesExistingRecordsUnchanged",
+          "0.005"
+        ],
+        [
+          "MomentStoreImportTests",
+          "testInvalidMergeLeavesExistingRecordsUnchanged",
+          "0.004"
+        ],
+        [
+          "MomentStoreImportTests",
+          "testMergeAddsNewRecordsAndUpdatesMatchingIDs",
+          "0.001"
+        ],
+        [
+          "MomentStoreRecoveryTests",
+          "testConversionFailurePreservesCachedSnapshotUntilRepair",
+          "0.004"
+        ],
+        [
+          "MomentStoreRecoveryTests",
+          "testEachPersistenceFailurePreservesSnapshotAndRequiresReload",
+          "0.001"
+        ],
+        [
+          "MomentStoreRecoveryTests",
+          "testFirstReadFailureBlocksAllMutationsUntilSuccessfulRetry",
+          "0.001"
+        ],
+        [
+          "MomentStoreRecoveryTests",
+          "testReadFailureKeepsCachedRecordsReadOnly",
+          "0.001"
+        ],
+        [
+          "MomentStoreRecoveryTests",
+          "testValidationAndDuplicateBackupErrorsDoNotDisableStorage",
+          "0.019"
+        ],
+        [
+          "MomentTimingDraftTests",
+          "testChangedTimingParticipatesInDiscardDetection",
+          "0.001"
+        ],
+        [
+          "MomentTimingDraftTests",
+          "testFutureNewDateRejectedWithoutChangingBackupValidation",
+          "0.001"
+        ],
+        [
+          "MomentTimingDraftTests",
+          "testMalformedOverflowAndOverLimitDurationsAreRejected",
+          "0.001"
+        ],
+        [
+          "MomentTimingDraftTests",
+          "testNonFiniteDateRejectedAndExistingValuesTakePrecedence",
+          "0.001"
+        ],
+        [
+          "MomentTimingDraftTests",
+          "testUntouchedShortAndLongDurationsPreserveExactSeconds",
+          "0.001"
+        ],
+        [
+          "MomentValidationTests",
+          "testBackupRejectsDuplicateIDsBeforeRestore",
+          "0.001"
+        ],
+        [
+          "MomentValidationTests",
+          "testBackupRejectsFilesOverSizeLimit",
+          "0.003"
+        ],
+        [
+          "MomentValidationTests",
+          "testBackupRejectsUnknownFormatVersion",
+          "0.001"
+        ],
+        [
+          "MomentValidationTests",
+          "testBackupRoundTripPreservesPrivateFields",
+          "0.001"
+        ],
+        [
+          "MomentValidationTests",
+          "testNegativeDurationIsRejected",
+          "0.001"
+        ],
+        [
+          "MomentValidationTests",
+          "testOverlongPrivateNoteIsRejected",
+          "0.001"
+        ],
+        [
+          "MomentValidationTests",
+          "testOversizedUnicodeNoteIsRejectedEvenWhenGraphemeCountIsSmall",
+          "0.003"
+        ],
+        [
+          "MomentValidationTests",
+          "testPrivateNoteAllowsEmptyAndExactCharacterLimit",
+          "0.001"
+        ],
+        [
+          "MomentValidationTests",
+          "testPrivateNoteUTF8BoundaryIsIndependentOfCharacterCount",
+          "0.003"
+        ],
+        [
+          "MomentValidationTests",
+          "testValidMomentPassesValidation",
+          "0.000"
+        ],
+        [
+          "SemanticColorTests",
+          "testAccentAndSessionTextRemainReadableInBothAppearances",
+          "0.001"
+        ],
+        [
+          "SemanticColorTests",
+          "testBodyAndSecondaryTextContrastOnSurfaces",
+          "0.001"
+        ],
+        [
+          "SwiftDataRecoveryTests",
+          "testInsertFailureLeavesNoPhantomRecord",
+          "0.007"
+        ],
+        [
+          "SwiftDataRecoveryTests",
+          "testInvalidPersistedFieldsBlockReadAndRepairRestoresAccess",
+          "0.020"
+        ],
+        [
+          "SwiftDataRecoveryTests",
+          "testSaveFailureRollsBackEveryMutationInRealModelContext",
+          "0.032"
+        ],
+        [
+          "UITestIsolationTests",
+          "testPrivacyPreferencesAreIsolatedByTheSameStoreUUID",
+          "0.004"
+        ],
+        [
+          "UITestIsolationTests",
+          "testSaveFailureRequiresBothAnIsolatedStoreAndExplicitFlag",
+          "0.000"
+        ],
+        [
+          "UITestIsolationTests",
+          "testTestStoreRequiresAValidUUID",
+          "0.005"
+        ]
+      ],
+      "uiPassed": [
+        [
+          "testChineseBackupFileRoundTrip",
+          "328.742"
+        ],
+        [
+          "testEditingFilteringDeletionAndRelaunch",
+          "124.660"
+        ],
+        [
+          "testLargeJournalInteractionBaseline",
+          "75.749"
+        ],
+        [
+          "testManualEntryTimingDateFilterAndPersistence",
+          "300.053"
+        ],
+        [
+          "testScreenGallery",
+          "635.434"
+        ],
+        [
+          "testSessionAndRecapDiscardConfirmations",
+          "40.628"
+        ],
+        [
+          "testTerminationPreservesOnlyExplicitlySavedRecords",
+          "73.567"
+        ]
+      ],
+      "testFailed": [
+        [
+          "-[PrivateMomentsUITests.PrivateMomentsUITests testBackupFileRoundTrip]",
+          "79.626"
+        ]
+      ],
+      "testErrors": [
+        "/Users/runner/work/private-moments-ios/private-moments-ios/UITests/PrivateMomentsUITests.swift:974: error: -[PrivateMomentsUITests.PrivateMomentsUITests testBackupFileRoundTrip] : Failed to get matching snapshot: No matches found for Descendants matching type Cell from input {("
+      ],
+      "unsignedRelease": true,
+      "filesReselected": [],
+      "targetMeasurements": [],
+      "resizing": [],
+      "interactionPerformance": {
+        "launchReadySeconds": {
+          "samples": [
+            4.239517791666685,
+            4.254092166666737,
+            4.163193624999963
+          ],
+          "median": 4.239517791666685
+        },
+        "scrollGestureSeconds": {
+          "samples": [
+            3.422211749999974,
+            3.5127531249999038,
+            3.5353704583333183
+          ],
+          "median": 3.5127531249999038
+        },
+        "searchTypingToMatchSeconds": {
+          "samples": [
+            1.7913847083333394,
+            1.8613395833332333,
+            1.844399666666618
+          ],
+          "median": 1.844399666666618
+        }
+      },
+      "backupPerformance": {
+        "100": [
+          {
+            "bytes": 32439,
+            "encodeSeconds": 0.0006303333333335104,
+            "decodeSeconds": 0.0005457083333340051
+          },
+          {
+            "bytes": 32439,
+            "encodeSeconds": 0.0006230416666994643,
+            "decodeSeconds": 0.000518875000011576
+          },
+          {
+            "bytes": 32439,
+            "encodeSeconds": 0.0007501666666485107,
+            "decodeSeconds": 0.0005680000000438667
+          }
+        ],
+        "1000": [
+          {
+            "bytes": 323919,
+            "encodeSeconds": 0.006245416666672554,
+            "decodeSeconds": 0.0051898333333610935
+          },
+          {
+            "bytes": 323919,
+            "encodeSeconds": 0.006367291666663277,
+            "decodeSeconds": 0.005503125000018372
+          },
+          {
+            "bytes": 323919,
+            "encodeSeconds": 0.0063485000000014224,
+            "decodeSeconds": 0.00506433333333689
+          }
+        ]
+      }
+    },
+    "phone-dark": {
+      "jobId": 135629721656,
+      "runAttempt": 1,
+      "unitPassed": [],
+      "uiPassed": [
+        [
+          "testBackupFileRoundTrip",
+          "460.534"
+        ],
+        [
+          "testScreenGallery",
+          "853.797"
+        ]
+      ],
+      "testFailed": [],
+      "testErrors": [],
+      "unsignedRelease": false,
+      "filesReselected": [],
+      "targetMeasurements": [],
+      "resizing": [],
+      "interactionPerformance": {},
+      "backupPerformance": {}
+    },
+    "ipad-light": {
+      "jobId": 135672263779,
+      "runAttempt": 2,
+      "unitPassed": [],
+      "uiPassed": [
+        [
+          "testBackupFileRoundTrip",
+          "357.432"
+        ],
+        [
+          "testIPadRotationContinuity",
+          "561.179"
+        ],
+        [
+          "testScreenGallery",
+          "719.688"
+        ]
+      ],
+      "testFailed": [],
+      "testErrors": [],
+      "unsignedRelease": false,
+      "filesReselected": [],
+      "targetMeasurements": [
+        [
+          "(44.0, 44.0)",
+          "(1376.0, 1032.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1032.0, 1376.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1376.0, 1032.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1032.0, 1376.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1376.0, 1032.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1032.0, 1376.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1376.0, 1032.0)"
+        ],
+        [
+          "(44.0, 44.0)",
+          "(1032.0, 1376.0)"
+        ]
+      ],
+      "resizing": [],
+      "interactionPerformance": {},
+      "backupPerformance": {}
+    },
+    "compact-dark-accessibility": {
+      "jobId": 135629721714,
+      "runAttempt": 1,
+      "unitPassed": [],
+      "uiPassed": [
+        [
+          "testBackupFileRoundTrip",
+          "958.594"
+        ],
+        [
+          "testScreenGallery",
+          "1682.898"
+        ]
+      ],
+      "testFailed": [],
+      "testErrors": [],
+      "unsignedRelease": false,
+      "filesReselected": [],
+      "targetMeasurements": [],
+      "resizing": [],
+      "interactionPerformance": {},
+      "backupPerformance": {}
+    }
+  },
+  "originalImageCount": 349,
+  "retainedImages": [
+    {
+      "profile": "compact-light",
+      "name": "Today-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "6a399b7a0b0490e2d7615e041373aababd94cb2a47f3b8df927f79a70bf6e5d9",
+      "path": "compact-light/Today-en.png",
+      "exportedAttachment": "F3461EB9-012D-4E37-9A4B-34BCD4048DEA.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Today-zh-Hans",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "7bf04dcd22637434f617255630f1a75a30cdf9a5fc0f4d16b8c9113cffa2a704",
+      "path": "compact-light/Today-zh-Hans.png",
+      "exportedAttachment": "D1F58372-A844-4D1C-81F3-BABAF7B31EF6.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Today-record-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "7925c661c202f0ddc7f8eaba68d7b39b57e30af35864f8590e4bc455898e8077",
+      "path": "compact-light/Today-record-en.png",
+      "exportedAttachment": "75BDD126-CFFA-4C4B-8EA9-4F96E69E59CA.png"
+    },
+    {
+      "profile": "compact-light",
+      "name": "Today-record-zh-Hans",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "8457c2059865eefe476a4b4fc232f58c9e437ca0ebb5b2424d7951cb97223138",
+      "path": "compact-light/Today-record-zh-Hans.png",
+      "exportedAttachment": "7E694729-DAD2-4BAA-9A21-603222B3D376.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Today-en",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "b76448f1cba84638fe25f651ccb327a726b20ed481159174db17492b224a0892",
+      "path": "phone-dark/Today-en.png",
+      "exportedAttachment": "E0195BEA-B951-46AF-984B-98B8CC477AA4.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Today-zh-Hans",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "015ce94a0407c26668e931ab33761d95cca330528f5580bf4e9146b25c3cbc02",
+      "path": "phone-dark/Today-zh-Hans.png",
+      "exportedAttachment": "55576092-1F14-487E-A3E2-07A74CDAC3AC.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Today-record-en",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "74ec6942eef1ce4dedcf4aade6f4d897f475b53fffcda2245675bf16cf37df72",
+      "path": "phone-dark/Today-record-en.png",
+      "exportedAttachment": "085B05DD-B73A-4B04-B495-760A1E848725.png"
+    },
+    {
+      "profile": "phone-dark",
+      "name": "Today-record-zh-Hans",
+      "device": "iPhone 17 Pro",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "cdaed9c916cb740dc85eb78fbf624c1a1a5db33807126f9486a6516b20069d62",
+      "path": "phone-dark/Today-record-zh-Hans.png",
+      "exportedAttachment": "2A57479F-21D9-43BF-971C-4574D667E43E.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Today-en",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "4c12bea7a1111c95a07137ef783357b99b39b789aa140a7c04dfad2c92e7fe64",
+      "path": "ipad-light/Today-en.png",
+      "exportedAttachment": "F0756381-507C-42BF-B8C0-72E8245D8860.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Today-record-zh-Hans",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "d615b11e7f9ced43b5260c63bc7daaaa6faceed8290f17bba50026d2b720412b",
+      "path": "ipad-light/Today-record-zh-Hans.png",
+      "exportedAttachment": "4F3E1EAA-E701-4468-86F1-72401ACFCECE.png"
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Import-feedback-all-actions-en",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "0d4cacb404b31c43681b80cf30eec3a5e3e935bac5061f2b46f0f70215e7fac5",
+      "path": "ipad-light/Import-feedback-all-actions-en.png",
+      "exportedAttachment": "69B98967-C5F8-4C26-8E22-B048EDD7C5F1.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Today-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "4addcc49f2998a941132b450b4c2c394b5ea6a5ee588bd4f03dc4d86085cb8c9",
+      "path": "compact-dark-accessibility/Today-en.png",
+      "exportedAttachment": "89606DE2-C214-415A-B888-1B531AC16B2E.png"
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "name": "Settings-top-en",
+      "device": "iPhone SE (3rd generation)",
+      "width": 750,
+      "height": 1334,
+      "sha256": "c947ef16bbb15c8dee1ef445a40396745ce39827d57a3807fdd60004c7485122",
+      "path": "compact-dark-accessibility/Settings-top-en.png",
+      "exportedAttachment": "0DBEBD2F-3ECD-4F23-B816-E1403C9C7D29.png"
+    }
+  ],
+  "filesFailureEvidence": {
+    "path": "compact-light/Export-failure-hierarchy.txt",
+    "sha256": "6b68d49480a4662cc4ad5ed8c6fe2a7acdb8c4138d75f820b31cce4631278828",
+    "exportedAttachment": "F4418A15-1B33-41C4-8549-AAD873D1C769.txt"
+  }
+}

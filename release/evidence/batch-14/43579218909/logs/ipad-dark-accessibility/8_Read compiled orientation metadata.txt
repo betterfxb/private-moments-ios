@@ -1,0 +1,20 @@
+﻿2026-11-14T09:25:45.4186660Z ##[group]Run python3 - "${RUNNER_TEMP}/PrivateMomentsDerivedData/Build/Products/Debug-iphonesimulator/PrivateMoments.app/Info.plist" <<'PY'
+2026-11-14T09:25:45.4187500Z [36;1mpython3 - "${RUNNER_TEMP}/PrivateMomentsDerivedData/Build/Products/Debug-iphonesimulator/PrivateMoments.app/Info.plist" <<'PY'[0m
+2026-11-14T09:25:45.4187980Z [36;1mimport json[0m
+2026-11-14T09:25:45.4188140Z [36;1mfrom pathlib import Path[0m
+2026-11-14T09:25:45.4188340Z [36;1mimport plistlib[0m
+2026-11-14T09:25:45.4188510Z [36;1mimport sys[0m
+2026-11-14T09:25:45.4188660Z [36;1mpath = Path(sys.argv[1])[0m
+2026-11-14T09:25:45.4188850Z [36;1mif path.is_file():[0m
+2026-11-14T09:25:45.4189070Z [36;1m    data = plistlib.loads(path.read_bytes())[0m
+2026-11-14T09:25:45.4189680Z [36;1m    keys = ['UIDeviceFamily', 'UISupportedInterfaceOrientations', 'UISupportedInterfaceOrientations~ipad', 'UIRequiresFullScreen', 'UIApplicationSceneManifest'][0m
+2026-11-14T09:25:45.4190330Z [36;1m    print(json.dumps({k: data.get(k) for k in keys}, sort_keys=True))[0m
+2026-11-14T09:25:45.4190650Z [36;1melse:[0m
+2026-11-14T09:25:45.4190870Z [36;1m    print('No compiled app orientation metadata available.')[0m
+2026-11-14T09:25:45.4191130Z [36;1mPY[0m
+2026-11-14T09:25:45.4640410Z shell: /bin/bash -e {0}
+2026-11-14T09:25:45.4640610Z env:
+2026-11-14T09:25:45.4640840Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T09:25:45.4641260Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=73C19119-B10E-4309-872E-C53EF3F0EF27
+2026-11-14T09:25:45.4641680Z ##[endgroup]
+2026-11-14T09:25:45.7991480Z {"UIApplicationSceneManifest": null, "UIDeviceFamily": [1, 2], "UIRequiresFullScreen": null, "UISupportedInterfaceOrientations": null, "UISupportedInterfaceOrientations~ipad": null}

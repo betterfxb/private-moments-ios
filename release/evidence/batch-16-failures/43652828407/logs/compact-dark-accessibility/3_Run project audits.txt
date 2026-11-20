@@ -1,0 +1,15 @@
+﻿2026-11-14T23:22:03.5870430Z ##[group]Run node tools/audit-localization.mjs
+2026-11-14T23:22:03.5870860Z [36;1mnode tools/audit-localization.mjs[0m
+2026-11-14T23:22:03.5871220Z [36;1mnode tools/audit-xcode-project.mjs[0m
+2026-11-14T23:22:03.5871490Z [36;1mnode tools/audit-release-materials.mjs[0m
+2026-11-14T23:22:03.5928710Z shell: /bin/bash -e {0}
+2026-11-14T23:22:03.5928940Z ##[endgroup]
+2026-11-14T23:22:03.9145640Z Localization audit passed: 231 source keys, en + zh-Hans metadata, and Xcode resource references.
+2026-11-14T23:22:04.0262850Z Xcode project audit passed: 109 objects; app/test targets, source membership, resources, configurations, privacy declarations, app icon, and shared scheme are consistent.
+2026-11-14T23:22:04.0267310Z Warning: App Debug configuration still uses placeholder bundle identifier com.example.PrivateMoments.
+2026-11-14T23:22:04.0269580Z Warning: App Release configuration still uses placeholder bundle identifier com.example.PrivateMoments.
+2026-11-14T23:22:04.1081490Z Release materials audit passed for en + zh-Hans:
+2026-11-14T23:22:04.1083720Z - en: name 15/30; subtitle 24/30; promo 135/170; description 968/4000; keywords 56/100.
+2026-11-14T23:22:04.1084740Z - zh-Hans: name 4/30; subtitle 10/30; promo 48/170; description 316/4000; keywords 24/100.
+2026-11-14T23:22:04.1086300Z Warning: The privacy policy still contains publisher-supplied fields; it is not ready to publish.
+2026-11-14T23:22:04.1087020Z Warning: App Review Notes still contain build, contact, URL, or account-dependent fields.

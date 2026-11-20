@@ -1,0 +1,1240 @@
+{
+  "batch": 15,
+  "runs": [
+    {
+      "runId": "43588585515",
+      "sourceCommit": "fbcae3f4b34055f719c2044f1adb322844349659",
+      "scope": "rotation",
+      "start": "cold-en",
+      "languages": [
+        "en"
+      ],
+      "profile": "ipad-dark-accessibility",
+      "conclusion": "success",
+      "jobId": 132428357314,
+      "unitTests": 0,
+      "runner": {
+        "id": 1000001219,
+        "name": "GitHub Actions 1000001219",
+        "group": "GitHub Actions",
+        "labels": [
+          "macos-15"
+        ]
+      },
+      "uiMethod": "testIPadColdEnglishRotationContinuity",
+      "uiSeconds": 284.009,
+      "rotationGeometry": [
+        [
+          "en",
+          "initial",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "en",
+          "draft",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "en",
+          "retained-draft",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "en",
+          "today",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "en",
+          "detail",
+          "4",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "en",
+          "detail-return",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "en",
+          "settings",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "en",
+          "paused-timer",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "en",
+          "relaunch",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ]
+      ],
+      "referenceGeometry": [],
+      "releaseVerification": false,
+      "PNGCount": 10,
+      "images": [
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-relaunched-portrait-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "a7e459273ea63b61a455b67e6b45246e0fa5da526999beef5f0a4a707daa91ac",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43588585515/images/Rotation-relaunched-portrait-en.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-timer-portrait-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "37c8d8368bc88b3371362008a7f4ec1cf7282495d5197e87b1e829b633572e91",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43588585515/images/Rotation-timer-portrait-en.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-settings-landscape-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "8cb5e1292806a2511039404f90fafbcc7631db48bc2741eed22659baae53c932",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43588585515/images/Rotation-settings-landscape-en.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-detail-portrait-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "1c32b47f416ab2ce29ab9e34c0e51d22df1bdeb8a6571b05982bfc3020636f4c",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43588585515/images/Rotation-detail-portrait-en.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-detail-landscape-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "e2cb1cca644a9b78c2d59a536b83ebcb0c10ee5dfae04f8ec14b5085a708300c",
+          "failure": false,
+          "exifOrientation": 6,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43588585515/images/Rotation-detail-landscape-en.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-timeline-landscape-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "bb64625f606577129b43ef8358c27d345a4f298c71a88f7de498f1c6be479efb",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43588585515/images/Rotation-timeline-landscape-en.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-today-landscape-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "c7c8832c1dd38ffb7409da30457c7cd9d668634a3bbbb537a2e8ce5d3210327b",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43588585515/images/Rotation-today-landscape-en.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-draft-portrait-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "62a7abfc01ddc411cdf806d2b4b2e330b81fb5224bb4bab342f51ba1e8395876",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43588585515/images/Rotation-draft-portrait-en.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-discard-confirm-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "e2e7b33dd7885cc2c8554466e2def537758ce017c6c2a8c4fe2bece2066124c8",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43588585515/images/Rotation-discard-confirm-en.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-draft-landscape-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "5e4ab8de223ba6f95e33202d8ecfab518c0c80cab1a74b0157818ebe94d9305d",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43588585515/images/Rotation-draft-landscape-en.png"
+        }
+      ],
+      "openedOriginalCount": 10
+    },
+    {
+      "runId": "43589974794",
+      "sourceCommit": "fbcae3f4b34055f719c2044f1adb322844349659",
+      "scope": "rotation",
+      "start": "cold-zh-Hans",
+      "languages": [
+        "zh-Hans"
+      ],
+      "profile": "ipad-dark-accessibility",
+      "conclusion": "success",
+      "jobId": 132432486957,
+      "unitTests": 0,
+      "runner": {
+        "id": 1000001221,
+        "name": "GitHub Actions 1000001221",
+        "group": "GitHub Actions",
+        "labels": [
+          "macos-15"
+        ]
+      },
+      "uiMethod": "testIPadColdChineseRotationContinuity",
+      "uiSeconds": 257.2,
+      "rotationGeometry": [
+        [
+          "zh-Hans",
+          "initial",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "zh-Hans",
+          "draft",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "zh-Hans",
+          "retained-draft",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "zh-Hans",
+          "today",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "zh-Hans",
+          "detail",
+          "4",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "zh-Hans",
+          "detail-return",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "zh-Hans",
+          "settings",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "zh-Hans",
+          "paused-timer",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "zh-Hans",
+          "relaunch",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ]
+      ],
+      "referenceGeometry": [],
+      "releaseVerification": false,
+      "PNGCount": 10,
+      "images": [
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-relaunched-portrait-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "b452d0751dd23fc1a93fae51ba7f6787ec53073426ab338ba0c1ed45c0dad97e",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43589974794/images/Rotation-relaunched-portrait-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-timer-portrait-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "cf33247505ca79000d3da134d10475ecb9fe396ca1aa251c69faf79da82873ff",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43589974794/images/Rotation-timer-portrait-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-settings-landscape-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "a2afd5ea2700a7ff54e96c1f611257943b50c54d1ccfde892d14c43774fbe7d4",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43589974794/images/Rotation-settings-landscape-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-detail-portrait-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "bb7c99c28be087db91d959ed289bc869eca5763b042335afce4bacfb6e78d5ad",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43589974794/images/Rotation-detail-portrait-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-detail-landscape-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "bacefd090500e74766a0fb38d00aa02e24276dc75d46fc7c2b473279451e7618",
+          "failure": false,
+          "exifOrientation": 6,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43589974794/images/Rotation-detail-landscape-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-timeline-landscape-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "5adc8ae39022b097b9fd82d6e98b9e67032cca956e9150353214504d94dee3db",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43589974794/images/Rotation-timeline-landscape-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-today-landscape-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "d3fdc8799025e4a48ef35e355fc576ff7c6b14250539d4ae6db5a72cfc22d8a2",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43589974794/images/Rotation-today-landscape-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-draft-portrait-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "42cff34cf833707689e897269fa0df1244ae539ad5e29a2e325ddcb370c6f26a",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43589974794/images/Rotation-draft-portrait-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-discard-confirm-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "4c2d3657267e1a21820db0a2ba094e5823e906575796de61ed23b6a52cf05fe4",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43589974794/images/Rotation-discard-confirm-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-dark-accessibility",
+          "name": "Rotation-draft-landscape-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "d37b0c73981582882be72d186a11e993e566f4605acc30426602975630c4afc4",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43589974794/images/Rotation-draft-landscape-zh-Hans.png"
+        }
+      ],
+      "openedOriginalCount": 10
+    },
+    {
+      "runId": "43591326457",
+      "sourceCommit": "fbcae3f4b34055f719c2044f1adb322844349659",
+      "scope": "rotation",
+      "start": "reference",
+      "languages": [
+        "en",
+        "zh-Hans"
+      ],
+      "profile": "ipad-light",
+      "conclusion": "success",
+      "jobId": 132436533994,
+      "unitTests": 0,
+      "runner": {
+        "id": 1000001223,
+        "name": "GitHub Actions 1000001223",
+        "group": "GitHub Actions",
+        "labels": [
+          "macos-15"
+        ]
+      },
+      "uiMethod": "testIPadRotationContinuity",
+      "uiSeconds": 583.108,
+      "rotationGeometry": [
+        [
+          "en",
+          "initial",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "en",
+          "draft",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "en",
+          "retained-draft",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "en",
+          "today",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "en",
+          "detail",
+          "4",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "en",
+          "detail-return",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "en",
+          "settings",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "en",
+          "paused-timer",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "en",
+          "relaunch",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "zh-Hans",
+          "initial",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "zh-Hans",
+          "draft",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "zh-Hans",
+          "retained-draft",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "zh-Hans",
+          "today",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "zh-Hans",
+          "detail",
+          "4",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "zh-Hans",
+          "detail-return",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "zh-Hans",
+          "settings",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "zh-Hans",
+          "paused-timer",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "zh-Hans",
+          "relaunch",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ]
+      ],
+      "referenceGeometry": [
+        [
+          "en",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "en",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ],
+        [
+          "zh-Hans",
+          "3",
+          "(0.0, 0.0, 1376.0, 1032.0)"
+        ],
+        [
+          "zh-Hans",
+          "1",
+          "(0.0, 0.0, 1032.0, 1376.0)"
+        ]
+      ],
+      "releaseVerification": false,
+      "PNGCount": 22,
+      "images": [
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-relaunched-portrait-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "3182242205ed8bbccb47ce6da3c521d8bd99e3e47728a69fa42c972ef95698d4",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-relaunched-portrait-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-timer-portrait-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "f63627c480ffb840e5fee38ae4d9c29ce24aff9f0eaf32c564607194012ee32d",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-timer-portrait-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-settings-landscape-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "ac7b37fc1c8a4d54960683a3b857f5d9e061d2cd545d11d4b5e22b367be542ed",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-settings-landscape-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-detail-portrait-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "01986f1d462463ae38bdf1aecef32570fc0d3e274085e7399865206b9cb06931",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-detail-portrait-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-detail-landscape-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "8b199f7638944c307989890f30d1ca4170f33c1bf91ac9e03053d003a208e027",
+          "failure": false,
+          "exifOrientation": 6,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-detail-landscape-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-timeline-landscape-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "35d0462dac3778c2f681f1e92194f9fa63ab7ef707966db48fa2e6ffaf37ed23",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-timeline-landscape-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-today-landscape-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "a1fe0bf247c5a3438e59ba41f415781ef56e90b9b365531b3abe0179cf1a4faa",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-today-landscape-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-draft-portrait-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "65324d1f035105aa2d04e440a43a87283cf88bddaa9d8446d00068dffef50de2",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-draft-portrait-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-discard-confirm-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "e3eefa433fd39a95cbe70eded1142f9000f04b5e48eeec93da07eb41379ad8da",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-discard-confirm-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-draft-landscape-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "80752c7c798de0efc1ef24d53540b25a4fba833521435041ca870033ef1a59da",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-draft-landscape-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-reference-landscape-zh-Hans",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "5d2f706d18292cc99bbaead470a459d0d93c40abc79cdce138981ac869546823",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-reference-landscape-zh-Hans.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-relaunched-portrait-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "d36d15dec3f8407c24f0211954eb507d966160933aab04b663b9c86359db7c10",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-relaunched-portrait-en.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-timer-portrait-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "be4b93a7e6945b346812722ee1cd2f60312464629dc4715b5d23537796dbee96",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-timer-portrait-en.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-settings-landscape-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "5d197bccb37c41cc4b3906684d1c05afda941e4ecdf3589016283141ab3f2ed0",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-settings-landscape-en.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-detail-portrait-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "b44056fa9f72e6d8ef514fe08d18bdf0a79d959f8b522101fb84637b7dfe060d",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-detail-portrait-en.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-detail-landscape-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "a1892099cd144d5ea5bf174c7010bd6fb19f20910b702e9af8ecbb1e155409db",
+          "failure": false,
+          "exifOrientation": 6,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-detail-landscape-en.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-timeline-landscape-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "8c09d9a68aed95afb3a41d7c2bc030fb3926a3095bb1952b426fdf13fc860ed6",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-timeline-landscape-en.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-today-landscape-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "18557bdb8b5102bcb3b4fc91af4c5174ca7e4b9a1e43d62c83cab8efc8276921",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-today-landscape-en.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-draft-portrait-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "1932c0058d9e66b42f1940fed254aa6b43a7f37abd503179a417b2e37fc2ce47",
+          "failure": false,
+          "exifOrientation": 1,
+          "displayWidth": 2064,
+          "displayHeight": 2752,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-draft-portrait-en.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-discard-confirm-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "3a6af9ad179b22d8c25f98dad199a5fa78c9a723349dea1d818b6954e381ff85",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-discard-confirm-en.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-draft-landscape-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "9577ee6340b51496c137b0605f09afa4a04d2feb8f912d946c3cfbf9df84e751",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-draft-landscape-en.png"
+        },
+        {
+          "profile": "ipad-light",
+          "name": "Rotation-reference-landscape-en",
+          "device": "iPad Pro 13-inch (M5)",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "4394dfe5053a170dfe470c37f4135150920b6f9b8d285dc7e63c018afe82de25",
+          "failure": false,
+          "exifOrientation": 8,
+          "displayWidth": 2752,
+          "displayHeight": 2064,
+          "openedOriginal": true,
+          "file": "43591326457/images/Rotation-reference-landscape-en.png"
+        }
+      ],
+      "openedOriginalCount": 22
+    }
+  ],
+  "attachments": [
+    {
+      "file": "43588585515/images/Rotation-relaunched-portrait-en.png",
+      "sha256": "a7e459273ea63b61a455b67e6b45246e0fa5da526999beef5f0a4a707daa91ac"
+    },
+    {
+      "file": "43588585515/images/Rotation-timer-portrait-en.png",
+      "sha256": "37c8d8368bc88b3371362008a7f4ec1cf7282495d5197e87b1e829b633572e91"
+    },
+    {
+      "file": "43588585515/images/Rotation-settings-landscape-en.png",
+      "sha256": "8cb5e1292806a2511039404f90fafbcc7631db48bc2741eed22659baae53c932"
+    },
+    {
+      "file": "43588585515/images/Rotation-detail-portrait-en.png",
+      "sha256": "1c32b47f416ab2ce29ab9e34c0e51d22df1bdeb8a6571b05982bfc3020636f4c"
+    },
+    {
+      "file": "43588585515/images/Rotation-detail-landscape-en.png",
+      "sha256": "e2cb1cca644a9b78c2d59a536b83ebcb0c10ee5dfae04f8ec14b5085a708300c"
+    },
+    {
+      "file": "43588585515/images/Rotation-timeline-landscape-en.png",
+      "sha256": "bb64625f606577129b43ef8358c27d345a4f298c71a88f7de498f1c6be479efb"
+    },
+    {
+      "file": "43588585515/images/Rotation-today-landscape-en.png",
+      "sha256": "c7c8832c1dd38ffb7409da30457c7cd9d668634a3bbbb537a2e8ce5d3210327b"
+    },
+    {
+      "file": "43588585515/images/Rotation-draft-portrait-en.png",
+      "sha256": "62a7abfc01ddc411cdf806d2b4b2e330b81fb5224bb4bab342f51ba1e8395876"
+    },
+    {
+      "file": "43588585515/images/Rotation-discard-confirm-en.png",
+      "sha256": "e2e7b33dd7885cc2c8554466e2def537758ce017c6c2a8c4fe2bece2066124c8"
+    },
+    {
+      "file": "43588585515/images/Rotation-draft-landscape-en.png",
+      "sha256": "5e4ab8de223ba6f95e33202d8ecfab518c0c80cab1a74b0157818ebe94d9305d"
+    },
+    {
+      "file": "43588585515/metadata/manifest.json",
+      "sha256": "c4ecd3481090327b43af4126c58d7c3c73140af254ce96b36dca37595fe38add"
+    },
+    {
+      "file": "43588585515/metadata/download-receipt.json",
+      "sha256": "3d6fd6f8f7c1e37a50c95b4c3126529ddc78c599cf5712f33b0acb064180de7c"
+    },
+    {
+      "file": "43588585515/hierarchies/24075DD2-1855-4E56-8808-B857DBE30133.txt",
+      "sha256": "f6ef842b0beee3ac694d97c87b63336e5163b614de286461fe9e1a4d47540b3f"
+    },
+    {
+      "file": "43588585515/logs/ipad-dark-accessibility/1_Set up job.txt",
+      "sha256": "3dc0fe94e22f06b37be027d3403bd590727d308ba67d915d6b64c0e02f540958"
+    },
+    {
+      "file": "43588585515/logs/ipad-dark-accessibility/2_Check out source.txt",
+      "sha256": "7516a3b45d55b5db58c52fe7815f3878355891fd214f74493a86fdc9101356ae"
+    },
+    {
+      "file": "43588585515/logs/ipad-dark-accessibility/3_Run project audits.txt",
+      "sha256": "eeeb3f9e359c0432579b2f416af2acf1a418a234eb2557d7ff6fb011709c1d79"
+    },
+    {
+      "file": "43588585515/logs/ipad-dark-accessibility/4_Select and verify pinned UI toolchain.txt",
+      "sha256": "818661862fa2175b75e16663c580fb9253530e5c84d59902e8b84745dc5c91e1"
+    },
+    {
+      "file": "43588585515/logs/ipad-dark-accessibility/5_Select and configure simulator.txt",
+      "sha256": "18265ef20b67c766b82c949e98b805390a0f3b6c47d774792cd703dbf6beacbe"
+    },
+    {
+      "file": "43588585515/logs/ipad-dark-accessibility/6_Build Debug and Release, then run XCTest.txt",
+      "sha256": "779e579c51622b1c63a05e40121ce4ef44413dfba1c126bdc63bb9d33bdd67f0"
+    },
+    {
+      "file": "43588585515/logs/ipad-dark-accessibility/8_Read compiled orientation metadata.txt",
+      "sha256": "1d96966d3d54bf8dcc135a6a08cb8d3fc530dcc28d9cda38193de29ca4d5a2a5"
+    },
+    {
+      "file": "43588585515/logs/plan/3_Run if [[ $ROTATION_SMOKE == 1 && ( $INPUT_SMOKE == 1  $BACKUP_SMOKE == 1 ) ]]; then.txt",
+      "sha256": "eaf9d24c5811a8d55235ebb4d19c73dd50472e2b3016a8055d792fb917870b2f"
+    },
+    {
+      "file": "43589974794/images/Rotation-relaunched-portrait-zh-Hans.png",
+      "sha256": "b452d0751dd23fc1a93fae51ba7f6787ec53073426ab338ba0c1ed45c0dad97e"
+    },
+    {
+      "file": "43589974794/images/Rotation-timer-portrait-zh-Hans.png",
+      "sha256": "cf33247505ca79000d3da134d10475ecb9fe396ca1aa251c69faf79da82873ff"
+    },
+    {
+      "file": "43589974794/images/Rotation-settings-landscape-zh-Hans.png",
+      "sha256": "a2afd5ea2700a7ff54e96c1f611257943b50c54d1ccfde892d14c43774fbe7d4"
+    },
+    {
+      "file": "43589974794/images/Rotation-detail-portrait-zh-Hans.png",
+      "sha256": "bb7c99c28be087db91d959ed289bc869eca5763b042335afce4bacfb6e78d5ad"
+    },
+    {
+      "file": "43589974794/images/Rotation-detail-landscape-zh-Hans.png",
+      "sha256": "bacefd090500e74766a0fb38d00aa02e24276dc75d46fc7c2b473279451e7618"
+    },
+    {
+      "file": "43589974794/images/Rotation-timeline-landscape-zh-Hans.png",
+      "sha256": "5adc8ae39022b097b9fd82d6e98b9e67032cca956e9150353214504d94dee3db"
+    },
+    {
+      "file": "43589974794/images/Rotation-today-landscape-zh-Hans.png",
+      "sha256": "d3fdc8799025e4a48ef35e355fc576ff7c6b14250539d4ae6db5a72cfc22d8a2"
+    },
+    {
+      "file": "43589974794/images/Rotation-draft-portrait-zh-Hans.png",
+      "sha256": "42cff34cf833707689e897269fa0df1244ae539ad5e29a2e325ddcb370c6f26a"
+    },
+    {
+      "file": "43589974794/images/Rotation-discard-confirm-zh-Hans.png",
+      "sha256": "4c2d3657267e1a21820db0a2ba094e5823e906575796de61ed23b6a52cf05fe4"
+    },
+    {
+      "file": "43589974794/images/Rotation-draft-landscape-zh-Hans.png",
+      "sha256": "d37b0c73981582882be72d186a11e993e566f4605acc30426602975630c4afc4"
+    },
+    {
+      "file": "43589974794/metadata/manifest.json",
+      "sha256": "1cb86d6725121915216e0b24e37d8fe3078de74b11cb245dae9d020f78dcf711"
+    },
+    {
+      "file": "43589974794/metadata/download-receipt.json",
+      "sha256": "0e76412391dfa63eee63c62c5374aac660d042140ee7f454c500bdba7216e677"
+    },
+    {
+      "file": "43589974794/hierarchies/ED355FBB-00C8-432E-B536-99CA9494C154.txt",
+      "sha256": "c96e7d8d18cce1ffe4a67b137d96322f1981e0ed792eefd657c94599e6ebba27"
+    },
+    {
+      "file": "43589974794/logs/ipad-dark-accessibility/1_Set up job.txt",
+      "sha256": "27b60bdaeee99d01f6861c32876a045d7cd515a12daf29b6cb863612b5621529"
+    },
+    {
+      "file": "43589974794/logs/ipad-dark-accessibility/2_Check out source.txt",
+      "sha256": "46dd9840be45f94b322aa573742ba27fcc2f76631adfbcd5e8244a0307550ad6"
+    },
+    {
+      "file": "43589974794/logs/ipad-dark-accessibility/3_Run project audits.txt",
+      "sha256": "3660e41fc5c41a8e2338fcc9e13bb98d11870a7073294ac12f6ee5c56053268e"
+    },
+    {
+      "file": "43589974794/logs/ipad-dark-accessibility/4_Select and verify pinned UI toolchain.txt",
+      "sha256": "a4bd752b8ff119c30924724f1244471a2f18a0ffbbfa367c80774da7e6a9f4b5"
+    },
+    {
+      "file": "43589974794/logs/ipad-dark-accessibility/5_Select and configure simulator.txt",
+      "sha256": "b62bee5f9f36a55641d567d3807b373cbe6695c3e051c324ce074950d6192da6"
+    },
+    {
+      "file": "43589974794/logs/ipad-dark-accessibility/6_Build Debug and Release, then run XCTest.txt",
+      "sha256": "af892fcce170d62d85f23b6d04203f9af866ee5314eb067dd6d72c77a3809cf0"
+    },
+    {
+      "file": "43589974794/logs/ipad-dark-accessibility/8_Read compiled orientation metadata.txt",
+      "sha256": "a9d735a49b405d626af594ff2578e3ea445e0ef7c2eb0926d81185c2453dc906"
+    },
+    {
+      "file": "43589974794/logs/plan/3_Run if [[ $ROTATION_SMOKE == 1 && ( $INPUT_SMOKE == 1  $BACKUP_SMOKE == 1 ) ]]; then.txt",
+      "sha256": "333bc50251852804ac99383ae289697dddb430aca954186250629ff300f5df4e"
+    },
+    {
+      "file": "43591326457/images/Rotation-relaunched-portrait-zh-Hans.png",
+      "sha256": "3182242205ed8bbccb47ce6da3c521d8bd99e3e47728a69fa42c972ef95698d4"
+    },
+    {
+      "file": "43591326457/images/Rotation-timer-portrait-zh-Hans.png",
+      "sha256": "f63627c480ffb840e5fee38ae4d9c29ce24aff9f0eaf32c564607194012ee32d"
+    },
+    {
+      "file": "43591326457/images/Rotation-settings-landscape-zh-Hans.png",
+      "sha256": "ac7b37fc1c8a4d54960683a3b857f5d9e061d2cd545d11d4b5e22b367be542ed"
+    },
+    {
+      "file": "43591326457/images/Rotation-detail-portrait-zh-Hans.png",
+      "sha256": "01986f1d462463ae38bdf1aecef32570fc0d3e274085e7399865206b9cb06931"
+    },
+    {
+      "file": "43591326457/images/Rotation-detail-landscape-zh-Hans.png",
+      "sha256": "8b199f7638944c307989890f30d1ca4170f33c1bf91ac9e03053d003a208e027"
+    },
+    {
+      "file": "43591326457/images/Rotation-timeline-landscape-zh-Hans.png",
+      "sha256": "35d0462dac3778c2f681f1e92194f9fa63ab7ef707966db48fa2e6ffaf37ed23"
+    },
+    {
+      "file": "43591326457/images/Rotation-today-landscape-zh-Hans.png",
+      "sha256": "a1fe0bf247c5a3438e59ba41f415781ef56e90b9b365531b3abe0179cf1a4faa"
+    },
+    {
+      "file": "43591326457/images/Rotation-draft-portrait-zh-Hans.png",
+      "sha256": "65324d1f035105aa2d04e440a43a87283cf88bddaa9d8446d00068dffef50de2"
+    },
+    {
+      "file": "43591326457/images/Rotation-discard-confirm-zh-Hans.png",
+      "sha256": "e3eefa433fd39a95cbe70eded1142f9000f04b5e48eeec93da07eb41379ad8da"
+    },
+    {
+      "file": "43591326457/images/Rotation-draft-landscape-zh-Hans.png",
+      "sha256": "80752c7c798de0efc1ef24d53540b25a4fba833521435041ca870033ef1a59da"
+    },
+    {
+      "file": "43591326457/images/Rotation-reference-landscape-zh-Hans.png",
+      "sha256": "5d2f706d18292cc99bbaead470a459d0d93c40abc79cdce138981ac869546823"
+    },
+    {
+      "file": "43591326457/images/Rotation-relaunched-portrait-en.png",
+      "sha256": "d36d15dec3f8407c24f0211954eb507d966160933aab04b663b9c86359db7c10"
+    },
+    {
+      "file": "43591326457/images/Rotation-timer-portrait-en.png",
+      "sha256": "be4b93a7e6945b346812722ee1cd2f60312464629dc4715b5d23537796dbee96"
+    },
+    {
+      "file": "43591326457/images/Rotation-settings-landscape-en.png",
+      "sha256": "5d197bccb37c41cc4b3906684d1c05afda941e4ecdf3589016283141ab3f2ed0"
+    },
+    {
+      "file": "43591326457/images/Rotation-detail-portrait-en.png",
+      "sha256": "b44056fa9f72e6d8ef514fe08d18bdf0a79d959f8b522101fb84637b7dfe060d"
+    },
+    {
+      "file": "43591326457/images/Rotation-detail-landscape-en.png",
+      "sha256": "a1892099cd144d5ea5bf174c7010bd6fb19f20910b702e9af8ecbb1e155409db"
+    },
+    {
+      "file": "43591326457/images/Rotation-timeline-landscape-en.png",
+      "sha256": "8c09d9a68aed95afb3a41d7c2bc030fb3926a3095bb1952b426fdf13fc860ed6"
+    },
+    {
+      "file": "43591326457/images/Rotation-today-landscape-en.png",
+      "sha256": "18557bdb8b5102bcb3b4fc91af4c5174ca7e4b9a1e43d62c83cab8efc8276921"
+    },
+    {
+      "file": "43591326457/images/Rotation-draft-portrait-en.png",
+      "sha256": "1932c0058d9e66b42f1940fed254aa6b43a7f37abd503179a417b2e37fc2ce47"
+    },
+    {
+      "file": "43591326457/images/Rotation-discard-confirm-en.png",
+      "sha256": "3a6af9ad179b22d8c25f98dad199a5fa78c9a723349dea1d818b6954e381ff85"
+    },
+    {
+      "file": "43591326457/images/Rotation-draft-landscape-en.png",
+      "sha256": "9577ee6340b51496c137b0605f09afa4a04d2feb8f912d946c3cfbf9df84e751"
+    },
+    {
+      "file": "43591326457/images/Rotation-reference-landscape-en.png",
+      "sha256": "4394dfe5053a170dfe470c37f4135150920b6f9b8d285dc7e63c018afe82de25"
+    },
+    {
+      "file": "43591326457/metadata/manifest.json",
+      "sha256": "c7b563943be0c9c5f4033312795f93f3b792a0bbe6d8e633fc777f5e6dee3a5e"
+    },
+    {
+      "file": "43591326457/metadata/download-receipt.json",
+      "sha256": "245f4fff91258bcb7fb9fde956e87c7b5a3b514c35139f1fe10fce18af90233e"
+    },
+    {
+      "file": "43591326457/hierarchies/1225731C-59FE-4F22-B487-BF5736138944.txt",
+      "sha256": "63d060f51d211dde43c9b7b82f3eace26434c05ed9badd588dc25d205a5004b1"
+    },
+    {
+      "file": "43591326457/hierarchies/5C865D73-4C77-4176-BA93-07ABDDA3D08C.txt",
+      "sha256": "9fc5c9e8a417d8cdb93b742a8f2b4658fc98e20a429036d7f7d9b561de23a7f9"
+    },
+    {
+      "file": "43591326457/hierarchies/79DF03E3-24E0-44B5-B393-239A9EF4A468.txt",
+      "sha256": "4cefcb1ec083f42dc27abce1b278a7707d966f98454990eb72e94881887316b0"
+    },
+    {
+      "file": "43591326457/hierarchies/7B92BCD4-E6B9-4898-86A7-3525B8F502AD.txt",
+      "sha256": "aa3d40ab4a1a05f1b6b9d3434066e73071b0a751edb595529243247a8dbc0576"
+    },
+    {
+      "file": "43591326457/logs/ipad-light/1_Set up job.txt",
+      "sha256": "583ade78b6ef4a08f1698a65f699778dd48ab09b4d2f32bf882f94572294bf6b"
+    },
+    {
+      "file": "43591326457/logs/ipad-light/2_Check out source.txt",
+      "sha256": "1d9b3a7d3810a971ea2f7c896e09e2e11dd066c8efe378745320261b4daf55fe"
+    },
+    {
+      "file": "43591326457/logs/ipad-light/3_Run project audits.txt",
+      "sha256": "3982a24d7b6f63c2aaa657aaa65cd37a17fabeae768b8315a4eeac5bffcf06c4"
+    },
+    {
+      "file": "43591326457/logs/ipad-light/4_Select and verify pinned UI toolchain.txt",
+      "sha256": "33846d3639e4a7a76cecbcc2ad205d253c14edb6f5338a3dc819cd3d02342afa"
+    },
+    {
+      "file": "43591326457/logs/ipad-light/5_Select and configure simulator.txt",
+      "sha256": "b1091e28d3987d00ef081824d91bf181c91da3eef056f403ee1a44ef12277673"
+    },
+    {
+      "file": "43591326457/logs/ipad-light/6_Build Debug and Release, then run XCTest.txt",
+      "sha256": "333d8312494c6b0ffb48e818dfe4671e1964b45759fd616104c9274676ba8b4c"
+    },
+    {
+      "file": "43591326457/logs/ipad-light/8_Read compiled orientation metadata.txt",
+      "sha256": "4dd6fcfcd65a310e5bcf881b6d27ce25d4024bb4d35d703d4f53cc7e06d8c65c"
+    },
+    {
+      "file": "43591326457/logs/plan/3_Run if [[ $ROTATION_SMOKE == 1 && ( $INPUT_SMOKE == 1  $BACKUP_SMOKE == 1 ) ]]; then.txt",
+      "sha256": "978238e794fe293b8e986a570fcc37362cd5bd504be641bf5ccc270be407b702"
+    }
+  ],
+  "openedOriginalCount": 42,
+  "exportedPNGCount": 42
+}

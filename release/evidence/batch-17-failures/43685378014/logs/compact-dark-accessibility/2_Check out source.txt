@@ -1,0 +1,153 @@
+﻿2026-11-15T06:26:05.8576600Z ##[group]Run actions/checkout@v7
+2026-11-15T06:26:05.8577410Z with:
+2026-11-15T06:26:05.8577780Z   repository: betterfxb/private-moments-ios
+2026-11-15T06:26:05.8580640Z   token: ***
+2026-11-15T06:26:05.8581000Z   ssh-strict: true
+2026-11-15T06:26:05.8581380Z   ssh-user: git
+2026-11-15T06:26:05.8581700Z   persist-credentials: true
+2026-11-15T06:26:05.8582050Z   clean: true
+2026-11-15T06:26:05.8583350Z   sparse-checkout-cone-mode: true
+2026-11-15T06:26:05.8584840Z   fetch-depth: 1
+2026-11-15T06:26:05.8585740Z   fetch-tags: false
+2026-11-15T06:26:05.8586670Z   show-progress: true
+2026-11-15T06:26:05.8587590Z   lfs: false
+2026-11-15T06:26:05.8588430Z   submodules: false
+2026-11-15T06:26:05.8589380Z   set-safe-directory: true
+2026-11-15T06:26:05.8590990Z   allow-unsafe-pr-checkout: false
+2026-11-15T06:26:05.8593920Z ##[endgroup]
+2026-11-15T06:26:06.4027330Z Syncing repository: betterfxb/private-moments-ios
+2026-11-15T06:26:06.4029590Z ##[group]Getting Git version info
+2026-11-15T06:26:06.4030440Z Working directory is '/Users/runner/work/private-moments-ios/private-moments-ios'
+2026-11-15T06:26:06.4031510Z [command]/opt/homebrew/bin/git version
+2026-11-15T06:26:06.4439650Z git version 2.56.0
+2026-11-15T06:26:06.4462390Z ##[endgroup]
+2026-11-15T06:26:06.4475110Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/d499b649-a35a-48e3-af08-b0f2825c4386/.gitconfig'
+2026-11-15T06:26:06.4486070Z Temporarily overriding HOME='/Users/runner/work/_temp/d499b649-a35a-48e3-af08-b0f2825c4386' before making global git config changes
+2026-11-15T06:26:06.4489470Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-15T06:26:06.4495400Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/private-moments-ios/private-moments-ios
+2026-11-15T06:26:06.4626490Z Deleting the contents of '/Users/runner/work/private-moments-ios/private-moments-ios'
+2026-11-15T06:26:06.4630150Z ##[group]Determining repository object format
+2026-11-15T06:26:06.4632080Z ##[endgroup]
+2026-11-15T06:26:06.4632890Z ##[group]Initializing the repository
+2026-11-15T06:26:06.4636230Z [command]/opt/homebrew/bin/git init /Users/runner/work/private-moments-ios/private-moments-ios
+2026-11-15T06:26:06.4947690Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-15T06:26:06.4949170Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-15T06:26:06.4950060Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-15T06:26:06.4950710Z hint: call:
+2026-11-15T06:26:06.4951070Z hint:
+2026-11-15T06:26:06.4951590Z hint: 	git config --global init.defaultBranch <name>
+2026-11-15T06:26:06.4952200Z hint:
+2026-11-15T06:26:06.4952690Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-15T06:26:06.4953440Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-15T06:26:06.4954040Z hint:
+2026-11-15T06:26:06.4954480Z hint: 	git branch -m <name>
+2026-11-15T06:26:06.4954980Z hint:
+2026-11-15T06:26:06.4955530Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-15T06:26:06.4972240Z Initialized empty Git repository in /Users/runner/work/private-moments-ios/private-moments-ios/.git/
+2026-11-15T06:26:06.4978340Z [command]/opt/homebrew/bin/git remote add origin https://github.com/betterfxb/private-moments-ios
+2026-11-15T06:26:06.5069000Z ##[endgroup]
+2026-11-15T06:26:06.5071400Z ##[group]Disabling automatic garbage collection
+2026-11-15T06:26:06.5073170Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2026-11-15T06:26:06.5210450Z ##[endgroup]
+2026-11-15T06:26:06.5213610Z ##[group]Setting up auth
+2026-11-15T06:26:06.5216380Z Removing SSH command configuration
+2026-11-15T06:26:06.5240470Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-15T06:26:06.5326350Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-15T06:26:06.7015020Z Removing HTTP extra header
+2026-11-15T06:26:06.7023830Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-15T06:26:06.7091030Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-15T06:26:06.8556350Z Removing includeIf entries pointing to credentials config files
+2026-11-15T06:26:06.8590370Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-15T06:26:06.8604280Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-15T06:26:06.9809380Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-3f6d2349-23c3-4ab7-98a6-d3130df0726c.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-15T06:26:07.0083060Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/private-moments-ios/private-moments-ios/.git.path /Users/runner/work/_temp/git-credentials-3f6d2349-23c3-4ab7-98a6-d3130df0726c.config
+2026-11-15T06:26:07.0234520Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/private-moments-ios/private-moments-ios/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-3f6d2349-23c3-4ab7-98a6-d3130df0726c.config
+2026-11-15T06:26:07.0326930Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-3f6d2349-23c3-4ab7-98a6-d3130df0726c.config
+2026-11-15T06:26:07.0398440Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-3f6d2349-23c3-4ab7-98a6-d3130df0726c.config
+2026-11-15T06:26:07.0461750Z ##[endgroup]
+2026-11-15T06:26:07.0463660Z ##[group]Fetching the repository
+2026-11-15T06:26:07.0466890Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +04ae10fa7ef0285d968cbd3303f039f3da77ddd3:refs/remotes/origin/feat/native-manual-entry
+2026-11-15T06:26:21.3610300Z From https://github.com/betterfxb/private-moments-ios
+2026-11-15T06:26:21.3612540Z  * [new ref]         04ae10fa7ef0285d968cbd3303f039f3da77ddd3 -> origin/feat/native-manual-entry
+2026-11-15T06:26:21.3662070Z [command]/opt/homebrew/bin/git branch --list --remote origin/feat/native-manual-entry
+2026-11-15T06:26:21.3798860Z   origin/feat/native-manual-entry
+2026-11-15T06:26:21.3818870Z [command]/opt/homebrew/bin/git rev-parse refs/remotes/origin/feat/native-manual-entry
+2026-11-15T06:26:21.3902000Z 04ae10fa7ef0285d968cbd3303f039f3da77ddd3
+2026-11-15T06:26:21.3904440Z ##[endgroup]
+2026-11-15T06:26:21.3905150Z ##[group]Determining the checkout info
+2026-11-15T06:26:21.3906550Z ##[endgroup]
+2026-11-15T06:26:21.3914550Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2026-11-15T06:26:21.4053080Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-15T06:26:21.4146890Z ##[group]Checking out the ref
+2026-11-15T06:26:21.4150250Z [command]/opt/homebrew/bin/git checkout --progress --force -B feat/native-manual-entry refs/remotes/origin/feat/native-manual-entry
+2026-11-15T06:26:22.5245680Z Updating files:  37% (817/2184)
+2026-11-15T06:26:22.5525920Z Updating files:  38% (830/2184)
+2026-11-15T06:26:22.5631210Z Updating files:  39% (852/2184)
+2026-11-15T06:26:22.5705430Z Updating files:  40% (874/2184)
+2026-11-15T06:26:22.5772660Z Updating files:  41% (896/2184)
+2026-11-15T06:26:22.5820490Z Updating files:  42% (918/2184)
+2026-11-15T06:26:22.6901020Z Updating files:  43% (940/2184)
+2026-11-15T06:26:22.7766290Z Updating files:  44% (961/2184)
+2026-11-15T06:26:22.8206780Z Updating files:  45% (983/2184)
+2026-11-15T06:26:22.8476930Z Updating files:  46% (1005/2184)
+2026-11-15T06:26:22.8808320Z Updating files:  47% (1027/2184)
+2026-11-15T06:26:22.9574980Z Updating files:  48% (1049/2184)
+2026-11-15T06:26:23.0125690Z Updating files:  49% (1071/2184)
+2026-11-15T06:26:23.0649470Z Updating files:  50% (1092/2184)
+2026-11-15T06:26:23.1068420Z Updating files:  51% (1114/2184)
+2026-11-15T06:26:23.1376780Z Updating files:  52% (1136/2184)
+2026-11-15T06:26:23.1592150Z Updating files:  53% (1158/2184)
+2026-11-15T06:26:23.1732530Z Updating files:  54% (1180/2184)
+2026-11-15T06:26:23.1783870Z Updating files:  55% (1202/2184)
+2026-11-15T06:26:23.1822750Z Updating files:  56% (1224/2184)
+2026-11-15T06:26:23.1899190Z Updating files:  57% (1245/2184)
+2026-11-15T06:26:23.1941900Z Updating files:  58% (1267/2184)
+2026-11-15T06:26:23.2142860Z Updating files:  59% (1289/2184)
+2026-11-15T06:26:23.2323530Z Updating files:  60% (1311/2184)
+2026-11-15T06:26:23.2822600Z Updating files:  61% (1333/2184)
+2026-11-15T06:26:23.3038710Z Updating files:  62% (1355/2184)
+2026-11-15T06:26:23.3354940Z Updating files:  63% (1376/2184)
+2026-11-15T06:26:23.3698820Z Updating files:  64% (1398/2184)
+2026-11-15T06:26:23.3975820Z Updating files:  65% (1420/2184)
+2026-11-15T06:26:23.4251960Z Updating files:  66% (1442/2184)
+2026-11-15T06:26:23.4351490Z Updating files:  67% (1464/2184)
+2026-11-15T06:26:23.4496170Z Updating files:  67% (1470/2184)
+2026-11-15T06:26:23.4904000Z Updating files:  68% (1486/2184)
+2026-11-15T06:26:23.5004330Z Updating files:  69% (1507/2184)
+2026-11-15T06:26:23.5203880Z Updating files:  70% (1529/2184)
+2026-11-15T06:26:23.5256960Z Updating files:  71% (1551/2184)
+2026-11-15T06:26:23.5363280Z Updating files:  72% (1573/2184)
+2026-11-15T06:26:23.5437250Z Updating files:  73% (1595/2184)
+2026-11-15T06:26:23.5589710Z Updating files:  74% (1617/2184)
+2026-11-15T06:26:23.5624820Z Updating files:  75% (1638/2184)
+2026-11-15T06:26:23.5816040Z Updating files:  76% (1660/2184)
+2026-11-15T06:26:23.6006670Z Updating files:  77% (1682/2184)
+2026-11-15T06:26:23.6156540Z Updating files:  78% (1704/2184)
+2026-11-15T06:26:23.6374450Z Updating files:  79% (1726/2184)
+2026-11-15T06:26:23.6590160Z Updating files:  80% (1748/2184)
+2026-11-15T06:26:23.6750530Z Updating files:  81% (1770/2184)
+2026-11-15T06:26:23.6995110Z Updating files:  82% (1791/2184)
+2026-11-15T06:26:23.7209710Z Updating files:  83% (1813/2184)
+2026-11-15T06:26:23.7250160Z Updating files:  84% (1835/2184)
+2026-11-15T06:26:23.7283180Z Updating files:  85% (1857/2184)
+2026-11-15T06:26:23.7312140Z Updating files:  86% (1879/2184)
+2026-11-15T06:26:23.7635960Z Updating files:  87% (1901/2184)
+2026-11-15T06:26:23.7888740Z Updating files:  88% (1922/2184)
+2026-11-15T06:26:23.7994940Z Updating files:  89% (1944/2184)
+2026-11-15T06:26:23.8254970Z Updating files:  90% (1966/2184)
+2026-11-15T06:26:23.8324020Z Updating files:  91% (1988/2184)
+2026-11-15T06:26:23.8583630Z Updating files:  92% (2010/2184)
+2026-11-15T06:26:23.8889140Z Updating files:  93% (2032/2184)
+2026-11-15T06:26:23.9050660Z Updating files:  94% (2053/2184)
+2026-11-15T06:26:23.9337930Z Updating files:  95% (2075/2184)
+2026-11-15T06:26:23.9625630Z Updating files:  96% (2097/2184)
+2026-11-15T06:26:24.0046650Z Updating files:  97% (2119/2184)
+2026-11-15T06:26:24.0119990Z Updating files:  98% (2141/2184)
+2026-11-15T06:26:24.0149790Z Updating files:  99% (2163/2184)
+2026-11-15T06:26:24.0164660Z Updating files: 100% (2184/2184)
+2026-11-15T06:26:24.0165120Z Updating files: 100% (2184/2184), done.
+2026-11-15T06:26:24.0263260Z Switched to a new branch 'feat/native-manual-entry'
+2026-11-15T06:26:24.0324640Z branch 'feat/native-manual-entry' set up to track 'origin/feat/native-manual-entry'.
+2026-11-15T06:26:24.0326680Z ##[endgroup]
+2026-11-15T06:26:24.0516780Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2026-11-15T06:26:24.0598410Z 04ae10fa7ef0285d968cbd3303f039f3da77ddd3

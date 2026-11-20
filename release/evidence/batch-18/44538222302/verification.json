@@ -1,0 +1,80 @@
+{
+  "batch": 18,
+  "runId": "44538222302",
+  "sourceCommit": "8f101595ab6ee54a0fd64b2bc27faa9398f10883",
+  "scope": "resize",
+  "conclusion": "failure",
+  "native": {
+    "ipad-light": {
+      "unitPassed": [],
+      "uiPassed": [],
+      "testFailed": [
+        [
+          "-[PrivateMomentsUITests.PrivateMomentsUITests testIPadWindowResizeContinuity]",
+          "198.833"
+        ]
+      ],
+      "testErrors": [
+        "/Users/runner/work/private-moments-ios/private-moments-ios/UITests/PrivateMomentsUITests.swift:434: error: -[PrivateMomentsUITests.PrivateMomentsUITests testIPadWindowResizeContinuity] : failed: caught error: \"Error Domain=PrivateMoments.WindowVerification Code=2 \"Window width did not change from (248.0, 0.0, 537.0, 1376.0) toward 516.0.\" UserInfo={NSLocalizedDescription=Window width did not change from (248.0, 0.0, 537.0, 1376.0) toward 516.0.}\""
+      ],
+      "unsignedRelease": false,
+      "filesReselected": [],
+      "targetMeasurements": [
+        [
+          "(44.0, 44.0)",
+          "(537.0, 1376.0)"
+        ]
+      ],
+      "resizing": [
+        [
+          "first-drag",
+          [
+            0.0,
+            0.0,
+            1032.0,
+            1376.0
+          ],
+          [
+            248.0,
+            0.0,
+            537.0,
+            1376.0
+          ]
+        ]
+      ],
+      "interactionPerformance": {},
+      "backupPerformance": {}
+    }
+  },
+  "originalImageCount": 3,
+  "retainedImages": [
+    {
+      "profile": "ipad-light",
+      "name": "Window-resize-first-drag",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "522100ce17b5f53e6b83827dd2a166ebd6fb841607f288c3ee7959745b004d22",
+      "path": "ipad-light/Window-resize-first-drag.png",
+      "exportedAttachment": "DA3BD52F-7D14-420F-995E-C50E6F4D0DD3.png",
+      "hierarchy": {
+        "path": "ipad-light/Window-resize-first-drag-hierarchy.txt",
+        "sha256": "19f292892f9995b078f507f1aa47f6353816fa87e5872d1232019be4a37b832e"
+      }
+    },
+    {
+      "profile": "ipad-light",
+      "name": "Window-resize-no-geometry-change-narrow",
+      "device": "iPad Pro 13-inch (M5)",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "19e5c93355190db10e78cb1ac255bde9d8b72a35461b255ab94359ec4042e78e",
+      "path": "ipad-light/Window-resize-no-geometry-change-narrow.png",
+      "exportedAttachment": "EA5D4754-F3A9-47E2-BB68-3038A93CAECF.png",
+      "hierarchy": {
+        "path": "ipad-light/Window-resize-no-geometry-change-narrow-hierarchy.txt",
+        "sha256": "73536ae3a1d70d88f7bb18f4cb691e575551d3735c49aa852c011c4a702f2d7d"
+      }
+    }
+  ]
+}
