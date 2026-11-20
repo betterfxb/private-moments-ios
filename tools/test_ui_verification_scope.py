@@ -42,11 +42,12 @@ class VerificationScopeTests(unittest.TestCase):
     def script(self, start='reference', **values):
         return execute(SELECTION, dict(PRIVATE_MOMENTS_UI_ROTATION_START=start, **values))
 
-    def test_performance_selects_only_the_real_app_workload(self):
+    def test_performance_measures_the_real_app_and_checks_mutations(self):
         result = self.script(PRIVATE_MOMENTS_UI_PERFORMANCE_ONLY='1')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
-                         ['-only-testing:' + PREFIX + 'testLargeJournalInteractionBaseline'])
+                         ['-only-testing:' + PREFIX + 'testLargeJournalInteractionBaseline',
+                          '-only-testing:' + PREFIX + 'testTimelineSearchReflectsEditAndDeletion'])
         for flags in [{'PRIVATE_MOMENTS_UI_INPUT_ONLY': '1'}, {'PRIVATE_MOMENTS_UI_BACKUP_ONLY': '1'},
                       {'PRIVATE_MOMENTS_UI_IPAD_TESTS': '1', 'PRIVATE_MOMENTS_UI_ROTATION_ONLY': '1'}]:
             self.assertNotEqual(self.script(PRIVATE_MOMENTS_UI_PERFORMANCE_ONLY='1', **flags).returncode, 0)

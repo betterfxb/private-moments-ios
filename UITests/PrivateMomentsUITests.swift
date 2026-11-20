@@ -63,9 +63,7 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertTrue(visibleRow.label != firstLabel || visibleRow.frame != firstFrame,
                           "A scroll sample must move a result or expose another result.")
             print("Performance UI count=1000 sample=\(sample) scrollGestureSeconds=\(ProcessInfo.processInfo.systemUptime - scrollStarted)")
-            scroll.swipeDown()
-            let search = app.searchFields.firstMatch
-            reveal(search, in: app)
+            let search = revealTimelineSearch(in: app)
             search.tap()
             XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
             let searchStarted = ProcessInfo.processInfo.systemUptime
@@ -77,6 +75,53 @@ final class PrivateMomentsUITests: XCTestCase {
             print("Performance UI count=1000 sample=\(sample) searchTypingToMatchSeconds=\(ProcessInfo.processInfo.systemUptime - searchStarted)")
             app.terminate()
         }
+    }
+
+    func testTimelineSearchReflectsEditAndDeletion() {
+        let app = makeApp()
+        app.launch()
+        tap(app.buttons["today.addRecord"], in: app)
+        tap(app.buttons["recap.saveToolbar"], in: app)
+        XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
+        selectTab("Timeline", "时间线", language: "en", app: app)
+
+        let result = app.buttons.matching(identifier: "moment.row").firstMatch
+        let total = app.staticTexts["timeline.resultCount"]
+        func searchFor(_ query: String, count: String) {
+            let clear = app.buttons["timeline.clearFilters"]
+            if clear.exists { tap(clear, in: app) }
+            let field = revealTimelineSearch(in: app)
+            tap(field, in: app)
+            XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+            field.typeText(query)
+            XCTAssertEqual(field.value as? String, query)
+            guard submitTimelineSearch(language: "en", app: app) else { return }
+            let updated = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                !app.keyboards.firstMatch.exists && total.exists && total.label == count
+            }, object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [updated], timeout: 10), .completed, "Search result for \(query)")
+        }
+
+        searchFor("Calm", count: "1 moment")
+        tap(result, in: app)
+        tap(app.buttons["detail.edit"], in: app)
+        tap(app.buttons["recap.mood.Happy"], in: app)
+        tap(app.buttons["recap.saveToolbar"], in: app)
+        XCTAssertTrue(app.staticTexts["Happy"].waitForExistence(timeout: 10))
+        goBack(app)
+        searchFor("Calm", count: "0 moments")
+        XCTAssertFalse(result.exists)
+        searchFor("Happy", count: "1 moment")
+        tap(result, in: app)
+        tap(app.buttons["detail.delete"], in: app)
+        tap(app.buttons["Delete moment"], in: app)
+        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 10))
+        if app.searchFields.firstMatch.value as? String == "Happy" {
+            XCTAssertEqual(total.label, "0 moments")
+        } else {
+            searchFor("Happy", count: "0 moments")
+        }
+        XCTAssertFalse(result.exists)
     }
 
     // The CI profile sets device, appearance and text size.

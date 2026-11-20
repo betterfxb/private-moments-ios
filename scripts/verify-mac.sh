@@ -98,6 +98,7 @@ if [[ "$ROTATION_ONLY" == "1" ]]; then
 elif [[ "$PERFORMANCE_ONLY" == "1" ]]; then
     printf '\nFocused 1,000-record timeline measurement.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testLargeJournalInteractionBaseline)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testTimelineSearchReflectsEditAndDeletion)
 elif [[ "$INPUT_ONLY" == "1" ]]; then
     printf '\nFocused input gallery only; this is not full simulator acceptance.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
