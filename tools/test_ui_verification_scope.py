@@ -32,7 +32,7 @@ def execute(block, values):
     environment = {k: v for k, v in os.environ.items()
                    if not k.startswith('PRIVATE_MOMENTS_UI_') and k not in {
                        'ROTATION_SMOKE', 'ROTATION_START', 'INPUT_SMOKE', 'BACKUP_SMOKE', 'BACKUP_LANGUAGE', 'PERFORMANCE_SMOKE',
-                       'SMOKE_PROFILE'}}
+                       'WEEK_REVIEW_SMOKE', 'SMOKE_PROFILE'}}
     environment.update(values)
     return subprocess.run([BASH, '-c', 'set -euo pipefail\nfail() { printf "%s\\n" "$1" >&2; exit 1; }\n' + block],
                           env=environment, text=True, capture_output=True, timeout=15)
@@ -66,6 +66,23 @@ class VerificationScopeTests(unittest.TestCase):
                 self.assertEqual([s for s in lines if s.startswith('-only-testing:')], ['-only-testing:' + PREFIX + expected])
                 self.assertIn('-skip-testing:' + PREFIX + excluded, lines)
                 self.assertNotIn('-skip-testing:' + PREFIX + expected, lines)
+
+    def test_week_review_smoke_checks_only_date_queries_and_the_native_flow(self):
+        result = self.script(PRIVATE_MOMENTS_UI_WEEK_REVIEW_ONLY='1', PRIVATE_MOMENTS_UI_IPAD_TESTS='1')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
+                         ['-only-testing:PrivateMomentsTests/MomentDateQueryTests',
+                          '-only-testing:' + PREFIX + 'testWeekReviewShowsLocalRecords'])
+        for key in ['INPUT', 'BACKUP', 'PERFORMANCE', 'ROTATION']:
+            conflict = self.script(PRIVATE_MOMENTS_UI_WEEK_REVIEW_ONLY='1', PRIVATE_MOMENTS_UI_IPAD_TESTS='1',
+                                   **{f'PRIVATE_MOMENTS_UI_{key}_ONLY': '1'})
+            self.assertNotEqual(conflict.returncode, 0)
+            result = execute(GUARD, dict(ROTATION_START='reference', ROTATION_SMOKE='0', INPUT_SMOKE='0',
+                                         BACKUP_SMOKE='0', BACKUP_LANGUAGE='en', PERFORMANCE_SMOKE='0',
+                                         SMOKE_PROFILE='ipad-light') | {'WEEK_REVIEW_SMOKE': '1', f'{key}_SMOKE': '1'})
+            self.assertNotEqual(result.returncode, 0)
+        gallery = self.script(PRIVATE_MOMENTS_UI_GALLERY_ONLY='1')
+        self.assertIn('-only-testing:' + PREFIX + 'testWeekReviewShowsLocalRecords', gallery.stdout.splitlines())
 
     def test_default_full_phone_and_ipad_exclude_cold_methods(self):
         for ipad in ['0', '1']:

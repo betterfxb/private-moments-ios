@@ -53,6 +53,7 @@ TEST_SCOPE_ARGUMENTS=(-parallel-testing-enabled NO)
 BACKUP_ONLY="${PRIVATE_MOMENTS_UI_BACKUP_ONLY:-0}"
 INPUT_ONLY="${PRIVATE_MOMENTS_UI_INPUT_ONLY:-0}"
 PERFORMANCE_ONLY="${PRIVATE_MOMENTS_UI_PERFORMANCE_ONLY:-0}"
+WEEK_REVIEW_ONLY="${PRIVATE_MOMENTS_UI_WEEK_REVIEW_ONLY:-0}"
 BACKUP_LANGUAGE="${PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE:-en}"
 ROTATION_ONLY="${PRIVATE_MOMENTS_UI_ROTATION_ONLY:-0}"
 IPAD_TESTS="${PRIVATE_MOMENTS_UI_IPAD_TESTS:-0}"
@@ -61,6 +62,8 @@ ROTATION_START="${PRIVATE_MOMENTS_UI_ROTATION_START:-reference}"
 [[ "$INPUT_ONLY" == "0" || "$INPUT_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_INPUT_ONLY must be 0 or 1."
 [[ "$PERFORMANCE_ONLY" == "0" || "$PERFORMANCE_ONLY" == "1" ]] || fail "Performance scope must be 0 or 1."
 [[ "$PERFORMANCE_ONLY" != "1" || ( "$INPUT_ONLY" == "0" && "$BACKUP_ONLY" == "0" && "$ROTATION_ONLY" == "0" && "$IPAD_TESTS" == "0" ) ]] || fail "Performance smoke requires a phone and excludes other smoke modes."
+[[ "$WEEK_REVIEW_ONLY" == "0" || "$WEEK_REVIEW_ONLY" == "1" ]] || fail "Week in review scope must be 0 or 1."
+[[ "$WEEK_REVIEW_ONLY" != "1" || ( "$INPUT_ONLY" == "0" && "$BACKUP_ONLY" == "0" && "$ROTATION_ONLY" == "0" && "$PERFORMANCE_ONLY" == "0" ) ]] || fail "Week in review excludes other smoke modes."
 [[ "$BACKUP_ONLY" != "1" || "$INPUT_ONLY" != "1" ]] || fail "Input and backup smoke modes are mutually exclusive."
 [[ "$BACKUP_LANGUAGE" == "en" || "$BACKUP_LANGUAGE" == "zh-Hans" ]] || fail "Backup language must be en or zh-Hans."
 [[ "$BACKUP_LANGUAGE" != "zh-Hans" || "$BACKUP_ONLY" == "1" ]] || fail "Chinese backup selection requires explicit backup smoke."
@@ -99,6 +102,10 @@ elif [[ "$PERFORMANCE_ONLY" == "1" ]]; then
     printf '\nFocused 1,000-record timeline measurement.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testLargeJournalInteractionBaseline)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testTimelineSearchReflectsEditAndDeletion)
+elif [[ "$WEEK_REVIEW_ONLY" == "1" ]]; then
+    printf '\nFocused local Week in review validation.\n'
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testWeekReviewShowsLocalRecords)
 elif [[ "$INPUT_ONLY" == "1" ]]; then
     printf '\nFocused input gallery only; this is not full simulator acceptance.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
@@ -112,6 +119,7 @@ elif [[ "$BACKUP_ONLY" == "1" ]]; then
     fi
 elif [[ "${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testWeekReviewShowsLocalRecords)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
     if [[ "$IPAD_TESTS" == "1" ]]; then
         TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadRotationContinuity)

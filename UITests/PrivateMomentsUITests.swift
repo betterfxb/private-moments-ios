@@ -133,6 +133,73 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertFalse(result.exists)
     }
 
+    func testWeekReviewShowsLocalRecords() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let app = makeApp(language: language)
+            app.launch()
+            XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 15))
+
+            let weekMenu = app.buttons["today.weekMenu"]
+            let weekContext = weekMenu.exists ? weekMenu : app.staticTexts[english ? "This week" : "本周"]
+            reveal(weekContext, in: app)
+            capture("Today-week-context-\(language)", app, stableSurface: weekContext)
+            let entry = app.buttons["today.weekReview"]
+            guard entry.waitForExistence(timeout: 5) else {
+                captureFailure("Week-review-entry-unavailable-\(language)", app)
+                return XCTFail("Today must provide a native Week in review entry.")
+            }
+            XCTAssertEqual(entry.label, english ? "Week in review" : "本周回顾")
+            reveal(entry, in: app)
+            XCTAssertGreaterThanOrEqual(entry.frame.height, 44)
+            assertAboveBottomTabBar(entry, message: "Review entry must clear the tab bar.", app: app)
+            capture("Week-review-entry-\(language)", app, stableSurface: entry)
+            entry.tap()
+
+            let count = app.staticTexts["weekReview.count"]
+            let range = app.staticTexts["weekReview.range"]
+            let empty = app.staticTexts["weekReview.empty"]
+            let records = app.buttons.matching(identifier: "weekReview.moment")
+            XCTAssertTrue(count.waitForExistence(timeout: 10))
+            XCTAssertEqual(count.label, english ? "0 moments" : "0 条记录")
+            XCTAssertTrue(range.exists)
+            XCTAssertFalse(range.label.isEmpty)
+            XCTAssertTrue(app.windows.firstMatch.frame.contains(range.frame))
+            XCTAssertEqual(empty.label, english ? "No moments this week" : "本周还没有记录")
+            XCTAssertEqual(records.count, 0)
+            capture("Week-review-empty-\(language)", app, stableSurface: count)
+            goBack(app)
+
+            tap(app.buttons["today.addRecord"], in: app)
+            tap(app.buttons["recap.saveToolbar"], in: app)
+            XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
+            tap(entry, in: app)
+            XCTAssertTrue(count.waitForExistence(timeout: 10))
+            let one = english ? "1 moment" : "1 条记录"
+            XCTAssertEqual(count.label, one)
+            XCTAssertFalse(empty.exists)
+            let mood = app.descendants(matching: .any).matching(identifier: "weekReview.mood.Calm").firstMatch
+            XCTAssertTrue(mood.waitForExistence(timeout: 10))
+            XCTAssertEqual(mood.label, english ? "Calm" : "平静")
+            XCTAssertEqual(mood.value as? String, one)
+            capture("Week-review-single-\(language)", app, stableSurface: count)
+
+            XCTAssertEqual(records.count, 1)
+            let record = records.firstMatch
+            reveal(record, in: app)
+            XCTAssertGreaterThanOrEqual(record.frame.height, 44)
+            capture("Week-review-record-\(language)", app, stableSurface: record)
+            record.tap()
+            XCTAssertTrue(app.buttons["detail.edit"].waitForExistence(timeout: 10))
+            XCTAssertTrue(app.navigationBars[english ? "Moment details" : "记录详情"].exists)
+            XCTAssertTrue(app.staticTexts[english ? "Calm" : "平静"].exists)
+            goBack(app)
+            XCTAssertTrue(count.waitForExistence(timeout: 10))
+            XCTAssertEqual(count.label, one)
+            app.terminate()
+        }
+    }
+
     // The CI profile sets device, appearance and text size.
     // Each locale gets a separate persistent test store; no normal journal is reset.
     func testScreenGallery() throws {
