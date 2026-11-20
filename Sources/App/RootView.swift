@@ -6,6 +6,7 @@ private enum AppRoute: Hashable {
     case manual(startedAt: Date)
     case recap(startedAt: Date, durationSeconds: Int, editingID: UUID?)
     case detail(id: UUID)
+    case weekReview
 }
 
 private enum AppTab: Hashable {
@@ -55,7 +56,8 @@ struct RootView: View {
                             todayPath.append(.session)
                         },
                         onOpen: { id in todayPath.append(.detail(id: id)) },
-                        onAddRecord: { date in todayPath.append(.manual(startedAt: date)) }
+                        onAddRecord: { date in todayPath.append(.manual(startedAt: date)) },
+                        onOpenWeekReview: { todayPath.append(.weekReview) }
                     )
                 }
                 .tabItem { Label("Today", systemImage: "heart.text.square") }
@@ -133,6 +135,8 @@ struct RootView: View {
                 onCancel: { finishRecap(editingID: editingID, path: path) },
                 onSaved: { _ in finishRecap(editingID: editingID, path: path, didSave: true) }
             )
+        case .weekReview:
+            WeekReviewView { id in path.wrappedValue.append(.detail(id: id)) }
         case .detail(let id):
             MomentDetailView(
                 momentID: id,

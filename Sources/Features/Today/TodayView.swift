@@ -9,6 +9,7 @@ struct TodayView: View {
     let onStart: () -> Void
     let onOpen: (UUID) -> Void
     let onAddRecord: (Date) -> Void
+    let onOpenWeekReview: () -> Void
     @State private var showingDatePicker = false
     @State private var dateToView = Date.now
 
@@ -186,7 +187,10 @@ struct TodayView: View {
                     }
                 }
 
-                weekSelector
+                VStack(spacing: 4) {
+                    weekSelector
+                    weekReviewLink
+                }
 
                 Text("All-time overview")
                     .font(.system(.headline, design: .rounded).weight(.semibold))
@@ -276,6 +280,25 @@ struct TodayView: View {
         } else {
             weekGrid
         }
+    }
+
+    private var weekReviewLink: some View {
+        Button(action: onOpenWeekReview) {
+            HStack(alignment: .firstTextBaseline, spacing: 12) {
+                Text("Week in review").fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.system(.footnote).weight(.semibold))
+                    .accessibilityHidden(true)
+            }
+            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+            .foregroundStyle(AppColors.accentText)
+            .padding(.vertical, 6)
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("today.weekReview")
     }
 
     private var weekGrid: some View {

@@ -192,7 +192,35 @@ enum MomentTimingError: LocalizedError, Equatable {
 enum MomentDateQuery {
     static func onDay(_ moments: [Moment], date: Date, calendar: Calendar = .current) -> [Moment] {
         guard let interval = calendar.dateInterval(of: .day, for: date) else { return [] }
-        // DateInterval.contains includes its upper bound; a calendar day must not.
+        return within(moments, interval: interval)
+    }
+
+    static func weekReview(_ moments: [Moment], containing date: Date, calendar: Calendar = .current) -> MomentWeekReview? {
+        guard let interval = calendar.dateInterval(of: .weekOfYear, for: date) else { return nil }
+        return MomentWeekReview(interval: interval, moments: within(moments, interval: interval))
+    }
+
+    private static func within(_ moments: [Moment], interval: DateInterval) -> [Moment] {
+        // DateInterval.contains includes its upper bound, which belongs to the next period here.
         return moments.filter { $0.occurredAt >= interval.start && $0.occurredAt < interval.end }
+    }
+}
+
+struct MomentWeekReview {
+    struct MoodCount: Identifiable {
+        let mood: MomentMood
+        let count: Int
+        var id: MomentMood { mood }
+    }
+
+    let interval: DateInterval
+    let moments: [Moment]
+
+    var moods: [MoodCount] {
+        var counts: [MomentMood: Int] = [:]
+        for moment in moments { counts[moment.mood, default: 0] += 1 }
+        return MomentMood.allCases.compactMap { mood in
+            counts[mood].map { MoodCount(mood: mood, count: $0) }
+        }
     }
 }

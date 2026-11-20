@@ -447,6 +447,55 @@ final class MomentDateQueryTests: XCTestCase {
             XCTAssertEqual(MomentDateQuery.onDay([inside, outside], date: date, calendar: calendar), [inside])
         }
     }
+
+    func testWeekReviewShowsEmptyAndSingleRecord() throws {
+        let calendar = try calendar("Asia/Tokyo")
+        let date = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 11, day: 20, hour: 13)))
+        let empty = try XCTUnwrap(MomentDateQuery.weekReview([], containing: date, calendar: calendar))
+        XCTAssertTrue(empty.moments.isEmpty)
+        XCTAssertTrue(empty.moods.isEmpty)
+
+        let saved = Moment(occurredAt: date, durationSeconds: 47, mood: .joyful, rating: 4)
+        let review = try XCTUnwrap(MomentDateQuery.weekReview([saved], containing: date, calendar: calendar))
+        XCTAssertEqual(review.moments, [saved])
+        XCTAssertEqual(review.moods.map(\.mood), [.joyful])
+        XCTAssertEqual(review.moods.map(\.count), [1])
+    }
+
+    func testWeekReviewUsesLocalYearBoundaryAndCountsOnlyIncludedMoods() throws {
+        var calendar = try calendar("Asia/Tokyo")
+        calendar.firstWeekday = 2
+        let start = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 12, day: 28)))
+        let date = try XCTUnwrap(calendar.date(from: DateComponents(year: 2027, month: 1, day: 1)))
+        let end = try XCTUnwrap(calendar.date(from: DateComponents(year: 2027, month: 1, day: 4)))
+        let previous = Moment(occurredAt: start.addingTimeInterval(-1), durationSeconds: 0, mood: .connected, rating: 4)
+        let first = Moment(occurredAt: start, durationSeconds: 10, mood: .calm, rating: 4)
+        let middle = Moment(occurredAt: date, durationSeconds: 20, mood: .happy, rating: 4)
+        let last = Moment(occurredAt: end.addingTimeInterval(-1), durationSeconds: 30, mood: .calm, rating: 4)
+        let following = Moment(occurredAt: end, durationSeconds: 0, mood: .relaxed, rating: 4)
+        let review = try XCTUnwrap(MomentDateQuery.weekReview([following, last, middle, first, previous],
+                                                             containing: date, calendar: calendar))
+        XCTAssertEqual(review.interval.start, start)
+        XCTAssertEqual(review.interval.end, end)
+        XCTAssertEqual(review.moments, [last, middle, first])
+        XCTAssertEqual(review.moods.map(\.mood), [.calm, .happy])
+        XCTAssertEqual(review.moods.map(\.count), [2, 1])
+    }
+
+    func testWeekReviewUsesLocalMidnightAcrossDaylightSaving() throws {
+        var calendar = try calendar("America/Los_Angeles")
+        calendar.firstWeekday = 1
+        let start = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 8)))
+        let date = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 11)))
+        let end = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 15)))
+        let last = Moment(occurredAt: end.addingTimeInterval(-1), durationSeconds: 0, mood: .relaxed, rating: 4)
+        let following = Moment(occurredAt: end, durationSeconds: 0, mood: .relaxed, rating: 4)
+        let review = try XCTUnwrap(MomentDateQuery.weekReview([following, last], containing: date, calendar: calendar))
+        XCTAssertEqual(review.interval.start, start)
+        XCTAssertEqual(review.interval.end, end)
+        XCTAssertEqual(review.interval.duration, 167 * 3_600)
+        XCTAssertEqual(review.moments, [last])
+    }
 }
 
 final class MomentValidationTests: XCTestCase {
