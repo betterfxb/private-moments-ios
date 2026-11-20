@@ -110,10 +110,10 @@ struct WeekReviewView: View {
 
     private func records(_ moments: [Moment]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeading(Text("Moments this week"))
+            sectionHeading(Text("Moments"))
             LazyVStack(spacing: 9) {
                 ForEach(moments) { moment in
-                    Button { onOpen(moment.id) } label: { MomentRow(moment: moment) }
+                    Button { onOpen(moment.id) } label: { MomentRow(moment: moment, fillsWidth: true) }
                         .buttonStyle(.plain)
                         .accessibilityHint("Opens the private details for this moment")
                         .accessibilityIdentifier("weekReview.moment")
@@ -138,6 +138,8 @@ struct WeekReviewView: View {
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
         let lastDay = calendar.date(byAdding: .day, value: -1, to: interval.end) ?? interval.start
+        let withinYear = calendar.isDate(interval.start, equalTo: lastDay, toGranularity: .year)
+        formatter.dateTemplate = withinYear ? "MMMd" : "yMMMd"
         return formatter.string(from: interval.start, to: lastDay)
     }
 }

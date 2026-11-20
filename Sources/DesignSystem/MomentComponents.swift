@@ -13,6 +13,7 @@ struct PrivateBadge: View {
 struct MomentRow: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let moment: Moment
+    var fillsWidth = false
 
     private var dateText: String {
         moment.occurredAt.formatted(date: .abbreviated, time: .shortened)
@@ -66,6 +67,7 @@ struct MomentRow: View {
             }
             .fixedSize(horizontal: false, vertical: true)
         }
+        .frame(maxWidth: fillsWidth ? .infinity : nil, alignment: .leading)
         .padding(16)
         .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
         .overlay {

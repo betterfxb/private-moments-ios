@@ -182,11 +182,14 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertTrue(mood.waitForExistence(timeout: 10))
             XCTAssertEqual(mood.label, english ? "Calm" : "平静")
             XCTAssertEqual(mood.value as? String, one)
-            capture("Week-review-single-\(language)", app, stableSurface: count)
-
             XCTAssertEqual(records.count, 1)
             let record = records.firstMatch
-            reveal(record, in: app)
+            XCTAssertEqual(record.frame.minX, range.frame.minX, accuracy: 1)
+            XCTAssertGreaterThanOrEqual(app.windows.firstMatch.frame.intersection(record.frame).height, 44,
+                "A one-record review must show at least one touch target on its first screen.")
+            capture("Week-review-single-\(language)", app, stableSurface: count)
+
+            revealFully(from: record, through: record, in: app)
             XCTAssertGreaterThanOrEqual(record.frame.height, 44)
             capture("Week-review-record-\(language)", app, stableSurface: record)
             record.tap()
