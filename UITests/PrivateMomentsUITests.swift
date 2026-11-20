@@ -395,7 +395,7 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     func testIPadWindowResizeWithKeyboard() throws {
-        guard enableIPadWindowedApps() else { return }
+        guard enableIPadWindowedApps(scrollSidebar: true) else { return }
         let app = makeApp()
         app.launch()
         let window = app.windows.firstMatch
@@ -443,11 +443,18 @@ final class PrivateMomentsUITests: XCTestCase {
         captureSystem("Window-keyboard-saved-note", app)
     }
 
-    private func enableIPadWindowedApps() -> Bool {
+    private func enableIPadWindowedApps(scrollSidebar: Bool = false) -> Bool {
         XCTAssertEqual(UIDevice.current.userInterfaceIdiom, .pad)
         let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
         settings.launch()
         let multitasking = settings.staticTexts["Multitasking & Gestures"].firstMatch
+        if scrollSidebar {
+            let sidebar = settings.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.16, dy: 0.69))
+            for _ in 0..<6 where !multitasking.isHittable {
+                sidebar.press(forDuration: 0.05, thenDragTo: sidebar.withOffset(CGVector(dx: 0, dy: -242)),
+                              withVelocity: .slow, thenHoldForDuration: 0.15)
+            }
+        }
         if !multitasking.isHittable {
             let sidebar = settings.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.16, dy: 0.33))
             sidebar.press(forDuration: 0.05, thenDragTo: sidebar.withOffset(CGVector(dx: 0, dy: 260)))
