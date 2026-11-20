@@ -150,7 +150,8 @@ final class PrivateMomentsUITests: XCTestCase {
                 return XCTFail("Today must provide a native Week in review entry.")
             }
             XCTAssertEqual(entry.label, english ? "Week in review" : "本周回顾")
-            reveal(entry, in: app)
+            revealFully(from: entry, through: entry, in: app)
+            waitForStableFrame(entry, requireHittable: true, message: "The full review entry must settle before tapping.")
             XCTAssertGreaterThanOrEqual(entry.frame.height, 44)
             assertAboveBottomTabBar(entry, message: "Review entry must clear the tab bar.", app: app)
             capture("Week-review-entry-\(language)", app, stableSurface: entry)
@@ -1130,15 +1131,12 @@ final class PrivateMomentsUITests: XCTestCase {
     }
 
     private func waitForLocalExportBrowser(_ app: XCUIApplication, timeout: TimeInterval) -> Bool {
-        let deadline = Date().addingTimeInterval(timeout)
-        repeat {
-            // Readiness is not a tap: a navigation-title StaticText may have
-            // no activation point even while its provider root is ready.
-            if localFileRoots(in: app).firstMatch.exists || !nativeLocalLocations(in: app).isEmpty {
-                return true
-            }
-        } while Date() < deadline
-        return false
+        // Let XCTest schedule accessibility polling while the system File
+        // Provider starts. A title can report readiness without being a button.
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            self.localFileRoots(in: app).firstMatch.exists || !self.nativeLocalLocations(in: app).isEmpty
+        }, object: nil)
+        return XCTWaiter.wait(for: [ready], timeout: timeout) == .completed
     }
 
     private func saveToLocalFiles(_ app: XCUIApplication, language: String, browserDeadline: Date) {
