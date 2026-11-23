@@ -1562,17 +1562,28 @@ final class PrivateMomentsUITests: XCTestCase {
     func testManualEntryTimingDateFilterAndPersistence() throws {
         let app = makeApp(failFirstSave: true)
         app.launch()
+
+        func selectOption(_ identifier: String, selected: Bool = true) {
+            let option = app.buttons[identifier]
+            // iOS 17 can report a partially visible option as hittable even
+            // when its tap point lands in the bottom system gesture area.
+            revealFully(from: option, through: option, in: app)
+            option.tap()
+            if option.isSelected != selected { captureFailure("Manual-option-not-applied", app) }
+            XCTAssertEqual(option.isSelected, selected, "The draft must reflect the chosen option before cancelling.")
+        }
+
         tap(app.buttons["today.addRecord"], in: app)
         tap(app.buttons["recap.cancel"], in: app)
         XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["Discard"].exists)
         XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0)
         tap(app.buttons["today.addRecord"], in: app)
-        tap(app.buttons["recap.kind.Solo"], in: app)
+        selectOption("recap.kind.Solo")
         tap(app.buttons["recap.cancel"], in: app)
         cancelConfirmation("Edit", destructiveAction: "Discard", in: app)
         XCTAssertTrue(app.buttons["recap.saveToolbar"].isHittable)
-        tap(app.buttons["recap.kind.Together"], in: app)
+        selectOption("recap.kind.Together")
         tap(app.buttons["recap.cancel"], in: app)
         XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10), "Reverting all changes should restore a clean draft.")
         tap(app.buttons["today.addRecord"], in: app)
@@ -1581,11 +1592,11 @@ final class PrivateMomentsUITests: XCTestCase {
             ("recap.rating.5", "recap.rating.4"),
             ("recap.tag.Relaxed", "recap.tag.Relaxed")
         ] {
-            tap(app.buttons[changed], in: app)
+            selectOption(changed)
             tap(app.buttons["recap.cancel"], in: app)
             cancelConfirmation("Edit", destructiveAction: "Discard", in: app)
             XCTAssertTrue(app.buttons[changed].isSelected, "Keeping the draft must preserve the selection.")
-            tap(app.buttons[original], in: app)
+            selectOption(original, selected: changed != original)
             tap(app.buttons["recap.cancel"], in: app)
             XCTAssertTrue(app.buttons["today.addRecord"].waitForExistence(timeout: 10))
             tap(app.buttons["today.addRecord"], in: app)
