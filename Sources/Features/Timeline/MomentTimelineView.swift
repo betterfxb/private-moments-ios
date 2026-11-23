@@ -23,6 +23,21 @@ struct MomentTimelineView: View {
     @State private var isSearchPresented = false
     @FocusState private var isSearchFocused: Bool
     @State private var searchSubmissionID = UUID()
+    #if DEBUG
+    @State private var searchTiming = TimelinePerformance.enabled ? TimelineSearchTiming() : nil
+    #endif
+
+    private var searchInput: Binding<String> {
+        #if DEBUG
+        if let searchTiming {
+            return Binding(get: { searchText }, set: { value in
+                if value != searchText { searchTiming.receiveInput(length: value.count) }
+                searchText = value
+            })
+        }
+        #endif
+        return $searchText
+    }
 
     private var query: String { searchText.trimmingCharacters(in: .whitespacesAndNewlines) }
     private var hasActiveFilters: Bool { filter != .all || !query.isEmpty }
@@ -94,6 +109,9 @@ struct MomentTimelineView: View {
                             .font(.system(.subheadline, design: .rounded).weight(.medium))
                             .foregroundStyle(AppColors.secondaryText)
                             .accessibilityIdentifier("timeline.resultCount")
+                            #if DEBUG
+                            .modifier(TimelineSearchLayoutTiming(timing: searchTiming, results: matches.count, element: .count))
+                            #endif
                             .id("timeline.results")
 
                         // Keep supporting controls before an unbounded result
@@ -109,6 +127,9 @@ struct MomentTimelineView: View {
                                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                                         to: nil, from: nil, for: nil)
                                 }
+                                #if DEBUG
+                                searchTiming?.reset()
+                                #endif
                                 searchText = ""
                                 filter = .all
                                 isSearchPresented = false
@@ -137,6 +158,12 @@ struct MomentTimelineView: View {
                                         .buttonStyle(.plain)
                                         .accessibilityHint("Opens the private details for this moment")
                                         .accessibilityIdentifier("moment.row")
+                                        #if DEBUG
+                                        .modifier(TimelineSearchLayoutTiming(
+                                            timing: matches.count == 1 ? searchTiming : nil,
+                                            results: matches.count, element: .row
+                                        ))
+                                        #endif
                                     }
                                 }
                             }
@@ -173,11 +200,14 @@ struct MomentTimelineView: View {
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Your moments")
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $searchText, isPresented: $isSearchPresented, prompt: "Search moments")
+        .searchable(text: searchInput, isPresented: $isSearchPresented, prompt: "Search moments")
         .modifier(TimelineSearchSubmission(focus: $isSearchFocused) {
             searchSubmissionID = UUID()
         })
         .task { store.reload() }
+        #if DEBUG
+        .onDisappear { searchTiming?.reset() }
+        #endif
     }
 
     @ViewBuilder
@@ -256,17 +286,96 @@ private enum TimelinePerformance {
     }
 }
 
+@MainActor
+private final class TimelineSearchTiming: NSObject {
+    enum Element: String { case count, row }
+
+    private struct Input {
+        let length: Int
+        let started: TimeInterval
+    }
+
+    private var sequence = 0
+    private var input: Input?
+    private var observedElements: Set<Element> = []
+    private var displayLink: CADisplayLink?
+    private var countLayout: (at: TimeInterval, results: Int)?
+
+    var pendingSequence: Int? { input == nil ? nil : sequence }
+
+    func receiveInput(length: Int) {
+        reset()
+        guard length > 0 else { return }
+        sequence += 1
+        let started = ProcessInfo.processInfo.systemUptime
+        input = Input(length: length, started: started)
+        TimelinePerformance.logger.notice("input sequence=\(self.sequence, privacy: .public) queryLength=\(length, privacy: .public) uptimeMs=\(started * 1_000, privacy: .public)")
+    }
+
+    func recordLayout(sequence: Int, results: Int, element: Element) {
+        guard sequence == self.sequence, let input, observedElements.insert(element).inserted else { return }
+        let now = ProcessInfo.processInfo.systemUptime
+        TimelinePerformance.logger.notice("layout element=\(element.rawValue, privacy: .public) sequence=\(sequence, privacy: .public) queryLength=\(input.length, privacy: .public) results=\(results, privacy: .public) ms=\((now - input.started) * 1_000, privacy: .public)")
+        guard element == .count else { return }
+        countLayout = (now, results)
+        let link = CADisplayLink(target: self, selector: #selector(nextRefresh(_:)))
+        displayLink = link
+        link.add(to: .main, forMode: .common)
+    }
+
+    @objc private func nextRefresh(_ link: CADisplayLink) {
+        link.invalidate()
+        displayLink = nil
+        guard let input, let countLayout else { return }
+        let now = ProcessInfo.processInfo.systemUptime
+        // A display refresh callback is a timing boundary, not proof of presentation.
+        TimelinePerformance.logger.notice("refresh sequence=\(self.sequence, privacy: .public) queryLength=\(input.length, privacy: .public) results=\(countLayout.results, privacy: .public) ms=\((now - input.started) * 1_000, privacy: .public) afterLayoutMs=\((now - countLayout.at) * 1_000, privacy: .public)")
+    }
+
+    func reset() {
+        displayLink?.invalidate()
+        displayLink = nil
+        input = nil
+        countLayout = nil
+        observedElements.removeAll()
+    }
+}
+
+private struct TimelineSearchLayoutTiming: ViewModifier {
+    let timing: TimelineSearchTiming?
+    let results: Int
+    let element: TimelineSearchTiming.Element
+
+    func body(content: Content) -> some View {
+        if let timing {
+            let sequence = timing.pendingSequence
+            content.onGeometryChange(for: Int?.self) { geometry in
+                geometry.size.height > 0 ? sequence : nil
+            } action: { sequence in
+                if let sequence { timing.recordLayout(sequence: sequence, results: results, element: element) }
+            }
+        } else {
+            content
+        }
+    }
+}
+
 private struct TimelineScrollTiming: ViewModifier {
     @State private var scrollStarted: TimeInterval?
+    @State private var decelerationStarted: TimeInterval?
 
     func body(content: Content) -> some View {
         if #available(iOS 18.0, *), TimelinePerformance.enabled {
             content.onScrollPhaseChange { _, phase in
                 if phase == .interacting, scrollStarted == nil {
                     scrollStarted = TimelinePerformance.start()
+                } else if phase == .decelerating, scrollStarted != nil {
+                    decelerationStarted = TimelinePerformance.start()
                 } else if phase == .idle, let started = scrollStarted {
-                    TimelinePerformance.logger.notice("scroll settledMs=\(TimelinePerformance.elapsed(since: started), privacy: .public)")
+                    let deceleration = decelerationStarted.map(TimelinePerformance.elapsed(since:)) ?? 0
+                    TimelinePerformance.logger.notice("scroll settledMs=\(TimelinePerformance.elapsed(since: started), privacy: .public) decelerationMs=\(deceleration, privacy: .public)")
                     scrollStarted = nil
+                    decelerationStarted = nil
                 }
             }
         } else {

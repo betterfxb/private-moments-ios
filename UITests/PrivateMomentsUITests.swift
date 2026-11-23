@@ -73,6 +73,15 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(XCTWaiter.wait(for: [matching], timeout: 15), .completed)
             XCTAssertEqual(search.value as? String, "baseline-target")
             print("Performance UI count=1000 sample=\(sample) searchTypingToMatchSeconds=\(ProcessInfo.processInfo.systemUptime - searchStarted)")
+            let submitStarted = ProcessInfo.processInfo.systemUptime
+            guard submitTimelineSearch(language: "en", app: app) else { return }
+            let rowRevealed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                !app.keyboards.firstMatch.exists && rows.firstMatch.isHittable
+            }, object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [rowRevealed], timeout: 15), .completed)
+            XCTAssertEqual(count.label, "1 moment")
+            XCTAssertEqual(search.value as? String, "baseline-target")
+            print("Performance UI count=1000 sample=\(sample) searchSubmitToRowSeconds=\(ProcessInfo.processInfo.systemUptime - submitStarted)")
             app.terminate()
         }
     }
