@@ -22,6 +22,7 @@ enum AppColors {
     static let onDarkSecondary = Color(uiColor: color(0xCCB8C5))
     static let onDarkAccent = Color(uiColor: color(0xF3A5BE))
     static let homeCover = adaptive(light: 0x352923, dark: 0x2A201C)
+    static let homeCoverNavigation = Color(uiColor: color(0x2A201C))
     static let homeCoverGlow = adaptive(light: 0x604336, dark: 0x4D3429)
     static let homeCoverText = Color(uiColor: color(0xFFF1E1))
     static let homeCoverSecondary = Color(uiColor: color(0xDEC6B2))

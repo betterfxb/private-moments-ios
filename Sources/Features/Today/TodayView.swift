@@ -51,7 +51,7 @@ struct TodayView: View {
         .background(AppColors.homePaper.ignoresSafeArea())
         .navigationTitle(dynamicTypeSize.isAccessibilitySize ? LocalizedStringKey("Today") : LocalizedStringKey(""))
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(AppColors.homeCover, for: .navigationBar)
+        .toolbarBackground(AppColors.homeCoverNavigation, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .onChange(of: scenePhase) { _, phase in
@@ -122,6 +122,14 @@ struct TodayView: View {
         .background {
             RadialGradient(colors: [AppColors.homeCoverGlow, AppColors.homeCover],
                            center: .center, startRadius: 12, endRadius: 275)
+                .overlay(alignment: .top) {
+                    LinearGradient(
+                        colors: [AppColors.homeCoverNavigation, AppColors.homeCoverNavigation.opacity(0)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: 48)
+                }
         }
     }
 
@@ -129,9 +137,17 @@ struct TodayView: View {
         ZStack {
             ForEach(0..<2) { index in
                 Capsule()
-                    .fill(LinearGradient(colors: [AppColors.homeCoverAction, AppColors.homeCoverGlow],
-                                         startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .overlay { Capsule().strokeBorder(AppColors.homeCoverText.opacity(0.3)) }
+                    .fill(LinearGradient(
+                        stops: [
+                            .init(color: AppColors.homeCoverAction, location: 0),
+                            .init(color: AppColors.homeCoverText.opacity(0.9), location: 0.3),
+                            .init(color: AppColors.homeCoverAction.opacity(0.72), location: 0.58),
+                            .init(color: AppColors.homeCoverGlow, location: 1),
+                        ],
+                        startPoint: index == 0 ? .leading : .topLeading,
+                        endPoint: index == 0 ? .trailing : .bottomTrailing
+                    ))
+                    .overlay { Capsule().strokeBorder(AppColors.homeCoverText.opacity(0.16)) }
                     .frame(width: 48, height: 78)
                     .rotationEffect(.degrees(index == 0 ? -25 : 20))
                     .offset(x: index == 0 ? -18 : 17, y: index == 0 ? -3 : 4)
