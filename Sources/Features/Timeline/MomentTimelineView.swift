@@ -295,18 +295,26 @@ private final class TimelineSearchTiming: NSObject {
         let started: TimeInterval
     }
 
+    private struct ResultUpdate {
+        let sequence: Int
+        let input: Input
+        let results: Int
+        let observedAt: TimeInterval
+    }
+
     private var sequence = 0
+    private var lastResultUpdateSequence = 0
     private var input: Input?
     private var observedElements: Set<Element> = []
     private var displayLink: CADisplayLink?
-    private var countLayout: (at: TimeInterval, results: Int)?
+    private var pendingRefreshes: [ResultUpdate] = []
 
     var pendingSequence: Int? { input == nil ? nil : sequence }
 
     func receiveInput(length: Int) {
-        reset()
-        guard length > 0 else { return }
+        guard length > 0 else { reset(); return }
         sequence += 1
+        observedElements.removeAll()
         let started = ProcessInfo.processInfo.systemUptime
         input = Input(length: length, started: started)
         TimelinePerformance.logger.notice("input sequence=\(self.sequence, privacy: .public) queryLength=\(length, privacy: .public) uptimeMs=\(started * 1_000, privacy: .public)")
@@ -316,8 +324,15 @@ private final class TimelineSearchTiming: NSObject {
         guard sequence == self.sequence, let input, observedElements.insert(element).inserted else { return }
         let now = ProcessInfo.processInfo.systemUptime
         TimelinePerformance.logger.notice("layout element=\(element.rawValue, privacy: .public) sequence=\(sequence, privacy: .public) queryLength=\(input.length, privacy: .public) results=\(results, privacy: .public) ms=\((now - input.started) * 1_000, privacy: .public)")
-        guard element == .count else { return }
-        countLayout = (now, results)
+    }
+
+    func recordResultUpdate(sequence: Int, results: Int) {
+        guard sequence == self.sequence, sequence > lastResultUpdateSequence, let input else { return }
+        lastResultUpdateSequence = sequence
+        let now = ProcessInfo.processInfo.systemUptime
+        TimelinePerformance.logger.notice("result-update sequence=\(sequence, privacy: .public) queryLength=\(input.length, privacy: .public) results=\(results, privacy: .public) ms=\((now - input.started) * 1_000, privacy: .public)")
+        pendingRefreshes.append(ResultUpdate(sequence: sequence, input: input, results: results, observedAt: now))
+        guard displayLink == nil else { return }
         let link = CADisplayLink(target: self, selector: #selector(nextRefresh(_:)))
         displayLink = link
         link.add(to: .main, forMode: .common)
@@ -326,17 +341,19 @@ private final class TimelineSearchTiming: NSObject {
     @objc private func nextRefresh(_ link: CADisplayLink) {
         link.invalidate()
         displayLink = nil
-        guard let input, let countLayout else { return }
         let now = ProcessInfo.processInfo.systemUptime
-        // A display refresh callback is a timing boundary, not proof of presentation.
-        TimelinePerformance.logger.notice("refresh sequence=\(self.sequence, privacy: .public) queryLength=\(input.length, privacy: .public) results=\(countLayout.results, privacy: .public) ms=\((now - input.started) * 1_000, privacy: .public) afterLayoutMs=\((now - countLayout.at) * 1_000, privacy: .public)")
+        // Several updates can precede one refresh callback.
+        for update in pendingRefreshes {
+            TimelinePerformance.logger.notice("refresh sequence=\(update.sequence, privacy: .public) queryLength=\(update.input.length, privacy: .public) results=\(update.results, privacy: .public) ms=\((now - update.input.started) * 1_000, privacy: .public) afterUpdateMs=\((now - update.observedAt) * 1_000, privacy: .public)")
+        }
+        pendingRefreshes.removeAll()
     }
 
     func reset() {
         displayLink?.invalidate()
         displayLink = nil
         input = nil
-        countLayout = nil
+        pendingRefreshes.removeAll()
         observedElements.removeAll()
     }
 }
@@ -353,6 +370,9 @@ private struct TimelineSearchLayoutTiming: ViewModifier {
                 geometry.size.height > 0 ? sequence : nil
             } action: { sequence in
                 if let sequence { timing.recordLayout(sequence: sequence, results: results, element: element) }
+            }
+            .onChange(of: sequence, initial: true) { _, sequence in
+                if element == .count, let sequence { timing.recordResultUpdate(sequence: sequence, results: results) }
             }
         } else {
             content
