@@ -110,7 +110,10 @@ struct MomentTimelineView: View {
                             .foregroundStyle(AppColors.secondaryText)
                             .accessibilityIdentifier("timeline.resultCount")
                             #if DEBUG
-                            .modifier(TimelineSearchLayoutTiming(timing: searchTiming, results: matches.count, element: .count))
+                            .modifier(TimelineSearchLayoutTiming(
+                                timing: searchTiming, sequence: searchTiming?.pendingSequence,
+                                results: matches.count, element: .count
+                            ))
                             #endif
                             .id("timeline.results")
 
@@ -161,6 +164,7 @@ struct MomentTimelineView: View {
                                         #if DEBUG
                                         .modifier(TimelineSearchLayoutTiming(
                                             timing: matches.count == 1 ? searchTiming : nil,
+                                            sequence: searchTiming?.pendingSequence,
                                             results: matches.count, element: .row
                                         ))
                                         #endif
@@ -360,12 +364,12 @@ private final class TimelineSearchTiming: NSObject {
 
 private struct TimelineSearchLayoutTiming: ViewModifier {
     let timing: TimelineSearchTiming?
+    let sequence: Int?
     let results: Int
     let element: TimelineSearchTiming.Element
 
     func body(content: Content) -> some View {
         if let timing {
-            let sequence = timing.pendingSequence
             content.onGeometryChange(for: Int?.self) { geometry in
                 geometry.size.height > 0 ? sequence : nil
             } action: { sequence in
