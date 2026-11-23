@@ -1,6 +1,6 @@
 # Private Moments 项目记忆
 
-更新日期：2026-11-21（Asia/Tokyo）。源码、原始运行及证据收据共同确定验收范围。记录文档的提交可与实际受测源码不同。
+更新日期：2026-11-23（Asia/Tokyo）。源码、原始运行及证据收据共同确定验收范围。记录文档的提交可与实际受测源码不同。
 
 ## 项目与约束
 
@@ -16,6 +16,12 @@
 - SwiftData本机数据、显式schema V1、禁止托管CloudKit同步；JSON备份是用户主动导出，包含备注且未加密。不要把“本机优先”解释成已实现云同步或跨设备服务。
 - 界面支持英语和简体中文，跟随 iOS 应用语言。记录枚举保持稳定，用户备注保留原文。字符串目录 236 键，Xcode 项目审计 111 对象。
 - Debug UI测试使用每次独立UUID库，不重置正常日记；Release排除测试钩子。认证使用真实系统流程，不增加成功绕过路径。
+
+## 第二十批原生首页、千条搜索与旧系统验收
+
+- 「沉浸扉页」原型与原生首页在 375 × 667 点中文浅色空态及有记录状态并排。原生保留提前出现的「开始记录」和独立「补记」，用暖色渐变消除导航和封面的断层，中央叠形补上内部亮面。最大字号在原生前后实拍中保留两入口。源码 `e08b36b5e964391da92568b7fbbcbde900f620e2` 的四配置、54 应用单元、20 次 UI 和无签名 Debug／Release 通过。 [云端四配置](https://github.com/betterfxb/private-moments-ios/actions/runs/45165361425) · [原图、对照及收据](release/evidence/batch-20/45165361425/visual-verification.json)
+- 1,000 条合成记录在三个独立进程中首次查询得到唯一结果，末键后的完整过滤分组中位数 6.7 ms，SwiftUI 更新 12.3 ms。首字符到唯一行布局 51.6 ms，显示刷新回调波动明显。滚动约 2.49 s，其中系统减速约 2.31 s。保留现有搜索逻辑。XCTest 验证了真实键盘提交、收键盘、查询保留、结果可点及编辑和删除后的搜索一致性。新增测点只在 Debug 的隔离库启用。 [云端定向复验](https://github.com/betterfxb/private-moments-ios/actions/runs/45179488037) · [三次样本](release/evidence/batch-20/45179488037/metrics.json)
+- `legacy_ios17` 入口使用原有 Xcode 26.2，有需要时从 Apple 下载 iOS 17.5（21F79）。实际 Intel iPhone 15 模拟器通过搜索和完整补记两个原生用例，Release 编译最低版本为 17.0。首轮因测试点落在距窗口底部 22 点处而漏选，复验先滚入完整选项并核对选中状态；一个 ARM64 复验未获执行器。17.0 运行时以及真机 Files、VoiceOver、中文输入候选和外接键盘待验证。 [最终 iOS 17.5 复验](https://github.com/betterfxb/private-moments-ios/actions/runs/45187823979) · [第二十批报告和双语真机清单](release/UX-ACCEPTANCE-20.md)
 
 ## 第十九批 iPad 输入、时间线与本周回顾
 
