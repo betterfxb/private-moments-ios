@@ -30,6 +30,10 @@ on:
         description: Measure the 1,000-record timeline on the compact-light profile
         type: boolean
         default: false
+      legacy_ios17:
+        description: Run search submission and manual save on an actual iOS 17 simulator
+        type: boolean
+        default: false
       week_review_smoke:
         description: Run the local week query tests and bilingual Week in review flow
         type: boolean
@@ -70,6 +74,7 @@ concurrency:
 
 jobs:
   plan:
+    if: ${{ github.event_name != 'workflow_dispatch' || !inputs.legacy_ios17 }}
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
@@ -262,5 +267,37 @@ jobs:
         with:
           name: private-moments-xcresult-${{ matrix.profile }}
           path: ${{ runner.temp }}/PrivateMoments.xcresult
+          if-no-files-found: ignore
+          retention-days: 7
+
+  ios17-compatibility:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.legacy_ios17 }}
+    name: iOS 17 compatibility
+    runs-on: ${{ inputs.use_intel_runner && 'macos-15-intel' || 'macos-15' }}
+    timeout-minutes: 45
+    steps:
+      - name: Reject conflicting scopes
+        if: ${{ inputs.backup_smoke || inputs.input_smoke || inputs.performance_smoke || inputs.week_review_smoke || inputs.rotation_smoke }}
+        run: |
+          printf 'The iOS 17 compatibility run excludes the other focused scopes.\n' >&2
+          exit 1
+
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Select and verify pinned UI toolchain
+        run: python3 tools/distribute.py select-toolchain
+
+      - name: Verify the deployment floor and exercise iOS 17
+        env:
+          PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments-iOS17.xcresult
+        run: bash scripts/verify-ios17.sh
+
+      - name: Upload iOS 17 XCTest result bundle
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: private-moments-xcresult-ios17
+          path: ${{ runner.temp }}/PrivateMoments-iOS17.xcresult
           if-no-files-found: ignore
           retention-days: 7
