@@ -5,6 +5,7 @@ private enum AppRoute: Hashable {
     case session
     case manual(startedAt: Date)
     case recap(startedAt: Date, durationSeconds: Int, editingID: UUID?)
+    case recoveredRecap
     case detail(id: UUID)
     case weekReview
 }
@@ -26,8 +27,25 @@ struct RootView: View {
     @State private var selectedTab: AppTab = .today
     @State private var selectedTodayDate: Date?
     @Environment(AppLockController.self) private var privacyLock
+    @Environment(RecapDraftStore.self) private var drafts
     @Environment(\.scenePhase) private var scenePhase
     @State private var isSceneShielded = true
+    @State private var resumedDraft: RecapDraft?
+    @State private var showingDraftConflict = false
+    @State private var showingDraftDiscard = false
+    @State private var showingDraftError = false
+
+    private var showsPrivacyShield: Bool { isSceneShielded || privacyLock.isLocked }
+
+    private var pendingDraft: RecapDraft? {
+        guard let draft = drafts.draft, !draft.alreadySaved(in: store.moments) else { return nil }
+        return draft
+    }
+
+    private var canResumeDraft: Bool {
+        guard store.isStorageAvailable, !drafts.readFailed, let draft = pendingDraft else { return false }
+        return draft.editingID.map { id in store.moments.contains { $0.id == id } } ?? true
+    }
 
     init(modelContext: ModelContext) {
         var saveChanges: @MainActor (ModelContext) throws -> Void = { try $0.save() }
@@ -54,12 +72,20 @@ struct RootView: View {
                     TodayView(
                         selectedDate: $selectedTodayDate,
                         onStart: {
-                            sessionClock.startFresh()
-                            todayPath.append(.session)
+                            startWhenDraftIsClear {
+                                sessionClock.startFresh()
+                                todayPath.append(.session)
+                            }
                         },
                         onOpen: { id in todayPath.append(.detail(id: id)) },
-                        onAddRecord: { date in todayPath.append(.manual(startedAt: date)) },
-                        onOpenWeekReview: { todayPath.append(.weekReview) }
+                        onAddRecord: { date in
+                            startWhenDraftIsClear { todayPath.append(.manual(startedAt: date)) }
+                        },
+                        onOpenWeekReview: { todayPath.append(.weekReview) },
+                        hasPendingDraft: pendingDraft != nil || drafts.readFailed,
+                        canResumeDraft: canResumeDraft,
+                        onResumeDraft: resumeDraft,
+                        onDiscardDraft: { showingDraftDiscard = true }
                     )
                 }
                 .tabItem { Label("Today", systemImage: "heart.text.square") }
@@ -85,8 +111,10 @@ struct RootView: View {
             }
             .environment(store)
             .environment(sessionClock)
+            .accessibilityHidden(showsPrivacyShield)
+            .allowsHitTesting(!showsPrivacyShield)
 
-            if isSceneShielded || privacyLock.isLocked {
+            if showsPrivacyShield {
                 PrivacyLockView()
                     .transition(.opacity)
                     .zIndex(1)
@@ -98,6 +126,30 @@ struct RootView: View {
             isSceneShielded = newPhase != .active
             if newPhase != .active { privacyLock.lockForBackground() }
             if newPhase == .background { privacyLock.cancelAuthenticationForBackground() }
+            if newPhase == .active, drafts.readFailed { drafts.reload() }
+        }
+        .onChange(of: showsPrivacyShield) { _, isShielded in
+            if isShielded {
+                showingDraftConflict = false
+                showingDraftDiscard = false
+                showingDraftError = false
+            }
+        }
+        .alert("Unfinished draft", isPresented: $showingDraftConflict) {
+            if canResumeDraft { Button("Resume draft", action: resumeDraft) }
+            Button("Discard draft", role: .destructive, action: discardDraft)
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Resume or discard the unfinished draft before starting another.")
+        }
+        .alert("Discard draft?", isPresented: $showingDraftDiscard) {
+            Button("Discard draft", role: .destructive, action: discardDraft)
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("The unsaved changes will be removed from this device.")
+        }
+        .alert("Couldn't remove draft", isPresented: $showingDraftError) {
+            Button("OK", role: .cancel) { }
         }
     }
 
@@ -145,17 +197,36 @@ struct RootView: View {
                 onCancel: { finishRecap(editingID: editingID, path: path) },
                 onSaved: { _ in finishRecap(editingID: editingID, path: path, didSave: true) }
             )
+        case .recoveredRecap:
+            if let draft = resumedDraft {
+                let existing = draft.editingID.flatMap { id in store.moments.first { $0.id == id } }
+                RecapView(
+                    durationSeconds: draft.originalDuration,
+                    startedAt: draft.startedAt,
+                    existingMoment: existing,
+                    isManualEntry: draft.isManualEntry,
+                    recoveredDraft: draft,
+                    onCancel: { finishRecap(editingID: draft.editingID, path: path) },
+                    onSaved: { moment in
+                        finishRecap(editingID: draft.editingID, path: path, didSave: true)
+                        if draft.isManualEntry { selectedTodayDate = moment.occurredAt }
+                    }
+                )
+                .id(draft.id)
+            }
         case .weekReview:
             MomentReviewView { id in path.wrappedValue.append(.detail(id: id)) }
         case .detail(let id):
             MomentDetailView(
                 momentID: id,
                 onEdit: { moment in
-                    path.wrappedValue.append(.recap(
-                        startedAt: moment.occurredAt,
-                        durationSeconds: moment.durationSeconds,
-                        editingID: moment.id
-                    ))
+                    startWhenDraftIsClear {
+                        path.wrappedValue.append(.recap(
+                            startedAt: moment.occurredAt,
+                            durationSeconds: moment.durationSeconds,
+                            editingID: moment.id
+                        ))
+                    }
                 },
                 onDeleted: { pop(path) }
             )
@@ -170,6 +241,29 @@ struct RootView: View {
             selectedTab = .today
             path.wrappedValue.removeAll()
         }
+        resumedDraft = nil
+    }
+
+    private func startWhenDraftIsClear(_ action: () -> Void) {
+        if pendingDraft != nil || drafts.readFailed {
+            showingDraftConflict = true
+        } else if let savedDraft = drafts.draft, !drafts.discard(id: savedDraft.id) {
+            showingDraftError = true
+        } else {
+            action()
+        }
+    }
+
+    private func resumeDraft() {
+        guard !showsPrivacyShield, canResumeDraft, let draft = pendingDraft else { return }
+        resumedDraft = draft
+        todayPath = draft.editingID.map { [.detail(id: $0), .recoveredRecap] } ?? [.recoveredRecap]
+        selectedTab = .today
+    }
+
+    private func discardDraft() {
+        guard !showsPrivacyShield, pendingDraft != nil || drafts.readFailed else { return }
+        showingDraftError = !drafts.discard(id: pendingDraft?.id)
     }
 
     private func pop(_ path: Binding<[AppRoute]>) {

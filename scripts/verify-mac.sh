@@ -106,10 +106,13 @@ elif [[ "$WEEK_REVIEW_ONLY" == "1" ]]; then
     printf '\nFocused local Review and record retrieval validation.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/FavoritePersistenceTests)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/RecapDraftRecoveryTests)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/SemanticColorTests)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testFavoriteCanBeFoundWithSearchAfterRelaunch)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testWeekReviewShowsLocalRecords)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewTabBrowsesPeriodsAndOpensFilteredRecord)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewComparisonOpensRecordsFromPreviousMonth)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded)
 elif [[ "$INPUT_ONLY" == "1" ]]; then
     printf '\nFocused input gallery only; this is not full simulator acceptance.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
@@ -127,6 +130,7 @@ elif [[ "${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testWeekReviewShowsLocalRecords)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewTabBrowsesPeriodsAndOpensFilteredRecord)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewComparisonOpensRecordsFromPreviousMonth)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
     if [[ "$IPAD_TESTS" == "1" ]]; then
         TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadRotationContinuity)

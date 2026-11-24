@@ -70,7 +70,7 @@ enum PrivateStoreFactory {
     #endif
 
     @MainActor
-    static func makeContainer() throws -> ModelContainer {
+    static func makeJournal() throws -> (container: ModelContainer, drafts: RecapDraftStore) {
         let fileManager = FileManager.default
         let applicationSupport = try fileManager.url(
             for: .applicationSupportDirectory,
@@ -146,7 +146,7 @@ enum PrivateStoreFactory {
                 )
             }
         }
-        return container
+        return (container, RecapDraftStore(directory: directory))
     }
 
     #if DEBUG

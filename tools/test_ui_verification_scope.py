@@ -67,16 +67,19 @@ class VerificationScopeTests(unittest.TestCase):
                 self.assertIn('-skip-testing:' + PREFIX + excluded, lines)
                 self.assertNotIn('-skip-testing:' + PREFIX + expected, lines)
 
-    def test_week_review_smoke_checks_only_date_queries_and_the_native_flow(self):
+    def test_week_review_smoke_checks_journal_queries_and_native_flows(self):
         result = self.script(PRIVATE_MOMENTS_UI_WEEK_REVIEW_ONLY='1', PRIVATE_MOMENTS_UI_IPAD_TESTS='1')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
                          ['-only-testing:PrivateMomentsTests/MomentDateQueryTests',
                           '-only-testing:PrivateMomentsTests/FavoritePersistenceTests',
+                          '-only-testing:PrivateMomentsTests/RecapDraftRecoveryTests',
+                          '-only-testing:PrivateMomentsTests/SemanticColorTests',
                           '-only-testing:' + PREFIX + 'testFavoriteCanBeFoundWithSearchAfterRelaunch',
                           '-only-testing:' + PREFIX + 'testWeekReviewShowsLocalRecords',
                           '-only-testing:' + PREFIX + 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord',
-                          '-only-testing:' + PREFIX + 'testReviewComparisonOpensRecordsFromPreviousMonth'])
+                          '-only-testing:' + PREFIX + 'testReviewComparisonOpensRecordsFromPreviousMonth',
+                          '-only-testing:' + PREFIX + 'testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded'])
         for key in ['INPUT', 'BACKUP', 'PERFORMANCE', 'ROTATION']:
             conflict = self.script(PRIVATE_MOMENTS_UI_WEEK_REVIEW_ONLY='1', PRIVATE_MOMENTS_UI_IPAD_TESTS='1',
                                    **{f'PRIVATE_MOMENTS_UI_{key}_ONLY': '1'})

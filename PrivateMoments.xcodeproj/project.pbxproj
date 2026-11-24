@@ -24,6 +24,7 @@
 		B00000000000000000000016 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000016 /* TodayView.swift */; };
 		B00000000000000000000017 /* AppLockController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000017 /* AppLockController.swift */; };
 		B00000000000000000000018 /* MomentBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000018 /* MomentBackup.swift */; };
+		B0000000000000000000002A /* RecapDraftStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000002A /* RecapDraftStore.swift */; };
 		B00000000000000000000019 /* PrivateStoreFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000019 /* PrivateStoreFactory.swift */; };
 		B00000000000000000000020 /* PrivacyLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000020 /* PrivacyLockView.swift */; };
 		B00000000000000000000021 /* PrivateMomentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000021 /* PrivateMomentsTests.swift */; };
@@ -56,6 +57,7 @@
 		F00000000000000000000016 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		F00000000000000000000017 /* AppLockController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockController.swift; sourceTree = "<group>"; };
 		F00000000000000000000018 /* MomentBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentBackup.swift; sourceTree = "<group>"; };
+		F0000000000000000000002A /* RecapDraftStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecapDraftStore.swift; sourceTree = "<group>"; };
 		F00000000000000000000019 /* PrivateStoreFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateStoreFactory.swift; sourceTree = "<group>"; };
 		F00000000000000000000020 /* PrivacyLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyLockView.swift; sourceTree = "<group>"; };
 		F00000000000000000000021 /* PrivateMomentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateMomentsTests.swift; sourceTree = "<group>"; };
@@ -108,7 +110,7 @@
 		A00000000000000000000003 /* Products */ = {isa = PBXGroup; children = (900000000000000000000001 /* PrivateMoments.app */, 900000000000000000000002 /* PrivateMomentsTests.xctest */, 900000000000000000000003 /* PrivateMomentsUITests.xctest */,); name = Products; sourceTree = "<group>"; };
 		A00000000000000000000004 /* App */ = {isa = PBXGroup; children = (F00000000000000000000001 /* PrivateMomentsApp.swift */, F00000000000000000000002 /* RootView.swift */,); path = App; sourceTree = "<group>"; };
 		A00000000000000000000005 /* Application */ = {isa = PBXGroup; children = (F00000000000000000000003 /* MomentStore.swift */, F00000000000000000000004 /* SessionClock.swift */, F00000000000000000000017 /* AppLockController.swift */,); path = Application; sourceTree = "<group>"; };
-		A00000000000000000000006 /* Data */ = {isa = PBXGroup; children = (F00000000000000000000005 /* MomentEntity.swift */, F00000000000000000000006 /* SwiftDataMomentRepository.swift */, F00000000000000000000018 /* MomentBackup.swift */, F00000000000000000000019 /* PrivateStoreFactory.swift */,); path = Data; sourceTree = "<group>"; };
+		A00000000000000000000006 /* Data */ = {isa = PBXGroup; children = (F00000000000000000000005 /* MomentEntity.swift */, F00000000000000000000006 /* SwiftDataMomentRepository.swift */, F00000000000000000000018 /* MomentBackup.swift */, F00000000000000000000019 /* PrivateStoreFactory.swift */, F0000000000000000000002A /* RecapDraftStore.swift */,); path = Data; sourceTree = "<group>"; };
 		A00000000000000000000007 /* DesignSystem */ = {isa = PBXGroup; children = (F00000000000000000000007 /* DesignTokens.swift */, F00000000000000000000008 /* MomentComponents.swift */,); path = DesignSystem; sourceTree = "<group>"; };
 		A00000000000000000000008 /* Domain */ = {isa = PBXGroup; children = (F00000000000000000000009 /* Moment.swift */, F00000000000000000000010 /* MomentRepository.swift */,); path = Domain; sourceTree = "<group>"; };
 		A00000000000000000000009 /* Features */ = {isa = PBXGroup; children = (A00000000000000000000010 /* Detail */, A00000000000000000000011 /* Recap */, A00000000000000000000012 /* Session */, A00000000000000000000013 /* Settings */, A00000000000000000000014 /* Timeline */, A00000000000000000000015 /* Today */,); path = Features; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				B00000000000000000000029 /* MomentReviewView.swift in Sources */,
 				B00000000000000000000017 /* AppLockController.swift in Sources */,
 				B00000000000000000000018 /* MomentBackup.swift in Sources */,
+				B0000000000000000000002A /* RecapDraftStore.swift in Sources */,
 				B00000000000000000000019 /* PrivateStoreFactory.swift in Sources */,
 				B00000000000000000000020 /* PrivacyLockView.swift in Sources */,
 				B00000000000000000000022 /* AppLocalization.swift in Sources */,

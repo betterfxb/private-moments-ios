@@ -4,12 +4,17 @@ struct TodayView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(MomentStore.self) private var store
+    @Environment(RecapDraftStore.self) private var drafts
     @Environment(\.scenePhase) private var scenePhase
     @Binding var selectedDate: Date?
     let onStart: () -> Void
     let onOpen: (UUID) -> Void
     let onAddRecord: (Date) -> Void
     let onOpenWeekReview: () -> Void
+    let hasPendingDraft: Bool
+    let canResumeDraft: Bool
+    let onResumeDraft: () -> Void
+    let onDiscardDraft: () -> Void
     @State private var showingDatePicker = false
     @State private var dateToView = Date.now
 
@@ -159,6 +164,7 @@ struct TodayView: View {
 
     private var journal: some View {
         VStack(alignment: .leading, spacing: AppSpacing.section) {
+            if hasPendingDraft { draftNotice }
             if !store.isStorageAvailable {
                 StorageRecoveryCard(
                     message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
@@ -232,6 +238,33 @@ struct TodayView: View {
             UnevenRoundedRectangle(topLeadingRadius: 26, topTrailingRadius: 26)
                 .fill(AppColors.homePaper)
         }
+    }
+
+    private var draftNotice: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Unfinished draft", systemImage: "square.and.pencil")
+                .font(.system(.headline, design: .serif))
+                .foregroundStyle(AppColors.text)
+                .accessibilityAddTraits(.isHeader)
+            if canResumeDraft {
+                Button(action: onResumeDraft) { Label("Resume draft", systemImage: "arrow.right") }
+                    .buttonStyle(SecondaryActionButtonStyle())
+                    .accessibilityIdentifier("today.resumeDraft")
+            } else {
+                Text("This draft can't be resumed right now.")
+                    .font(.subheadline)
+                    .foregroundStyle(AppColors.secondaryText)
+                if drafts.readFailed {
+                    Button("Reload", action: drafts.reload)
+                        .frame(minHeight: 44)
+                }
+            }
+            Button("Discard draft", role: .destructive, action: onDiscardDraft)
+                .foregroundStyle(AppColors.destructive)
+                .frame(minHeight: 44)
+                .accessibilityIdentifier("today.discardDraft")
+        }
+        .modifier(JournalPanel())
     }
 
     private var calendarSheet: some View {

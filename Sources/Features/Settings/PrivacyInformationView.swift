@@ -44,6 +44,10 @@ struct PrivacyInformationView: View {
                     body: "Entries remain in the app until you delete them. Copies at export destinations are handled separately."
                 )
                 infoCard(
+                    title: "Unfinished draft",
+                    body: "The app keeps one unfinished draft on this device until you save or discard it. JSON backups include saved entries only."
+                )
+                infoCard(
                     title: "Storage protection",
                     body: "The app requests iOS file protection and exclusion from device backups. Backup exclusion is best effort and is not guaranteed."
                 )

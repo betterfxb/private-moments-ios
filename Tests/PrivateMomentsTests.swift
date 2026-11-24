@@ -965,6 +965,74 @@ final class MomentStoreRecoveryTests: XCTestCase {
 }
 
 @MainActor
+final class RecapDraftRecoveryTests: XCTestCase {
+    func testDraftRoundTripKeepsInvalidTimingAndPrivateTextUntilExplicitDiscard() throws {
+        try withDraftDirectory { directory in
+            let original = makeDraft(id: UUID(), seconds: "60")
+            let initial = RecapDraftStore(directory: directory)
+            XCTAssertFalse(initial.readFailed)
+            XCTAssertTrue(initial.save(original))
+            XCTAssertFalse(initial.save(makeDraft(id: UUID())))
+
+            let relaunched = RecapDraftStore(directory: directory)
+            XCTAssertEqual(relaunched.draft, original)
+            XCTAssertTrue(relaunched.discard(id: UUID()))
+            XCTAssertEqual(relaunched.draft, original)
+            XCTAssertTrue(relaunched.discard(id: original.id))
+            XCTAssertNil(RecapDraftStore(directory: directory).draft)
+        }
+    }
+
+    func testUnreadableDraftCannotBeOverwrittenWithoutExplicitDiscard() throws {
+        try withDraftDirectory { directory in
+            let file = directory.appendingPathComponent("RecapDraft.json")
+            let corrupt = Data("truncated-draft".utf8)
+            try corrupt.write(to: file)
+            let store = RecapDraftStore(directory: directory)
+            let draft = makeDraft(id: UUID())
+            XCTAssertTrue(store.readFailed)
+            XCTAssertFalse(store.save(draft))
+            XCTAssertEqual(try Data(contentsOf: file), corrupt)
+            XCTAssertTrue(store.discard())
+            XCTAssertTrue(store.save(draft))
+            XCTAssertEqual(RecapDraftStore(directory: directory).draft, draft)
+        }
+    }
+
+    func testRelaunchAfterRecordCommitDoesNotOfferTheSameDraftTwice() {
+        let id = UUID()
+        let draft = makeDraft(id: id)
+        let saved = Moment(id: id, occurredAt: draft.occurredAt, durationSeconds: 61,
+                           mood: .happy, kind: .solo, rating: 5, tags: ["Relaxed"], privateNote: "Synthetic note")
+        XCTAssertTrue(draft.alreadySaved(in: [saved]))
+        XCTAssertFalse(draft.alreadySaved(in: []))
+        let edit = makeDraft(id: UUID(), editingID: id)
+        XCTAssertTrue(edit.alreadySaved(in: [saved]))
+        var changed = saved
+        changed.privateNote = "Previously saved text"
+        XCTAssertFalse(edit.alreadySaved(in: [changed]))
+    }
+
+    private func makeDraft(id: UUID, editingID: UUID? = nil, seconds: String = "01") -> RecapDraft {
+        let date = Date(timeIntervalSince1970: 10_000)
+        return RecapDraft(id: id, editingID: editingID, isManualEntry: editingID == nil,
+                          startedAt: date, originalDuration: 0, occurredAt: date,
+                          minutes: "1", seconds: seconds, mood: .happy, kind: .solo, rating: 5,
+                          tags: ["Relaxed"], note: "Synthetic note\n")
+    }
+
+    private func withDraftDirectory(_ run: (URL) throws -> Void) throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false)
+        defer {
+            do { try FileManager.default.removeItem(at: directory) }
+            catch { XCTFail("Could not remove isolated draft directory: \(error)") }
+        }
+        try run(directory)
+    }
+}
+
+@MainActor
 final class FavoritePersistenceTests: XCTestCase {
     func testFailedFavoriteSaveLeavesTheRecordUnchanged() {
         let original = makeRecoveryMoment()

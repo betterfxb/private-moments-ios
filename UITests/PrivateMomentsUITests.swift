@@ -406,6 +406,66 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let app = makeApp(language: language)
+            let add = app.buttons["today.addRecord"]
+            let note = app.textViews["recap.note"]
+            let resume = app.buttons["today.resumeDraft"]
+            let firstNote = "Tea after a long day.\nKept the quiet."
+            app.launch()
+            tap(add, in: app)
+            tap(app.buttons["recap.mood.Happy"], in: app)
+            replaceNumber(app.textFields["recap.minutes"], with: "3", in: app)
+            dismissRecapKeyboard(language: language, app: app)
+            tap(note, in: app)
+            note.typeText(firstNote)
+            dismissRecapKeyboard(language: language, app: app)
+            app.terminate()
+            app.launch()
+
+            revealFully(from: resume, through: resume, in: app)
+            XCTAssertGreaterThanOrEqual(resume.frame.height, 44)
+            assertAboveBottomTabBar(resume, message: "The recovery action must clear the tab bar.", app: app)
+            XCTAssertEqual(resume.label, english ? "Resume draft" : "继续草稿")
+            XCTAssertFalse(app.staticTexts[firstNote].exists, "Today does not preview draft notes.")
+            capture("Draft-recovery-\(language)", app, stableSurface: resume)
+            resume.tap()
+            XCTAssertTrue(note.waitForExistence(timeout: 10))
+            XCTAssertEqual(note.value as? String, firstNote)
+            XCTAssertEqual(app.textFields["recap.minutes"].value as? String, "3")
+            XCTAssertTrue(app.buttons["recap.mood.Happy"].isSelected)
+            tap(app.buttons["recap.saveToolbar"], in: app)
+            XCTAssertTrue(add.waitForExistence(timeout: 10))
+            app.terminate()
+            app.launch()
+            XCTAssertTrue(add.waitForExistence(timeout: 10))
+            XCTAssertFalse(resume.exists)
+            selectTab("Timeline", "时间线", language: language, app: app)
+            XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, english ? "1 moment" : "1 条记录")
+            tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
+            let savedNote = app.staticTexts["detail.note"]
+            reveal(savedNote, in: app)
+            XCTAssertEqual(savedNote.label, firstNote)
+            tap(app.buttons["detail.editToolbar"], in: app)
+            tap(app.buttons["recap.mood.Calm"], in: app)
+            app.terminate()
+            app.launch()
+            tap(resume, in: app)
+            XCTAssertTrue(app.buttons["recap.mood.Calm"].isSelected)
+            tap(app.buttons["recap.cancel"], in: app)
+            tap(app.buttons[english ? "Discard" : "放弃"], in: app)
+            XCTAssertTrue(app.buttons["detail.editToolbar"].waitForExistence(timeout: 10))
+            XCTAssertTrue(app.staticTexts[english ? "Happy" : "愉悦"].exists)
+            app.terminate()
+            app.launch()
+            XCTAssertTrue(add.waitForExistence(timeout: 10))
+            XCTAssertFalse(resume.exists)
+            app.terminate()
+        }
+    }
+
     // The CI profile sets device, appearance and text size.
     // Each locale gets a separate persistent test store; no normal journal is reset.
     func testScreenGallery() throws {

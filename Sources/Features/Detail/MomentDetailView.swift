@@ -3,11 +3,13 @@ import SwiftUI
 struct MomentDetailView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(MomentStore.self) private var store
+    @Environment(RecapDraftStore.self) private var drafts
     let momentID: UUID
     let onEdit: (Moment) -> Void
     let onDeleted: () -> Void
 
     @State private var showingDeleteConfirmation = false
+    @State private var showingDraftRemovalError = false
 
     private var moment: Moment? {
         store.moments.first { $0.id == momentID }
@@ -57,11 +59,18 @@ struct MomentDetailView: View {
             titleVisibility: .visible
         ) {
             Button("Delete moment", role: .destructive) {
-                if store.delete(id: momentID) { onDeleted() }
+                if let draft = drafts.draft, draft.editingID == momentID, !drafts.discard(id: draft.id) {
+                    showingDraftRemovalError = true
+                } else if store.delete(id: momentID) {
+                    onDeleted()
+                }
             }
             Button("Cancel", role: .cancel) { }
         } message: {
-            Text("This removes the entry from this app's local journal. Any JSON backup you created remains unchanged.")
+            Text("This removes the entry and its unfinished edit. Any JSON backup you created remains unchanged.")
+        }
+        .alert("Couldn't remove draft", isPresented: $showingDraftRemovalError) {
+            Button("OK", role: .cancel) { }
         }
     }
 

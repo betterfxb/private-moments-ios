@@ -21,9 +21,11 @@ struct SettingsView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.scenePhase) private var scenePhase
     @Environment(MomentStore.self) private var store
+    @Environment(RecapDraftStore.self) private var drafts
     @Environment(AppLockController.self) private var privacyLock
     @State private var showingDeleteAllConfirmation = false
     @State private var deletionCompleted = false
+    @State private var showingDraftRemovalError = false
     @State private var showingExportWarning = false
     @State private var isExporting = false
     @State private var isImporting = false
@@ -63,11 +65,15 @@ struct SettingsView: View {
         ) {
             Button("Delete all moments", role: .destructive) {
                 backupStatus = nil
-                deletionCompleted = store.deleteAll()
+                if drafts.discard() { deletionCompleted = store.deleteAll() }
+                else { showingDraftRemovalError = true }
             }
             Button("Cancel", role: .cancel) { }
         } message: {
-            Text("This removes current journal entries and private notes from this app's local database. Any JSON backup remains unchanged.")
+            Text("This removes saved entries, private notes and the unfinished draft from this device. Any JSON backup remains unchanged.")
+        }
+        .alert("Couldn't remove draft", isPresented: $showingDraftRemovalError) {
+            Button("OK", role: .cancel) { }
         }
         .alert("Backup", isPresented: $showingExportWarning) {
             Button("Export") { prepareBackupExport() }

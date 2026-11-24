@@ -109,4 +109,5 @@ xcodebuild "${build_arguments[@]}" -configuration Debug \
     "-only-testing:$test_target/testReviewTabBrowsesPeriodsAndOpensFilteredRecord" \
     "-only-testing:$test_target/testReviewComparisonOpensRecordsFromPreviousMonth" \
     "-only-testing:PrivateMomentsTests/FavoritePersistenceTests" \
+    "-only-testing:PrivateMomentsTests/RecapDraftRecoveryTests" \
     test

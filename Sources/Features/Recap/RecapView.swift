@@ -4,6 +4,7 @@ struct RecapView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(MomentStore.self) private var store
+    @Environment(RecapDraftStore.self) private var drafts
     @Environment(\.scenePhase) private var scenePhase
     let durationSeconds: Int
     let startedAt: Date
@@ -18,7 +19,9 @@ struct RecapView: View {
     @State private var selectedTags: Set<String>
     @State private var privateNote: String
     @State private var timing: MomentTimingDraft
-    @State private var newMomentID = UUID()
+    @State private var draftID: UUID
+    @State private var draftWriteFailed = false
+    @State private var showingDraftRemovalError = false
     @State private var showingSaveError = false
     @State private var showingDiscardConfirmation = false
     @State private var showingOccurrencePicker = false
@@ -73,7 +76,9 @@ struct RecapView: View {
         return result
     }
 
-    init(durationSeconds: Int, startedAt: Date = .now, existingMoment: Moment? = nil, isManualEntry: Bool = false, onCancel: @escaping () -> Void, onSaved: @escaping (Moment) -> Void) {
+    init(durationSeconds: Int, startedAt: Date = .now, existingMoment: Moment? = nil,
+         isManualEntry: Bool = false, recoveredDraft: RecapDraft? = nil,
+         onCancel: @escaping () -> Void, onSaved: @escaping (Moment) -> Void) {
         self.durationSeconds = durationSeconds
         self.startedAt = startedAt
         self.existingMoment = existingMoment
@@ -86,12 +91,20 @@ struct RecapView: View {
                                             tags: Set(existingMoment?.tags ?? ["Connected"]),
                                             note: existingMoment?.privateNote ?? "")
         initialReflection = reflection
-        _mood = State(initialValue: reflection.mood)
-        _kind = State(initialValue: reflection.kind)
-        _rating = State(initialValue: reflection.rating)
-        _selectedTags = State(initialValue: reflection.tags)
-        _privateNote = State(initialValue: reflection.note)
-        _timing = State(initialValue: MomentTimingDraft(startedAt: startedAt, durationSeconds: durationSeconds, existingMoment: existingMoment))
+        _draftID = State(initialValue: recoveredDraft?.id ?? UUID())
+        _mood = State(initialValue: recoveredDraft?.mood ?? reflection.mood)
+        _kind = State(initialValue: recoveredDraft?.kind ?? reflection.kind)
+        _rating = State(initialValue: recoveredDraft?.rating ?? reflection.rating)
+        _selectedTags = State(initialValue: recoveredDraft.map { Set($0.tags) } ?? reflection.tags)
+        _privateNote = State(initialValue: recoveredDraft?.note ?? reflection.note)
+        var draftTiming = MomentTimingDraft(startedAt: startedAt, durationSeconds: durationSeconds,
+                                            existingMoment: existingMoment)
+        if let recoveredDraft {
+            draftTiming.occurredAt = recoveredDraft.occurredAt
+            draftTiming.minutes = recoveredDraft.minutes
+            draftTiming.seconds = recoveredDraft.seconds
+        }
+        _timing = State(initialValue: draftTiming)
     }
 
     var body: some View {
@@ -132,7 +145,7 @@ struct RecapView: View {
                     .accessibilityIdentifier("recap.cancel")
                     .foregroundStyle(AppColors.accentText)
                     .alert("Discard changes?", isPresented: $showingDiscardConfirmation) {
-                        Button("Discard", role: .destructive, action: onCancel)
+                        Button("Discard", role: .destructive, action: discardAndClose)
                         Button("Edit", role: .cancel) { }
                     } message: {
                         Text("Unsaved edits will be lost.")
@@ -161,6 +174,16 @@ struct RecapView: View {
             }
         }
         .accessibilityAction(.escape) { requestCancel() }
+        .onChange(of: draftSnapshot, initial: true) { _, snapshot in
+            if hasUnsavedContent {
+                draftWriteFailed = !drafts.save(snapshot)
+            } else {
+                draftWriteFailed = !drafts.discard(id: snapshot.id)
+            }
+        }
+        .alert("Couldn't remove draft", isPresented: $showingDraftRemovalError) {
+            Button("OK", role: .cancel) { }
+        }
         .alert("Not saved", isPresented: $showingSaveError) {
             if !store.isStorageAvailable {
                 Button("Reload") { store.reload() }
@@ -211,7 +234,9 @@ struct RecapView: View {
             Text(AppLocalization.format("%@ · %@", timing.occurredAt.formatted(date: .abbreviated, time: .shortened), SessionClock.durationText((try? timing.durationSeconds()) ?? durationSeconds)))
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(AppColors.secondaryText)
-            Text("Unsaved changes are lost if you force-quit the app.")
+            Text(draftWriteFailed
+                ? LocalizedStringKey("Draft recovery is unavailable. Save before closing the app.")
+                : LocalizedStringKey("Unfinished drafts stay on this device."))
                 .font(.system(.footnote, design: .rounded))
                 .foregroundStyle(AppColors.secondaryText)
         }
@@ -495,7 +520,7 @@ struct RecapView: View {
             return
         }
         let moment = Moment(
-            id: existingMoment?.id ?? newMomentID,
+            id: existingMoment?.id ?? draftID,
             occurredAt: timing.occurredAt,
             durationSeconds: seconds,
             mood: mood,
@@ -507,14 +532,29 @@ struct RecapView: View {
             favorite: existingMoment?.favorite
         )
         showingSaveError = !store.add(moment)
-        if !showingSaveError { onSaved(moment) }
+        if !showingSaveError {
+            drafts.discard(id: draftID)
+            onSaved(moment)
+        }
+    }
+
+    private var draftSnapshot: RecapDraft {
+        RecapDraft(id: draftID, editingID: existingMoment?.id, isManualEntry: isManualEntry,
+                   startedAt: startedAt, originalDuration: durationSeconds, occurredAt: timing.occurredAt,
+                   minutes: timing.minutes, seconds: timing.seconds, mood: mood, kind: kind,
+                   rating: rating, tags: selectedTags.sorted(), note: privateNote)
+    }
+
+    private func discardAndClose() {
+        if drafts.discard(id: draftID) { onCancel() }
+        else { showingDraftRemovalError = true }
     }
 
     private func requestCancel() {
         if hasUnsavedContent {
             showingDiscardConfirmation = true
         } else {
-            onCancel()
+            discardAndClose()
         }
     }
 }
