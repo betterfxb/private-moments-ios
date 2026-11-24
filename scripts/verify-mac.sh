@@ -103,8 +103,9 @@ elif [[ "$PERFORMANCE_ONLY" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testLargeJournalInteractionBaseline)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testTimelineSearchReflectsEditAndDeletion)
 elif [[ "$WEEK_REVIEW_ONLY" == "1" ]]; then
-    printf '\nFocused local Week in review validation.\n'
+    printf '\nFocused local Review and record retrieval validation.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testFavoriteCanBeFoundWithSearchAfterRelaunch)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testWeekReviewShowsLocalRecords)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewTabBrowsesPeriodsAndOpensFilteredRecord)
 elif [[ "$INPUT_ONLY" == "1" ]]; then
@@ -120,6 +121,7 @@ elif [[ "$BACKUP_ONLY" == "1" ]]; then
     fi
 elif [[ "${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testFavoriteCanBeFoundWithSearchAfterRelaunch)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testWeekReviewShowsLocalRecords)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewTabBrowsesPeriodsAndOpensFilteredRecord)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)

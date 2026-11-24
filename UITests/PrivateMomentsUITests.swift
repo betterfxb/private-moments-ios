@@ -142,6 +142,49 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertFalse(result.exists)
     }
 
+    func testFavoriteCanBeFoundWithSearchAfterRelaunch() {
+        for language in ["en", "zh-Hans"] {
+            let app = makeApp(language: language)
+            app.launch()
+            for mood in ["Calm", "Happy"] {
+                tap(app.buttons["today.addRecord"], in: app)
+                tap(app.buttons["recap.mood.\(mood)"], in: app)
+                tap(app.buttons["recap.saveToolbar"], in: app)
+                XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
+            }
+            selectTab("Timeline", "时间线", language: language, app: app)
+            let rows = app.buttons.matching(identifier: "moment.row")
+            tap(rows.firstMatch, in: app)
+            let bookmark = app.buttons["detail.favorite"]
+            XCTAssertTrue(bookmark.waitForExistence(timeout: 5), "A saved moment can be bookmarked from detail.")
+            XCTAssertEqual(bookmark.label, language == "en" ? "Add to favorites" : "添加收藏")
+            tap(bookmark, in: app)
+            XCTAssertEqual(bookmark.label, language == "en" ? "Remove from favorites" : "取消收藏")
+            capture("Favorite-detail-\(language)", app, stableSurface: bookmark)
+
+            app.terminate()
+            app.launch()
+            selectTab("Timeline", "时间线", language: language, app: app)
+            tap(app.buttons["timeline.favorites"], in: app)
+            let total = app.staticTexts["timeline.resultCount"]
+            XCTAssertEqual(total.label, language == "en" ? "1 moment" : "1 条记录")
+            capture("Favorite-timeline-\(language)", app, stableSurface: total)
+            let search = revealTimelineSearch(in: app)
+            tap(search, in: app)
+            search.typeText("Happy")
+            guard submitTimelineSearch(language: language, app: app) else { return }
+            XCTAssertEqual(total.label, language == "en" ? "1 moment" : "1 条记录")
+            tap(rows.firstMatch, in: app)
+            XCTAssertEqual(bookmark.label, language == "en" ? "Remove from favorites" : "取消收藏")
+            tap(bookmark, in: app)
+            goBack(app)
+            XCTAssertEqual(total.label, language == "en" ? "0 moments" : "0 条记录")
+            tap(app.buttons["timeline.clearFilters"], in: app)
+            XCTAssertEqual(total.label, language == "en" ? "2 moments" : "2 条记录")
+            app.terminate()
+        }
+    }
+
     func testReviewTabBrowsesPeriodsAndOpensFilteredRecord() {
         for language in ["en", "zh-Hans"] {
             let english = language == "en"
