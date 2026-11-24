@@ -72,6 +72,7 @@ class VerificationScopeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
                          ['-only-testing:PrivateMomentsTests/MomentDateQueryTests',
+                          '-only-testing:PrivateMomentsTests/FavoritePersistenceTests',
                           '-only-testing:' + PREFIX + 'testFavoriteCanBeFoundWithSearchAfterRelaunch',
                           '-only-testing:' + PREFIX + 'testWeekReviewShowsLocalRecords',
                           '-only-testing:' + PREFIX + 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord'])

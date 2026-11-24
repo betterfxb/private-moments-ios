@@ -4,11 +4,43 @@ import SwiftData
 enum PrivateMomentsSchemaV1: VersionedSchema {
     static var versionIdentifier = Schema.Version(1, 0, 0)
     static var models: [any PersistentModel.Type] { [MomentEntity.self] }
+
+    @Model
+    final class MomentEntity {
+        @Attribute(.unique) var id: UUID
+        var occurredAt: Date
+        var durationSeconds: Int
+        var moodRawValue: String
+        var kindRawValue: String
+        var rating: Int
+        private var tagsJSON: String
+        var privateNote: String
+        var approximatePlace: String?
+
+        init(moment: Moment) throws {
+            id = moment.id
+            occurredAt = moment.occurredAt
+            durationSeconds = moment.durationSeconds
+            moodRawValue = moment.mood.rawValue
+            kindRawValue = moment.kind.rawValue
+            rating = moment.rating
+            tagsJSON = String(decoding: try JSONEncoder().encode(moment.tags), as: UTF8.self)
+            privateNote = moment.privateNote
+            approximatePlace = moment.approximatePlace
+        }
+    }
+}
+
+enum PrivateMomentsSchemaV2: VersionedSchema {
+    static var versionIdentifier = Schema.Version(2, 0, 0)
+    static var models: [any PersistentModel.Type] { [MomentEntity.self] }
 }
 
 enum PrivateMomentsMigrationPlan: SchemaMigrationPlan {
-    static var schemas: [any VersionedSchema.Type] { [PrivateMomentsSchemaV1.self] }
-    static var stages: [MigrationStage] { [] }
+    static var schemas: [any VersionedSchema.Type] { [PrivateMomentsSchemaV1.self, PrivateMomentsSchemaV2.self] }
+    static var stages: [MigrationStage] {
+        [.lightweight(fromVersion: PrivateMomentsSchemaV1.self, toVersion: PrivateMomentsSchemaV2.self)]
+    }
 }
 
 enum PrivateStoreFactory {
@@ -75,7 +107,7 @@ enum PrivateStoreFactory {
             ofItemAtPath: directory.path
         )
 
-        let schema = Schema(versionedSchema: PrivateMomentsSchemaV1.self)
+        let schema = Schema(versionedSchema: PrivateMomentsSchemaV2.self)
         let storeURL = directory.appendingPathComponent("PrivateMoments.store")
         let configuration = ModelConfiguration(
             "PrivateMoments",

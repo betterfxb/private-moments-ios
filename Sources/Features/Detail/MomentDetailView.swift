@@ -39,9 +39,12 @@ struct MomentDetailView: View {
         .toolbar {
             if let moment {
                 if #available(iOS 26.0, *) {
+                    ToolbarItem(placement: .topBarTrailing) { toolbarFavorite(moment) }
+                        .sharedBackgroundVisibility(.hidden)
                     ToolbarItem(placement: .topBarTrailing) { toolbarEdit(moment) }
                         .sharedBackgroundVisibility(.hidden)
                 } else {
+                    ToolbarItem(placement: .topBarTrailing) { toolbarFavorite(moment) }
                     ToolbarItem(placement: .topBarTrailing) { toolbarEdit(moment) }
                 }
             }
@@ -61,8 +64,22 @@ struct MomentDetailView: View {
     }
 
     private func toolbarEdit(_ moment: Moment) -> some View {
-        Button { onEdit(moment) } label: {
-            Label("Edit reflection", systemImage: "pencil")
+        detailToolbarButton("Edit reflection", symbol: "pencil") { onEdit(moment) }
+            .accessibilityIdentifier("detail.editToolbar")
+    }
+
+    private func toolbarFavorite(_ moment: Moment) -> some View {
+        detailToolbarButton(moment.isFavorite ? "Remove from favorites" : "Add to favorites",
+                            symbol: moment.isFavorite ? "bookmark.fill" : "bookmark") {
+            store.toggleFavorite(id: moment.id)
+        }
+        .accessibilityIdentifier("detail.favorite")
+    }
+
+    private func detailToolbarButton(_ title: LocalizedStringKey, symbol: String,
+                                     action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: symbol)
                 .labelStyle(.iconOnly)
                 .font(.body.weight(.semibold))
                 .frame(minWidth: 44, minHeight: 44)
@@ -72,7 +89,6 @@ struct MomentDetailView: View {
         .buttonStyle(.plain)
         .foregroundStyle(store.isStorageAvailable ? AppColors.accentText : AppColors.secondaryText)
         .disabled(!store.isStorageAvailable)
-        .accessibilityIdentifier("detail.editToolbar")
     }
 
     @ViewBuilder

@@ -105,6 +105,7 @@ elif [[ "$PERFORMANCE_ONLY" == "1" ]]; then
 elif [[ "$WEEK_REVIEW_ONLY" == "1" ]]; then
     printf '\nFocused local Review and record retrieval validation.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/FavoritePersistenceTests)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testFavoriteCanBeFoundWithSearchAfterRelaunch)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testWeekReviewShowsLocalRecords)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewTabBrowsesPeriodsAndOpensFilteredRecord)

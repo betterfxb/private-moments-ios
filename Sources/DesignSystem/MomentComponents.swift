@@ -35,6 +35,12 @@ struct MomentRow: View {
                 HStack(spacing: 6) {
                     Text(moment.kind.displayName)
                         .font(.system(.headline, design: .rounded).weight(.semibold))
+                    if moment.isFavorite {
+                        Image(systemName: "bookmark.fill")
+                            .font(.caption2)
+                            .foregroundStyle(AppColors.accentText)
+                            .accessibilityLabel("Favorite moment")
+                    }
                     if !moment.privateNote.isEmpty {
                         Image(systemName: "lock.fill")
                             .font(.caption2)

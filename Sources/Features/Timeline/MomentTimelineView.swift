@@ -20,6 +20,7 @@ struct MomentTimelineView: View {
 
     @State private var searchText = ""
     @State private var filter: MomentFilter = .all
+    @State private var favoritesOnly = false
     @State private var isSearchPresented = false
     @FocusState private var isSearchFocused: Bool
     @State private var searchSubmissionID = UUID()
@@ -40,7 +41,7 @@ struct MomentTimelineView: View {
     }
 
     private var query: String { searchText.trimmingCharacters(in: .whitespacesAndNewlines) }
-    private var hasActiveFilters: Bool { filter != .all || !query.isEmpty }
+    private var hasActiveFilters: Bool { filter != .all || favoritesOnly || !query.isEmpty }
 
     private var results: [Moment] {
         #if DEBUG
@@ -56,10 +57,11 @@ struct MomentTimelineView: View {
             }
         }
         #endif
-        guard currentFilter != .all || !currentQuery.isEmpty else { return moments }
+        guard currentFilter != .all || favoritesOnly || !currentQuery.isEmpty else { return moments }
         return moments.filter { moment in
             let matchesKind = currentFilter == .all || moment.kind.rawValue == currentFilter.rawValue
-            guard matchesKind, !currentQuery.isEmpty else { return matchesKind }
+            guard matchesKind, !favoritesOnly || moment.isFavorite else { return false }
+            guard !currentQuery.isEmpty else { return true }
             let searchable = [
                 moment.occurredAt.formatted(date: .abbreviated, time: .shortened),
                 moment.mood.rawValue,
@@ -135,6 +137,7 @@ struct MomentTimelineView: View {
                                 #endif
                                 searchText = ""
                                 filter = .all
+                                favoritesOnly = false
                                 isSearchPresented = false
                             } label: {
                                 Label("Clear filters", systemImage: "line.3.horizontal.decrease.circle")
@@ -237,11 +240,13 @@ struct MomentTimelineView: View {
     }
 
     private var emptyTitle: LocalizedStringKey {
-        hasActiveFilters ? "No matching moments" : "No moments here yet"
+        if favoritesOnly, filter == .all, query.isEmpty { return "No favorites yet" }
+        return hasActiveFilters ? "No matching moments" : "No moments here yet"
     }
 
     private var emptyMessage: LocalizedStringKey {
-        hasActiveFilters
+        if favoritesOnly, filter == .all, query.isEmpty { return "Bookmark a moment from its details to find it here." }
+        return hasActiveFilters
             ? "Try another word or change the selected filter."
             : "Your timeline will appear here after you save a moment."
     }
@@ -264,6 +269,20 @@ struct MomentTimelineView: View {
                 .foregroundStyle(AppColors.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("timeline.searchScope")
+
+            Button { favoritesOnly.toggle() } label: {
+                Label("Favorites only", systemImage: favoritesOnly ? "bookmark.fill" : "bookmark")
+                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                    .foregroundStyle(AppColors.accentText)
+                    .padding(.horizontal, 14)
+                    .frame(minHeight: 44)
+                    .background(favoritesOnly ? AppColors.accentWash : AppColors.surface, in: Capsule())
+                    .overlay { Capsule().strokeBorder(AppColors.separator) }
+                    .contentShape(Capsule())
+            }
+            .buttonStyle(.plain)
+            .accessibilityAddTraits(favoritesOnly ? .isSelected : [])
+            .accessibilityIdentifier("timeline.favorites")
         }
     }
 

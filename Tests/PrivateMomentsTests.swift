@@ -937,6 +937,79 @@ final class MomentStoreRecoveryTests: XCTestCase {
 }
 
 @MainActor
+final class FavoritePersistenceTests: XCTestCase {
+    func testFailedFavoriteSaveLeavesTheRecordUnchanged() {
+        let original = makeRecoveryMoment()
+        let repository = InMemoryMomentRepository(moments: [original])
+        let store = MomentStore(repository: repository)
+        repository.failedMutation = .save
+        XCTAssertFalse(store.toggleFavorite(id: original.id))
+        XCTAssertEqual(store.moments, [original])
+        XCTAssertFalse(store.isStorageAvailable)
+        XCTAssertEqual(repository.moments, [original])
+        repository.failedMutation = nil
+        store.reload()
+        XCTAssertTrue(store.toggleFavorite(id: original.id))
+        XCTAssertTrue(store.moments.first?.isFavorite == true)
+    }
+
+    func testLegacyBackupDoesNotClearLocalFavoriteDuringMerge() throws {
+        let id = try XCTUnwrap(UUID(uuidString: "44444444-1234-4567-8901-222222222222"))
+        let legacy = Data(#"{"formatVersion":1,"createdAt":0,"moments":[{"id":"44444444-1234-4567-8901-222222222222","occurredAt":0,"durationSeconds":108,"mood":"Happy","kind":"Together","rating":4,"tags":["Connected"],"privateNote":"Earlier snapshot"}]}"#.utf8)
+        let imported = try XCTUnwrap(MomentBackupCodec.decode(legacy).moments.first)
+        XCTAssertFalse(imported.isFavorite)
+        XCTAssertEqual(imported.id, id)
+        let local = Moment(id: id, durationSeconds: 30, mood: .calm, rating: 3, favorite: true)
+        let store = MomentStore(repository: InMemoryMomentRepository(moments: [local]))
+        XCTAssertEqual(store.mergeBackup([imported]), 0)
+        XCTAssertEqual(store.moments.first?.privateNote, "Earlier snapshot")
+        XCTAssertTrue(try XCTUnwrap(store.moments.first).isFavorite)
+
+        var cleared = local
+        cleared.favorite = false
+        let newer = try MomentBackupCodec.decode(MomentBackupCodec.encode([cleared])).moments
+        XCTAssertEqual(store.mergeBackup(newer), 0)
+        XCTAssertFalse(try XCTUnwrap(store.moments.first).isFavorite)
+        XCTAssertTrue(store.replaceWithBackup([imported]))
+        XCTAssertFalse(try XCTUnwrap(store.moments.first).isFavorite)
+    }
+
+    func testFavoritePersistsAfterMigrationAndSurvivesBackupRoundTrip() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false)
+        defer {
+            do { try FileManager.default.removeItem(at: directory) }
+            catch { XCTFail("Could not remove isolated store: \(error)") }
+        }
+        let url = directory.appendingPathComponent("Journal.store")
+        let original = makeRecoveryMoment()
+        do {
+            let schema = Schema(versionedSchema: PrivateMomentsSchemaV1.self)
+            let legacy = try ModelContainer(for: schema, configurations: [
+                ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .none)
+            ])
+            legacy.mainContext.insert(try PrivateMomentsSchemaV1.MomentEntity(moment: original))
+            try legacy.mainContext.save()
+        }
+        let schema = Schema(versionedSchema: PrivateMomentsSchemaV2.self)
+        let migrated = try ModelContainer(for: schema, migrationPlan: PrivateMomentsMigrationPlan.self, configurations: [
+            ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .none)
+        ])
+        let store = MomentStore(repository: SwiftDataMomentRepository(modelContext: migrated.mainContext))
+        XCTAssertEqual(store.moments, [original])
+        XCTAssertTrue(store.toggleFavorite(id: original.id))
+        let reader = SwiftDataMomentRepository(modelContext: ModelContext(migrated))
+        let reloaded = try XCTUnwrap(reader.fetchAll().first)
+        XCTAssertTrue(reloaded.isFavorite)
+        XCTAssertEqual(reloaded.privateNote, original.privateNote)
+        XCTAssertEqual(reloaded.tags, original.tags)
+        let restored = try MomentBackupCodec.decode(MomentBackupCodec.encode([reloaded])).moments
+        XCTAssertEqual(restored, [reloaded])
+        XCTAssertTrue(try XCTUnwrap(restored.first).isFavorite)
+    }
+}
+
+@MainActor
 final class SwiftDataRecoveryTests: XCTestCase {
     func testSaveFailureRollsBackEveryMutationInRealModelContext() throws {
         for operation in RepositoryMutation.allCases {
@@ -1007,7 +1080,7 @@ final class SwiftDataRecoveryTests: XCTestCase {
     }
 
     private func makeContainer() throws -> ModelContainer {
-        let schema = Schema(versionedSchema: PrivateMomentsSchemaV1.self)
+        let schema = Schema(versionedSchema: PrivateMomentsSchemaV2.self)
         return try ModelContainer(
             for: schema,
             migrationPlan: PrivateMomentsMigrationPlan.self,

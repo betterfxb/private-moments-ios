@@ -503,7 +503,8 @@ struct RecapView: View {
             rating: rating,
             tags: selectedTags.sorted(),
             privateNote: privateNote.trimmingCharacters(in: .whitespacesAndNewlines),
-            approximatePlace: existingMoment?.approximatePlace
+            approximatePlace: existingMoment?.approximatePlace,
+            favorite: existingMoment?.favorite
         )
         showingSaveError = !store.add(moment)
         if !showingSaveError { onSaved(moment) }

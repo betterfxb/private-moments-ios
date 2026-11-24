@@ -31,6 +31,10 @@ struct Moment: Identifiable, Codable, Hashable, Sendable {
     var tags: [String]
     var privateNote: String
     var approximatePlace: String?
+    // Missing in older backups and stores. An explicit false records a removal.
+    var favorite: Bool?
+
+    var isFavorite: Bool { favorite == true }
 
     init(
         id: UUID = UUID(),
@@ -41,7 +45,8 @@ struct Moment: Identifiable, Codable, Hashable, Sendable {
         rating: Int,
         tags: [String] = [],
         privateNote: String = "",
-        approximatePlace: String? = nil
+        approximatePlace: String? = nil,
+        favorite: Bool? = nil
     ) {
         self.id = id
         self.occurredAt = occurredAt
@@ -52,6 +57,7 @@ struct Moment: Identifiable, Codable, Hashable, Sendable {
         self.tags = tags
         self.privateNote = privateNote
         self.approximatePlace = approximatePlace
+        self.favorite = favorite
     }
 }
 
