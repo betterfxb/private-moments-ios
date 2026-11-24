@@ -34,7 +34,7 @@
 		B00000000000000000000026 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000027 /* Assets.xcassets */; };
 		B00000000000000000000027 /* PrivacyInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000028 /* PrivacyInformationView.swift */; };
 		B00000000000000000000028 /* PrivateMomentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000029 /* PrivateMomentsUITests.swift */; };
-		B00000000000000000000029 /* WeekReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000030 /* WeekReviewView.swift */; };
+		B00000000000000000000029 /* MomentReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000030 /* MomentReviewView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,7 +67,7 @@
 		F00000000000000000000027 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F00000000000000000000028 /* PrivacyInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyInformationView.swift; sourceTree = "<group>"; };
 		F00000000000000000000029 /* PrivateMomentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateMomentsUITests.swift; sourceTree = "<group>"; };
-		F00000000000000000000030 /* WeekReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekReviewView.swift; sourceTree = "<group>"; };
+		F00000000000000000000030 /* MomentReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentReviewView.swift; sourceTree = "<group>"; };
 		900000000000000000000001 /* PrivateMoments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PrivateMoments.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		900000000000000000000002 /* PrivateMomentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PrivateMomentsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		900000000000000000000003 /* PrivateMomentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PrivateMomentsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,7 +117,7 @@
 		A00000000000000000000012 /* Session */ = {isa = PBXGroup; children = (F00000000000000000000013 /* LiveSessionView.swift */,); path = Session; sourceTree = "<group>"; };
 		A00000000000000000000013 /* Settings */ = {isa = PBXGroup; children = (F00000000000000000000014 /* SettingsView.swift */, F00000000000000000000020 /* PrivacyLockView.swift */, F00000000000000000000028 /* PrivacyInformationView.swift */,); path = Settings; sourceTree = "<group>"; };
 		A00000000000000000000014 /* Timeline */ = {isa = PBXGroup; children = (F00000000000000000000015 /* MomentTimelineView.swift */,); path = Timeline; sourceTree = "<group>"; };
-		A00000000000000000000015 /* Today */ = {isa = PBXGroup; children = (F00000000000000000000016 /* TodayView.swift */, F00000000000000000000030 /* WeekReviewView.swift */,); path = Today; sourceTree = "<group>"; };
+		A00000000000000000000015 /* Today */ = {isa = PBXGroup; children = (F00000000000000000000016 /* TodayView.swift */, F00000000000000000000030 /* MomentReviewView.swift */,); path = Today; sourceTree = "<group>"; };
 		A00000000000000000000016 /* Tests */ = {isa = PBXGroup; children = (F00000000000000000000021 /* PrivateMomentsTests.swift */,); path = Tests; sourceTree = "<group>"; };
 		A00000000000000000000017 /* Support */ = {isa = PBXGroup; children = (F00000000000000000000022 /* AppLocalization.swift */,); path = Support; sourceTree = "<group>"; };
 		A00000000000000000000018 /* Resources */ = {isa = PBXGroup; children = (F00000000000000000000025 /* Localizable.xcstrings */, A00000000000000000000019 /* InfoPlist.strings */, F00000000000000000000026 /* PrivacyInfo.xcprivacy */, F00000000000000000000027 /* Assets.xcassets */,); path = Resources; sourceTree = "<group>"; };
@@ -221,7 +221,7 @@
 				B00000000000000000000014 /* SettingsView.swift in Sources */,
 				B00000000000000000000015 /* MomentTimelineView.swift in Sources */,
 				B00000000000000000000016 /* TodayView.swift in Sources */,
-				B00000000000000000000029 /* WeekReviewView.swift in Sources */,
+				B00000000000000000000029 /* MomentReviewView.swift in Sources */,
 				B00000000000000000000017 /* AppLockController.swift in Sources */,
 				B00000000000000000000018 /* MomentBackup.swift in Sources */,
 				B00000000000000000000019 /* PrivateStoreFactory.swift in Sources */,

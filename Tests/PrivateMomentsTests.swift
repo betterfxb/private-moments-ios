@@ -451,12 +451,12 @@ final class MomentDateQueryTests: XCTestCase {
     func testWeekReviewShowsEmptyAndSingleRecord() throws {
         let calendar = try calendar("Asia/Tokyo")
         let date = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 11, day: 20, hour: 13)))
-        let empty = try XCTUnwrap(MomentDateQuery.weekReview([], containing: date, calendar: calendar))
+        let empty = try XCTUnwrap(MomentDateQuery.review([], period: .week, containing: date, calendar: calendar))
         XCTAssertTrue(empty.moments.isEmpty)
         XCTAssertTrue(empty.moods.isEmpty)
 
         let saved = Moment(occurredAt: date, durationSeconds: 47, mood: .joyful, rating: 4)
-        let review = try XCTUnwrap(MomentDateQuery.weekReview([saved], containing: date, calendar: calendar))
+        let review = try XCTUnwrap(MomentDateQuery.review([saved], period: .week, containing: date, calendar: calendar))
         XCTAssertEqual(review.moments, [saved])
         XCTAssertEqual(review.moods.map(\.mood), [.joyful])
         XCTAssertEqual(review.moods.map(\.count), [1])
@@ -473,8 +473,8 @@ final class MomentDateQueryTests: XCTestCase {
         let middle = Moment(occurredAt: date, durationSeconds: 20, mood: .happy, rating: 4)
         let last = Moment(occurredAt: end.addingTimeInterval(-1), durationSeconds: 30, mood: .calm, rating: 4)
         let following = Moment(occurredAt: end, durationSeconds: 0, mood: .relaxed, rating: 4)
-        let review = try XCTUnwrap(MomentDateQuery.weekReview([following, last, middle, first, previous],
-                                                             containing: date, calendar: calendar))
+        let review = try XCTUnwrap(MomentDateQuery.review([following, last, middle, first, previous],
+                                                             period: .week, containing: date, calendar: calendar))
         XCTAssertEqual(review.interval.start, start)
         XCTAssertEqual(review.interval.end, end)
         XCTAssertEqual(review.moments, [last, middle, first])
@@ -490,11 +490,52 @@ final class MomentDateQueryTests: XCTestCase {
         let end = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 15)))
         let last = Moment(occurredAt: end.addingTimeInterval(-1), durationSeconds: 0, mood: .relaxed, rating: 4)
         let following = Moment(occurredAt: end, durationSeconds: 0, mood: .relaxed, rating: 4)
-        let review = try XCTUnwrap(MomentDateQuery.weekReview([following, last], containing: date, calendar: calendar))
+        let review = try XCTUnwrap(MomentDateQuery.review([following, last], period: .week, containing: date, calendar: calendar))
         XCTAssertEqual(review.interval.start, start)
         XCTAssertEqual(review.interval.end, end)
         XCTAssertEqual(review.interval.duration, 167 * 3_600)
         XCTAssertEqual(review.moments, [last])
+    }
+
+    func testMonthReviewGroupsLocalDaysAndKeepsPeriodCountsWhenFiltered() throws {
+        let calendar = try calendar("Asia/Tokyo")
+        func date(_ month: Int, _ day: Int, hour: Int = 0) throws -> Date {
+            try XCTUnwrap(calendar.date(from: DateComponents(year: 2027, month: month, day: day, hour: hour)))
+        }
+        let start = try date(1, 1)
+        let middle = try date(1, 12)
+        let end = try date(2, 1)
+        let early = Moment(occurredAt: start, durationSeconds: 60, mood: .happy, rating: 4)
+        let calm = Moment(occurredAt: try date(1, 12, hour: 8), durationSeconds: 60, mood: .calm, rating: 4)
+        let happy = Moment(occurredAt: try date(1, 12, hour: 18), durationSeconds: 60, mood: .happy, rating: 4)
+        let outsideBefore = Moment(occurredAt: start.addingTimeInterval(-1), durationSeconds: 60, mood: .happy, rating: 4)
+        let outsideAfter = Moment(occurredAt: end, durationSeconds: 60, mood: .happy, rating: 4)
+        let review = try XCTUnwrap(MomentDateQuery.review([outsideAfter, happy, calm, early, outsideBefore],
+                                                         period: .month, containing: middle, calendar: calendar))
+        XCTAssertEqual(review.interval, DateInterval(start: start, end: end))
+        XCTAssertEqual(review.moments, [happy, calm, early])
+        let groups = review.dayGroups(calendar: calendar)
+        XCTAssertEqual(groups.map(\.date), [middle, start])
+        XCTAssertEqual(groups.map(\.moments), [[happy, calm], [early]])
+        XCTAssertEqual(review.dayGroups(matching: .happy, calendar: calendar).map(\.moments), [[happy], [early]])
+        XCTAssertTrue(review.dayGroups(matching: .relaxed, calendar: calendar).isEmpty)
+        XCTAssertEqual(review.moods.map(\.count), [1, 2])
+    }
+
+    func testReviewNavigationMovesBetweenCalendarPeriodStarts() throws {
+        var calendar = try calendar("America/Los_Angeles")
+        calendar.firstWeekday = 2
+        func date(_ year: Int, _ month: Int, _ day: Int) throws -> Date {
+            try XCTUnwrap(calendar.date(from: DateComponents(year: year, month: month, day: day)))
+        }
+        let december = try date(2026, 12, 31)
+        XCTAssertEqual(MomentReviewPeriod.month.date(byMoving: 1, from: december, calendar: calendar),
+                       try date(2027, 1, 1))
+        let daylightSavingWeek = try date(2026, 3, 8)
+        XCTAssertEqual(MomentReviewPeriod.week.date(byMoving: 1, from: daylightSavingWeek, calendar: calendar),
+                       try date(2026, 3, 9))
+        XCTAssertEqual(MomentReviewPeriod.week.date(byMoving: -1, from: daylightSavingWeek, calendar: calendar),
+                       try date(2026, 2, 23))
     }
 }
 

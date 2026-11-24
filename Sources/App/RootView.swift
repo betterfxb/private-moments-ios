@@ -12,6 +12,7 @@ private enum AppRoute: Hashable {
 private enum AppTab: Hashable {
     case today
     case timeline
+    case review
     case settings
 }
 
@@ -21,6 +22,7 @@ struct RootView: View {
     @State private var sessionClock = SessionClock()
     @State private var todayPath: [AppRoute] = []
     @State private var timelinePath: [AppRoute] = []
+    @State private var reviewPath: [AppRoute] = []
     @State private var selectedTab: AppTab = .today
     @State private var selectedTodayDate: Date?
     @Environment(AppLockController.self) private var privacyLock
@@ -68,6 +70,14 @@ struct RootView: View {
                 }
                 .tabItem { Label("Timeline", systemImage: "calendar") }
                 .tag(AppTab.timeline)
+
+                navigationStack(path: $reviewPath) {
+                    MomentReviewView(showsPeriodControls: true) { id in
+                        reviewPath.append(.detail(id: id))
+                    }
+                }
+                .tabItem { Label("Review", systemImage: "book.closed") }
+                .tag(AppTab.review)
 
                 NavigationStack { SettingsView() }
                     .tabItem { Label("Settings", systemImage: "slider.horizontal.3") }
@@ -136,7 +146,7 @@ struct RootView: View {
                 onSaved: { _ in finishRecap(editingID: editingID, path: path, didSave: true) }
             )
         case .weekReview:
-            WeekReviewView { id in path.wrappedValue.append(.detail(id: id)) }
+            MomentReviewView { id in path.wrappedValue.append(.detail(id: id)) }
         case .detail(let id):
             MomentDetailView(
                 momentID: id,

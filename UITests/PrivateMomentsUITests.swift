@@ -148,7 +148,7 @@ final class PrivateMomentsUITests: XCTestCase {
             let app = makeApp(language: language)
             app.launch()
             XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 15))
-            let tab = app.tabBars.buttons[english ? "Review" : "回顾"]
+            let tab = app.buttons.matching(NSPredicate(format: "label == %@", english ? "Review" : "回顾")).firstMatch
             guard tab.waitForExistence(timeout: 5) else {
                 captureFailure("Review-tab-unavailable-\(language)", app)
                 return XCTFail("Review must have its own native tab.")
@@ -167,8 +167,11 @@ final class PrivateMomentsUITests: XCTestCase {
 
             XCTAssertTrue(count.waitForExistence(timeout: 10))
             XCTAssertEqual(count.label, zero)
+            XCTAssertEqual(week.label, english ? "Week" : "周")
+            XCTAssertEqual(month.label, english ? "Month" : "月")
             XCTAssertTrue(week.isSelected)
             XCTAssertFalse(next.isEnabled)
+            XCTAssertEqual(empty.label, english ? "No moments in this period" : "这段时间还没有记录")
             capture("Review-tab-empty-\(language)", app, stableSurface: range)
 
             selectTab("Today", "今天", language: language, app: app)
@@ -176,8 +179,10 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(app.buttons["recap.saveToolbar"], in: app)
             XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
             tap(app.buttons["today.addRecord"], in: app)
-            tap(app.buttons["recap.mood.Happy"], in: app)
-            XCTAssertTrue(app.buttons["recap.mood.Happy"].isSelected)
+            let happyChoice = app.buttons["recap.mood.Happy"]
+            revealFully(from: happyChoice, through: happyChoice, in: app)
+            happyChoice.tap()
+            XCTAssertTrue(happyChoice.isSelected)
             tap(app.buttons["recap.saveToolbar"], in: app)
             XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
             tab.tap()
@@ -219,6 +224,7 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(records.count, 1)
             let record = records.firstMatch
             revealFully(from: record, through: record, in: app)
+            XCTAssertTrue(app.staticTexts.matching(identifier: "review.recordDay").firstMatch.exists)
             capture("Review-tab-filtered-\(language)", app, stableSurface: record)
             record.tap()
             XCTAssertTrue(app.buttons["detail.edit"].waitForExistence(timeout: 10))

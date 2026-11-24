@@ -189,15 +189,33 @@ enum MomentTimingError: LocalizedError, Equatable {
     }
 }
 
+enum MomentReviewPeriod: Hashable {
+    case week
+    case month
+
+    private var component: Calendar.Component {
+        self == .week ? .weekOfYear : .month
+    }
+
+    func interval(containing date: Date, calendar: Calendar) -> DateInterval? {
+        calendar.dateInterval(of: component, for: date)
+    }
+
+    func date(byMoving offset: Int, from date: Date, calendar: Calendar) -> Date? {
+        guard let start = interval(containing: date, calendar: calendar)?.start else { return nil }
+        return calendar.date(byAdding: component, value: offset, to: start)
+    }
+}
+
 enum MomentDateQuery {
     static func onDay(_ moments: [Moment], date: Date, calendar: Calendar = .current) -> [Moment] {
         guard let interval = calendar.dateInterval(of: .day, for: date) else { return [] }
         return within(moments, interval: interval)
     }
 
-    static func weekReview(_ moments: [Moment], containing date: Date, calendar: Calendar = .current) -> MomentWeekReview? {
-        guard let interval = calendar.dateInterval(of: .weekOfYear, for: date) else { return nil }
-        return MomentWeekReview(interval: interval, moments: within(moments, interval: interval))
+    static func review(_ moments: [Moment], period: MomentReviewPeriod, containing date: Date, calendar: Calendar) -> MomentReview? {
+        guard let interval = period.interval(containing: date, calendar: calendar) else { return nil }
+        return MomentReview(interval: interval, moments: within(moments, interval: interval))
     }
 
     private static func within(_ moments: [Moment], interval: DateInterval) -> [Moment] {
@@ -206,15 +224,28 @@ enum MomentDateQuery {
     }
 }
 
-struct MomentWeekReview {
+struct MomentReview {
     struct MoodCount: Identifiable {
         let mood: MomentMood
         let count: Int
         var id: MomentMood { mood }
     }
 
+    struct DayGroup: Identifiable {
+        let date: Date
+        let moments: [Moment]
+        var id: Date { date }
+    }
+
     let interval: DateInterval
     let moments: [Moment]
+
+    func dayGroups(matching mood: MomentMood? = nil, calendar: Calendar) -> [DayGroup] {
+        let matches = mood.map { mood in moments.filter { $0.mood == mood } } ?? moments
+        return Dictionary(grouping: matches, by: { calendar.startOfDay(for: $0.occurredAt) })
+            .map { DayGroup(date: $0.key, moments: $0.value) }
+            .sorted { $0.date > $1.date }
+    }
 
     var moods: [MoodCount] {
         var counts: [MomentMood: Int] = [:]

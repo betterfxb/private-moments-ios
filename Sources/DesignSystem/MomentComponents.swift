@@ -14,9 +14,10 @@ struct MomentRow: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let moment: Moment
     var fillsWidth = false
+    var includesDate = true
 
     private var dateText: String {
-        moment.occurredAt.formatted(date: .abbreviated, time: .shortened)
+        moment.occurredAt.formatted(date: includesDate ? .abbreviated : .omitted, time: .shortened)
     }
 
     var body: some View {
