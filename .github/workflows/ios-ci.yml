@@ -35,7 +35,7 @@ on:
         type: boolean
         default: false
       week_review_smoke:
-        description: Run local date queries, bilingual Review and record retrieval flows
+        description: Run local journal tests and bilingual retrieval, Review and draft flows
         type: boolean
         default: false
       rotation_smoke:
@@ -69,7 +69,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ios-validation-${{ github.ref }}
+  group: ios-validation-${{ github.ref }}-${{ inputs.legacy_ios17 && 'ios17' || inputs.week_review_smoke && format('journal-{0}', inputs.backup_smoke_profile) || 'standard' }}
   cancel-in-progress: true
 
 jobs:
