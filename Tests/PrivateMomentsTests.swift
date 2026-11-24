@@ -537,6 +537,33 @@ final class MomentDateQueryTests: XCTestCase {
         XCTAssertEqual(MomentReviewPeriod.week.date(byMoving: -1, from: daylightSavingWeek, calendar: calendar),
                        try date(2026, 2, 23))
     }
+
+    func testComparisonUsesAdjacentLocalPeriodsAndKeepsTiedFeelings() throws {
+        var calendar = try calendar("America/Los_Angeles")
+        calendar.firstWeekday = 1
+        let currentDate = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 8)))
+        let lastMonth = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 2, day: 28)))
+        let lastWeek = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 1)))
+        let current = [MomentMood.calm, .calm, .happy, .happy].map {
+            Moment(occurredAt: currentDate, durationSeconds: 18, mood: $0, rating: 4)
+        }
+        let previousWeek = Moment(occurredAt: lastWeek, durationSeconds: 18, mood: .connected, rating: 4)
+        let previousMonth = Moment(occurredAt: lastMonth, durationSeconds: 18, mood: .joyful, rating: 4)
+        let all = current + [previousWeek, previousMonth]
+        let week = try XCTUnwrap(MomentDateQuery.review(all, period: .week, containing: currentDate, calendar: calendar))
+        let comparedWeek = try XCTUnwrap(MomentDateQuery.previousReview(all, period: .week, from: week, calendar: calendar))
+        XCTAssertEqual(comparedWeek.moments, [previousWeek])
+        XCTAssertEqual(comparedWeek.interval.end, week.interval.start)
+        XCTAssertEqual(week.commonMoods.map(\.mood), [.calm, .happy])
+        XCTAssertTrue(comparedWeek.commonMoods.isEmpty)
+
+        let month = try XCTUnwrap(MomentDateQuery.review(all, period: .month, containing: currentDate, calendar: calendar))
+        let comparedMonth = try XCTUnwrap(MomentDateQuery.previousReview(all, period: .month, from: month, calendar: calendar))
+        XCTAssertEqual(comparedMonth.moments, [previousMonth])
+        XCTAssertEqual(month.dayCount(calendar: calendar), 2)
+        XCTAssertEqual(comparedMonth.dayCount(calendar: calendar), 1)
+        XCTAssertNil(MomentDateQuery.previousReview(current, period: .month, from: month, calendar: calendar))
+    }
 }
 
 final class MomentValidationTests: XCTestCase {

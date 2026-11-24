@@ -367,6 +367,45 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testReviewComparisonOpensRecordsFromPreviousMonth() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let app = makeApp(language: language)
+            app.launchArguments.append("-pm-ui-test-review-comparison-fixture")
+            app.launch()
+            selectTab("Review", "回顾", language: language, app: app)
+            tap(app.buttons["review.month"], in: app)
+            let range = app.staticTexts["weekReview.range"]
+            let selectedRange = range.label
+            let compare = app.buttons["review.compare"]
+            XCTAssertEqual(compare.label, english ? "Compare with previous period" : "与上一周期对照")
+            tap(compare, in: app)
+            let selected = app.buttons["review.selected.records"]
+            let previous = app.buttons["review.previous.records"]
+            XCTAssertEqual(selected.label, english ? "1 moment" : "1 条记录")
+            XCTAssertEqual(previous.label, english ? "2 moments" : "2 条记录")
+            XCTAssertEqual(previous.value as? String, english ? "1 day with entries" : "1 天有记录")
+            XCTAssertFalse(app.buttons["review.comparisonMood.selected.Connected"].exists)
+            let mood = app.buttons["review.comparisonMood.previous.Calm"]
+            revealFully(from: mood, through: mood, in: app)
+            XCTAssertGreaterThanOrEqual(mood.frame.height, 44)
+            assertAboveBottomTabBar(mood, message: "The previous period action must clear the tab bar.", app: app)
+            capture("Review-comparison-\(language)", app, stableSurface: mood)
+            mood.tap()
+            XCTAssertNotEqual(range.label, selectedRange)
+            let records = app.buttons.matching(identifier: "weekReview.moment")
+            XCTAssertEqual(records.count, 2)
+            tap(records.firstMatch, in: app)
+            let note = app.staticTexts["detail.note"]
+            reveal(note, in: app)
+            XCTAssertEqual(note.label, "previous-month-second-entry")
+            goBack(app)
+            XCTAssertTrue(app.buttons["weekReview.mood.Calm"].isSelected)
+            XCTAssertFalse(compare.exists)
+            app.terminate()
+        }
+    }
+
     // The CI profile sets device, appearance and text size.
     // Each locale gets a separate persistent test store; no normal journal is reset.
     func testScreenGallery() throws {

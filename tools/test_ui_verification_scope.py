@@ -75,7 +75,8 @@ class VerificationScopeTests(unittest.TestCase):
                           '-only-testing:PrivateMomentsTests/FavoritePersistenceTests',
                           '-only-testing:' + PREFIX + 'testFavoriteCanBeFoundWithSearchAfterRelaunch',
                           '-only-testing:' + PREFIX + 'testWeekReviewShowsLocalRecords',
-                          '-only-testing:' + PREFIX + 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord'])
+                          '-only-testing:' + PREFIX + 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord',
+                          '-only-testing:' + PREFIX + 'testReviewComparisonOpensRecordsFromPreviousMonth'])
         for key in ['INPUT', 'BACKUP', 'PERFORMANCE', 'ROTATION']:
             conflict = self.script(PRIVATE_MOMENTS_UI_WEEK_REVIEW_ONLY='1', PRIVATE_MOMENTS_UI_IPAD_TESTS='1',
                                    **{f'PRIVATE_MOMENTS_UI_{key}_ONLY': '1'})

@@ -13,6 +13,8 @@ struct MomentReviewView: View {
     @State private var selectedMood: MomentMood?
     @State private var showingDatePicker = false
     @State private var dateToView = Date.now
+    @State private var isComparing = false
+    @State private var recordJumpID = UUID()
 
     private let showsPeriodControls: Bool
     private let onOpen: (UUID) -> Void
@@ -53,11 +55,9 @@ struct MomentReviewView: View {
                 .frame(maxWidth: 700, alignment: .leading)
                 .frame(maxWidth: .infinity)
             }
-            .onChange(of: selectedMood) { _, mood in
-                if mood != nil {
-                    proxy.scrollTo("review.records", anchor: .top)
-                    recordsFocused = true
-                }
+            .onChange(of: recordJumpID) { _, _ in
+                proxy.scrollTo("review.records", anchor: .top)
+                recordsFocused = true
             }
         }
         .background(AppColors.homePaper.ignoresSafeArea())
@@ -92,6 +92,10 @@ struct MomentReviewView: View {
     @ViewBuilder
     private func reviewContent(_ review: MomentReview) -> some View {
         overview(review)
+        if showsPeriodControls,
+           let previous = MomentDateQuery.previousReview(store.moments, period: period, from: review, calendar: calendar) {
+            comparison(review, previous: previous)
+        }
         if review.moments.isEmpty && selectedMood == nil {
             Text(showsPeriodControls ? LocalizedStringKey("No moments in this period") : LocalizedStringKey("No moments this week"))
                 .font(.system(.body, design: .rounded))
@@ -160,6 +164,7 @@ struct MomentReviewView: View {
             guard period != option else { return }
             period = option
             selectedMood = nil
+            isComparing = false
         } label: {
             Text(title)
                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
@@ -196,6 +201,7 @@ struct MomentReviewView: View {
     private func selectDate(_ date: Date) {
         historicalDate = date < currentPeriodStart ? date : nil
         selectedMood = nil
+        isComparing = false
     }
 
     private var calendarSheet: some View {
@@ -244,6 +250,7 @@ struct MomentReviewView: View {
                     if showsPeriodControls {
                         Button {
                             selectedMood = isSelected ? nil : item.mood
+                            if !isSelected { recordJumpID = UUID() }
                         } label: {
                             moodRow(item, total: review.moments.count, isSelected: isSelected)
                                 .padding(.vertical, 4)
@@ -262,6 +269,94 @@ struct MomentReviewView: View {
                 .accessibilityIdentifier("weekReview.mood.\(item.mood.rawValue)")
             }
         }
+    }
+
+    private func comparison(_ current: MomentReview, previous: MomentReview) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Button { isComparing.toggle() } label: {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Compare with previous period")
+                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 8)
+                    Image(systemName: isComparing ? "chevron.up" : "chevron.down")
+                        .font(.caption.weight(.semibold))
+                        .accessibilityHidden(true)
+                }
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(AppColors.accentText)
+            .accessibilityValue(isComparing ? Text("Expanded") : Text("Collapsed"))
+            .accessibilityIdentifier("review.compare")
+
+            if isComparing {
+                comparisonPeriod(current, isPrevious: false)
+                Rectangle().fill(AppColors.journalRule).frame(height: 1).accessibilityHidden(true)
+                comparisonPeriod(previous, isPrevious: true)
+            }
+        }
+    }
+
+    private func comparisonPeriod(_ review: MomentReview, isPrevious: Bool) -> some View {
+        let dayCount = review.dayCount(calendar: calendar)
+        let commonMoods = review.commonMoods
+        let scope = isPrevious ? "previous" : "selected"
+        return VStack(alignment: .leading, spacing: 8) {
+            Text(isPrevious ? LocalizedStringKey("Previous period") : LocalizedStringKey("Selected period"))
+                .font(.system(.caption, design: .rounded).weight(.semibold))
+                .foregroundStyle(AppColors.secondaryText)
+                .accessibilityAddTraits(.isHeader)
+            Text(periodLabel(review.interval))
+                .font(.system(.headline, design: .serif))
+                .foregroundStyle(AppColors.text)
+                .fixedSize(horizontal: false, vertical: true)
+            comparisonLink(review, title: AppLocalization.momentCount(review.moments.count),
+                           value: dayCount == 1 ? AppLocalization.string("1 day with entries")
+                               : AppLocalization.format("%lld days with entries", dayCount))
+                .accessibilityIdentifier("review.\(scope).records")
+            if !commonMoods.isEmpty {
+                Text("Most common feelings")
+                    .font(.system(.caption, design: .rounded).weight(.semibold))
+                    .foregroundStyle(AppColors.secondaryText)
+                ForEach(commonMoods) { item in
+                    comparisonLink(review, title: item.mood.displayName,
+                                   value: AppLocalization.momentCount(item.count), mood: item.mood)
+                        .accessibilityIdentifier("review.comparisonMood.\(scope).\(item.mood.rawValue)")
+                }
+            }
+        }
+    }
+
+    private func comparisonLink(_ review: MomentReview, title: String, value: String, mood: MomentMood? = nil) -> some View {
+        Button {
+            selectDate(review.interval.start)
+            selectedMood = mood
+            recordJumpID = UUID()
+        } label: {
+            HStack(spacing: 10) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(title)
+                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .foregroundStyle(AppColors.text)
+                    Text(value)
+                        .font(.system(.footnote, design: .rounded))
+                        .foregroundStyle(AppColors.secondaryText)
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.forward")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AppColors.accentText)
+                    .accessibilityHidden(true)
+            }
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(title))
+        .accessibilityValue(Text(value))
     }
 
     private func moodRow(_ item: MomentReview.MoodCount, total: Int, isSelected: Bool) -> some View {

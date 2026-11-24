@@ -126,6 +126,10 @@ enum PrivateStoreFactory {
            ProcessInfo.processInfo.arguments.contains("-pm-ui-test-performance-fixture") {
             try seedPerformanceFixture(in: container)
         }
+        if uiTestStoreIdentifier() != nil,
+           ProcessInfo.processInfo.arguments.contains("-pm-ui-test-review-comparison-fixture") {
+            try seedMonthlyComparisonFixture(in: container)
+        }
         #endif
 
         // Apply protection to store files created by SwiftData as well as the containing directory.
@@ -159,6 +163,23 @@ enum PrivateStoreFactory {
                    tags: index == 0 ? ["baseline-target"] : [],
                    privateNote: "synthetic-fixture")
         }
+        try SwiftDataMomentRepository(modelContext: context).mergeAll(moments)
+    }
+
+    @MainActor
+    private static func seedMonthlyComparisonFixture(in container: ModelContainer) throws {
+        let context = container.mainContext
+        guard try context.fetchCount(FetchDescriptor<MomentEntity>()) == 0 else { return }
+        let now = Date.now
+        let calendar = Calendar.current
+        guard let prior = MomentReviewPeriod.month.date(byMoving: -1, from: now, calendar: calendar) else {
+            throw CocoaError(.coderInvalidValue)
+        }
+        let moments = [
+            Moment(occurredAt: now, durationSeconds: 80, mood: .connected, rating: 4),
+            Moment(occurredAt: prior, durationSeconds: 90, mood: .calm, rating: 3, privateNote: "previous-month-first-entry"),
+            Moment(occurredAt: prior.addingTimeInterval(90), durationSeconds: 120, mood: .calm, rating: 5, privateNote: "previous-month-second-entry")
+        ]
         try SwiftDataMomentRepository(modelContext: context).mergeAll(moments)
     }
     #endif

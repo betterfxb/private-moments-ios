@@ -224,6 +224,15 @@ enum MomentDateQuery {
         return MomentReview(interval: interval, moments: within(moments, interval: interval))
     }
 
+    static func previousReview(_ moments: [Moment], period: MomentReviewPeriod,
+                               from current: MomentReview, calendar: Calendar) -> MomentReview? {
+        guard !current.moments.isEmpty,
+              let date = period.date(byMoving: -1, from: current.interval.start, calendar: calendar),
+              let previous = review(moments, period: period, containing: date, calendar: calendar),
+              !previous.moments.isEmpty else { return nil }
+        return previous
+    }
+
     private static func within(_ moments: [Moment], interval: DateInterval) -> [Moment] {
         // DateInterval.contains includes its upper bound, which belongs to the next period here.
         return moments.filter { $0.occurredAt >= interval.start && $0.occurredAt < interval.end }
@@ -259,5 +268,15 @@ struct MomentReview {
         return MomentMood.allCases.compactMap { mood in
             counts[mood].map { MoodCount(mood: mood, count: $0) }
         }
+    }
+
+    var commonMoods: [MoodCount] {
+        let counts = moods
+        guard let highest = counts.map(\.count).max(), highest >= 2 else { return [] }
+        return counts.filter { $0.count == highest }
+    }
+
+    func dayCount(calendar: Calendar) -> Int {
+        Set(moments.map { calendar.startOfDay(for: $0.occurredAt) }).count
     }
 }

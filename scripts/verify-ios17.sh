@@ -106,4 +106,7 @@ xcodebuild "${build_arguments[@]}" -configuration Debug \
     -resultBundlePath "$result_bundle" -parallel-testing-enabled NO \
     "-only-testing:$test_target/testTimelineSearchReflectsEditAndDeletion" \
     "-only-testing:$test_target/testManualEntryTimingDateFilterAndPersistence" \
+    "-only-testing:$test_target/testReviewTabBrowsesPeriodsAndOpensFilteredRecord" \
+    "-only-testing:$test_target/testReviewComparisonOpensRecordsFromPreviousMonth" \
+    "-only-testing:PrivateMomentsTests/FavoritePersistenceTests" \
     test
