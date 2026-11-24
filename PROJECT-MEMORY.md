@@ -1,6 +1,6 @@
 # Private Moments 项目记忆
 
-更新日期：2026-11-23（Asia/Tokyo）。源码、原始运行及证据收据共同确定验收范围。记录文档的提交可与实际受测源码不同。
+更新日期：2026-11-24（Asia/Tokyo）。源码、原始运行及证据收据共同确定验收范围。记录文档的提交可与实际受测源码不同。
 
 ## 项目与约束
 
@@ -12,10 +12,15 @@
 
 ## 架构与数据边界
 
-- RootView持有MomentStore、SessionClock、Today／Timeline独立导航路径和选中标签；RecapView保存表单草稿，持久化只在明确保存时完成。
+- RootView持有MomentStore、SessionClock、Today／Timeline／Review 独立导航路径和选中标签。RecapView保存表单草稿，持久化只在明确保存时完成。
 - SwiftData本机数据、显式schema V1、禁止托管CloudKit同步；JSON备份是用户主动导出，包含备注且未加密。不要把“本机优先”解释成已实现云同步或跨设备服务。
-- 界面支持英语和简体中文，跟随 iOS 应用语言。记录枚举保持稳定，用户备注保留原文。字符串目录 236 键，Xcode 项目审计 111 对象。
+- 界面支持英语和简体中文，跟随 iOS 应用语言。记录枚举保持稳定，用户备注保留原文。字符串目录 247 键，Xcode 项目审计 111 对象。
 - Debug UI测试使用每次独立UUID库，不重置正常日记；Release排除测试钩子。认证使用真实系统流程，不增加成功绕过路径。
+
+## 第二十一批独立回顾页
+
+- 原生导航为「今天｜时间线｜回顾｜设置」。回顾支持按周／月翻阅及按日期跳转，显示周期总数和按日分组的本机记录。点感受后可直接查看匹配记录，详情返回保留周期和筛选。首页原有「本周回顾」路径复用同一界面。现有 SwiftData 与备份格式继续适用。
+- 源码 `de97f559894231b9b18c355bda46c3d1377762fc` 的 iPhone SE（第三代）浅色常规字号和深色最大字号配置通过。每配置 7 项日期查询单测和 2 个双语原生 UI 用例，归档 12 张原图。真机 VoiceOver、iPad 大屏和新回顾页的 iOS 17 运行证据待补。下一批规划为收藏。 [完整报告](release/UX-ACCEPTANCE-21.md) · [常规运行](https://github.com/betterfxb/private-moments-ios/actions/runs/45386361856) · [最大字号运行](https://github.com/betterfxb/private-moments-ios/actions/runs/45392182272)
 
 ## 第二十批原生首页、千条搜索与旧系统验收
 
