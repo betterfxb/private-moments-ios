@@ -125,6 +125,10 @@ struct MomentTimelineView: View {
                             searchControls
                         }
 
+                        if dynamicTypeSize.isAccessibilitySize {
+                            favoritesButton
+                        }
+
                         if hasActiveFilters {
                             Button {
                                 isSearchFocused = false
@@ -267,15 +271,19 @@ struct MomentTimelineView: View {
         .disabled(!store.isStorageAvailable)
 
         if store.isStorageAvailable {
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 8) {
-                    searchScope.fixedSize(horizontal: true, vertical: false)
-                    Spacer(minLength: 0)
-                    favoritesButton.fixedSize(horizontal: true, vertical: false)
-                }
-                VStack(alignment: .leading, spacing: 4) {
-                    searchScope
-                    favoritesButton
+            if dynamicTypeSize.isAccessibilitySize {
+                searchScope
+            } else {
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 8) {
+                        searchScope.fixedSize(horizontal: true, vertical: false)
+                        Spacer(minLength: 0)
+                        favoritesButton.fixedSize(horizontal: true, vertical: false)
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        searchScope
+                        favoritesButton
+                    }
                 }
             }
         }

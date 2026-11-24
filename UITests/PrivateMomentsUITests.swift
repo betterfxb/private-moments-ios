@@ -148,7 +148,10 @@ final class PrivateMomentsUITests: XCTestCase {
             app.launch()
             for mood in ["Calm", "Happy"] {
                 tap(app.buttons["today.addRecord"], in: app)
-                tap(app.buttons["recap.mood.\(mood)"], in: app)
+                let moodChoice = app.buttons["recap.mood.\(mood)"]
+                revealFully(from: moodChoice, through: moodChoice, in: app)
+                moodChoice.tap()
+                XCTAssertTrue(moodChoice.isSelected)
                 if mood == "Happy" {
                     let note = app.textViews["recap.note"]
                     tap(note, in: app)
@@ -160,7 +163,10 @@ final class PrivateMomentsUITests: XCTestCase {
             }
             selectTab("Timeline", "时间线", language: language, app: app)
             let rows = app.buttons.matching(identifier: "moment.row")
-            tap(rows.firstMatch, in: app)
+            let happy = language == "en" ? "Happy" : "愉悦"
+            let happyRow = rows.matching(NSPredicate(format: "label CONTAINS %@", happy)).firstMatch
+            tap(happyRow, in: app)
+            XCTAssertTrue(app.staticTexts[happy].exists)
             let bookmark = app.buttons["detail.favorite"]
             XCTAssertTrue(bookmark.waitForExistence(timeout: 5), "A saved moment can be bookmarked from detail.")
             XCTAssertEqual(bookmark.label, language == "en" ? "Add to favorites" : "添加收藏")
@@ -178,6 +184,7 @@ final class PrivateMomentsUITests: XCTestCase {
             let search = revealTimelineSearch(in: app)
             tap(search, in: app)
             search.typeText("Happy")
+            XCTAssertEqual(search.value as? String, "Happy")
             guard submitTimelineSearch(language: language, app: app) else { return }
             XCTAssertEqual(total.label, language == "en" ? "1 moment" : "1 条记录")
             tap(rows.firstMatch, in: app)
@@ -431,8 +438,13 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(resume.label, english ? "Resume draft" : "继续草稿")
             XCTAssertFalse(app.staticTexts[firstNote].exists, "Today does not preview draft notes.")
             capture("Draft-recovery-\(language)", app, stableSurface: resume)
+            waitForStableFrame(resume, requireHittable: true, message: "The recovery action is ready to open.")
             resume.tap()
-            XCTAssertTrue(note.waitForExistence(timeout: 10))
+            guard app.buttons["recap.saveToolbar"].waitForExistence(timeout: 10) else {
+                captureFailure("Draft-resume-destination-unavailable-\(language)", app)
+                return XCTFail("One tap on Resume draft must open the form.")
+            }
+            reveal(note, in: app)
             XCTAssertEqual(note.value as? String, firstNote)
             XCTAssertEqual(app.textFields["recap.minutes"].value as? String, "3")
             XCTAssertTrue(app.buttons["recap.mood.Happy"].isSelected)
@@ -2134,6 +2146,7 @@ final class PrivateMomentsUITests: XCTestCase {
         let destination: XCUIElement
         switch english {
         case "Timeline": destination = app.staticTexts["timeline.resultCount"]
+        case "Review": destination = app.staticTexts["weekReview.range"]
         case "Settings": destination = app.buttons["settings.export"]
         default: destination = app.buttons["today.startMoment"]
         }

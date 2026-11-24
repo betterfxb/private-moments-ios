@@ -2,7 +2,7 @@ import Foundation
 import Observation
 import OSLog
 
-struct RecapDraft: Codable, Equatable {
+struct RecapDraft: Codable, Hashable {
     let id: UUID
     let editingID: UUID?
     let isManualEntry: Bool

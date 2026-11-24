@@ -5,7 +5,7 @@ private enum AppRoute: Hashable {
     case session
     case manual(startedAt: Date)
     case recap(startedAt: Date, durationSeconds: Int, editingID: UUID?)
-    case recoveredRecap
+    case recoveredRecap(RecapDraft)
     case detail(id: UUID)
     case weekReview
 }
@@ -30,7 +30,6 @@ struct RootView: View {
     @Environment(RecapDraftStore.self) private var drafts
     @Environment(\.scenePhase) private var scenePhase
     @State private var isSceneShielded = true
-    @State private var resumedDraft: RecapDraft?
     @State private var showingDraftConflict = false
     @State private var showingDraftDiscard = false
     @State private var showingDraftError = false
@@ -82,7 +81,7 @@ struct RootView: View {
                             startWhenDraftIsClear { todayPath.append(.manual(startedAt: date)) }
                         },
                         onOpenWeekReview: { todayPath.append(.weekReview) },
-                        hasPendingDraft: pendingDraft != nil || drafts.readFailed,
+                        hasPendingDraft: !showsPrivacyShield && (pendingDraft != nil || drafts.readFailed),
                         canResumeDraft: canResumeDraft,
                         onResumeDraft: resumeDraft,
                         onDiscardDraft: { showingDraftDiscard = true }
@@ -111,8 +110,7 @@ struct RootView: View {
             }
             .environment(store)
             .environment(sessionClock)
-            .accessibilityHidden(showsPrivacyShield)
-            .allowsHitTesting(!showsPrivacyShield)
+            .accessibilityHidden(privacyLock.isLocked && !isSceneShielded)
 
             if showsPrivacyShield {
                 PrivacyLockView()
@@ -197,23 +195,20 @@ struct RootView: View {
                 onCancel: { finishRecap(editingID: editingID, path: path) },
                 onSaved: { _ in finishRecap(editingID: editingID, path: path, didSave: true) }
             )
-        case .recoveredRecap:
-            if let draft = resumedDraft {
-                let existing = draft.editingID.flatMap { id in store.moments.first { $0.id == id } }
-                RecapView(
-                    durationSeconds: draft.originalDuration,
-                    startedAt: draft.startedAt,
-                    existingMoment: existing,
-                    isManualEntry: draft.isManualEntry,
-                    recoveredDraft: draft,
-                    onCancel: { finishRecap(editingID: draft.editingID, path: path) },
-                    onSaved: { moment in
-                        finishRecap(editingID: draft.editingID, path: path, didSave: true)
-                        if draft.isManualEntry { selectedTodayDate = moment.occurredAt }
-                    }
-                )
-                .id(draft.id)
-            }
+        case .recoveredRecap(let draft):
+            let existing = draft.editingID.flatMap { id in store.moments.first { $0.id == id } }
+            RecapView(
+                durationSeconds: draft.originalDuration,
+                startedAt: draft.startedAt,
+                existingMoment: existing,
+                isManualEntry: draft.isManualEntry,
+                recoveredDraft: draft,
+                onCancel: { finishRecap(editingID: draft.editingID, path: path) },
+                onSaved: { moment in
+                    finishRecap(editingID: draft.editingID, path: path, didSave: true)
+                    if draft.isManualEntry { selectedTodayDate = moment.occurredAt }
+                }
+            )
         case .weekReview:
             MomentReviewView { id in path.wrappedValue.append(.detail(id: id)) }
         case .detail(let id):
@@ -241,7 +236,6 @@ struct RootView: View {
             selectedTab = .today
             path.wrappedValue.removeAll()
         }
-        resumedDraft = nil
     }
 
     private func startWhenDraftIsClear(_ action: () -> Void) {
@@ -256,9 +250,8 @@ struct RootView: View {
 
     private func resumeDraft() {
         guard !showsPrivacyShield, canResumeDraft, let draft = pendingDraft else { return }
-        resumedDraft = draft
-        todayPath = draft.editingID.map { [.detail(id: $0), .recoveredRecap] } ?? [.recoveredRecap]
         selectedTab = .today
+        todayPath = draft.editingID.map { [.detail(id: $0), .recoveredRecap(draft)] } ?? [.recoveredRecap(draft)]
     }
 
     private func discardDraft() {

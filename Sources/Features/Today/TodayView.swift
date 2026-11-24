@@ -242,12 +242,17 @@ struct TodayView: View {
 
     private var draftNotice: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Unfinished draft", systemImage: "square.and.pencil")
+            Text("Unfinished draft")
                 .font(.system(.headline, design: .serif))
                 .foregroundStyle(AppColors.text)
+                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
             if canResumeDraft {
-                Button(action: onResumeDraft) { Label("Resume draft", systemImage: "arrow.right") }
+                Button(action: onResumeDraft) {
+                    Text("Resume draft")
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
                     .buttonStyle(SecondaryActionButtonStyle())
                     .accessibilityIdentifier("today.resumeDraft")
             } else {
