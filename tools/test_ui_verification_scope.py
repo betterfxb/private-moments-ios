@@ -72,7 +72,8 @@ class VerificationScopeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
                          ['-only-testing:PrivateMomentsTests/MomentDateQueryTests',
-                          '-only-testing:' + PREFIX + 'testWeekReviewShowsLocalRecords'])
+                          '-only-testing:' + PREFIX + 'testWeekReviewShowsLocalRecords',
+                          '-only-testing:' + PREFIX + 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord'])
         for key in ['INPUT', 'BACKUP', 'PERFORMANCE', 'ROTATION']:
             conflict = self.script(PRIVATE_MOMENTS_UI_WEEK_REVIEW_ONLY='1', PRIVATE_MOMENTS_UI_IPAD_TESTS='1',
                                    **{f'PRIVATE_MOMENTS_UI_{key}_ONLY': '1'})
@@ -83,6 +84,8 @@ class VerificationScopeTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
         gallery = self.script(PRIVATE_MOMENTS_UI_GALLERY_ONLY='1')
         self.assertIn('-only-testing:' + PREFIX + 'testWeekReviewShowsLocalRecords', gallery.stdout.splitlines())
+        self.assertIn('-only-testing:' + PREFIX + 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord',
+                      gallery.stdout.splitlines())
 
     def test_default_full_phone_and_ipad_exclude_cold_methods(self):
         for ipad in ['0', '1']:
