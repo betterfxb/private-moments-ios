@@ -149,6 +149,12 @@ final class PrivateMomentsUITests: XCTestCase {
             for mood in ["Calm", "Happy"] {
                 tap(app.buttons["today.addRecord"], in: app)
                 tap(app.buttons["recap.mood.\(mood)"], in: app)
+                if mood == "Happy" {
+                    let note = app.textViews["recap.note"]
+                    tap(note, in: app)
+                    note.typeText("Made tea at home.\nTook a moment to sit.")
+                    dismissRecapKeyboard(language: language, app: app)
+                }
                 tap(app.buttons["recap.saveToolbar"], in: app)
                 XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
             }
@@ -175,6 +181,14 @@ final class PrivateMomentsUITests: XCTestCase {
             guard submitTimelineSearch(language: language, app: app) else { return }
             XCTAssertEqual(total.label, language == "en" ? "1 moment" : "1 条记录")
             tap(rows.firstMatch, in: app)
+            XCTAssertEqual(bookmark.label, language == "en" ? "Remove from favorites" : "取消收藏")
+            let savedNote = app.staticTexts["detail.note"]
+            reveal(savedNote, in: app)
+            XCTAssertEqual(savedNote.label, "Made tea at home.\nTook a moment to sit.")
+            capture("Reading-note-\(language)", app, stableSurface: savedNote)
+            tap(app.buttons["detail.editToolbar"], in: app)
+            XCTAssertTrue(app.textViews["recap.note"].exists)
+            tap(app.buttons["recap.cancel"], in: app)
             XCTAssertEqual(bookmark.label, language == "en" ? "Remove from favorites" : "取消收藏")
             tap(bookmark, in: app)
             goBack(app)

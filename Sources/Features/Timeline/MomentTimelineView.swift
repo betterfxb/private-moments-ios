@@ -91,7 +91,7 @@ struct MomentTimelineView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 14) {
                     if !isSearchPresented {
                         searchControls
                     }
@@ -108,7 +108,7 @@ struct MomentTimelineView: View {
                         }
 
                         Text(AppLocalization.momentCount(matches.count))
-                            .font(.system(.subheadline, design: .rounded).weight(.medium))
+                            .font(.system(.subheadline, design: .serif).weight(.medium))
                             .foregroundStyle(AppColors.secondaryText)
                             .accessibilityIdentifier("timeline.resultCount")
                             #if DEBUG
@@ -149,17 +149,18 @@ struct MomentTimelineView: View {
                         if matches.isEmpty {
                             emptyState
                         } else {
-                            LazyVStack(spacing: 9) {
+                            LazyVStack(spacing: 0) {
                                 ForEach(dayGroups(for: matches)) { group in
                                     Text(group.date.formatted(date: .abbreviated, time: .omitted))
-                                        .font(.system(.caption, design: .rounded).weight(.semibold))
-                                        .foregroundStyle(AppColors.accentText)
+                                        .font(.system(.headline, design: .serif).weight(.medium))
+                                        .foregroundStyle(AppColors.text)
                                         .frame(maxWidth: .infinity, alignment: .leading)
-                                        .padding(.top, 8)
+                                        .padding(.top, 16)
+                                        .padding(.bottom, 9)
                                         .accessibilityAddTraits(.isHeader)
                                     ForEach(group.moments) { moment in
                                         Button { onOpen(moment.id) } label: {
-                                            MomentRow(moment: moment)
+                                            TimelineEntry(moment: moment)
                                         }
                                         .buttonStyle(.plain)
                                         .accessibilityHint("Opens the private details for this moment")
@@ -204,9 +205,11 @@ struct MomentTimelineView: View {
                 proxy.scrollTo(results.isEmpty ? "timeline.emptyState" : "timeline.resultsBody", anchor: .top)
             }
         }
-        .background(AppColors.background.ignoresSafeArea())
+        .background(AppColors.homePaper.ignoresSafeArea())
         .navigationTitle("Your moments")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(AppColors.homePaper, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .searchable(text: searchInput, isPresented: $isSearchPresented, prompt: "Search moments")
         .modifier(TimelineSearchSubmission(focus: $isSearchFocused) {
             searchSubmissionID = UUID()
@@ -264,26 +267,42 @@ struct MomentTimelineView: View {
         .disabled(!store.isStorageAvailable)
 
         if store.isStorageAvailable {
-            Text("Date, type, mood, or tag")
-                .font(.system(.footnote, design: .rounded))
-                .foregroundStyle(AppColors.secondaryText)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityIdentifier("timeline.searchScope")
-
-            Button { favoritesOnly.toggle() } label: {
-                Label("Favorites only", systemImage: favoritesOnly ? "bookmark.fill" : "bookmark")
-                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                    .foregroundStyle(AppColors.accentText)
-                    .padding(.horizontal, 14)
-                    .frame(minHeight: 44)
-                    .background(favoritesOnly ? AppColors.accentWash : AppColors.surface, in: Capsule())
-                    .overlay { Capsule().strokeBorder(AppColors.separator) }
-                    .contentShape(Capsule())
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    searchScope.fixedSize(horizontal: true, vertical: false)
+                    Spacer(minLength: 0)
+                    favoritesButton.fixedSize(horizontal: true, vertical: false)
+                }
+                VStack(alignment: .leading, spacing: 4) {
+                    searchScope
+                    favoritesButton
+                }
             }
-            .buttonStyle(.plain)
-            .accessibilityAddTraits(favoritesOnly ? .isSelected : [])
-            .accessibilityIdentifier("timeline.favorites")
         }
+    }
+
+    private var searchScope: some View {
+        Text("Date, type, mood, or tag")
+            .font(.system(.footnote, design: .rounded))
+            .foregroundStyle(AppColors.secondaryText)
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityIdentifier("timeline.searchScope")
+    }
+
+    private var favoritesButton: some View {
+        Button { favoritesOnly.toggle() } label: {
+            Label("Favorites only", systemImage: favoritesOnly ? "bookmark.fill" : "bookmark")
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(AppColors.accentText)
+                .padding(.horizontal, 10)
+                .frame(minHeight: 44)
+                .background(favoritesOnly ? AppColors.accentWash : Color.clear, in: Capsule())
+                .overlay { Capsule().strokeBorder(favoritesOnly ? AppColors.accentText : AppColors.journalRule) }
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(favoritesOnly ? .isSelected : [])
+        .accessibilityIdentifier("timeline.favorites")
     }
 
     private var filterPicker: some View {
@@ -293,6 +312,64 @@ struct MomentTimelineView: View {
             }
         }
         .accessibilityIdentifier("timeline.filter")
+    }
+}
+
+private struct TimelineEntry: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    let moment: Moment
+
+    var body: some View {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6))
+            : AnyLayout(HStackLayout(alignment: .center, spacing: 12))
+        layout {
+            VStack(alignment: .leading, spacing: 5) {
+                Text(moment.mood.displayName)
+                    .font(.system(.title3, design: .serif).weight(.medium))
+                    .foregroundStyle(AppColors.text)
+                Text(AppLocalization.format("%@ · %@", moment.kind.displayName,
+                                            moment.occurredAt.formatted(date: .omitted, time: .shortened)))
+                    .font(.system(.subheadline, design: .rounded))
+                    .foregroundStyle(AppColors.secondaryText)
+            }
+            if !dynamicTypeSize.isAccessibilitySize { Spacer(minLength: 0) }
+            VStack(alignment: dynamicTypeSize.isAccessibilitySize ? .leading : .trailing, spacing: 4) {
+                Text(SessionClock.durationText(moment.durationSeconds))
+                    .font(.system(.subheadline, design: .rounded).monospacedDigit())
+                    .foregroundStyle(AppColors.text)
+                HStack(spacing: 6) {
+                    Label {
+                        Text(moment.rating.formatted() + "/5")
+                    } icon: {
+                        Image(systemName: "star.fill")
+                    }
+                        .font(.system(.caption, design: .rounded))
+                        .foregroundStyle(AppColors.secondaryText)
+                        .accessibilityLabel(AppLocalization.format("%lld of 5", moment.rating))
+                    if moment.isFavorite {
+                        Image(systemName: "bookmark.fill")
+                            .font(.caption)
+                            .foregroundStyle(AppColors.accentText)
+                            .accessibilityLabel("Favorite moment")
+                    }
+                }
+            }
+            if !dynamicTypeSize.isAccessibilitySize {
+                Image(systemName: "chevron.forward")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AppColors.accentText)
+                    .accessibilityHidden(true)
+            }
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+        .padding(.vertical, 12)
+        .overlay(alignment: .top) {
+            Rectangle().fill(AppColors.journalRule).frame(height: 1).accessibilityHidden(true)
+        }
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
     }
 }
 

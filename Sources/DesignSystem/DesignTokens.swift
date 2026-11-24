@@ -29,6 +29,8 @@ enum AppColors {
     static let homeCoverAction = Color(uiColor: color(0xEBC9AE))
     static let homeCoverActionText = Color(uiColor: color(0x372820))
     static let homePaper = adaptive(light: 0xFAF3EB, dark: 0x1D1816)
+    static let journalRule = adaptive(light: 0xE2D2C5, dark: 0x4C3C33)
+    static let journalNote = adaptive(light: 0xFFFAF3, dark: 0x2A211D)
 
     private static func color(_ hex: UInt32) -> UIColor {
         UIColor(red: CGFloat((hex >> 16) & 255) / 255,

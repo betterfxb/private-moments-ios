@@ -33,9 +33,11 @@ struct MomentDetailView: View {
                 )
             }
         }
-        .background(AppColors.background.ignoresSafeArea())
+        .background(AppColors.homePaper.ignoresSafeArea())
         .navigationTitle("Moment details")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(AppColors.homePaper, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .toolbar {
             if let moment {
                 if #available(iOS 26.0, *) {
@@ -95,8 +97,6 @@ struct MomentDetailView: View {
     private func detailContent(_ moment: Moment) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
-                PrivateBadge()
-
                 if !store.isStorageAvailable {
                     StorageRecoveryCard(
                         message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
@@ -104,54 +104,7 @@ struct MomentDetailView: View {
                     )
                 }
 
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack(spacing: 12) {
-                        if !dynamicTypeSize.isAccessibilitySize {
-                            Image(systemName: moment.kind == .together ? "person.2.fill" : "person.fill")
-                                .font(.system(size: 22, weight: .medium))
-                                .foregroundStyle(AppColors.accentText)
-                                .frame(width: 52, height: 52)
-                                .background(AppColors.accentWash, in: RoundedRectangle(cornerRadius: 16))
-                                .accessibilityHidden(true)
-                        }
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("A moment to remember")
-                                .font(.system(.caption, design: .rounded))
-                                .foregroundStyle(AppColors.secondaryText)
-                            Text(moment.kind.displayName)
-                                .font(.system(.title2, design: .rounded).weight(.semibold))
-                                .foregroundStyle(AppColors.text)
-                        }
-                    }
-                    Divider()
-                    Text(SessionClock.durationText(moment.durationSeconds))
-                        .font(.system(.largeTitle, design: .rounded).weight(.semibold).monospacedDigit())
-                        .foregroundStyle(AppColors.accentText)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text(moment.occurredAt.formatted(date: .complete, time: .shortened))
-                        .font(.system(.subheadline, design: .rounded))
-                        .foregroundStyle(AppColors.secondaryText)
-                }
-                .modifier(JournalPanel())
-
-                infoLayout {
-                    infoCard(title: "Feeling", value: moment.mood.displayName, symbol: moment.mood.symbol)
-                    infoCard(title: "Rating", value: AppLocalization.format("%lld of 5", moment.rating), symbol: "star.fill")
-                }
-                .fixedSize(horizontal: false, vertical: true)
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Label("Tags", systemImage: "tag")
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundStyle(AppColors.accentText)
-                    Text(moment.tags.isEmpty
-                        ? AppLocalization.string("No tags added")
-                        : moment.tags.map(AppLocalization.localizedTag).joined(separator: " · "))
-                        .font(.system(.subheadline, design: .rounded))
-                        .foregroundStyle(AppColors.secondaryText)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .modifier(JournalPanel())
+                pageHeading(moment)
 
                 VStack(alignment: .leading, spacing: 12) {
                     Label("Private note", systemImage: "lock")
@@ -164,11 +117,29 @@ struct MomentDetailView: View {
                         .textSelection(.enabled)
                         .accessibilityIdentifier("detail.note")
                         .privacySensitive()
-                    Text("Private notes are included in exported backups.")
-                        .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(AppColors.secondaryText)
+                    if !moment.privateNote.isEmpty {
+                        Text("Private notes are included in exported backups.")
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundStyle(AppColors.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
-                .modifier(JournalPanel())
+                .padding(AppSpacing.card)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(AppColors.journalNote, in: RoundedRectangle(cornerRadius: AppRadius.control))
+                .overlay { RoundedRectangle(cornerRadius: AppRadius.control).strokeBorder(AppColors.journalRule) }
+
+                VStack(alignment: .leading, spacing: 7) {
+                    Label("Tags", systemImage: "tag")
+                        .font(.system(.headline, design: .rounded))
+                        .foregroundStyle(AppColors.secondaryText)
+                    Text(moment.tags.isEmpty
+                        ? AppLocalization.string("No tags added")
+                        : moment.tags.map(AppLocalization.localizedTag).joined(separator: " · "))
+                        .font(.system(.body, design: .rounded))
+                        .foregroundStyle(AppColors.text)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
 
                 if store.isStorageAvailable, let errorMessage = store.errorMessage {
                     ErrorNotice(message: errorMessage)
@@ -207,24 +178,36 @@ struct MomentDetailView: View {
         }
     }
 
-    private var infoLayout: AnyLayout {
-        dynamicTypeSize.isAccessibilitySize
-            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
-            : AnyLayout(HStackLayout(spacing: 12))
-    }
-
-    private func infoCard(title: LocalizedStringKey, value: String, symbol: String) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Image(systemName: symbol)
-                .foregroundStyle(AppColors.accentText)
-            Text(title)
-                .font(.system(.caption, design: .rounded))
+    private func pageHeading(_ moment: Moment) -> some View {
+        VStack(alignment: .leading, spacing: 11) {
+            Text(moment.occurredAt.formatted(date: .complete, time: .shortened))
+                .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(AppColors.secondaryText)
-            Text(value)
-                .font(.system(.headline, design: .rounded))
+            Text(moment.mood.displayName)
+                .font(.system(.largeTitle, design: .serif).weight(.medium))
                 .foregroundStyle(AppColors.text)
+                .accessibilityAddTraits(.isHeader)
+            let layout = dynamicTypeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+                : AnyLayout(HStackLayout(spacing: 16))
+            layout {
+                Text(moment.kind.displayName)
+                Text(SessionClock.durationText(moment.durationSeconds)).monospacedDigit()
+                Label {
+                    Text(moment.rating.formatted() + "/5")
+                } icon: {
+                    Image(systemName: "star.fill").foregroundStyle(AppColors.accentText)
+                }
+                .accessibilityLabel(AppLocalization.format("%lld of 5", moment.rating))
+            }
+            .font(.system(.subheadline, design: .rounded))
+            .foregroundStyle(AppColors.secondaryText)
+            Rectangle()
+                .fill(AppColors.journalRule)
+                .frame(height: 1)
+                .padding(.top, 8)
+                .accessibilityHidden(true)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .modifier(JournalPanel())
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
