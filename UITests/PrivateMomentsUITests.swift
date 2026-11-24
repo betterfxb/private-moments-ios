@@ -142,6 +142,97 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertFalse(result.exists)
     }
 
+    func testReviewTabBrowsesPeriodsAndOpensFilteredRecord() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let app = makeApp(language: language)
+            app.launch()
+            XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 15))
+            let tab = app.tabBars.buttons[english ? "Review" : "回顾"]
+            guard tab.waitForExistence(timeout: 5) else {
+                captureFailure("Review-tab-unavailable-\(language)", app)
+                return XCTFail("Review must have its own native tab.")
+            }
+            tab.tap()
+
+            let count = app.staticTexts["weekReview.count"]
+            let range = app.staticTexts["weekReview.range"]
+            let empty = app.staticTexts["weekReview.empty"]
+            let month = app.buttons["review.month"]
+            let week = app.buttons["review.week"]
+            let previous = app.buttons["review.previous"]
+            let next = app.buttons["review.next"]
+            let zero = english ? "0 moments" : "0 条记录"
+            let two = english ? "2 moments" : "2 条记录"
+
+            XCTAssertTrue(count.waitForExistence(timeout: 10))
+            XCTAssertEqual(count.label, zero)
+            XCTAssertTrue(week.isSelected)
+            XCTAssertFalse(next.isEnabled)
+            capture("Review-tab-empty-\(language)", app, stableSurface: range)
+
+            selectTab("Today", "今天", language: language, app: app)
+            tap(app.buttons["today.addRecord"], in: app)
+            tap(app.buttons["recap.saveToolbar"], in: app)
+            XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
+            tap(app.buttons["today.addRecord"], in: app)
+            tap(app.buttons["recap.mood.Happy"], in: app)
+            XCTAssertTrue(app.buttons["recap.mood.Happy"].isSelected)
+            tap(app.buttons["recap.saveToolbar"], in: app)
+            XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
+            tab.tap()
+
+            XCTAssertTrue(count.waitForExistence(timeout: 10))
+            XCTAssertEqual(count.label, two)
+            let currentWeek = range.label
+            tap(previous, in: app)
+            XCTAssertNotEqual(range.label, currentWeek)
+            XCTAssertEqual(count.label, zero)
+            XCTAssertTrue(empty.exists)
+            tap(next, in: app)
+            XCTAssertEqual(range.label, currentWeek)
+            XCTAssertEqual(count.label, two)
+
+            tap(month, in: app)
+            XCTAssertTrue(month.isSelected)
+            XCTAssertEqual(count.label, two)
+            let currentMonth = range.label
+            XCTAssertNotEqual(currentMonth, currentWeek)
+            capture("Review-tab-month-\(language)", app, stableSurface: range)
+            tap(previous, in: app)
+            XCTAssertNotEqual(range.label, currentMonth)
+            XCTAssertEqual(count.label, zero)
+            tap(app.buttons["review.jumpDate"], in: app)
+            tap(app.buttons["review.selectToday"], in: app)
+            tap(app.buttons["review.applyDate"], in: app)
+            XCTAssertTrue(range.waitForExistence(timeout: 10))
+            XCTAssertEqual(range.label, currentMonth)
+            XCTAssertEqual(count.label, two)
+
+            let happy = app.buttons["weekReview.mood.Happy"]
+            revealFully(from: happy, through: happy, in: app)
+            XCTAssertGreaterThanOrEqual(happy.frame.height, 44)
+            assertAboveBottomTabBar(happy, message: "Mood filter must clear the tab bar.", app: app)
+            happy.tap()
+            XCTAssertTrue(happy.isSelected)
+            let records = app.buttons.matching(identifier: "weekReview.moment")
+            XCTAssertEqual(records.count, 1)
+            let record = records.firstMatch
+            revealFully(from: record, through: record, in: app)
+            capture("Review-tab-filtered-\(language)", app, stableSurface: record)
+            record.tap()
+            XCTAssertTrue(app.buttons["detail.edit"].waitForExistence(timeout: 10))
+            XCTAssertTrue(app.staticTexts[english ? "Happy" : "愉悦"].exists)
+            goBack(app)
+            XCTAssertTrue(range.waitForExistence(timeout: 10))
+            XCTAssertEqual(range.label, currentMonth)
+            XCTAssertTrue(happy.isSelected)
+            tap(app.buttons["review.clearMood"], in: app)
+            XCTAssertEqual(records.count, 2)
+            app.terminate()
+        }
+    }
+
     func testWeekReviewShowsLocalRecords() {
         for language in ["en", "zh-Hans"] {
             let english = language == "en"
