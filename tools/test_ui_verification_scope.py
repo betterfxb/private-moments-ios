@@ -9,8 +9,8 @@ import unittest
 
 ROOT = Path(__file__).resolve().parent.parent
 SCRIPT = (ROOT / 'scripts/verify-mac.sh').read_text(encoding='utf-8')
-SELECTION = SCRIPT[SCRIPT.index('TEST_SCOPE_ARGUMENTS='):SCRIPT.index("else\nprintf '\\nBuilding Debug")]
-SELECTION += 'else\n:\nfi\nprintf "%s\\n" "${TEST_SCOPE_ARGUMENTS[@]}"\n'
+SELECTION = SCRIPT[SCRIPT.index('TEST_SCOPE_ARGUMENTS='):SCRIPT.index("printf '\\nBuilding Debug")]
+SELECTION += ':\nfi\nprintf "%s\\n" "${TEST_SCOPE_ARGUMENTS[@]}"\n'
 WORKFLOW = (ROOT / '.github/workflows/ios-ci.yml').read_text(encoding='utf-8')
 GUARD = textwrap.dedent(WORKFLOW[WORKFLOW.index('          if [[ "$ROTATION_SMOKE"'):WORKFLOW.index('          python3 -m unittest')])
 BASH = shutil.which('bash')
@@ -41,6 +41,38 @@ def execute(block, values):
 class VerificationScopeTests(unittest.TestCase):
     def script(self, start='reference', **values):
         return execute(SELECTION, dict(PRIVATE_MOMENTS_UI_ROTATION_START=start, **values))
+
+    def test_acceptance_gallery_runs_only_bilingual_gallery(self):
+        result = self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='gallery')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
+                         ['-only-testing:' + PREFIX + 'testScreenGallery'])
+
+    def test_acceptance_core_skips_sharded_methods_and_runs_remaining_tests(self):
+        result = self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='core')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        lines = result.stdout.splitlines()
+        self.assertFalse(any(line.startswith('-only-testing:') for line in lines))
+        for method in ['testScreenGallery', 'testFavoriteCanBeFoundWithSearchAfterRelaunch',
+                       'testWeekReviewShowsLocalRecords', 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord',
+                       'testReviewComparisonOpensRecordsFromPreviousMonth',
+                       'testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded',
+                       'testBackupFileRoundTrip', 'testChineseBackupFileRoundTrip', REFERENCE]:
+            self.assertIn('-skip-testing:' + PREFIX + method, lines)
+        for method in ['testManualEntryTimingDateFilterAndPersistence', 'testSessionAndRecapDiscardConfirmations',
+                       'testEditingFilteringDeletionAndRelaunch', 'testTerminationPreservesOnlyExplicitlySavedRecords',
+                       'testLargeJournalInteractionBaseline', 'testTimelineSearchReflectsEditAndDeletion']:
+            self.assertNotIn('-skip-testing:' + PREFIX + method, lines)
+
+    def test_acceptance_part_rejects_invalid_or_mixed_scopes(self):
+        self.assertNotEqual(self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='unknown').returncode, 0)
+        for part in ['gallery', 'core']:
+            for key in ['INPUT_ONLY', 'BACKUP_ONLY', 'PERFORMANCE_ONLY', 'WEEK_REVIEW_ONLY',
+                        'ROTATION_ONLY', 'GALLERY_ONLY']:
+                with self.subTest(part=part, key=key):
+                    self.assertNotEqual(self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART=part,
+                                                    PRIVATE_MOMENTS_UI_IPAD_TESTS='1',
+                                                    **{f'PRIVATE_MOMENTS_UI_{key}': '1'}).returncode, 0)
 
     def test_performance_measures_the_real_app_and_checks_mutations(self):
         result = self.script(PRIVATE_MOMENTS_UI_PERFORMANCE_ONLY='1')

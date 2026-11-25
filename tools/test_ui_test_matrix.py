@@ -12,21 +12,32 @@ matrix = module.matrix
 
 class UITestMatrixTests(unittest.TestCase):
     def test_full_acceptance_keeps_original_profiles_and_scopes(self):
-        profiles = matrix("full")["include"]
-        self.assertEqual([p["profile"] for p in profiles], [
-            "compact-light", "phone-dark", "ipad-light", "compact-dark-accessibility",
-        ])
-        self.assertEqual([p["gallery_only"] for p in profiles], ["0", "1", "1", "1"])
-        self.assertEqual([p["timeout_minutes"] for p in profiles], [75, 45, 60, 75])
-        self.assertEqual([p["text_size"] for p in profiles], [
-            "large", "large", "large", "accessibility-extra-extra-extra-large",
-        ])
+        jobs = matrix("full")["include"]
+        groups = {
+            "compact-light": {"gallery", "journal", "files", "files-zh", "core"},
+            "phone-dark": {"gallery", "journal", "files"},
+            "ipad-light": {"gallery", "journal", "files", "rotation"},
+            "compact-dark-accessibility": {"gallery", "journal", "files"},
+        }
+        self.assertEqual({(job["profile"], job["suite"]) for job in jobs},
+                         {(profile, suite) for profile, suites in groups.items() for suite in suites})
+        self.assertEqual(len(jobs), sum(map(len, groups.values())))
+        for job in jobs:
+            with self.subTest(job=job):
+                self.assertGreaterEqual(job["timeout_minutes"] - job["test_timeout_minutes"], 12)
+                if job["suite"] == "gallery":
+                    self.assertGreaterEqual(job["test_timeout_minutes"], 75)
+                source, = matrix("input", job["profile"])["include"]
+                for key in ["family", "appearance", "text_size"]:
+                    self.assertEqual(job[key], source[key])
 
     def test_existing_diagnostics_select_exactly_the_requested_profile(self):
-        for profile in matrix("full")["include"]:
+        for profile in ["compact-light", "phone-dark", "ipad-light", "compact-dark-accessibility"]:
             for scope in ["input", "backup"]:
-                with self.subTest(profile=profile["profile"], scope=scope):
-                    self.assertEqual(matrix(scope, profile["profile"])["include"], [profile])
+                with self.subTest(profile=profile, scope=scope):
+                    selected, = matrix(scope, profile)["include"]
+                    self.assertEqual(selected["profile"], profile)
+                    self.assertNotIn("suite", selected)
 
     def test_ipad_accessibility_requires_explicit_input_scope(self):
         profile = matrix("input", "ipad-light-accessibility")["include"]

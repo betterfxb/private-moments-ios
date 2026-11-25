@@ -132,7 +132,7 @@ jobs:
 
   build-and-test:
     needs: plan
-    name: ${{ matrix.profile }}
+    name: ${{ matrix.profile }}${{ matrix.suite && format(' / {0}', matrix.suite) || '' }}
     runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.use_intel_runner && 'macos-15-intel' || 'macos-15' }}
     timeout-minutes: ${{ matrix.timeout_minutes }}
     strategy:
@@ -196,17 +196,18 @@ jobs:
           xcrun simctl ui "$simulator_id" appearance "$SIMULATOR_APPEARANCE"
           xcrun simctl ui "$simulator_id" content_size "$SIMULATOR_TEXT_SIZE"
 
-      - name: Build Debug and Release, then run XCTest
+      - name: Build and run selected XCTest scope
+        timeout-minutes: ${{ matrix.test_timeout_minutes || matrix.timeout_minutes }}
         env:
           PRIVATE_MOMENTS_DERIVED_DATA: ${{ runner.temp }}/PrivateMomentsDerivedData
           PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments.xcresult
-          PRIVATE_MOMENTS_UI_GALLERY_ONLY: ${{ matrix.gallery_only }}
-          PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.backup_smoke && '1' || '0' }}
-          PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
+          PRIVATE_MOMENTS_UI_ACCEPTANCE_PART: ${{ (matrix.suite == 'gallery' || matrix.suite == 'core') && matrix.suite || '' }}
+          PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ (matrix.suite == 'files' || matrix.suite == 'files-zh' || inputs.backup_smoke) && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE: ${{ matrix.suite == 'files-zh' && 'zh-Hans' || inputs.backup_smoke_language || 'en' }}
           PRIVATE_MOMENTS_UI_INPUT_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && '1' || '0' }}
           PRIVATE_MOMENTS_UI_PERFORMANCE_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.performance_smoke && '1' || '0' }}
-          PRIVATE_MOMENTS_UI_WEEK_REVIEW_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.week_review_smoke && '1' || '0' }}
-          PRIVATE_MOMENTS_UI_ROTATION_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.rotation_smoke && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_WEEK_REVIEW_ONLY: ${{ (matrix.suite == 'journal' || inputs.week_review_smoke) && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_ROTATION_ONLY: ${{ (matrix.suite == 'rotation' || inputs.rotation_smoke) && '1' || '0' }}
           PRIVATE_MOMENTS_UI_ROTATION_START: ${{ inputs.rotation_start || 'reference' }}
           PRIVATE_MOMENTS_UI_IPAD_TESTS: ${{ startsWith(matrix.family, 'ipad') && '1' || '0' }}
         run: bash scripts/verify-mac.sh
@@ -256,7 +257,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: private-moments-ui-screenshots-${{ matrix.profile }}
+          name: private-moments-ui-screenshots-${{ matrix.profile }}${{ matrix.suite && format('-{0}', matrix.suite) || '' }}
           path: ${{ runner.temp }}/PrivateMomentsUIScreenshots
           if-no-files-found: ignore
           retention-days: 7
@@ -265,7 +266,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: private-moments-xcresult-${{ matrix.profile }}
+          name: private-moments-xcresult-${{ matrix.profile }}${{ matrix.suite && format('-{0}', matrix.suite) || '' }}
           path: ${{ runner.temp }}/PrivateMoments.xcresult
           if-no-files-found: ignore
           retention-days: 7

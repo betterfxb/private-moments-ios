@@ -58,6 +58,10 @@ BACKUP_LANGUAGE="${PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE:-en}"
 ROTATION_ONLY="${PRIVATE_MOMENTS_UI_ROTATION_ONLY:-0}"
 IPAD_TESTS="${PRIVATE_MOMENTS_UI_IPAD_TESTS:-0}"
 ROTATION_START="${PRIVATE_MOMENTS_UI_ROTATION_START:-reference}"
+ACCEPTANCE_PART="${PRIVATE_MOMENTS_UI_ACCEPTANCE_PART:-}"
+GALLERY_ONLY="${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}"
+[[ "$ACCEPTANCE_PART" == "" || "$ACCEPTANCE_PART" == "gallery" || "$ACCEPTANCE_PART" == "core" ]] || fail "Acceptance part must be gallery or core."
+[[ "$ACCEPTANCE_PART" == "" || ( "$BACKUP_ONLY" == "0" && "$INPUT_ONLY" == "0" && "$PERFORMANCE_ONLY" == "0" && "$WEEK_REVIEW_ONLY" == "0" && "$ROTATION_ONLY" == "0" && "$GALLERY_ONLY" == "0" ) ]] || fail "An acceptance part excludes other verification scopes."
 [[ "$BACKUP_ONLY" == "0" || "$BACKUP_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_BACKUP_ONLY must be 0 or 1."
 [[ "$INPUT_ONLY" == "0" || "$INPUT_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_INPUT_ONLY must be 0 or 1."
 [[ "$PERFORMANCE_ONLY" == "0" || "$PERFORMANCE_ONLY" == "1" ]] || fail "Performance scope must be 0 or 1."
@@ -84,13 +88,21 @@ fi
 if [[ "$ROTATION_START" != "cold-zh-Hans" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadColdChineseRotationContinuity)
 fi
-if [[ "$IPAD_TESTS" == "0" ]]; then
+if [[ "$IPAD_TESTS" == "0" || "$ACCEPTANCE_PART" == "core" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadRotationContinuity)
 fi
 if [[ "$INPUT_ONLY" != "1" ]]; then
     # The full gallery already exercises this flow inline.
     TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testTimelineSearchLayoutInBothLanguages)
 fi
+UI_SUITE=PrivateMomentsUITests/PrivateMomentsUITests
+JOURNAL_METHODS=(
+    testFavoriteCanBeFoundWithSearchAfterRelaunch
+    testWeekReviewShowsLocalRecords
+    testReviewTabBrowsesPeriodsAndOpensFilteredRecord
+    testReviewComparisonOpensRecordsFromPreviousMonth
+    testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded
+)
 if [[ "$ROTATION_ONLY" == "1" ]]; then
     printf '\nFocused iPad system-window diagnostic.\n'
     case "$ROTATION_START" in
@@ -112,11 +124,9 @@ elif [[ "$WEEK_REVIEW_ONLY" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/FavoritePersistenceTests)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/RecapDraftRecoveryTests)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/SemanticColorTests)
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testFavoriteCanBeFoundWithSearchAfterRelaunch)
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testWeekReviewShowsLocalRecords)
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewTabBrowsesPeriodsAndOpensFilteredRecord)
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewComparisonOpensRecordsFromPreviousMonth)
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded)
+    for method in "${JOURNAL_METHODS[@]}"; do
+        TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/$method")
+    done
 elif [[ "$INPUT_ONLY" == "1" ]]; then
     printf '\nFocused input gallery and native search layout.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
@@ -129,18 +139,23 @@ elif [[ "$BACKUP_ONLY" == "1" ]]; then
     else
         TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
     fi
-elif [[ "${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}" == "1" ]]; then
+elif [[ "$ACCEPTANCE_PART" == "gallery" ]]; then
+    TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testScreenGallery")
+elif [[ "$GALLERY_ONLY" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testFavoriteCanBeFoundWithSearchAfterRelaunch)
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testWeekReviewShowsLocalRecords)
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewTabBrowsesPeriodsAndOpensFilteredRecord)
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewComparisonOpensRecordsFromPreviousMonth)
-    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded)
+    for method in "${JOURNAL_METHODS[@]}"; do
+        TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/$method")
+    done
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testBackupFileRoundTrip)
     if [[ "$IPAD_TESTS" == "1" ]]; then
         TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadRotationContinuity)
     fi
 else
+if [[ "$ACCEPTANCE_PART" == "core" ]]; then
+    for method in testScreenGallery "${JOURNAL_METHODS[@]}" testBackupFileRoundTrip testChineseBackupFileRoundTrip; do
+        TEST_SCOPE_ARGUMENTS+=("-skip-testing:$UI_SUITE/$method")
+    done
+fi
 printf '\nBuilding Debug for the generic iOS Simulator destination...\n'
 xcodebuild \
     -project "$PROJECT_PATH" \
@@ -190,6 +205,8 @@ elif [[ "$INPUT_ONLY" == "1" ]]; then
     printf '\nFocused input gallery and search layout passed; full regression is still required.\n'
 elif [[ "$BACKUP_ONLY" == "1" ]]; then
     printf '\nFocused backup smoke passed; full regression is still required.\n'
+elif [[ "$ACCEPTANCE_PART" != "" ]]; then
+    printf '\nSimulator acceptance job passed: %s.\n' "$ACCEPTANCE_PART"
 else
     printf '\nMac simulator acceptance passed.\n'
 fi

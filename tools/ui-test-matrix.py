@@ -40,7 +40,17 @@ def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
     selected = [p for p in profiles if p["profile"] == smoke_profile]
     if not selected:
         raise ValueError("Unknown diagnostic profile: " + smoke_profile)
-    return {"include": profiles if scope == "full" else selected}
+    if scope != "full":
+        return {"include": selected}
+
+    common_suites = [("gallery", 80), ("journal", 80), ("files", 55)]
+    additional_suites = {"compact-light": [("core", 100), ("files-zh", 55)],
+                         "ipad-light": [("rotation", 55)]}
+    return {"include": [
+        dict(profile, suite=suite, test_timeout_minutes=minutes, timeout_minutes=minutes + 25)
+        for profile in profiles
+        for suite, minutes in common_suites + additional_suites.get(profile["profile"], [])
+    ]}
 
 
 if __name__ == "__main__":
