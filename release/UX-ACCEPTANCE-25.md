@@ -28,4 +28,6 @@ Windows 已通过 53 项工具测试、Bash 脚本语法、本地化 281 键、X
 
 `aca682a` 在常规小屏也通过相同的 11 项单测和 3 个原生用例。已保存 7 张实拍，包含两种语言的日期范围与无结果，以及「再记一次」和月度精选。两套 `aca682a` 的功能证据与后续日期裁切修复分别记录。[常规小屏 XCTest](evidence/batch-25/45650755597/compact-light-journal-features/xctest-extract.txt) · [原图收据](evidence/batch-25/45650755597/compact-light-journal-features/screenshots.json)
 
-同一 `c260b35` 已追加常规小屏回归，核对沿用紧凑选择器的布局和三项功能。[常规小屏复验](https://github.com/betterfxb/private-moments-ios/actions/runs/45655726442)
+`c260b35` 的常规小屏复验通过 11 项单测和 3 个原生功能用例，中英文继续使用紧凑日期选择器。归档 7 张日期、无结果、再记及月度精选原图。[常规小屏 XCTest](evidence/batch-25/45655726442/compact-light/xctest-extract.txt) · [截图收据](evidence/batch-25/45655726442/compact-light/screenshots.json) · [云端运行](https://github.com/betterfxb/private-moments-ios/actions/runs/45655726442)
+
+`c260b35` 的 Intel 最大字号作业构建成功并通过 11 项单测。UI 测试启动器在首个用例之前因 `Timed out waiting for AX loaded notification` 退出。`e30269d` 仅追加验收记录和原图，已使用相同应用与测试代码改走 ARM64。[Intel 运行](https://github.com/betterfxb/private-moments-ios/actions/runs/45655196061/job/139350231940) · [ARM64 重试](https://github.com/betterfxb/private-moments-ios/actions/runs/45661989166)
