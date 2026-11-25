@@ -91,8 +91,9 @@ struct MomentTimelineView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: 14) {
-                    if !isSearchPresented {
+                VStack(alignment: .leading, spacing: 12) {
+                    let putsResultsFirst = isSearchPresented || dynamicTypeSize.isAccessibilitySize
+                    if !putsResultsFirst {
                         searchControls
                     }
 
@@ -107,47 +108,11 @@ struct MomentTimelineView: View {
                             ErrorNotice(message: errorMessage)
                         }
 
-                        Text(AppLocalization.momentCount(matches.count))
-                            .font(.system(.subheadline, design: .serif).weight(.medium))
-                            .foregroundStyle(AppColors.secondaryText)
-                            .accessibilityIdentifier("timeline.resultCount")
-                            #if DEBUG
-                            .modifier(TimelineSearchLayoutTiming(
-                                timing: searchTiming, sequence: searchTiming?.pendingSequence,
-                                results: matches.count, element: .count
-                            ))
-                            #endif
+                        resultSummary(matches.count)
                             .id("timeline.results")
 
-                        // Keep supporting controls before an unbounded result
-                        // list; the live count still comes first while typing.
-                        if isSearchPresented {
+                        if putsResultsFirst {
                             searchControls
-                        }
-
-                        if dynamicTypeSize.isAccessibilitySize {
-                            favoritesButton
-                        }
-
-                        if hasActiveFilters {
-                            Button {
-                                isSearchFocused = false
-                                if #unavailable(iOS 18.0) {
-                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
-                                        to: nil, from: nil, for: nil)
-                                }
-                                #if DEBUG
-                                searchTiming?.reset()
-                                #endif
-                                searchText = ""
-                                filter = .all
-                                favoritesOnly = false
-                                isSearchPresented = false
-                            } label: {
-                                Label("Clear filters", systemImage: "line.3.horizontal.decrease.circle")
-                            }
-                            .buttonStyle(SecondaryActionButtonStyle())
-                            .accessibilityIdentifier("timeline.clearFilters")
                         }
 
                         if matches.isEmpty {
@@ -156,11 +121,11 @@ struct MomentTimelineView: View {
                             LazyVStack(spacing: 0) {
                                 ForEach(dayGroups(for: matches)) { group in
                                     Text(group.date.formatted(date: .abbreviated, time: .omitted))
-                                        .font(.system(.headline, design: .serif).weight(.medium))
-                                        .foregroundStyle(AppColors.text)
+                                        .font(.system(.subheadline, design: .serif).weight(.medium))
+                                        .foregroundStyle(AppColors.secondaryText)
                                         .frame(maxWidth: .infinity, alignment: .leading)
-                                        .padding(.top, 16)
-                                        .padding(.bottom, 9)
+                                        .padding(.top, 12)
+                                        .padding(.bottom, 8)
                                         .accessibilityAddTraits(.isHeader)
                                     ForEach(group.moments) { moment in
                                         Button { onOpen(moment.id) } label: {
@@ -225,6 +190,61 @@ struct MomentTimelineView: View {
     }
 
     @ViewBuilder
+    private func resultSummary(_ count: Int) -> some View {
+        let countLabel = Text(AppLocalization.momentCount(count))
+            .font(.system(.footnote, design: .rounded).weight(.medium))
+            .foregroundStyle(AppColors.secondaryText)
+            .accessibilityIdentifier("timeline.resultCount")
+            #if DEBUG
+            .modifier(TimelineSearchLayoutTiming(
+                timing: searchTiming, sequence: searchTiming?.pendingSequence,
+                results: count, element: .count
+            ))
+            #endif
+        if hasActiveFilters {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 12) {
+                    countLabel.fixedSize()
+                    Spacer(minLength: 0)
+                    clearButton.fixedSize()
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    countLabel
+                    clearButton
+                }
+            }
+        } else {
+            countLabel
+        }
+    }
+
+    private var clearButton: some View {
+        Button {
+            isSearchFocused = false
+            if #unavailable(iOS 18.0) {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                    to: nil, from: nil, for: nil)
+            }
+            #if DEBUG
+            searchTiming?.reset()
+            #endif
+            searchText = ""
+            filter = .all
+            favoritesOnly = false
+            isSearchPresented = false
+        } label: {
+            Text("Clear filters")
+                .font(.system(.footnote, design: .rounded).weight(.semibold))
+                .padding(.horizontal, 6)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.borderless)
+        .tint(AppColors.journalAccent)
+        .accessibilityIdentifier("timeline.clearFilters")
+    }
+
+    @ViewBuilder
     private var emptyState: some View {
         if isSearchPresented {
             // Give results priority over decorative artwork while typing.
@@ -272,6 +292,7 @@ struct MomentTimelineView: View {
 
         if store.isStorageAvailable {
             if dynamicTypeSize.isAccessibilitySize {
+                favoritesButton
                 searchScope
             } else {
                 ViewThatFits(in: .horizontal) {
@@ -291,7 +312,7 @@ struct MomentTimelineView: View {
 
     private var searchScope: some View {
         Text("Date, type, mood, or tag")
-            .font(.system(.footnote, design: .rounded))
+            .font(.system(.caption, design: .rounded))
             .foregroundStyle(AppColors.secondaryText)
             .fixedSize(horizontal: false, vertical: true)
             .accessibilityIdentifier("timeline.searchScope")
@@ -300,12 +321,12 @@ struct MomentTimelineView: View {
     private var favoritesButton: some View {
         Button { favoritesOnly.toggle() } label: {
             Label("Favorites only", systemImage: favoritesOnly ? "bookmark.fill" : "bookmark")
-                .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                .foregroundStyle(AppColors.accentText)
+                .font(.system(.footnote, design: .rounded).weight(.semibold))
+                .foregroundStyle(favoritesOnly ? AppColors.journalAccent : AppColors.secondaryText)
                 .padding(.horizontal, 10)
                 .frame(minHeight: 44)
-                .background(favoritesOnly ? AppColors.accentWash : Color.clear, in: Capsule())
-                .overlay { Capsule().strokeBorder(favoritesOnly ? AppColors.accentText : AppColors.journalRule) }
+                .background(favoritesOnly ? AppColors.journalSelection : Color.clear, in: Capsule())
+                .overlay { Capsule().strokeBorder(favoritesOnly ? Color.clear : AppColors.journalRule) }
                 .contentShape(Capsule())
         }
         .buttonStyle(.plain)
@@ -358,7 +379,7 @@ private struct TimelineEntry: View {
                     if moment.isFavorite {
                         Image(systemName: "bookmark.fill")
                             .font(.caption)
-                            .foregroundStyle(AppColors.accentText)
+                            .foregroundStyle(AppColors.journalAccent)
                             .accessibilityLabel("Favorite moment")
                     }
                 }
@@ -366,7 +387,7 @@ private struct TimelineEntry: View {
             if !dynamicTypeSize.isAccessibilitySize {
                 Image(systemName: "chevron.forward")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(AppColors.accentText)
+                    .foregroundStyle(AppColors.journalAccent)
                     .accessibilityHidden(true)
             }
         }

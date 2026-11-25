@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+from tempfile import TemporaryDirectory
 import textwrap
 import unittest
 
@@ -34,8 +35,13 @@ def execute(block, values):
                        'ROTATION_SMOKE', 'ROTATION_START', 'INPUT_SMOKE', 'BACKUP_SMOKE', 'BACKUP_LANGUAGE', 'PERFORMANCE_SMOKE',
                        'WEEK_REVIEW_SMOKE', 'READING_SMOKE', 'SMOKE_PROFILE'}}
     environment.update(values)
-    return subprocess.run([BASH, '-c', 'set -euo pipefail\nfail() { printf "%s\\n" "$1" >&2; exit 1; }\n' + block],
-                          env=environment, text=True, capture_output=True, timeout=15)
+    # Git Bash on Windows truncates long command arguments. Execute the
+    # complete selection with Unix line endings from a temporary script.
+    with TemporaryDirectory() as directory:
+        script = Path(directory) / 'test-scope.sh'
+        script.write_text('set -euo pipefail\nfail() { printf "%s\\n" "$1" >&2; exit 1; }\n' + block,
+                          encoding='utf-8', newline='\n')
+        return subprocess.run([BASH, script.as_posix()], env=environment, text=True, capture_output=True, timeout=15)
 
 
 class VerificationScopeTests(unittest.TestCase):
@@ -52,7 +58,8 @@ class VerificationScopeTests(unittest.TestCase):
         result = self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='reading')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
-                         ['-only-testing:' + PREFIX + 'testJournalReadingSample'])
+                         ['-only-testing:PrivateMomentsTests/SemanticColorTests',
+                          '-only-testing:' + PREFIX + 'testJournalReadingSample'])
         baseline = dict(ROTATION_START='reference', ROTATION_SMOKE='0', INPUT_SMOKE='0', BACKUP_SMOKE='0',
                         BACKUP_LANGUAGE='en', READING_SMOKE='1', SMOKE_PROFILE='compact-light')
         self.assertEqual(execute(GUARD, baseline).returncode, 0)

@@ -822,6 +822,14 @@ final class SemanticColorTests: XCTestCase {
         }
     }
 
+    func testJournalActionsRemainReadableOnPaperAndSelectedSurfaces() {
+        for style in [UIUserInterfaceStyle.light, .dark] {
+            for surface in [AppColors.homePaper, AppColors.journalNote, AppColors.journalSelection] {
+                XCTAssertGreaterThanOrEqual(contrast(AppColors.journalAccent, surface, style), 4.5)
+            }
+        }
+    }
+
     private func contrast(_ foreground: Color, _ background: Color, _ style: UIUserInterfaceStyle) -> Double {
         let traits = UITraitCollection(userInterfaceStyle: style)
         func luminance(_ color: Color) -> Double {

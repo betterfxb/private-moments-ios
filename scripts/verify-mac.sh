@@ -142,6 +142,7 @@ elif [[ "$BACKUP_ONLY" == "1" ]]; then
 elif [[ "$ACCEPTANCE_PART" == "gallery" ]]; then
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testScreenGallery")
 elif [[ "$ACCEPTANCE_PART" == "reading" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/SemanticColorTests)
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testJournalReadingSample")
 elif [[ "$GALLERY_ONLY" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)

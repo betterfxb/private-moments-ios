@@ -232,6 +232,9 @@ final class PrivateMomentsUITests: XCTestCase {
             assertToolbarTarget(favorite)
             capture("Reading-sample-detail-\(language)", app, stableSurface: favorite)
             let note = app.staticTexts["detail.note"]
+            let kind = app.staticTexts["detail.kind"]
+            XCTAssertTrue(kind.exists)
+            XCTAssertLessThan(note.frame.minY, kind.frame.minY, "The note should precede secondary reflection details.")
             reveal(note, in: app)
             XCTAssertTrue(note.label.hasPrefix(english ? "We came home" : "傍晚回到家"))
             XCTAssertTrue(note.label.contains(english ? "The tea cooled" : "茶渐渐凉了"))

@@ -10,6 +10,7 @@ struct MomentDetailView: View {
 
     @State private var showingDeleteConfirmation = false
     @State private var showingDraftRemovalError = false
+    @ScaledMetric(relativeTo: .body) private var noteLineSpacing: CGFloat = 4
 
     private var moment: Moment? {
         store.moments.first { $0.id == momentID }
@@ -81,62 +82,46 @@ struct MomentDetailView: View {
 
     private func toolbarFavorite(_ moment: Moment) -> some View {
         detailToolbarButton(moment.isFavorite ? "Remove from favorites" : "Add to favorites",
-                            symbol: moment.isFavorite ? "bookmark.fill" : "bookmark") {
+                            symbol: moment.isFavorite ? "bookmark.fill" : "bookmark",
+                            isSelected: moment.isFavorite) {
             store.toggleFavorite(id: moment.id)
         }
+        .accessibilityAddTraits(moment.isFavorite ? .isSelected : [])
         .accessibilityIdentifier("detail.favorite")
     }
 
     private func detailToolbarButton(_ title: LocalizedStringKey, symbol: String,
+                                     isSelected: Bool = false,
                                      action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Label(title, systemImage: symbol)
                 .labelStyle(.iconOnly)
                 .font(.body.weight(.semibold))
                 .frame(minWidth: 44, minHeight: 44)
-                .background(AppColors.accentWash, in: Circle())
+                .background(isSelected ? AppColors.journalSelection : AppColors.journalNote, in: Circle())
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .foregroundStyle(store.isStorageAvailable ? AppColors.accentText : AppColors.secondaryText)
+        .foregroundStyle(store.isStorageAvailable ? AppColors.journalAccent : AppColors.secondaryText)
         .disabled(!store.isStorageAvailable)
     }
 
     @ViewBuilder
     private func detailContent(_ moment: Moment) -> some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: AppSpacing.section) {
+            VStack(alignment: .leading, spacing: 20) {
                 if !store.isStorageAvailable {
                     StorageRecoveryCard(
                         message: store.errorMessage ?? AppLocalization.string("Couldn't load your moments. Please try again."),
                         onRetry: store.reload
                     )
+                } else if let errorMessage = store.errorMessage {
+                    ErrorNotice(message: errorMessage)
                 }
 
                 pageHeading(moment)
-
-                VStack(alignment: .leading, spacing: 12) {
-                    Label("Private note", systemImage: "lock")
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundStyle(AppColors.accentText)
-                    Text(moment.privateNote.isEmpty ? AppLocalization.string("No note added.") : moment.privateNote)
-                        .font(.system(.body, design: .rounded))
-                        .foregroundStyle(AppColors.text)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .textSelection(.enabled)
-                        .accessibilityIdentifier("detail.note")
-                        .privacySensitive()
-                    if !moment.privateNote.isEmpty {
-                        Text("Private notes are included in exported backups.")
-                            .font(.system(.caption, design: .rounded))
-                            .foregroundStyle(AppColors.secondaryText)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-                .padding(AppSpacing.card)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(AppColors.journalNote, in: RoundedRectangle(cornerRadius: AppRadius.control))
-                .overlay { RoundedRectangle(cornerRadius: AppRadius.control).strokeBorder(AppColors.journalRule) }
+                privateNote(moment)
+                reflectionDetails(moment)
 
                 VStack(alignment: .leading, spacing: 7) {
                     Label("Tags", systemImage: "tag")
@@ -150,19 +135,15 @@ struct MomentDetailView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                if store.isStorageAvailable, let errorMessage = store.errorMessage {
-                    ErrorNotice(message: errorMessage)
-                }
-
                 Button {
                     onEdit(moment)
                 } label: {
                     Label("Edit reflection", systemImage: "pencil")
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
+                        .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                        .contentShape(Rectangle())
                 }
-                .buttonStyle(.bordered)
-                .tint(AppColors.accentText)
+                .buttonStyle(.borderless)
+                .tint(AppColors.journalAccent)
                 .disabled(!store.isStorageAvailable)
                 .accessibilityIdentifier("detail.edit")
 
@@ -171,8 +152,8 @@ struct MomentDetailView: View {
                 } label: {
                     Label("Delete this moment", systemImage: "trash")
                         .foregroundStyle(AppColors.destructive)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
+                        .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .tint(AppColors.destructive)
@@ -182,43 +163,83 @@ struct MomentDetailView: View {
             .padding(.horizontal, AppSpacing.page)
             .padding(.top, 18)
             .padding(.bottom, 30)
-            .frame(maxWidth: 680)
+            .frame(maxWidth: 640)
             .frame(maxWidth: .infinity)
         }
     }
 
     private func pageHeading(_ moment: Moment) -> some View {
-        VStack(alignment: .leading, spacing: 11) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(moment.occurredAt.formatted(date: dynamicTypeSize.isAccessibilitySize ? .abbreviated : .complete,
                                             time: .shortened))
                 .font(.system(.footnote, design: .rounded))
                 .foregroundStyle(AppColors.secondaryText)
                 .accessibilityLabel(moment.occurredAt.formatted(date: .complete, time: .shortened))
+            if let place = moment.approximatePlace, !place.isEmpty {
+                Text(verbatim: place)
+                    .font(.system(.footnote, design: .rounded))
+                    .foregroundStyle(AppColors.secondaryText)
+                    .privacySensitive()
+            }
             Text(moment.mood.displayName)
                 .font(.system(.largeTitle, design: .serif).weight(.medium))
                 .foregroundStyle(AppColors.text)
                 .accessibilityAddTraits(.isHeader)
-            let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
-                : AnyLayout(HStackLayout(spacing: 16))
-            layout {
-                Text(moment.kind.displayName)
-                Text(SessionClock.durationText(moment.durationSeconds)).monospacedDigit()
-                Label {
-                    Text(moment.rating.formatted() + "/5")
-                } icon: {
-                    Image(systemName: "star.fill").foregroundStyle(AppColors.accentText)
-                }
-                .accessibilityLabel(AppLocalization.format("%lld of 5", moment.rating))
+        }
+        .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private func privateNote(_ moment: Moment) -> some View {
+        let hasNote = !moment.privateNote.isEmpty
+        return VStack(alignment: .leading, spacing: 10) {
+            Label("Private note", systemImage: "lock")
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(AppColors.journalAccent)
+            Text(hasNote ? moment.privateNote : AppLocalization.string("No note added."))
+                .font(.system(.body, design: .serif))
+                .foregroundStyle(hasNote ? AppColors.text : AppColors.secondaryText)
+                .lineSpacing(noteLineSpacing)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .textSelection(.enabled)
+                .accessibilityIdentifier("detail.note")
+                .privacySensitive()
+            if hasNote {
+                Text("Private notes are included in exported backups.")
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundStyle(AppColors.secondaryText)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            .font(.system(.subheadline, design: .rounded))
-            .foregroundStyle(AppColors.secondaryText)
-            Rectangle()
-                .fill(AppColors.journalRule)
-                .frame(height: 1)
-                .padding(.top, 8)
+        }
+        .padding(.horizontal, 19)
+        .padding(.vertical, AppSpacing.card)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppColors.journalNote, in: RoundedRectangle(cornerRadius: AppRadius.control))
+        .overlay(alignment: .leading) {
+            Capsule()
+                .fill(AppColors.journalAccent.opacity(0.45))
+                .frame(width: 2)
+                .padding(.vertical, AppSpacing.card)
                 .accessibilityHidden(true)
         }
+    }
+
+    private func reflectionDetails(_ moment: Moment) -> some View {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 16))
+        return layout {
+            Text(moment.kind.displayName)
+                .accessibilityIdentifier("detail.kind")
+            Text(SessionClock.durationText(moment.durationSeconds)).monospacedDigit()
+            Label {
+                Text(moment.rating.formatted() + "/5")
+            } icon: {
+                Image(systemName: "star.fill").foregroundStyle(AppColors.journalAccent)
+            }
+            .accessibilityLabel(AppLocalization.format("%lld of 5", moment.rating))
+        }
+        .font(.system(.subheadline, design: .rounded))
+        .foregroundStyle(AppColors.secondaryText)
         .fixedSize(horizontal: false, vertical: true)
     }
 }
