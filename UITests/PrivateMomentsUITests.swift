@@ -216,7 +216,8 @@ final class PrivateMomentsUITests: XCTestCase {
             let count = app.staticTexts["timeline.resultCount"]
             let advanced = app.buttons["timeline.dateAndTag"]
             let apply = app.buttons["timeline.dateAndTag.apply"]
-            let range = app.switches["timeline.dateRange.enabled"]
+            let range = app.buttons["timeline.dateRange.enabled"]
+            let startDate = app.descendants(matching: .any).matching(identifier: "timeline.dateRange.start").firstMatch
             tap(advanced, in: app)
             tap(app.buttons["timeline.tagFilter"], in: app)
             let tag = app.buttons[english ? "Connected" : "亲密相连"].firstMatch
@@ -227,12 +228,18 @@ final class PrivateMomentsUITests: XCTestCase {
 
             tap(advanced, in: app)
             tap(range, in: app)
+            guard startDate.waitForExistence(timeout: 5) else {
+                captureFailure("Timeline-date-range-did-not-open-\(language)", app)
+                return XCTFail("One tap must show the dates before applying the filter.")
+            }
+            capture("Timeline-date-range-\(language)", app, stableSurface: range)
             tap(apply, in: app)
             XCTAssertEqual(count.label, english ? "0 moments" : "0 条记录")
             capture("Timeline-range-empty-\(language)", app, stableSurface: count)
 
             tap(advanced, in: app)
             tap(range, in: app)
+            XCTAssertFalse(startDate.exists)
             tap(apply, in: app)
             tap(app.buttons["timeline.favorites"], in: app)
             chooseMomentFilter(english ? "Together" : "共同", in: app)
@@ -245,6 +252,7 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(app.staticTexts["detail.note"].label, "Synthetic note for timeline filtering.")
             goBack(app)
             XCTAssertEqual(count.label, english ? "1 moment" : "1 条记录")
+            XCTAssertEqual(revealTimelineSearch(in: app).value as? String, "Happy")
             tap(app.buttons["timeline.clearFilters"], in: app)
             XCTAssertEqual(count.label, english ? "2 moments" : "2 条记录")
             XCTAssertFalse(app.staticTexts["timeline.dateAndTag.summary"].exists)

@@ -397,13 +397,6 @@ private struct TimelineDateAndTagSheet: View {
         self.onApply = onApply
     }
 
-    private var dateFilterEnabled: Binding<Bool> {
-        Binding(get: { selection.days != nil }, set: { enabled in
-            let today = Calendar.current.startOfDay(for: .now)
-            selection.days = enabled ? MomentDayRange(start: today, end: today) : nil
-        })
-    }
-
     private var validDates: Bool {
         selection.days == nil || selection.days?.interval(calendar: .current) != nil
     }
@@ -412,10 +405,25 @@ private struct TimelineDateAndTagSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    Toggle("Date range", isOn: dateFilterEnabled)
-                        .accessibilityIdentifier("timeline.dateRange.enabled")
+                    Button {
+                        if selection.days == nil {
+                            let today = Calendar.current.startOfDay(for: .now)
+                            selection.days = MomentDayRange(start: today, end: today)
+                        } else {
+                            selection.days = nil
+                        }
+                    } label: {
+                        Label(selection.days == nil ? "Date range" : "Remove date range",
+                              systemImage: selection.days == nil ? "calendar" : "calendar.badge.minus")
+                            .foregroundStyle(AppColors.journalAccent)
+                            .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("timeline.dateRange.enabled")
                     if let days = Binding($selection.days) {
                         DatePicker("Start date", selection: days.start, displayedComponents: .date)
+                            .accessibilityIdentifier("timeline.dateRange.start")
                         DatePicker("End date", selection: days.end, displayedComponents: .date)
                         if !validDates {
                             Text("The end date must be on or after the start date.")
