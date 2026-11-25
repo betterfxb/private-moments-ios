@@ -1930,6 +1930,18 @@ final class PrivateMomentsUITests: XCTestCase {
 
         goBack(app)
         selectTab("Today", "今天", language: "en", app: app)
+        revealFully(from: start, through: start, in: app)
+        waitForStableFrame(start, requireHittable: true, message: "The Home timer action is ready to open.")
+        start.tap()
+        let unfinishedDraft = app.alerts["Unfinished draft"]
+        guard unfinishedDraft.waitForExistence(timeout: 10) else {
+            captureFailure("Draft-start-conflict-unavailable", app)
+            return XCTFail("A new timer must acknowledge the preserved draft first.")
+        }
+        XCTAssertTrue(unfinishedDraft.buttons["Resume draft"].exists)
+        XCTAssertFalse(app.buttons["session.pauseResume"].exists)
+        unfinishedDraft.buttons["Discard draft"].tap()
+        XCTAssertFalse(app.buttons["today.resumeDraft"].exists)
         tap(start, in: app)
         reveal(app.buttons["session.pauseResume"], in: app)
         XCTAssertEqual(app.buttons["session.pauseResume"].label, "Pause")
