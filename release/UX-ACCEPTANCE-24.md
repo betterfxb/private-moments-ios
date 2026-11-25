@@ -16,4 +16,4 @@
 | 常规手机深色、iPad 浅色、小屏深色最大辅助字号 | 实拍核对两种主题、中文和英文。检查 iPad 阅读列、长文换行、状态和触控范围。在最大辅助字号提交真实键盘查询后，计数和结果仍能找到。 |
 | 核心操作 | 从正常入口筛出一条已收藏记录，打开并读到两段备注，返回时仍筛选为一条，清除后恢复两条。基础图库和键盘搜索覆盖其他空态、提交和错误。 |
 
-旧版同内容原生基线已请求，受测源码为 `16a962aca8b95ad58b0c9ffc34255ec2e1c08447`。旧的实拍仅作为设计诊断。新旧同内容对照需等待基线和候选样张的云端截图。[原生基线运行](https://github.com/betterfxb/private-moments-ios/actions/runs/45622949026)
+同内容的常规小屏原生基线与候选样张已经提交到 GitHub Actions。基线源码为 `16a962aca8b95ad58b0c9ffc34255ec2e1c08447`，候选源码为 `69365f715d796f2de16b214fec1fcdca61fe2a7f`。两次请求均选择相同的小屏配置和 Intel macOS 执行器。视觉效果需用原生前后截图复核。[原生基线](https://github.com/betterfxb/private-moments-ios/actions/runs/45622949026) · [候选样张](https://github.com/betterfxb/private-moments-ios/actions/runs/45625188179)

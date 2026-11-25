@@ -14,4 +14,6 @@
 
 `journal_features_smoke` 可以独立检验三项原生操作。完整矩阵把这些用例放在常规小屏和深色最大辅助字号的 `journal-features` 作业。既有图库、回顾与草稿、系统文件及无签名核心构建各自保留。待核对同一提交下的新单元测试、两套环境的截图和 XCTest 结果。
 
+两个定向运行使用相同的 `6f83cb739f487c5b5f7b6f0c599f585a2af1ad5d`。GitHub 已通过计划作业并分配设备配置。原生作业结果待查。[常规小屏](https://github.com/betterfxb/private-moments-ios/actions/runs/45626995515) · [深色最大辅助字号](https://github.com/betterfxb/private-moments-ios/actions/runs/45626988045)
+
 Windows 已通过 53 项工具测试、Bash 脚本语法、本地化 281 键、Xcode 项目 113 对象、发行材料和 Git 差异检查。Windows 上的检查覆盖工程配置、测试选择及资源完整性。原生编译、交互及视觉结果按 GitHub Actions 的实际结果另行记录。
