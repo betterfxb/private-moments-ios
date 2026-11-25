@@ -1141,9 +1141,20 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
 
         tap(app.buttons["settings.restore"], in: app)
-        let cancel = nativeControl(["Cancel", "取消"], app: app, timeout: 10)
-        let outside = pickerDismissalPoint(in: app, requireBlank: false)
+        var cancel: XCUIElement?
+        var outside: XCUICoordinate?
+        let pickerReady = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            cancel = self.nativeControl(["Cancel", "取消"], app: app, timeout: 0, enabledAction: true)
+            outside = self.pickerDismissalPoint(in: app, requireBlank: false)
+            return cancel != nil || outside != nil
+        }, object: nil)
+        // The remote Files scene may hand focus to the app after the sheet first
+        // appears. Keep the existing provider-startup budget used for file browsing.
+        let pickerResult = XCTWaiter.wait(for: [pickerReady], timeout: 90)
         captureSystem("Import-files-\(language)", app)
+        guard pickerResult == .completed else {
+            return XCTFail("The system picker has no native cancel action or safe outside dismissal.")
+        }
         if let outside {
             // Exercise the real adaptive presentation's escape path on iPad.
             print("Explicit native picker backdrop cancellation; journal checked unchanged afterward.")
