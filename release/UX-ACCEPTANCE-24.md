@@ -21,3 +21,5 @@
 中文并排实拍里，时间线清除动作移入计数行，第一条记录标题向上约 50 点。详情先读感受和备注，正文首行向上约 60 点。颜色集中到书签和小型操作。内容不同高度时低优先级动作随正文滚动。上述位置由 375 点并排图估读。审美评价与三套补充配置实拍待核对。[同设备、同内容前后对照](evidence/batch-24/reading-comparison-375pt.png)
 
 补充组合使用 `85983a4`，包含新增日期与标签入口及收藏后的「再记一次」，保留同一长备注夹具。三个运行已请求。[常规手机深色](https://github.com/betterfxb/private-moments-ios/actions/runs/45635246862) · [iPad 浅色](https://github.com/betterfxb/private-moments-ios/actions/runs/45635247449) · [小屏深色最大字号](https://github.com/betterfxb/private-moments-ios/actions/runs/45635231042)
+
+iPad Pro 13 英寸（M5）在 1,032 × 1,376 点通过双语长备注与收藏往返，用例及 3 项对比度检查成功。备注保持在居中阅读列，正常字号下正文与「再记一次」在首屏可见。已归档 6 张原图。[中文详情](evidence/batch-24/45635247449/ipad-light/Reading-sample-detail-zh-Hans.png) · [截图收据](evidence/batch-24/45635247449/ipad-light/screenshots.json)
