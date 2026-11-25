@@ -212,6 +212,7 @@ final class PrivateMomentsUITests: XCTestCase {
             let app = makeApp(language: language)
             app.launchEnvironment["PM_UI_TEST_READING_NOTE"] = "Synthetic note for timeline filtering."
             app.launch()
+            let usesAccessibilityLayout = app.buttons["today.weekMenu"].exists
             selectTab("Timeline", "时间线", language: language, app: app)
             let count = app.staticTexts["timeline.resultCount"]
             let advanced = app.buttons["timeline.dateAndTag"]
@@ -232,7 +233,29 @@ final class PrivateMomentsUITests: XCTestCase {
                 captureFailure("Timeline-date-range-did-not-open-\(language)", app)
                 return XCTFail("One tap must show the dates before applying the filter.")
             }
-            capture("Timeline-date-range-\(language)", app, stableSurface: range)
+            if usesAccessibilityLayout {
+                let dateRows = [app.buttons["timeline.dateRange.start"], app.buttons["timeline.dateRange.end"]]
+                let window = app.windows.firstMatch.frame
+                for row in dateRows {
+                    guard row.exists else { return XCTFail("Dates need a full-width action at accessibility sizes.") }
+                    revealFully(from: row, through: row, in: app)
+                    XCTAssertTrue(row.isHittable)
+                    XCTAssertGreaterThanOrEqual(row.frame.minX, window.minX)
+                    XCTAssertLessThanOrEqual(row.frame.maxX, window.maxX)
+                    XCTAssertFalse((row.value as? String ?? "").isEmpty, "The current date must be available to VoiceOver.")
+                }
+                let start = dateRows[0]
+                let initialDate = start.value as? String
+                tap(start, in: app)
+                let calendar = app.buttons["timeline.dateRange.calendarDone"]
+                XCTAssertTrue(calendar.waitForExistence(timeout: 10), "The full-width date row must open the system calendar.")
+                capture("Timeline-date-calendar-\(language)", app, stableSurface: calendar)
+                let cancelCalendar = app.buttons["timeline.dateRange.calendarCancel"]
+                tap(cancelCalendar, in: app)
+                XCTAssertEqual(start.value as? String, initialDate)
+                revealFully(from: start, through: start, in: app)
+            }
+            capture("Timeline-date-range-\(language)", app, stableSurface: startDate)
             tap(apply, in: app)
             XCTAssertEqual(count.label, english ? "0 moments" : "0 条记录")
             capture("Timeline-range-empty-\(language)", app, stableSurface: count)

@@ -384,10 +384,21 @@ private struct TimelineDateAndTag {
 }
 
 private struct TimelineDateAndTagSheet: View {
+    private enum DateBound: String, Identifiable {
+        case start, end
+
+        var id: Self { self }
+        var title: LocalizedStringKey { self == .start ? "Start date" : "End date" }
+        var identifier: String { "timeline.dateRange.\(rawValue)" }
+    }
+
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var dateRangeEnabled: Bool
     @State private var dateRange: MomentDayRange
     @State private var selectedTag: String?
+    @State private var editingDate: DateBound?
+    @State private var pendingDate = Date.now
     private let tags: [String]
     private let onApply: (TimelineDateAndTag) -> Void
 
@@ -420,9 +431,8 @@ private struct TimelineDateAndTagSheet: View {
                     .buttonStyle(.plain)
                     .accessibilityIdentifier("timeline.dateRange.enabled")
                     if dateRangeEnabled {
-                        DatePicker("Start date", selection: $dateRange.start, displayedComponents: .date)
-                            .accessibilityIdentifier("timeline.dateRange.start")
-                        DatePicker("End date", selection: $dateRange.end, displayedComponents: .date)
+                        dateRow(.start, selection: $dateRange.start)
+                        dateRow(.end, selection: $dateRange.end)
                         if !validDates {
                             Text("The end date must be on or after the start date.")
                                 .font(.footnote)
@@ -454,6 +464,64 @@ private struct TimelineDateAndTagSheet: View {
                     .accessibilityIdentifier("timeline.dateAndTag.apply")
                 }
             }
+        }
+        .sheet(item: $editingDate) { bound in
+            NavigationStack {
+                ScrollView {
+                    DatePicker(bound.title, selection: $pendingDate, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .tint(AppColors.controlTint)
+                        .padding()
+                        .frame(maxWidth: 520)
+                        .frame(maxWidth: .infinity)
+                }
+                .navigationTitle(bound.title)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { editingDate = nil }
+                            .accessibilityIdentifier("timeline.dateRange.calendarCancel")
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") {
+                            switch bound {
+                            case .start: dateRange.start = pendingDate
+                            case .end: dateRange.end = pendingDate
+                            }
+                            editingDate = nil
+                        }
+                        .accessibilityIdentifier("timeline.dateRange.calendarDone")
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func dateRow(_ bound: DateBound, selection: Binding<Date>) -> some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            let date = selection.wrappedValue.formatted(date: .long, time: .omitted)
+            Button {
+                pendingDate = selection.wrappedValue
+                editingDate = bound
+            } label: {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(bound.title)
+                        .foregroundStyle(AppColors.journalAccent)
+                    Text(date)
+                        .foregroundStyle(AppColors.text)
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text(bound.title))
+            .accessibilityValue(Text(date))
+            .accessibilityIdentifier(bound.identifier)
+        } else {
+            DatePicker(bound.title, selection: selection, displayedComponents: .date)
+                .accessibilityIdentifier(bound.identifier)
         }
     }
 }
