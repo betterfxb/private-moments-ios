@@ -385,12 +385,17 @@ private struct TimelineDateAndTag {
 
 private struct TimelineDateAndTagSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var selection: TimelineDateAndTag
+    @State private var dateRangeEnabled: Bool
+    @State private var dateRange: MomentDayRange
+    @State private var selectedTag: String?
     private let tags: [String]
     private let onApply: (TimelineDateAndTag) -> Void
 
     init(selection: TimelineDateAndTag, moments: [Moment], onApply: @escaping (TimelineDateAndTag) -> Void) {
-        _selection = State(initialValue: selection)
+        let today = Calendar.current.startOfDay(for: .now)
+        _dateRangeEnabled = State(initialValue: selection.days != nil)
+        _dateRange = State(initialValue: selection.days ?? MomentDayRange(start: today, end: today))
+        _selectedTag = State(initialValue: selection.tag)
         var tags = Set(moments.flatMap(\.tags))
         if let tag = selection.tag { tags.insert(tag) }
         self.tags = tags.sorted { AppLocalization.localizedTag($0).localizedStandardCompare(AppLocalization.localizedTag($1)) == .orderedAscending }
@@ -398,33 +403,26 @@ private struct TimelineDateAndTagSheet: View {
     }
 
     private var validDates: Bool {
-        selection.days == nil || selection.days?.interval(calendar: .current) != nil
+        !dateRangeEnabled || dateRange.interval(calendar: .current) != nil
     }
 
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    Button {
-                        if selection.days == nil {
-                            let today = Calendar.current.startOfDay(for: .now)
-                            selection.days = MomentDayRange(start: today, end: today)
-                        } else {
-                            selection.days = nil
-                        }
-                    } label: {
-                        Label(selection.days == nil ? "Date range" : "Remove date range",
-                              systemImage: selection.days == nil ? "calendar" : "calendar.badge.minus")
+                    Button { dateRangeEnabled.toggle() } label: {
+                        Label(dateRangeEnabled ? "Remove date range" : "Date range",
+                              systemImage: dateRangeEnabled ? "calendar.badge.minus" : "calendar")
                             .foregroundStyle(AppColors.journalAccent)
                             .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                     .accessibilityIdentifier("timeline.dateRange.enabled")
-                    if let days = Binding($selection.days) {
-                        DatePicker("Start date", selection: days.start, displayedComponents: .date)
+                    if dateRangeEnabled {
+                        DatePicker("Start date", selection: $dateRange.start, displayedComponents: .date)
                             .accessibilityIdentifier("timeline.dateRange.start")
-                        DatePicker("End date", selection: days.end, displayedComponents: .date)
+                        DatePicker("End date", selection: $dateRange.end, displayedComponents: .date)
                         if !validDates {
                             Text("The end date must be on or after the start date.")
                                 .font(.footnote)
@@ -433,7 +431,7 @@ private struct TimelineDateAndTagSheet: View {
                     }
                 }
                 Section {
-                    Picker("Tags", selection: $selection.tag) {
+                    Picker("Tags", selection: $selectedTag) {
                         Text("All tags").tag(nil as String?)
                         ForEach(tags, id: \.self) { tag in
                             Text(AppLocalization.localizedTag(tag)).tag(Optional(tag))
@@ -449,7 +447,7 @@ private struct TimelineDateAndTagSheet: View {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
-                        onApply(selection)
+                        onApply(TimelineDateAndTag(days: dateRangeEnabled ? dateRange : nil, tag: selectedTag))
                         dismiss()
                     }
                     .disabled(!validDates)

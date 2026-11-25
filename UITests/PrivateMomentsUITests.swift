@@ -239,6 +239,9 @@ final class PrivateMomentsUITests: XCTestCase {
 
             tap(advanced, in: app)
             tap(range, in: app)
+            guard app.state == .runningForeground else {
+                return XCTFail("Removing the date range must leave the filter sheet open.")
+            }
             XCTAssertFalse(startDate.exists)
             tap(apply, in: app)
             tap(app.buttons["timeline.favorites"], in: app)
