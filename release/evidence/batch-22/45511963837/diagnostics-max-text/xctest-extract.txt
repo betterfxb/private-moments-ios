@@ -1,0 +1,24 @@
+2026-11-24T23:51:08.2796330Z Test Case '-[PrivateMomentsTests.FavoritePersistenceTests testFailedFavoriteSaveLeavesTheRecordUnchanged]' passed (0.018 seconds).
+2026-11-24T23:51:08.4876800Z Test Case '-[PrivateMomentsTests.FavoritePersistenceTests testFavoritePersistsAfterMigrationAndSurvivesBackupRoundTrip]' passed (0.661 seconds).
+2026-11-24T23:51:08.5910210Z Test Case '-[PrivateMomentsTests.FavoritePersistenceTests testLegacyBackupDoesNotClearLocalFavoriteDuringMerge]' passed (0.003 seconds).
+2026-11-24T23:51:08.9971170Z Test Case '-[PrivateMomentsTests.MomentDateQueryTests testComparisonUsesAdjacentLocalPeriodsAndKeepsTiedFeelings]' passed (0.003 seconds).
+2026-11-24T23:51:09.2254170Z Test Case '-[PrivateMomentsTests.MomentDateQueryTests testDaylightSavingDaysUseCalendarBoundaries]' passed (0.002 seconds).
+2026-11-24T23:51:09.5713950Z Test Case '-[PrivateMomentsTests.MomentDateQueryTests testMidnightBelongsOnlyToTheFollowingDay]' passed (0.002 seconds).
+2026-11-24T23:51:09.8541320Z Test Case '-[PrivateMomentsTests.MomentDateQueryTests testMonthReviewGroupsLocalDaysAndKeepsPeriodCountsWhenFiltered]' passed (0.003 seconds).
+2026-11-24T23:51:10.0808590Z Test Case '-[PrivateMomentsTests.MomentDateQueryTests testReviewNavigationMovesBetweenCalendarPeriodStarts]' passed (0.003 seconds).
+2026-11-24T23:51:10.3120840Z Test Case '-[PrivateMomentsTests.MomentDateQueryTests testWeekReviewShowsEmptyAndSingleRecord]' passed (0.002 seconds).
+2026-11-24T23:51:10.5145340Z Test Case '-[PrivateMomentsTests.MomentDateQueryTests testWeekReviewUsesLocalMidnightAcrossDaylightSaving]' passed (0.002 seconds).
+2026-11-24T23:51:10.6152310Z Test Case '-[PrivateMomentsTests.MomentDateQueryTests testWeekReviewUsesLocalYearBoundaryAndCountsOnlyIncludedMoods]' passed (0.003 seconds).
+2026-11-24T23:51:11.1172110Z Test Case '-[PrivateMomentsTests.RecapDraftRecoveryTests testDraftRoundTripKeepsInvalidTimingAndPrivateTextUntilExplicitDiscard]' passed (0.008 seconds).
+2026-11-24T23:51:11.3175700Z Test Case '-[PrivateMomentsTests.RecapDraftRecoveryTests testRelaunchAfterRecordCommitDoesNotOfferTheSameDraftTwice]' passed (0.003 seconds).
+2026-11-24T23:51:11.6190490Z Test Case '-[PrivateMomentsTests.RecapDraftRecoveryTests testUnreadableDraftCannotBeOverwrittenWithoutExplicitDiscard]' passed (0.013 seconds).
+2026-11-24T23:51:12.1287550Z Test Case '-[PrivateMomentsTests.SemanticColorTests testAccentAndSessionTextRemainReadableInBothAppearances]' passed (0.006 seconds).
+2026-11-24T23:51:12.3293490Z Test Case '-[PrivateMomentsTests.SemanticColorTests testBodyAndSecondaryTextContrastOnSurfaces]' passed (0.002 seconds).
+2026-11-24T23:59:53.7393580Z Test Case '-[PrivateMomentsUITests.PrivateMomentsUITests testFavoriteCanBeFoundWithSearchAfterRelaunch]' passed (513.145 seconds).
+2026-11-25T00:00:24.1782790Z /Users/runner/work/private-moments-ios/private-moments-ios/UITests/PrivateMomentsUITests.swift:392: error: -[PrivateMomentsUITests.PrivateMomentsUITests testReviewComparisonOpensRecordsFromPreviousMonth] : Failed to get matching snapshot: No matches found for Elements matching predicate '"review.selected.records" IN identifiers' from input {(
+2026-11-25T00:00:26.1131160Z Test Case '-[PrivateMomentsUITests.PrivateMomentsUITests testReviewComparisonOpensRecordsFromPreviousMonth]' failed (31.959 seconds).
+2026-11-25T00:06:27.2220860Z Test Case '-[PrivateMomentsUITests.PrivateMomentsUITests testReviewTabBrowsesPeriodsAndOpensFilteredRecord]' passed (361.533 seconds).
+2026-11-25T00:12:53.9833930Z /Users/runner/work/private-moments-ios/private-moments-ios/UITests/PrivateMomentsUITests.swift:468: error: -[PrivateMomentsUITests.PrivateMomentsUITests testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded] : Failed to get matching snapshot: No matches found for Elements matching predicate '"recap.mood.Calm" IN identifiers' from input {(
+2026-11-25T00:12:56.2989010Z Test Case '-[PrivateMomentsUITests.PrivateMomentsUITests testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded]' failed (388.918 seconds).
+2026-11-25T00:19:30.4581800Z Test Case '-[PrivateMomentsUITests.PrivateMomentsUITests testWeekReviewShowsLocalRecords]' passed (394.286 seconds).
+2026-11-25T00:21:40.9295370Z ** TEST FAILED **
