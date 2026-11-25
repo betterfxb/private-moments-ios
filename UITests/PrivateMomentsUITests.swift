@@ -206,6 +206,44 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testJournalReadingSample() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let app = makeApp(language: language)
+            let noteText = english
+                ? "We came home in the evening, turned the lights down and sat by the window with tea. I meant to catch up on messages, but put my phone aside when I heard the rain.\n\nWe talked about the day and let the room go quiet again. The tea cooled in our cups. I want to remember the light on the windowsill and how unhurried we felt."
+                : "傍晚回到家，我们把灯调暗了一点，坐在窗边喝茶。雨声还在，屋里很安静。我本来想趁这段空闲回消息，后来只是把手机放在一旁。\n\n聊到白天的事时，谁也没有赶着解释。茶渐渐凉了，我记得窗台上的光，也记得这一小段时间有多从容。"
+            app.launchEnvironment["PM_UI_TEST_READING_NOTE"] = noteText
+            app.launch()
+            selectTab("Timeline", "时间线", language: language, app: app)
+            let favorites = app.buttons["timeline.favorites"]
+            tap(favorites, in: app)
+            let count = app.staticTexts["timeline.resultCount"]
+            XCTAssertEqual(count.label, english ? "1 moment" : "1 条记录")
+
+            let timeline = app.scrollViews.firstMatch
+            let search = app.searchFields.firstMatch
+            if !search.isHittable { timeline.swipeDown() }
+            capture("Reading-sample-timeline-\(language)", app)
+            tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
+
+            let favorite = app.buttons["detail.favorite"]
+            XCTAssertEqual(favorite.label, english ? "Remove from favorites" : "取消收藏")
+            assertToolbarTarget(favorite)
+            capture("Reading-sample-detail-\(language)", app, stableSurface: favorite)
+            let note = app.staticTexts["detail.note"]
+            reveal(note, in: app)
+            XCTAssertTrue(note.label.hasPrefix(english ? "We came home" : "傍晚回到家"))
+            XCTAssertTrue(note.label.contains(english ? "The tea cooled" : "茶渐渐凉了"))
+            capture("Reading-sample-note-\(language)", app, stableSurface: note)
+            goBack(app)
+            XCTAssertEqual(count.label, english ? "1 moment" : "1 条记录")
+            tap(app.buttons["timeline.clearFilters"], in: app)
+            XCTAssertEqual(count.label, english ? "2 moments" : "2 条记录")
+            app.terminate()
+        }
+    }
+
     func testReviewTabBrowsesPeriodsAndOpensFilteredRecord() {
         for language in ["en", "zh-Hans"] {
             let english = language == "en"

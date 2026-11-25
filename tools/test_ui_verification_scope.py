@@ -32,7 +32,7 @@ def execute(block, values):
     environment = {k: v for k, v in os.environ.items()
                    if not k.startswith('PRIVATE_MOMENTS_UI_') and k not in {
                        'ROTATION_SMOKE', 'ROTATION_START', 'INPUT_SMOKE', 'BACKUP_SMOKE', 'BACKUP_LANGUAGE', 'PERFORMANCE_SMOKE',
-                       'WEEK_REVIEW_SMOKE', 'SMOKE_PROFILE'}}
+                       'WEEK_REVIEW_SMOKE', 'READING_SMOKE', 'SMOKE_PROFILE'}}
     environment.update(values)
     return subprocess.run([BASH, '-c', 'set -euo pipefail\nfail() { printf "%s\\n" "$1" >&2; exit 1; }\n' + block],
                           env=environment, text=True, capture_output=True, timeout=15)
@@ -47,6 +47,18 @@ class VerificationScopeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
                          ['-only-testing:' + PREFIX + 'testScreenGallery'])
+
+    def test_reading_diagnostic_reuses_the_same_native_sample(self):
+        result = self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='reading')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
+                         ['-only-testing:' + PREFIX + 'testJournalReadingSample'])
+        baseline = dict(ROTATION_START='reference', ROTATION_SMOKE='0', INPUT_SMOKE='0', BACKUP_SMOKE='0',
+                        BACKUP_LANGUAGE='en', READING_SMOKE='1', SMOKE_PROFILE='compact-light')
+        self.assertEqual(execute(GUARD, baseline).returncode, 0)
+        for key in ['INPUT_SMOKE', 'BACKUP_SMOKE', 'WEEK_REVIEW_SMOKE', 'ROTATION_SMOKE', 'PERFORMANCE_SMOKE']:
+            with self.subTest(key=key):
+                self.assertNotEqual(execute(GUARD, baseline | {key: '1'}).returncode, 0)
 
     def test_acceptance_core_skips_sharded_methods_and_runs_remaining_tests(self):
         result = self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='core')
@@ -66,7 +78,7 @@ class VerificationScopeTests(unittest.TestCase):
 
     def test_acceptance_part_rejects_invalid_or_mixed_scopes(self):
         self.assertNotEqual(self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='unknown').returncode, 0)
-        for part in ['gallery', 'core']:
+        for part in ['gallery', 'core', 'reading']:
             for key in ['INPUT_ONLY', 'BACKUP_ONLY', 'PERFORMANCE_ONLY', 'WEEK_REVIEW_ONLY',
                         'ROTATION_ONLY', 'GALLERY_ONLY']:
                 with self.subTest(part=part, key=key):

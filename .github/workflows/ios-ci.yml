@@ -38,6 +38,10 @@ on:
         description: Run local journal tests and bilingual retrieval, Review and draft flows
         type: boolean
         default: false
+      reading_smoke:
+        description: Capture the same native timeline and long note in both languages
+        type: boolean
+        default: false
       rotation_smoke:
         description: Run a focused system-window or rotation check on a supported iPad
         type: boolean
@@ -69,7 +73,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ios-validation-${{ github.ref }}-${{ inputs.legacy_ios17 && 'ios17' || inputs.week_review_smoke && format('journal-{0}', inputs.backup_smoke_profile) || inputs.backup_smoke && format('backup-{0}-{1}', inputs.backup_smoke_profile, inputs.backup_smoke_language) || 'standard' }}
+  group: ios-validation-${{ github.ref }}-${{ inputs.legacy_ios17 && 'ios17' || inputs.reading_smoke && format('reading-{0}', inputs.backup_smoke_profile) || inputs.week_review_smoke && format('journal-{0}', inputs.backup_smoke_profile) || inputs.backup_smoke && format('backup-{0}-{1}', inputs.backup_smoke_profile, inputs.backup_smoke_language) || 'standard' }}
   cancel-in-progress: true
 
 jobs:
@@ -82,11 +86,12 @@ jobs:
       - uses: actions/checkout@v7
       - id: matrix
         env:
-          MATRIX_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.rotation_smoke && 'rotation' || github.event_name == 'workflow_dispatch' && (inputs.input_smoke || inputs.performance_smoke || inputs.week_review_smoke) && 'input' || github.event_name == 'workflow_dispatch' && inputs.backup_smoke && 'backup' || 'full' }}
+          MATRIX_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.rotation_smoke && 'rotation' || github.event_name == 'workflow_dispatch' && (inputs.input_smoke || inputs.performance_smoke || inputs.week_review_smoke || inputs.reading_smoke) && 'input' || github.event_name == 'workflow_dispatch' && inputs.backup_smoke && 'backup' || 'full' }}
           SMOKE_PROFILE: ${{ inputs.backup_smoke_profile || 'compact-light' }}
           INPUT_SMOKE: ${{ inputs.input_smoke && '1' || '0' }}
           PERFORMANCE_SMOKE: ${{ inputs.performance_smoke && '1' || '0' }}
           WEEK_REVIEW_SMOKE: ${{ inputs.week_review_smoke && '1' || '0' }}
+          READING_SMOKE: ${{ inputs.reading_smoke && '1' || '0' }}
           BACKUP_SMOKE: ${{ inputs.backup_smoke && '1' || '0' }}
           BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
           ROTATION_SMOKE: ${{ inputs.rotation_smoke && '1' || '0' }}
@@ -106,6 +111,10 @@ jobs:
           fi
           if [[ "${WEEK_REVIEW_SMOKE:-0}" == "1" && ( "$ROTATION_SMOKE" == "1" || "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" || "${PERFORMANCE_SMOKE:-0}" == "1" ) ]]; then
             printf 'Week in review excludes other smoke modes.\n' >&2
+            exit 1
+          fi
+          if [[ "${READING_SMOKE:-0}" == "1" && ( "$ROTATION_SMOKE" == "1" || "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" || "${PERFORMANCE_SMOKE:-0}" == "1" || "${WEEK_REVIEW_SMOKE:-0}" == "1" ) ]]; then
+            printf 'Reading sample excludes other smoke modes.\n' >&2
             exit 1
           fi
           if [[ "$BACKUP_LANGUAGE" != "en" && "$BACKUP_LANGUAGE" != "zh-Hans" ]] ||
@@ -201,7 +210,7 @@ jobs:
         env:
           PRIVATE_MOMENTS_DERIVED_DATA: ${{ runner.temp }}/PrivateMomentsDerivedData
           PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments.xcresult
-          PRIVATE_MOMENTS_UI_ACCEPTANCE_PART: ${{ (matrix.suite == 'gallery' || matrix.suite == 'core') && matrix.suite || '' }}
+          PRIVATE_MOMENTS_UI_ACCEPTANCE_PART: ${{ inputs.reading_smoke && 'reading' || (matrix.suite == 'gallery' || matrix.suite == 'core') && matrix.suite || '' }}
           PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ (matrix.suite == 'files' || matrix.suite == 'files-zh' || inputs.backup_smoke) && '1' || '0' }}
           PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE: ${{ matrix.suite == 'files-zh' && 'zh-Hans' || inputs.backup_smoke_language || 'en' }}
           PRIVATE_MOMENTS_UI_INPUT_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && '1' || '0' }}
@@ -278,7 +287,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Reject conflicting scopes
-        if: ${{ inputs.backup_smoke || inputs.input_smoke || inputs.performance_smoke || inputs.week_review_smoke || inputs.rotation_smoke }}
+        if: ${{ inputs.backup_smoke || inputs.input_smoke || inputs.performance_smoke || inputs.week_review_smoke || inputs.rotation_smoke || inputs.reading_smoke }}
         run: |
           printf 'The iOS 17 compatibility run excludes the other focused scopes.\n' >&2
           exit 1

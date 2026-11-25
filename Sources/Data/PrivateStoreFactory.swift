@@ -130,6 +130,10 @@ enum PrivateStoreFactory {
            ProcessInfo.processInfo.arguments.contains("-pm-ui-test-review-comparison-fixture") {
             try seedMonthlyComparisonFixture(in: container)
         }
+        if uiTestStoreIdentifier() != nil,
+           let note = ProcessInfo.processInfo.environment["PM_UI_TEST_READING_NOTE"], !note.isEmpty {
+            try seedReadingFixture(note: note, in: container)
+        }
         #endif
 
         // Apply protection to store files created by SwiftData as well as the containing directory.
@@ -179,6 +183,20 @@ enum PrivateStoreFactory {
             Moment(occurredAt: now, durationSeconds: 80, mood: .connected, rating: 4),
             Moment(occurredAt: prior, durationSeconds: 90, mood: .calm, rating: 3, privateNote: "previous-month-first-entry"),
             Moment(occurredAt: prior.addingTimeInterval(90), durationSeconds: 120, mood: .calm, rating: 5, privateNote: "previous-month-second-entry")
+        ]
+        try SwiftDataMomentRepository(modelContext: context).mergeAll(moments)
+    }
+
+    @MainActor
+    private static func seedReadingFixture(note: String, in container: ModelContainer) throws {
+        let context = container.mainContext
+        guard try context.fetchCount(FetchDescriptor<MomentEntity>()) == 0 else { return }
+        let date = Date(timeIntervalSince1970: 1_761_770_400)
+        let moments = [
+            Moment(occurredAt: date, durationSeconds: 420, mood: .happy, rating: 5,
+                   tags: ["Connected"], privateNote: note, favorite: true),
+            Moment(occurredAt: date.addingTimeInterval(-3_600), durationSeconds: 125, mood: .calm,
+                   kind: .solo, rating: 4, tags: ["Relaxed"]),
         ]
         try SwiftDataMomentRepository(modelContext: context).mergeAll(moments)
     }

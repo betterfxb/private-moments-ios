@@ -17,6 +17,7 @@ def validate_release_test_hooks(contents):
     if any(marker in contents for marker in (b"-pm-ui-test-store", b"PrivateMoments-UITests",
                                               b"-pm-ui-test-fail-save-once", b"-pm-ui-test-performance-fixture",
                                               b"-pm-ui-test-review-comparison-fixture",
+                                              b"PM_UI_TEST_READING_NOTE",
                                               b"-pm-ui-test-performance-trace", b"timeline-performance")):
         raise DistributionError("A Debug-only UI-test hook leaked into the Release executable.")
 

@@ -60,7 +60,7 @@ IPAD_TESTS="${PRIVATE_MOMENTS_UI_IPAD_TESTS:-0}"
 ROTATION_START="${PRIVATE_MOMENTS_UI_ROTATION_START:-reference}"
 ACCEPTANCE_PART="${PRIVATE_MOMENTS_UI_ACCEPTANCE_PART:-}"
 GALLERY_ONLY="${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}"
-[[ "$ACCEPTANCE_PART" == "" || "$ACCEPTANCE_PART" == "gallery" || "$ACCEPTANCE_PART" == "core" ]] || fail "Acceptance part must be gallery or core."
+[[ "$ACCEPTANCE_PART" == "" || "$ACCEPTANCE_PART" == "gallery" || "$ACCEPTANCE_PART" == "core" || "$ACCEPTANCE_PART" == "reading" ]] || fail "Acceptance part must be gallery, core or reading."
 [[ "$ACCEPTANCE_PART" == "" || ( "$BACKUP_ONLY" == "0" && "$INPUT_ONLY" == "0" && "$PERFORMANCE_ONLY" == "0" && "$WEEK_REVIEW_ONLY" == "0" && "$ROTATION_ONLY" == "0" && "$GALLERY_ONLY" == "0" ) ]] || fail "An acceptance part excludes other verification scopes."
 [[ "$BACKUP_ONLY" == "0" || "$BACKUP_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_BACKUP_ONLY must be 0 or 1."
 [[ "$INPUT_ONLY" == "0" || "$INPUT_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_INPUT_ONLY must be 0 or 1."
@@ -141,6 +141,8 @@ elif [[ "$BACKUP_ONLY" == "1" ]]; then
     fi
 elif [[ "$ACCEPTANCE_PART" == "gallery" ]]; then
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testScreenGallery")
+elif [[ "$ACCEPTANCE_PART" == "reading" ]]; then
+    TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testJournalReadingSample")
 elif [[ "$GALLERY_ONLY" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
     for method in "${JOURNAL_METHODS[@]}"; do
