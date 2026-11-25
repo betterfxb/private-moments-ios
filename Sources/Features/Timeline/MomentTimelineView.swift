@@ -101,6 +101,9 @@ struct MomentTimelineView: View {
 
                         resultSummary(matches.count)
                             .id("timeline.results")
+                        if dynamicTypeSize.isAccessibilitySize {
+                            searchScope
+                        }
                         if dateAndTag.isActive && !isSearchFocused {
                             Text(verbatim: dateAndTag.summary)
                                 .font(.system(.caption, design: .rounded))
@@ -315,7 +318,6 @@ struct MomentTimelineView: View {
         if store.isStorageAvailable {
             if dynamicTypeSize.isAccessibilitySize {
                 favoritesButton
-                searchScope
             } else {
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 8) {
