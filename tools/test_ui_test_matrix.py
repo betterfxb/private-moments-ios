@@ -14,10 +14,10 @@ class UITestMatrixTests(unittest.TestCase):
     def test_full_acceptance_keeps_original_profiles_and_scopes(self):
         jobs = matrix("full")["include"]
         groups = {
-            "compact-light": {"gallery", "journal", "files", "files-zh", "core"},
+            "compact-light": {"gallery", "journal", "journal-features", "files", "files-zh", "core"},
             "phone-dark": {"gallery", "journal", "files"},
             "ipad-light": {"gallery", "journal", "files", "rotation"},
-            "compact-dark-accessibility": {"gallery", "journal", "files"},
+            "compact-dark-accessibility": {"gallery", "journal", "journal-features", "files"},
         }
         self.assertEqual({(job["profile"], job["suite"]) for job in jobs},
                          {(profile, suite) for profile, suites in groups.items() for suite in suites})

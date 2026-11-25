@@ -44,8 +44,11 @@ def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
         return {"include": selected}
 
     common_suites = [("gallery", 80), ("journal", 80), ("files", 55)]
-    additional_suites = {"compact-light": [("core", 100), ("files-zh", 55)],
-                         "ipad-light": [("rotation", 55)]}
+    additional_suites = {
+        "compact-light": [("core", 100), ("files-zh", 55), ("journal-features", 70)],
+        "ipad-light": [("rotation", 55)],
+        "compact-dark-accessibility": [("journal-features", 70)],
+    }
     return {"include": [
         dict(profile, suite=suite, test_timeout_minutes=minutes, timeout_minutes=minutes + 25)
         for profile in profiles

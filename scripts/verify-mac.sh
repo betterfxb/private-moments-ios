@@ -60,7 +60,10 @@ IPAD_TESTS="${PRIVATE_MOMENTS_UI_IPAD_TESTS:-0}"
 ROTATION_START="${PRIVATE_MOMENTS_UI_ROTATION_START:-reference}"
 ACCEPTANCE_PART="${PRIVATE_MOMENTS_UI_ACCEPTANCE_PART:-}"
 GALLERY_ONLY="${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}"
-[[ "$ACCEPTANCE_PART" == "" || "$ACCEPTANCE_PART" == "gallery" || "$ACCEPTANCE_PART" == "core" || "$ACCEPTANCE_PART" == "reading" ]] || fail "Acceptance part must be gallery, core or reading."
+case "$ACCEPTANCE_PART" in
+    ''|gallery|core|reading|journal-features) ;;
+    *) fail "Unknown acceptance part: $ACCEPTANCE_PART." ;;
+esac
 [[ "$ACCEPTANCE_PART" == "" || ( "$BACKUP_ONLY" == "0" && "$INPUT_ONLY" == "0" && "$PERFORMANCE_ONLY" == "0" && "$WEEK_REVIEW_ONLY" == "0" && "$ROTATION_ONLY" == "0" && "$GALLERY_ONLY" == "0" ) ]] || fail "An acceptance part excludes other verification scopes."
 [[ "$BACKUP_ONLY" == "0" || "$BACKUP_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_BACKUP_ONLY must be 0 or 1."
 [[ "$INPUT_ONLY" == "0" || "$INPUT_ONLY" == "1" ]] || fail "PRIVATE_MOMENTS_UI_INPUT_ONLY must be 0 or 1."
@@ -98,11 +101,15 @@ fi
 UI_SUITE=PrivateMomentsUITests/PrivateMomentsUITests
 JOURNAL_METHODS=(
     testFavoriteCanBeFoundWithSearchAfterRelaunch
-    testTimelineDateAndTagFiltersCombineAndSurviveNavigation
     testWeekReviewShowsLocalRecords
     testReviewTabBrowsesPeriodsAndOpensFilteredRecord
     testReviewComparisonOpensRecordsFromPreviousMonth
     testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded
+)
+JOURNAL_FEATURE_METHODS=(
+    testTimelineDateAndTagFiltersCombineAndSurviveNavigation
+    testRecordAgainCopiesOnlyTypeAndTags
+    testMonthHighlightsOpenFavoritesAndMatchingFeelings
 )
 if [[ "$ROTATION_ONLY" == "1" ]]; then
     printf '\nFocused iPad system-window diagnostic.\n'
@@ -145,6 +152,11 @@ elif [[ "$ACCEPTANCE_PART" == "gallery" ]]; then
 elif [[ "$ACCEPTANCE_PART" == "reading" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/SemanticColorTests)
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testJournalReadingSample")
+elif [[ "$ACCEPTANCE_PART" == "journal-features" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
+    for method in "${JOURNAL_FEATURE_METHODS[@]}"; do
+        TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/$method")
+    done
 elif [[ "$GALLERY_ONLY" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
     for method in "${JOURNAL_METHODS[@]}"; do
@@ -156,7 +168,7 @@ elif [[ "$GALLERY_ONLY" == "1" ]]; then
     fi
 else
 if [[ "$ACCEPTANCE_PART" == "core" ]]; then
-    for method in testScreenGallery "${JOURNAL_METHODS[@]}" testBackupFileRoundTrip testChineseBackupFileRoundTrip; do
+    for method in testScreenGallery "${JOURNAL_METHODS[@]}" "${JOURNAL_FEATURE_METHODS[@]}" testBackupFileRoundTrip testChineseBackupFileRoundTrip; do
         TEST_SCOPE_ARGUMENTS+=("-skip-testing:$UI_SUITE/$method")
     done
 fi

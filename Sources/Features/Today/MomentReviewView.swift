@@ -1,6 +1,23 @@
 import Combine
 import SwiftUI
 
+private enum ReviewRecordFilter: Equatable {
+    case favorites
+    case mood(MomentMood)
+
+    var mood: MomentMood? {
+        if case .mood(let mood) = self { return mood }
+        return nil
+    }
+
+    var title: Text {
+        switch self {
+        case .favorites: Text("Bookmarked moments")
+        case .mood(let mood): Text(mood.displayName)
+        }
+    }
+}
+
 struct MomentReviewView: View {
     @Environment(MomentStore.self) private var store
     @Environment(\.locale) private var locale
@@ -10,7 +27,7 @@ struct MomentReviewView: View {
     @State private var referenceDate = Date.now
     @State private var historicalDate: Date?
     @State private var period: MomentReviewPeriod = .week
-    @State private var selectedMood: MomentMood?
+    @State private var recordFilter: ReviewRecordFilter?
     @State private var showingDatePicker = false
     @State private var dateToView = Date.now
     @State private var isComparing = false
@@ -92,11 +109,14 @@ struct MomentReviewView: View {
     @ViewBuilder
     private func reviewContent(_ review: MomentReview) -> some View {
         overview(review)
+        if showsPeriodControls, period == .month {
+            monthHighlights(review)
+        }
         if showsPeriodControls,
            let previous = MomentDateQuery.previousReview(store.moments, period: period, from: review, calendar: calendar) {
             comparison(review, previous: previous)
         }
-        if review.moments.isEmpty && selectedMood == nil {
+        if review.moments.isEmpty && recordFilter == nil {
             Text(showsPeriodControls ? LocalizedStringKey("No moments in this period") : LocalizedStringKey("No moments this week"))
                 .font(.system(.body, design: .rounded))
                 .foregroundStyle(AppColors.secondaryText)
@@ -163,7 +183,7 @@ struct MomentReviewView: View {
         return Button {
             guard period != option else { return }
             period = option
-            selectedMood = nil
+            recordFilter = nil
             isComparing = false
         } label: {
             Text(title)
@@ -200,7 +220,7 @@ struct MomentReviewView: View {
 
     private func selectDate(_ date: Date) {
         historicalDate = date < currentPeriodStart ? date : nil
-        selectedMood = nil
+        recordFilter = nil
         isComparing = false
     }
 
@@ -245,12 +265,15 @@ struct MomentReviewView: View {
         VStack(alignment: .leading, spacing: 12) {
             sectionHeading(Text("Feelings"))
             ForEach(review.moods) { item in
-                let isSelected = selectedMood == item.mood
+                let isSelected = recordFilter == .mood(item.mood)
                 Group {
                     if showsPeriodControls {
                         Button {
-                            selectedMood = isSelected ? nil : item.mood
-                            if !isSelected { recordJumpID = UUID() }
+                            if isSelected {
+                                recordFilter = nil
+                            } else {
+                                showRecords(matching: .mood(item.mood))
+                            }
                         } label: {
                             moodRow(item, total: review.moments.count, isSelected: isSelected)
                                 .padding(.vertical, 4)
@@ -269,6 +292,64 @@ struct MomentReviewView: View {
                 .accessibilityIdentifier("weekReview.mood.\(item.mood.rawValue)")
             }
         }
+    }
+
+    @ViewBuilder
+    private func monthHighlights(_ review: MomentReview) -> some View {
+        let favoriteCount = review.favoriteCount
+        let moods = review.commonMoods
+        if favoriteCount > 0 || !moods.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                sectionHeading(Text("Month highlights"))
+                if favoriteCount > 0 {
+                    highlightLink(filter: .favorites, symbol: "bookmark.fill", count: favoriteCount,
+                                  identifier: "review.highlights.favorites")
+                }
+                if !moods.isEmpty {
+                    Text("Most common feelings")
+                        .font(.system(.footnote, design: .rounded))
+                        .foregroundStyle(AppColors.secondaryText)
+                }
+                ForEach(moods) { item in
+                    highlightLink(filter: .mood(item.mood), symbol: "heart", count: item.count,
+                                  identifier: "review.highlights.mood.\(item.mood.rawValue)")
+                }
+            }
+        }
+    }
+
+    private func highlightLink(filter: ReviewRecordFilter, symbol: String, count: Int, identifier: String) -> some View {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
+            : AnyLayout(HStackLayout(spacing: 14))
+        return Button { showRecords(matching: filter) } label: {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: symbol).accessibilityHidden(true)
+                layout {
+                    filter.title.fontWeight(.semibold)
+                    Text(AppLocalization.momentCount(count)).foregroundStyle(AppColors.secondaryText)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.forward").font(.caption.weight(.semibold)).accessibilityHidden(true)
+            }
+            .font(.system(.subheadline, design: .rounded))
+            .foregroundStyle(AppColors.journalAccent)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+            .background(AppColors.journalNote, in: RoundedRectangle(cornerRadius: AppRadius.control))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(filter.title)
+        .accessibilityValue(Text(AppLocalization.momentCount(count)))
+        .accessibilityAddTraits(recordFilter == filter ? .isSelected : [])
+        .accessibilityIdentifier(identifier)
+    }
+
+    private func showRecords(matching filter: ReviewRecordFilter?) {
+        recordFilter = filter
+        recordJumpID = UUID()
     }
 
     private func comparison(_ current: MomentReview, previous: MomentReview) -> some View {
@@ -332,8 +413,7 @@ struct MomentReviewView: View {
     private func comparisonLink(_ review: MomentReview, title: String, value: String, mood: MomentMood? = nil) -> some View {
         Button {
             selectDate(review.interval.start)
-            selectedMood = mood
-            recordJumpID = UUID()
+            showRecords(matching: mood.map(ReviewRecordFilter.mood))
         } label: {
             HStack(spacing: 10) {
                 VStack(alignment: .leading, spacing: 3) {
@@ -393,10 +473,10 @@ struct MomentReviewView: View {
             sectionHeading(Text("Moments"))
                 .accessibilityFocused($recordsFocused)
                 .id("review.records")
-            if let selectedMood {
-                Text(selectedMood.displayName).foregroundStyle(AppColors.secondaryText)
+            if let recordFilter {
+                recordFilter.title.foregroundStyle(AppColors.secondaryText)
                 Button {
-                    self.selectedMood = nil
+                    self.recordFilter = nil
                 } label: {
                     Text("Show all moments")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
@@ -409,9 +489,12 @@ struct MomentReviewView: View {
             }
             LazyVStack(spacing: 9) {
                 if showsPeriodControls {
-                    let groups = review.dayGroups(matching: selectedMood, calendar: calendar)
+                    let groups = review.dayGroups(matching: recordFilter?.mood,
+                                                  favoritesOnly: recordFilter == .favorites, calendar: calendar)
                     if groups.isEmpty {
-                        Text("No moments match this feeling").foregroundStyle(AppColors.secondaryText)
+                        Text(recordFilter == .favorites ? LocalizedStringKey("No favorites in this month")
+                             : LocalizedStringKey("No moments match this feeling"))
+                            .foregroundStyle(AppColors.secondaryText)
                     }
                     ForEach(groups) { group in
                         let label = group.date.formatted(.dateTime.month(.abbreviated).day().weekday(.abbreviated).locale(locale))

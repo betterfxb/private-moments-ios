@@ -460,6 +460,28 @@ final class MomentDateQueryTests: XCTestCase {
         XCTAssertEqual(onlyReading.matching([]), [])
     }
 
+    func testMonthFavoritesAndCommonFeelingsLinkToTheSelectedMonthsRecords() throws {
+        let calendar = try calendar("Asia/Tokyo")
+        let first = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 12, day: 1)))
+        let last = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 12, day: 31, hour: 23)))
+        let following = try XCTUnwrap(calendar.date(from: DateComponents(year: 2027, month: 1, day: 1)))
+        let earlier = Moment(occurredAt: first, durationSeconds: 60, mood: .calm, rating: 4)
+        let favorite = Moment(occurredAt: last, durationSeconds: 90, mood: .calm, rating: 5, favorite: true)
+        let outside = Moment(occurredAt: following, durationSeconds: 0, mood: .happy, rating: 5, favorite: true)
+        let review = try XCTUnwrap(MomentDateQuery.review([outside, favorite, earlier], period: .month,
+                                                         containing: first, calendar: calendar))
+        XCTAssertEqual(review.favoriteCount, 1)
+        XCTAssertEqual(review.commonMoods.map(\.mood), [.calm])
+        XCTAssertEqual(review.dayGroups(favoritesOnly: true, calendar: calendar).flatMap(\.moments), [favorite])
+        XCTAssertEqual(review.dayGroups(matching: .calm, calendar: calendar).flatMap(\.moments), [favorite, earlier])
+
+        let afterRemoval = try XCTUnwrap(MomentDateQuery.review([outside, earlier], period: .month,
+                                                               containing: first, calendar: calendar))
+        XCTAssertEqual(afterRemoval.favoriteCount, 0)
+        XCTAssertTrue(afterRemoval.commonMoods.isEmpty)
+        XCTAssertTrue(afterRemoval.dayGroups(favoritesOnly: true, calendar: calendar).isEmpty)
+    }
+
     func testMidnightBelongsOnlyToTheFollowingDay() throws {
         let calendar = try calendar("Asia/Tokyo")
         let day = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 11, day: 10)))

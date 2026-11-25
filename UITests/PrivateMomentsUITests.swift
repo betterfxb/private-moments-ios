@@ -266,11 +266,12 @@ final class PrivateMomentsUITests: XCTestCase {
 
         tap(happy, in: app)
         tap(again, in: app)
+        revealFully(from: minutes, through: seconds, in: app)
         XCTAssertEqual(minutes.value as? String, "0")
         XCTAssertEqual(seconds.value as? String, "0")
         let note = app.textViews["recap.note"]
         reveal(note, in: app)
-        XCTAssertFalse((note.value as? String ?? "").contains("The original private reflection."))
+        XCTAssertEqual(note.value as? String ?? "", "")
         tap(app.buttons["recap.cancel"], in: app)
         XCTAssertEqual(app.staticTexts["detail.note"].label, "The original private reflection.")
         goBack(app)
@@ -499,6 +500,40 @@ final class PrivateMomentsUITests: XCTestCase {
             goBack(app)
             XCTAssertTrue(count.waitForExistence(timeout: 10))
             XCTAssertEqual(count.label, one)
+            app.terminate()
+        }
+    }
+
+    func testMonthHighlightsOpenFavoritesAndMatchingFeelings() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let app = makeApp(language: language)
+            app.launchArguments.append("-pm-ui-test-review-comparison-fixture")
+            app.launch()
+            selectTab("Review", "回顾", language: language, app: app)
+            tap(app.buttons["review.month"], in: app)
+            let favorite = app.buttons["review.highlights.favorites"]
+            XCTAssertFalse(favorite.exists, "A month without a favorite must not invent a highlight.")
+            tap(app.buttons["review.previous"], in: app)
+            let date = app.staticTexts["weekReview.range"].label
+            reveal(favorite, in: app)
+            XCTAssertEqual(favorite.value as? String, english ? "1 moment" : "1 条记录")
+            capture("Month-highlights-\(language)", app, stableSurface: favorite)
+            tap(favorite, in: app)
+            let records = app.buttons.matching(identifier: "weekReview.moment")
+            tap(records.firstMatch, in: app)
+            XCTAssertEqual(app.staticTexts["detail.note"].label, "previous-month-first-entry")
+            goBack(app)
+            XCTAssertEqual(app.staticTexts["weekReview.range"].label, date)
+            XCTAssertTrue(app.buttons["review.clearMood"].exists)
+            XCTAssertEqual(records.count, 1)
+
+            let calm = app.buttons["review.highlights.mood.Calm"]
+            reveal(calm, in: app)
+            XCTAssertEqual(calm.value as? String, english ? "2 moments" : "2 条记录")
+            tap(calm, in: app)
+            tap(records.firstMatch, in: app)
+            XCTAssertEqual(app.staticTexts["detail.note"].label, "previous-month-second-entry")
             app.terminate()
         }
     }

@@ -307,12 +307,14 @@ struct MomentReview {
     let interval: DateInterval
     let moments: [Moment]
 
-    func dayGroups(matching mood: MomentMood? = nil, calendar: Calendar) -> [DayGroup] {
-        let matches = mood.map { mood in moments.filter { $0.mood == mood } } ?? moments
+    func dayGroups(matching mood: MomentMood? = nil, favoritesOnly: Bool = false, calendar: Calendar) -> [DayGroup] {
+        let matches = moments.filter { (mood == nil || $0.mood == mood) && (!favoritesOnly || $0.isFavorite) }
         return Dictionary(grouping: matches, by: { calendar.startOfDay(for: $0.occurredAt) })
             .map { DayGroup(date: $0.key, moments: $0.value) }
             .sorted { $0.date > $1.date }
     }
+
+    var favoriteCount: Int { moments.lazy.filter(\.isFavorite).count }
 
     var moods: [MoodCount] {
         var counts: [MomentMood: Int] = [:]

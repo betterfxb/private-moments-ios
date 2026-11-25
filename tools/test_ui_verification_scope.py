@@ -33,7 +33,7 @@ def execute(block, values):
     environment = {k: v for k, v in os.environ.items()
                    if not k.startswith('PRIVATE_MOMENTS_UI_') and k not in {
                        'ROTATION_SMOKE', 'ROTATION_START', 'INPUT_SMOKE', 'BACKUP_SMOKE', 'BACKUP_LANGUAGE', 'PERFORMANCE_SMOKE',
-                       'WEEK_REVIEW_SMOKE', 'READING_SMOKE', 'SMOKE_PROFILE'}}
+                       'WEEK_REVIEW_SMOKE', 'READING_SMOKE', 'JOURNAL_FEATURES_SMOKE', 'SMOKE_PROFILE'}}
     environment.update(values)
     # Git Bash on Windows truncates long command arguments. Execute the
     # complete selection with Unix line endings from a temporary script.
@@ -67,6 +67,21 @@ class VerificationScopeTests(unittest.TestCase):
             with self.subTest(key=key):
                 self.assertNotEqual(execute(GUARD, baseline | {key: '1'}).returncode, 0)
 
+    def test_journal_features_are_tested_together_without_extending_older_journal_diagnostics(self):
+        result = self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='journal-features')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
+                         ['-only-testing:PrivateMomentsTests/MomentDateQueryTests',
+                          '-only-testing:' + PREFIX + 'testTimelineDateAndTagFiltersCombineAndSurviveNavigation',
+                          '-only-testing:' + PREFIX + 'testRecordAgainCopiesOnlyTypeAndTags',
+                          '-only-testing:' + PREFIX + 'testMonthHighlightsOpenFavoritesAndMatchingFeelings'])
+        baseline = dict(ROTATION_START='reference', ROTATION_SMOKE='0', INPUT_SMOKE='0', BACKUP_SMOKE='0',
+                        BACKUP_LANGUAGE='en', JOURNAL_FEATURES_SMOKE='1', SMOKE_PROFILE='compact-light')
+        self.assertEqual(execute(GUARD, baseline).returncode, 0)
+        for key in ['INPUT_SMOKE', 'BACKUP_SMOKE', 'WEEK_REVIEW_SMOKE', 'ROTATION_SMOKE', 'PERFORMANCE_SMOKE', 'READING_SMOKE']:
+            with self.subTest(key=key):
+                self.assertNotEqual(execute(GUARD, baseline | {key: '1'}).returncode, 0)
+
     def test_acceptance_core_skips_sharded_methods_and_runs_remaining_tests(self):
         result = self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='core')
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -74,6 +89,7 @@ class VerificationScopeTests(unittest.TestCase):
         self.assertFalse(any(line.startswith('-only-testing:') for line in lines))
         for method in ['testScreenGallery', 'testFavoriteCanBeFoundWithSearchAfterRelaunch',
                        'testTimelineDateAndTagFiltersCombineAndSurviveNavigation',
+                       'testRecordAgainCopiesOnlyTypeAndTags', 'testMonthHighlightsOpenFavoritesAndMatchingFeelings',
                        'testWeekReviewShowsLocalRecords', 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord',
                        'testReviewComparisonOpensRecordsFromPreviousMonth',
                        'testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded',
@@ -86,7 +102,7 @@ class VerificationScopeTests(unittest.TestCase):
 
     def test_acceptance_part_rejects_invalid_or_mixed_scopes(self):
         self.assertNotEqual(self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='unknown').returncode, 0)
-        for part in ['gallery', 'core', 'reading']:
+        for part in ['gallery', 'core', 'reading', 'journal-features']:
             for key in ['INPUT_ONLY', 'BACKUP_ONLY', 'PERFORMANCE_ONLY', 'WEEK_REVIEW_ONLY',
                         'ROTATION_ONLY', 'GALLERY_ONLY']:
                 with self.subTest(part=part, key=key):
@@ -128,7 +144,6 @@ class VerificationScopeTests(unittest.TestCase):
                           '-only-testing:PrivateMomentsTests/RecapDraftRecoveryTests',
                           '-only-testing:PrivateMomentsTests/SemanticColorTests',
                           '-only-testing:' + PREFIX + 'testFavoriteCanBeFoundWithSearchAfterRelaunch',
-                          '-only-testing:' + PREFIX + 'testTimelineDateAndTagFiltersCombineAndSurviveNavigation',
                           '-only-testing:' + PREFIX + 'testWeekReviewShowsLocalRecords',
                           '-only-testing:' + PREFIX + 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord',
                           '-only-testing:' + PREFIX + 'testReviewComparisonOpensRecordsFromPreviousMonth',
