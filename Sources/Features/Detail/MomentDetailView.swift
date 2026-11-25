@@ -6,6 +6,7 @@ struct MomentDetailView: View {
     @Environment(RecapDraftStore.self) private var drafts
     let momentID: UUID
     let onEdit: (Moment) -> Void
+    let onRepeat: (Moment) -> Void
     let onDeleted: () -> Void
 
     @State private var showingDeleteConfirmation = false
@@ -133,6 +134,21 @@ struct MomentDetailView: View {
                         .font(.system(.body, design: .rounded))
                         .foregroundStyle(AppColors.text)
                         .fixedSize(horizontal: false, vertical: true)
+                }
+
+                if moment.isFavorite {
+                    Button { onRepeat(moment) } label: {
+                        Label("Record again", systemImage: "plus.circle")
+                            .font(.system(.headline, design: .rounded))
+                            .foregroundStyle(AppColors.journalAccent)
+                            .padding(.horizontal, 12)
+                            .frame(maxWidth: .infinity, minHeight: 48, alignment: .leading)
+                            .background(AppColors.journalSelection, in: RoundedRectangle(cornerRadius: AppRadius.control))
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!store.isStorageAvailable)
+                    .accessibilityIdentifier("detail.recordAgain")
                 }
 
                 Button {

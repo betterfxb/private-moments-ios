@@ -61,6 +61,16 @@ struct Moment: Identifiable, Codable, Hashable, Sendable {
     }
 }
 
+struct MomentRepeatPreset: Hashable {
+    let kind: MomentKind
+    let tags: [String]
+
+    init(from moment: Moment) {
+        kind = moment.kind
+        tags = moment.tags
+    }
+}
+
 enum MomentValidationError: LocalizedError, Equatable {
     case invalidDuration
     case invalidRating

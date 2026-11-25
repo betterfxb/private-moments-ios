@@ -27,6 +27,7 @@ struct RecapView: View {
     @State private var showingOccurrencePicker = false
     @State private var pendingOccurrence = Date.now
     private let initialReflection: ReflectionSnapshot
+    private let inheritedTags: [String]
     private enum InputField: Hashable { case note, minutes, seconds }
     @FocusState private var focusedField: InputField?
     @ScaledMetric(relativeTo: .body) private var noteMinimumHeight: CGFloat = 112
@@ -70,14 +71,14 @@ struct RecapView: View {
 
     private var availableTags: [String] {
         var result = ["Relaxed", "Connected", "Better sleep"]
-        for existingTag in existingMoment?.tags ?? [] where !result.contains(existingTag) {
-            result.append(existingTag)
+        for tag in inheritedTags where !result.contains(tag) {
+            result.append(tag)
         }
         return result
     }
 
     init(durationSeconds: Int, startedAt: Date = .now, existingMoment: Moment? = nil,
-         isManualEntry: Bool = false, recoveredDraft: RecapDraft? = nil,
+         isManualEntry: Bool = false, repeatPreset: MomentRepeatPreset? = nil, recoveredDraft: RecapDraft? = nil,
          onCancel: @escaping () -> Void, onSaved: @escaping (Moment) -> Void) {
         self.durationSeconds = durationSeconds
         self.startedAt = startedAt
@@ -85,10 +86,11 @@ struct RecapView: View {
         self.isManualEntry = isManualEntry
         self.onCancel = onCancel
         self.onSaved = onSaved
+        inheritedTags = (existingMoment?.tags ?? []) + (repeatPreset?.tags ?? []) + (recoveredDraft?.tags ?? [])
         let reflection = ReflectionSnapshot(mood: existingMoment?.mood ?? .calm,
-                                            kind: existingMoment?.kind ?? .together,
+                                            kind: existingMoment?.kind ?? repeatPreset?.kind ?? .together,
                                             rating: existingMoment?.rating ?? 4,
-                                            tags: Set(existingMoment?.tags ?? ["Connected"]),
+                                            tags: Set(existingMoment?.tags ?? repeatPreset?.tags ?? ["Connected"]),
                                             note: existingMoment?.privateNote ?? "")
         initialReflection = reflection
         _draftID = State(initialValue: recoveredDraft?.id ?? UUID())

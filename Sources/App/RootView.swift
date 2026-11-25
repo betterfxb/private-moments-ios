@@ -4,6 +4,7 @@ import SwiftUI
 private enum AppRoute: Hashable {
     case session
     case manual(startedAt: Date)
+    case repeatMoment(startedAt: Date, preset: MomentRepeatPreset)
     case recap(startedAt: Date, durationSeconds: Int, editingID: UUID?)
     case recoveredRecap(RecapDraft)
     case detail(id: UUID)
@@ -186,6 +187,15 @@ struct RootView: View {
                     editingID: nil
                 ))
             }
+        case .repeatMoment(let startedAt, let preset):
+            RecapView(
+                durationSeconds: 0,
+                startedAt: startedAt,
+                isManualEntry: true,
+                repeatPreset: preset,
+                onCancel: { pop(path) },
+                onSaved: { _ in pop(path) }
+            )
         case .recap(let startedAt, let durationSeconds, let editingID):
             let existing = editingID.flatMap { id in store.moments.first { $0.id == id } }
             RecapView(
@@ -221,6 +231,12 @@ struct RootView: View {
                             durationSeconds: moment.durationSeconds,
                             editingID: moment.id
                         ))
+                    }
+                },
+                onRepeat: { moment in
+                    startWhenDraftIsClear {
+                        path.wrappedValue.append(.repeatMoment(startedAt: .now,
+                                                               preset: MomentRepeatPreset(from: moment)))
                     }
                 },
                 onDeleted: { pop(path) }

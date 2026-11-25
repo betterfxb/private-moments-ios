@@ -252,6 +252,48 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testRecordAgainCopiesOnlyTypeAndTags() {
+        let app = makeApp()
+        app.launchEnvironment["PM_UI_TEST_READING_NOTE"] = "The original private reflection."
+        app.launch()
+        selectTab("Timeline", "时间线", app: app)
+        let rows = app.buttons.matching(identifier: "moment.row")
+        let happy = rows.matching(NSPredicate(format: "label CONTAINS %@", "Happy")).firstMatch
+        let calm = rows.matching(NSPredicate(format: "label CONTAINS %@", "Calm")).firstMatch
+        let again = app.buttons["detail.recordAgain"]
+        let minutes = app.textFields["recap.minutes"]
+        let seconds = app.textFields["recap.seconds"]
+
+        tap(happy, in: app)
+        tap(again, in: app)
+        XCTAssertEqual(minutes.value as? String, "0")
+        XCTAssertEqual(seconds.value as? String, "0")
+        let note = app.textViews["recap.note"]
+        reveal(note, in: app)
+        XCTAssertFalse((note.value as? String ?? "").contains("The original private reflection."))
+        tap(app.buttons["recap.cancel"], in: app)
+        XCTAssertEqual(app.staticTexts["detail.note"].label, "The original private reflection.")
+        goBack(app)
+
+        tap(calm, in: app)
+        XCTAssertFalse(again.exists)
+        tap(app.buttons["detail.favorite"], in: app)
+        tap(again, in: app)
+        let solo = app.buttons["recap.kind.Solo"]
+        let relaxed = app.buttons["recap.tag.Relaxed"]
+        reveal(solo, in: app)
+        XCTAssertTrue(solo.isSelected)
+        reveal(relaxed, in: app)
+        XCTAssertTrue(relaxed.isSelected)
+        XCTAssertFalse(app.buttons["recap.tag.Connected"].isSelected)
+        capture("Record-again-tag-en", app, stableSurface: relaxed)
+        tap(app.buttons["recap.saveToolbar"], in: app)
+        XCTAssertEqual(app.staticTexts["detail.kind"].label, "Solo")
+        XCTAssertEqual(app.buttons["detail.favorite"].label, "Remove from favorites")
+        goBack(app)
+        XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, "3 moments")
+    }
+
     func testJournalReadingSample() {
         for language in ["en", "zh-Hans"] {
             let english = language == "en"
