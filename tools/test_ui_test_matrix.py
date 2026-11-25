@@ -39,6 +39,15 @@ class UITestMatrixTests(unittest.TestCase):
                     self.assertEqual(selected["profile"], profile)
                     self.assertNotIn("suite", selected)
 
+    def test_exact_acceptance_job_can_be_reissued_with_the_same_coverage(self):
+        for job in matrix("full")["include"]:
+            with self.subTest(profile=job["profile"], suite=job["suite"]):
+                self.assertEqual(matrix("full", job["profile"], job["suite"])["include"], [job])
+        for scope, profile, suite in [("full", "phone-dark", "core"), ("full", "ipad-light", "unknown"),
+                                      ("input", "compact-light", "core"), ("full", "ipad-mini-light", "core")]:
+            with self.subTest(scope=scope, profile=profile, suite=suite), self.assertRaises(ValueError):
+                matrix(scope, profile, suite)
+
     def test_ipad_accessibility_requires_explicit_input_scope(self):
         profile = matrix("input", "ipad-light-accessibility")["include"]
         self.assertEqual(len(profile), 1)

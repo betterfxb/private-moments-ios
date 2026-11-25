@@ -2,7 +2,7 @@
 
 ## Cloud validation ordering
 
-Finish the current workflow before dispatching another run in the same branch and concurrency group. GitHub cancels the earlier run in that group. A native reading comparison uses the profile and revision in its group so the baseline and candidate can be captured independently. Full acceptance runs its gallery, journal, Files, core and rotation jobs on a single revision. Compare original screenshots and retain each job's result bundle. A focused run provides evidence for its selected methods. To investigate an infrastructure interruption, retry the affected job from the original run. Artifact names include the attempt number when a job is retried. Investigate functional failures before running them again.
+Finish the current workflow before dispatching another run in the same branch and concurrency group. GitHub cancels the earlier run in that group. A native reading comparison uses the profile and revision in its group so the baseline and candidate can be captured independently. Full acceptance runs its gallery, journal, Files, core and rotation jobs on a single revision, with four jobs eligible to run at once. Compare original screenshots and retain each job's result bundle. For an infrastructure interruption, retry the affected job from the original run to retain its source. The `acceptance_suite` input selects a single job when the profile and runner need to be specified for a new run. A focused run provides evidence for its selected revision and methods. Artifact names include the attempt number when a job is retried. Investigate functional failures before running them again.
 
 ## Historical full validation: batch16 search usability
 

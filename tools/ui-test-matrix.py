@@ -3,7 +3,7 @@ import argparse
 import json
 
 
-def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
+def matrix(scope: str, smoke_profile: str = "compact-light", acceptance_suite: str = "all") -> dict:
     profiles = [
         dict(profile="compact-light", family="compact", appearance="light",
              text_size="large", gallery_only="0", timeout_minutes=75),
@@ -16,6 +16,8 @@ def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
     ]
     if scope not in {"full", "backup", "input", "rotation"}:
         raise ValueError("Unknown UI verification scope: " + scope)
+    if acceptance_suite != "all" and scope != "full":
+        raise ValueError("Select either an acceptance suite or a focused diagnostic.")
     supplements = {
         "ipad-mini-light": dict(profile="ipad-mini-light", family="ipad-mini",
             appearance="light", text_size="large", gallery_only="1", timeout_minutes=75),
@@ -49,11 +51,16 @@ def matrix(scope: str, smoke_profile: str = "compact-light") -> dict:
         "ipad-light": [("rotation", 55)],
         "compact-dark-accessibility": [("journal-features", 70)],
     }
-    return {"include": [
+    jobs = [
         dict(profile, suite=suite, test_timeout_minutes=minutes, timeout_minutes=minutes + 25)
         for profile in profiles
         for suite, minutes in common_suites + additional_suites.get(profile["profile"], [])
-    ]}
+    ]
+    if acceptance_suite != "all":
+        jobs = [job for job in jobs if job["profile"] == smoke_profile and job["suite"] == acceptance_suite]
+        if not jobs:
+            raise ValueError(f"Acceptance suite {acceptance_suite} is unavailable on {smoke_profile}.")
+    return {"include": jobs}
 
 
 if __name__ == "__main__":
@@ -62,5 +69,6 @@ if __name__ == "__main__":
     parser.add_argument("--smoke-profile", default="compact-light",
                         choices=["compact-light", "phone-dark", "ipad-light", "compact-dark-accessibility",
                                  "ipad-light-accessibility", "ipad-mini-light", "ipad-dark-accessibility"])
+    parser.add_argument("--acceptance-suite", default="all")
     args = parser.parse_args()
-    print(json.dumps(matrix(args.scope, args.smoke_profile)))
+    print(json.dumps(matrix(args.scope, args.smoke_profile, args.acceptance_suite)))

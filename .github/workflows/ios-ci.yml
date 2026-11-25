@@ -61,7 +61,7 @@ on:
           - window-resize
           - window-resize-keyboard
       backup_smoke_profile:
-        description: Device profile for focused diagnosis (ignored by full acceptance)
+        description: Device profile for a focused diagnostic or single acceptance suite
         type: choice
         default: compact-light
         options:
@@ -72,6 +72,19 @@ on:
           - ipad-light-accessibility
           - ipad-mini-light
           - ipad-dark-accessibility
+      acceptance_suite:
+        description: Repeat one acceptance suite on the selected profile or run the entire matrix
+        type: choice
+        default: all
+        options:
+          - all
+          - gallery
+          - journal
+          - files
+          - files-zh
+          - core
+          - rotation
+          - journal-features
 
 permissions:
   contents: read
@@ -83,6 +96,7 @@ concurrency:
     || inputs.journal_features_smoke && format('journal-features-{0}', inputs.backup_smoke_profile)
     || inputs.week_review_smoke && format('journal-{0}', inputs.backup_smoke_profile)
     || inputs.backup_smoke && format('backup-{0}-{1}', inputs.backup_smoke_profile, inputs.backup_smoke_language)
+    || (inputs.acceptance_suite || 'all') != 'all' && format('acceptance-{0}-{1}', inputs.backup_smoke_profile, inputs.acceptance_suite)
     || 'standard' }}
   cancel-in-progress: true
 
@@ -101,6 +115,7 @@ jobs:
             || (inputs.input_smoke || inputs.performance_smoke || inputs.week_review_smoke || inputs.reading_smoke || inputs.journal_features_smoke) && 'input'
             || inputs.backup_smoke && 'backup' || 'full' }}
           SMOKE_PROFILE: ${{ inputs.backup_smoke_profile || 'compact-light' }}
+          ACCEPTANCE_SUITE: ${{ inputs.acceptance_suite || 'all' }}
           INPUT_SMOKE: ${{ inputs.input_smoke && '1' || '0' }}
           PERFORMANCE_SMOKE: ${{ inputs.performance_smoke && '1' || '0' }}
           WEEK_REVIEW_SMOKE: ${{ inputs.week_review_smoke && '1' || '0' }}
@@ -154,7 +169,7 @@ jobs:
             exit 1
           fi
           python3 -m unittest discover -s tools -p 'test_ui*.py' -v
-          matrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE")"
+          matrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE" --acceptance-suite "$ACCEPTANCE_SUITE")"
           printf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"
 
   build-and-test:
@@ -308,7 +323,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Reject conflicting scopes
-        if: ${{ inputs.backup_smoke || inputs.input_smoke || inputs.performance_smoke || inputs.week_review_smoke || inputs.rotation_smoke || inputs.reading_smoke || inputs.journal_features_smoke }}
+        if: ${{ inputs.backup_smoke || inputs.input_smoke || inputs.performance_smoke || inputs.week_review_smoke || inputs.rotation_smoke || inputs.reading_smoke || inputs.journal_features_smoke || (inputs.acceptance_suite || 'all') != 'all' }}
         run: |
           printf 'The iOS 17 compatibility run excludes the other focused scopes.\n' >&2
           exit 1
