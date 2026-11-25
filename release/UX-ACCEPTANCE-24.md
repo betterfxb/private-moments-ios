@@ -26,4 +26,4 @@ iPad Pro 13 英寸（M5）在 1,032 × 1,376 点通过双语长备注与收藏�
 
 iPhone 17 Pro 深色常规字号在 402 × 874 点通过相同的双语原生流程和 3 项对比度检查。正文底色与页面底色之间的层次可辨，棕色收藏和「再记一次」保持同一色系。已归档 6 张原图。[深色中文详情](evidence/batch-24/45635246862/phone-dark/Reading-sample-detail-zh-Hans.png) · [截图收据](evidence/batch-24/45635246862/phone-dark/screenshots.json)
 
-最后一套深色最大字号长期等待 ARM64 执行器时，追加了以 `88eb6ff` 为源码的 Intel 采集。[最大字号备用运行](https://github.com/betterfxb/private-moments-ios/actions/runs/45648953703)
+最后一套深色最大字号的 Intel 采集在 `88eb6ff` 通过。iPhone SE（第三代）375 × 667 点，原生双语用例经过筛出一条收藏记录、详情读到两段备注、返回仍保持收藏筛选以及清除后恢复两条。3 项对比度检查通过，归档并检查了 6 张原图。中英文详情首屏均有备注正文，长文随字号换行。最大字号的时间线实拍里，搜索框、结果计数、类型、收藏和说明占满首屏，第一条记录仍需向下滚动。这里保留原生可用性通过的结果，同时将首屏记录可见性记为视觉余项。[真实运行](https://github.com/betterfxb/private-moments-ios/actions/runs/45648953703) · [中文时间线](evidence/batch-24/45648953703/compact-dark-accessibility/Reading-sample-timeline-zh-Hans.png) · [中文详情](evidence/batch-24/45648953703/compact-dark-accessibility/Reading-sample-detail-zh-Hans.png) · [截图收据](evidence/batch-24/45648953703/compact-dark-accessibility/screenshots.json)
