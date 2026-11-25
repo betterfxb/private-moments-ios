@@ -26,4 +26,6 @@ Windows 已通过 53 项工具测试、Bash 脚本语法、本地化 281 键、X
 
 `aca682a` 在深色最大辅助字号通过 11 项单测及 3 个原生功能用例，包括两种语言的日期移除、组合筛选及详情往返。原图另显示系统紧凑日期字段的标签和日期被左右裁切。`c260b35` 在辅助字号将标签和完整日期改为可换行的独立行，沿用补记使用的系统日历样式。日历取消不改变日期，确认写入当前起止字段，筛选仍由表单确认应用。新增两种语言的日期行可点、语义有值、日历可打开及取消保留选择的验收。原生复验已触发。[原生回归结果](evidence/batch-25/45650798278/compact-dark-accessibility/xctest-extract.txt) · [裁切实拍](evidence/batch-25/45650798278/compact-dark-accessibility/Timeline-date-range-zh-Hans.png) · [日历复验](https://github.com/betterfxb/private-moments-ios/actions/runs/45655196061)
 
+`aca682a` 在常规小屏也通过相同的 11 项单测和 3 个原生用例。已保存 7 张实拍，包含两种语言的日期范围与无结果，以及「再记一次」和月度精选。两套 `aca682a` 的功能证据与后续日期裁切修复分别记录。[常规小屏 XCTest](evidence/batch-25/45650755597/compact-light-journal-features/xctest-extract.txt) · [原图收据](evidence/batch-25/45650755597/compact-light-journal-features/screenshots.json)
+
 同一 `c260b35` 已追加常规小屏回归，核对沿用紧凑选择器的布局和三项功能。[常规小屏复验](https://github.com/betterfxb/private-moments-ios/actions/runs/45655726442)
