@@ -25,3 +25,5 @@
 iPad Pro 13 英寸（M5）在 1,032 × 1,376 点通过双语长备注与收藏往返，用例及 3 项对比度检查成功。备注保持在居中阅读列，正常字号下正文与「再记一次」在首屏可见。已归档 6 张原图。[中文详情](evidence/batch-24/45635247449/ipad-light/Reading-sample-detail-zh-Hans.png) · [截图收据](evidence/batch-24/45635247449/ipad-light/screenshots.json)
 
 iPhone 17 Pro 深色常规字号在 402 × 874 点通过相同的双语原生流程和 3 项对比度检查。正文底色与页面底色之间的层次可辨，棕色收藏和「再记一次」保持同一色系。已归档 6 张原图。[深色中文详情](evidence/batch-24/45635246862/phone-dark/Reading-sample-detail-zh-Hans.png) · [截图收据](evidence/batch-24/45635246862/phone-dark/screenshots.json)
+
+最后一套深色最大字号长期等待 ARM64 执行器时，追加了以 `88eb6ff` 为源码的 Intel 采集。[最大字号备用运行](https://github.com/betterfxb/private-moments-ios/actions/runs/45648953703)
