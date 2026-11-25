@@ -35,3 +35,5 @@ Windows 已通过 53 项工具测试、Bash 脚本语法、本地化 281 键、X
 ARM64 重试通过 11 项单测和 3 个原生功能用例。中英文最大字号的日期字段按完整日期换行，两个输入行均通过可点和无横向越界断言。打开系统日历并取消后保留原日期。已归档 9 张原图。英文「Dates and tags」在最窄最大字号顶栏仍会截短，日期值可逐行完整阅读。[通过日志](evidence/batch-25/45661989166/compact-dark-accessibility/xctest-extract.txt) · [中文日期范围](evidence/batch-25/45661989166/compact-dark-accessibility/Timeline-date-range-zh-Hans.png) · [中文原生日历](evidence/batch-25/45661989166/compact-dark-accessibility/Timeline-date-calendar-zh-Hans.png) · [英文日期范围](evidence/batch-25/45661989166/compact-dark-accessibility/Timeline-date-range-en.png)
 
 `9880cb3` 调整最大字号的时间线搜索说明后，重新通过 11 项单测及三项原生功能用例。[最新最大字号回归](evidence/batch-25/45679021708/compact-dark-accessibility/xctest-extract.txt)
+
+隔离测试并发组后的 `331ed2b` 保持相同应用源码，并再次通过最大字号的 11 项单测及三项原生用例。[并发修复后的功能验收](evidence/batch-25/45703000795/compact-dark-accessibility/xctest-extract.txt)
