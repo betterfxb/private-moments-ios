@@ -34,3 +34,4 @@
 - GitHub 接受了 `aca682a` 的完整 ARM64 验收，包含日期表单及核心测试修正，取代 `88eb6ff` 的进行中矩阵。Intel 完整矩阵的提交请求遇到 HTTP 500／502；定向的 Intel 常规小屏仍有独立运行。按各套实际终态和源码记录结果。[最新完整矩阵](https://github.com/betterfxb/private-moments-ios/actions/runs/45651570403)
 - `aca682a` 的独立核心复验通过全部 67 项单测、7 个原生 UI 用例、无签名 Debug／Release 双构建及 Release 测试钩子排除。包含曾失败的草稿保留、主动丢弃及再次启动计时原生路径。[核心通过日志](evidence/batch-23/45650796446/compact-light-core/xctest-extract.txt)
 - 整套 17 项矩阵改由包含大字号日期裁切修正的 `e30269d` 执行。此前 `aca682a` 矩阵已有常规小屏图库、日记、核心和中英文 Files 五项成功，进行中作业由新版完整运行接替。`e30269d` 和 `c260b35` 的应用及测试源码一致。[覆盖最新版产品源码的完整矩阵](https://github.com/betterfxb/private-moments-ios/actions/runs/45662061224)
+- `e30269d` 矩阵的核心作业已通过 67 项单测、7 个原生 UI 用例、无签名 Debug／Release 两项构建及 Release 测试钩子排除。[同源核心结果](evidence/batch-23/45662061224/compact-light-core/xctest-extract.txt)
