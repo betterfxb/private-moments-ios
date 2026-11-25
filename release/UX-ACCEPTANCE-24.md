@@ -16,4 +16,8 @@
 | 常规手机深色、iPad 浅色、小屏深色最大辅助字号 | 实拍核对两种主题、中文和英文。检查 iPad 阅读列、长文换行、状态和触控范围。在最大辅助字号提交真实键盘查询后，计数和结果仍能找到。 |
 | 核心操作 | 从正常入口筛出一条已收藏记录，打开并读到两段备注，返回时仍筛选为一条，清除后恢复两条。基础图库和键盘搜索覆盖其他空态、提交和错误。 |
 
-同内容的常规小屏原生基线与候选样张已经提交到 GitHub Actions。基线源码为 `16a962aca8b95ad58b0c9ffc34255ec2e1c08447`，候选源码为 `69365f715d796f2de16b214fec1fcdca61fe2a7f`。两次请求均选择相同的小屏配置和 Intel macOS 执行器。视觉效果需用原生前后截图复核。[原生基线](https://github.com/betterfxb/private-moments-ios/actions/runs/45622949026) · [候选样张](https://github.com/betterfxb/private-moments-ios/actions/runs/45625188179)
+同内容基线 `16a962a` 和候选样张 `69365f7` 在 iPhone SE（第三代）、iOS 26.2、375 × 667 点上通过。两次实际运行使用相同的浅色常规字号及 Intel macOS 执行器。候选样张同时通过 3 项语义色对比度测试，含本批暖棕色在暖纸底、私密备注底及选中底上的可读性。已保留中英文的时间线、详情首屏和长备注共 12 张原图及哈希。[原生基线](https://github.com/betterfxb/private-moments-ios/actions/runs/45622949026) · [候选样张](https://github.com/betterfxb/private-moments-ios/actions/runs/45625188179) · [基线截图收据](evidence/batch-24/45622949026/compact-light/screenshots.json) · [候选截图收据](evidence/batch-24/45625188179/compact-light/screenshots.json)
+
+中文并排实拍里，时间线清除动作移入计数行，第一条记录标题向上约 50 点。详情先读感受和备注，正文首行向上约 60 点。颜色集中到书签和小型操作。内容不同高度时低优先级动作随正文滚动。上述位置由 375 点并排图估读。审美评价与三套补充配置实拍待核对。[同设备、同内容前后对照](evidence/batch-24/reading-comparison-375pt.png)
+
+补充组合使用 `85983a4`，包含新增日期与标签入口及收藏后的「再记一次」，保留同一长备注夹具。三个运行已请求。[常规手机深色](https://github.com/betterfxb/private-moments-ios/actions/runs/45635246862) · [iPad 浅色](https://github.com/betterfxb/private-moments-ios/actions/runs/45635247449) · [小屏深色最大字号](https://github.com/betterfxb/private-moments-ios/actions/runs/45635231042)
