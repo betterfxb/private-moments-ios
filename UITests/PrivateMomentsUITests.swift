@@ -206,6 +206,52 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testTimelineDateAndTagFiltersCombineAndSurviveNavigation() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let app = makeApp(language: language)
+            app.launchEnvironment["PM_UI_TEST_READING_NOTE"] = "Synthetic note for timeline filtering."
+            app.launch()
+            selectTab("Timeline", "时间线", language: language, app: app)
+            let count = app.staticTexts["timeline.resultCount"]
+            let advanced = app.buttons["timeline.dateAndTag"]
+            let apply = app.buttons["timeline.dateAndTag.apply"]
+            let range = app.switches["timeline.dateRange.enabled"]
+            tap(advanced, in: app)
+            tap(app.buttons["timeline.tagFilter"], in: app)
+            let tag = app.buttons[english ? "Connected" : "亲密相连"].firstMatch
+            XCTAssertTrue(tag.waitForExistence(timeout: 10))
+            tag.tap()
+            tap(apply, in: app)
+            XCTAssertEqual(count.label, english ? "1 moment" : "1 条记录")
+
+            tap(advanced, in: app)
+            tap(range, in: app)
+            tap(apply, in: app)
+            XCTAssertEqual(count.label, english ? "0 moments" : "0 条记录")
+            capture("Timeline-range-empty-\(language)", app, stableSurface: count)
+
+            tap(advanced, in: app)
+            tap(range, in: app)
+            tap(apply, in: app)
+            tap(app.buttons["timeline.favorites"], in: app)
+            chooseMomentFilter(english ? "Together" : "共同", in: app)
+            let search = revealTimelineSearch(in: app)
+            tap(search, in: app)
+            search.typeText("Happy")
+            guard submitTimelineSearch(language: language, app: app) else { return }
+            XCTAssertEqual(count.label, english ? "1 moment" : "1 条记录")
+            tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
+            XCTAssertEqual(app.staticTexts["detail.note"].label, "Synthetic note for timeline filtering.")
+            goBack(app)
+            XCTAssertEqual(count.label, english ? "1 moment" : "1 条记录")
+            tap(app.buttons["timeline.clearFilters"], in: app)
+            XCTAssertEqual(count.label, english ? "2 moments" : "2 条记录")
+            XCTAssertFalse(app.staticTexts["timeline.dateAndTag.summary"].exists)
+            app.terminate()
+        }
+    }
+
     func testJournalReadingSample() {
         for language in ["en", "zh-Hans"] {
             let english = language == "en"

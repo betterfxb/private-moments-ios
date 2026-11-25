@@ -11,16 +11,20 @@ private enum MomentFilter: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
     var displayName: String { AppLocalization.string(rawValue) }
+    var kind: MomentKind? { MomentKind(rawValue: rawValue) }
 }
 
 struct MomentTimelineView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(MomentStore.self) private var store
     let onOpen: (UUID) -> Void
 
     @State private var searchText = ""
     @State private var filter: MomentFilter = .all
     @State private var favoritesOnly = false
+    @State private var dateAndTag = TimelineDateAndTag()
+    @State private var showingDateAndTag = false
     @State private var isSearchPresented = false
     @FocusState private var isSearchFocused: Bool
     @State private var searchSubmissionID = UUID()
@@ -41,14 +45,13 @@ struct MomentTimelineView: View {
     }
 
     private var query: String { searchText.trimmingCharacters(in: .whitespacesAndNewlines) }
-    private var hasActiveFilters: Bool { filter != .all || favoritesOnly || !query.isEmpty }
+    private var hasActiveFilters: Bool { filter != .all || favoritesOnly || dateAndTag.isActive || !query.isEmpty }
 
     private var results: [Moment] {
         #if DEBUG
         let started = TimelinePerformance.start()
         #endif
         let currentQuery = query
-        let currentFilter = filter
         let moments = store.moments
         #if DEBUG
         defer {
@@ -57,20 +60,8 @@ struct MomentTimelineView: View {
             }
         }
         #endif
-        guard currentFilter != .all || favoritesOnly || !currentQuery.isEmpty else { return moments }
-        return moments.filter { moment in
-            let matchesKind = currentFilter == .all || moment.kind.rawValue == currentFilter.rawValue
-            guard matchesKind, !favoritesOnly || moment.isFavorite else { return false }
-            guard !currentQuery.isEmpty else { return true }
-            let searchable = [
-                moment.occurredAt.formatted(date: .abbreviated, time: .shortened),
-                moment.mood.rawValue,
-                moment.mood.displayName,
-                moment.kind.rawValue,
-                moment.kind.displayName
-            ] + moment.tags.flatMap { [$0, AppLocalization.localizedTag($0)] }
-            return searchable.joined(separator: " ").localizedCaseInsensitiveContains(currentQuery)
-        }
+        return MomentTimelineQuery(kind: filter.kind, favoritesOnly: favoritesOnly,
+                                   days: dateAndTag.days, tag: dateAndTag.tag, text: currentQuery).matching(moments)
     }
 
     private func dayGroups(for matches: [Moment]) -> [MomentDayGroup] {
@@ -110,6 +101,12 @@ struct MomentTimelineView: View {
 
                         resultSummary(matches.count)
                             .id("timeline.results")
+                        if dateAndTag.isActive && !isSearchFocused {
+                            Text(verbatim: dateAndTag.summary)
+                                .font(.system(.caption, design: .rounded))
+                                .foregroundStyle(AppColors.journalAccent)
+                                .accessibilityIdentifier("timeline.dateAndTag.summary")
+                        }
 
                         if putsResultsFirst {
                             searchControls
@@ -179,6 +176,30 @@ struct MomentTimelineView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.homePaper, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { showingDateAndTag = true } label: {
+                    Label("Dates and tags", systemImage: dateAndTag.isActive
+                          ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                        .labelStyle(.iconOnly)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
+                }
+                .tint(AppColors.journalAccent)
+                .accessibilityValue(Text(verbatim: dateAndTag.summary))
+                .accessibilityAddTraits(dateAndTag.isActive ? .isSelected : [])
+                .accessibilityIdentifier("timeline.dateAndTag")
+                .disabled(!store.isStorageAvailable)
+            }
+        }
+        .sheet(isPresented: $showingDateAndTag) {
+            TimelineDateAndTagSheet(selection: dateAndTag, moments: store.moments) { selection in
+                dateAndTag = selection
+            }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active { showingDateAndTag = false }
+        }
         .searchable(text: searchInput, isPresented: $isSearchPresented, prompt: "Search moments")
         .modifier(TimelineSearchSubmission(focus: $isSearchFocused) {
             searchSubmissionID = UUID()
@@ -231,6 +252,7 @@ struct MomentTimelineView: View {
             searchText = ""
             filter = .all
             favoritesOnly = false
+            dateAndTag = TimelineDateAndTag()
             isSearchPresented = false
         } label: {
             Text("Clear filters")
@@ -267,12 +289,12 @@ struct MomentTimelineView: View {
     }
 
     private var emptyTitle: LocalizedStringKey {
-        if favoritesOnly, filter == .all, query.isEmpty { return "No favorites yet" }
+        if favoritesOnly, filter == .all, query.isEmpty, !dateAndTag.isActive { return "No favorites yet" }
         return hasActiveFilters ? "No matching moments" : "No moments here yet"
     }
 
     private var emptyMessage: LocalizedStringKey {
-        if favoritesOnly, filter == .all, query.isEmpty { return "Bookmark a moment from its details to find it here." }
+        if favoritesOnly, filter == .all, query.isEmpty, !dateAndTag.isActive { return "Bookmark a moment from its details to find it here." }
         return hasActiveFilters
             ? "Try another word or change the selected filter."
             : "Your timeline will appear here after you save a moment."
@@ -341,6 +363,92 @@ struct MomentTimelineView: View {
             }
         }
         .accessibilityIdentifier("timeline.filter")
+    }
+}
+
+private struct TimelineDateAndTag {
+    var days: MomentDayRange?
+    var tag: String?
+
+    var isActive: Bool { days != nil || tag != nil }
+
+    var summary: String {
+        let dateSummary = days.map { range in
+            let start = range.start.formatted(date: .abbreviated, time: .omitted)
+            if Calendar.current.isDate(range.start, inSameDayAs: range.end) { return start }
+            let end = range.end.formatted(date: .abbreviated, time: .omitted)
+            return AppLocalization.format("%@ – %@", start, end)
+        }
+        return [dateSummary, tag.map(AppLocalization.localizedTag)].compactMap { $0 }.joined(separator: " · ")
+    }
+}
+
+private struct TimelineDateAndTagSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var selection: TimelineDateAndTag
+    private let tags: [String]
+    private let onApply: (TimelineDateAndTag) -> Void
+
+    init(selection: TimelineDateAndTag, moments: [Moment], onApply: @escaping (TimelineDateAndTag) -> Void) {
+        _selection = State(initialValue: selection)
+        var tags = Set(moments.flatMap(\.tags))
+        if let tag = selection.tag { tags.insert(tag) }
+        self.tags = tags.sorted { AppLocalization.localizedTag($0).localizedStandardCompare(AppLocalization.localizedTag($1)) == .orderedAscending }
+        self.onApply = onApply
+    }
+
+    private var dateFilterEnabled: Binding<Bool> {
+        Binding(get: { selection.days != nil }, set: { enabled in
+            let today = Calendar.current.startOfDay(for: .now)
+            selection.days = enabled ? MomentDayRange(start: today, end: today) : nil
+        })
+    }
+
+    private var validDates: Bool {
+        selection.days == nil || selection.days?.interval(calendar: .current) != nil
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    Toggle("Date range", isOn: dateFilterEnabled)
+                        .accessibilityIdentifier("timeline.dateRange.enabled")
+                    if let days = Binding($selection.days) {
+                        DatePicker("Start date", selection: days.start, displayedComponents: .date)
+                        DatePicker("End date", selection: days.end, displayedComponents: .date)
+                        if !validDates {
+                            Text("The end date must be on or after the start date.")
+                                .font(.footnote)
+                                .foregroundStyle(AppColors.destructive)
+                        }
+                    }
+                }
+                Section {
+                    Picker("Tags", selection: $selection.tag) {
+                        Text("All tags").tag(nil as String?)
+                        ForEach(tags, id: \.self) { tag in
+                            Text(AppLocalization.localizedTag(tag)).tag(Optional(tag))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .accessibilityIdentifier("timeline.tagFilter")
+                }
+            }
+            .navigationTitle("Dates and tags")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        onApply(selection)
+                        dismiss()
+                    }
+                    .disabled(!validDates)
+                    .accessibilityIdentifier("timeline.dateAndTag.apply")
+                }
+            }
+        }
     }
 }
 

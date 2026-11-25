@@ -425,6 +425,41 @@ final class MomentDateQueryTests: XCTestCase {
         return calendar
     }
 
+    func testTimelineRangeAppliesEveryConditionAndIncludesTheEndDay() throws {
+        let calendar = try calendar("America/Los_Angeles")
+        let first = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 7)))
+        let last = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 8)))
+        let midnight = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 9)))
+        let selected = Moment(occurredAt: midnight.addingTimeInterval(-1), durationSeconds: 90, mood: .happy,
+                              kind: .solo, rating: 4, tags: ["Reading"], favorite: true)
+        var nextDay = selected
+        nextDay.occurredAt = midnight
+        var differentType = selected
+        differentType.kind = .together
+        var otherTag = selected
+        otherTag.tags = ["Music"]
+        var notBookmarked = selected
+        notBookmarked.favorite = false
+        var anotherMood = selected
+        anotherMood.mood = .relaxed
+        let filters = MomentTimelineQuery(kind: .solo, favoritesOnly: true,
+                                          days: MomentDayRange(start: first, end: last), tag: "Reading", text: "Happy")
+        XCTAssertEqual(filters.matching([nextDay, differentType, otherTag, notBookmarked, selected, anotherMood],
+                                        calendar: calendar), [selected])
+        XCTAssertEqual(MomentDayRange(start: first, end: last).interval(calendar: calendar)?.duration, 47 * 3_600)
+        XCTAssertNil(MomentDayRange(start: last, end: first).interval(calendar: calendar))
+    }
+
+    func testTimelineFilterReadsImportedTagsAndRecomputesAfterAnEdit() {
+        let saved = Moment(durationSeconds: 150, mood: .calm, rating: 3, tags: ["Reading"])
+        let onlyReading = MomentTimelineQuery(kind: nil, favoritesOnly: false, days: nil, tag: "Reading", text: "reading")
+        XCTAssertEqual(onlyReading.matching([saved]), [saved])
+        var edited = saved
+        edited.tags = ["Outdoors"]
+        XCTAssertEqual(onlyReading.matching([edited]), [])
+        XCTAssertEqual(onlyReading.matching([]), [])
+    }
+
     func testMidnightBelongsOnlyToTheFollowingDay() throws {
         let calendar = try calendar("Asia/Tokyo")
         let day = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 11, day: 10)))

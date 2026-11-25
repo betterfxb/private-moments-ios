@@ -213,6 +213,44 @@ enum MomentReviewPeriod: Hashable {
     }
 }
 
+struct MomentDayRange: Equatable {
+    var start: Date
+    var end: Date
+
+    func interval(calendar: Calendar) -> DateInterval? {
+        let firstDay = calendar.startOfDay(for: start)
+        guard let lastDay = calendar.dateInterval(of: .day, for: end), firstDay <= lastDay.start else { return nil }
+        return DateInterval(start: firstDay, end: lastDay.end)
+    }
+}
+
+struct MomentTimelineQuery {
+    let kind: MomentKind?
+    let favoritesOnly: Bool
+    let days: MomentDayRange?
+    let tag: String?
+    let text: String
+
+    func matching(_ moments: [Moment], calendar: Calendar = .current) -> [Moment] {
+        guard kind != nil || favoritesOnly || days != nil || tag != nil || !text.isEmpty else { return moments }
+        let interval = days?.interval(calendar: calendar)
+        guard days == nil || interval != nil else { return [] }
+        return moments.filter { moment in
+            if let kind, moment.kind != kind { return false }
+            if favoritesOnly && !moment.isFavorite { return false }
+            if let interval, !MomentDateQuery.contains(moment.occurredAt, in: interval) { return false }
+            if let tag, !moment.tags.contains(tag) { return false }
+            if text.isEmpty { return true }
+            let searchable = [
+                moment.occurredAt.formatted(date: .abbreviated, time: .shortened),
+                moment.mood.rawValue, moment.mood.displayName,
+                moment.kind.rawValue, moment.kind.displayName
+            ] + moment.tags.flatMap { [$0, AppLocalization.localizedTag($0)] }
+            return searchable.joined(separator: " ").localizedCaseInsensitiveContains(text)
+        }
+    }
+}
+
 enum MomentDateQuery {
     static func onDay(_ moments: [Moment], date: Date, calendar: Calendar = .current) -> [Moment] {
         guard let interval = calendar.dateInterval(of: .day, for: date) else { return [] }
@@ -234,8 +272,12 @@ enum MomentDateQuery {
     }
 
     private static func within(_ moments: [Moment], interval: DateInterval) -> [Moment] {
+        moments.filter { contains($0.occurredAt, in: interval) }
+    }
+
+    static func contains(_ date: Date, in interval: DateInterval) -> Bool {
         // DateInterval.contains includes its upper bound, which belongs to the next period here.
-        return moments.filter { $0.occurredAt >= interval.start && $0.occurredAt < interval.end }
+        date >= interval.start && date < interval.end
     }
 }
 

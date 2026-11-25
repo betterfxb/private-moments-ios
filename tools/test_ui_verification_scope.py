@@ -73,6 +73,7 @@ class VerificationScopeTests(unittest.TestCase):
         lines = result.stdout.splitlines()
         self.assertFalse(any(line.startswith('-only-testing:') for line in lines))
         for method in ['testScreenGallery', 'testFavoriteCanBeFoundWithSearchAfterRelaunch',
+                       'testTimelineDateAndTagFiltersCombineAndSurviveNavigation',
                        'testWeekReviewShowsLocalRecords', 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord',
                        'testReviewComparisonOpensRecordsFromPreviousMonth',
                        'testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded',
@@ -127,6 +128,7 @@ class VerificationScopeTests(unittest.TestCase):
                           '-only-testing:PrivateMomentsTests/RecapDraftRecoveryTests',
                           '-only-testing:PrivateMomentsTests/SemanticColorTests',
                           '-only-testing:' + PREFIX + 'testFavoriteCanBeFoundWithSearchAfterRelaunch',
+                          '-only-testing:' + PREFIX + 'testTimelineDateAndTagFiltersCombineAndSurviveNavigation',
                           '-only-testing:' + PREFIX + 'testWeekReviewShowsLocalRecords',
                           '-only-testing:' + PREFIX + 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord',
                           '-only-testing:' + PREFIX + 'testReviewComparisonOpensRecordsFromPreviousMonth',

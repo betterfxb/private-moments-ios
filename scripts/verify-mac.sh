@@ -98,6 +98,7 @@ fi
 UI_SUITE=PrivateMomentsUITests/PrivateMomentsUITests
 JOURNAL_METHODS=(
     testFavoriteCanBeFoundWithSearchAfterRelaunch
+    testTimelineDateAndTagFiltersCombineAndSurviveNavigation
     testWeekReviewShowsLocalRecords
     testReviewTabBrowsesPeriodsAndOpensFilteredRecord
     testReviewComparisonOpensRecordsFromPreviousMonth
