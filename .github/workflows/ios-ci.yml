@@ -73,7 +73,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ios-validation-${{ github.ref }}-${{ inputs.legacy_ios17 && 'ios17' || inputs.reading_smoke && format('reading-{0}', inputs.backup_smoke_profile) || inputs.week_review_smoke && format('journal-{0}', inputs.backup_smoke_profile) || inputs.backup_smoke && format('backup-{0}-{1}', inputs.backup_smoke_profile, inputs.backup_smoke_language) || 'standard' }}
+  group: ios-validation-${{ github.ref }}-${{ inputs.legacy_ios17 && 'ios17' || inputs.reading_smoke && format('reading-{0}-{1}', inputs.backup_smoke_profile, github.sha) || inputs.week_review_smoke && format('journal-{0}', inputs.backup_smoke_profile) || inputs.backup_smoke && format('backup-{0}-{1}', inputs.backup_smoke_profile, inputs.backup_smoke_language) || 'standard' }}
   cancel-in-progress: true
 
 jobs:
@@ -266,7 +266,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: private-moments-ui-screenshots-${{ matrix.profile }}${{ matrix.suite && format('-{0}', matrix.suite) || '' }}
+          name: private-moments-ui-screenshots-${{ matrix.profile }}${{ matrix.suite && format('-{0}', matrix.suite) || '' }}${{ github.run_attempt != '1' && format('-attempt-{0}', github.run_attempt) || '' }}
           path: ${{ runner.temp }}/PrivateMomentsUIScreenshots
           if-no-files-found: ignore
           retention-days: 7
@@ -275,7 +275,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: private-moments-xcresult-${{ matrix.profile }}${{ matrix.suite && format('-{0}', matrix.suite) || '' }}
+          name: private-moments-xcresult-${{ matrix.profile }}${{ matrix.suite && format('-{0}', matrix.suite) || '' }}${{ github.run_attempt != '1' && format('-attempt-{0}', github.run_attempt) || '' }}
           path: ${{ runner.temp }}/PrivateMoments.xcresult
           if-no-files-found: ignore
           retention-days: 7

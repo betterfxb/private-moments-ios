@@ -2,7 +2,7 @@
 
 ## Cloud validation ordering
 
-Run focused diagnostics and full validation serially on a branch. The workflow uses a same-ref concurrency group with cancel-in-progress: starting a second run cancels the active one. A focused input or backup success is diagnostic evidence only; final acceptance requires the full matrix and original-image review. Do not restart a functional failure unchanged to obtain a pass.
+Finish the current workflow before dispatching another run in the same branch and concurrency group. GitHub cancels the earlier run in that group. A native reading comparison uses the profile and revision in its group so the baseline and candidate can be captured independently. Full acceptance runs its gallery, journal, Files, core and rotation jobs on a single revision. Compare original screenshots and retain each job's result bundle. A focused run provides evidence for its selected methods. To investigate an infrastructure interruption, retry the affected job from the original run. Artifact names include the attempt number when a job is retried. Investigate functional failures before running them again.
 
 ## Historical full validation: batch16 search usability
 
