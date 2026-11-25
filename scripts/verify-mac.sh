@@ -87,6 +87,10 @@ fi
 if [[ "$IPAD_TESTS" == "0" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadRotationContinuity)
 fi
+if [[ "$INPUT_ONLY" != "1" ]]; then
+    # The full gallery already exercises this flow inline.
+    TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testTimelineSearchLayoutInBothLanguages)
+fi
 if [[ "$ROTATION_ONLY" == "1" ]]; then
     printf '\nFocused iPad system-window diagnostic.\n'
     case "$ROTATION_START" in
@@ -114,8 +118,9 @@ elif [[ "$WEEK_REVIEW_ONLY" == "1" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testReviewComparisonOpensRecordsFromPreviousMonth)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded)
 elif [[ "$INPUT_ONLY" == "1" ]]; then
-    printf '\nFocused input gallery only; this is not full simulator acceptance.\n'
+    printf '\nFocused input gallery and native search layout.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testScreenGallery)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsUITests/PrivateMomentsUITests/testTimelineSearchLayoutInBothLanguages)
 elif [[ "$BACKUP_ONLY" == "1" ]]; then
     printf '\nFocused backup smoke only; this is not full simulator acceptance.\n'
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/BackupUXTests)
@@ -182,7 +187,7 @@ xcodebuild \
 if [[ "$ROTATION_ONLY" == "1" ]]; then
     printf '\nFocused iPad system-window diagnostic passed.\n'
 elif [[ "$INPUT_ONLY" == "1" ]]; then
-    printf '\nFocused input gallery passed; full regression is still required.\n'
+    printf '\nFocused input gallery and search layout passed; full regression is still required.\n'
 elif [[ "$BACKUP_ONLY" == "1" ]]; then
     printf '\nFocused backup smoke passed; full regression is still required.\n'
 else

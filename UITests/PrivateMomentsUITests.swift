@@ -530,8 +530,10 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Today-\(language)", app)
             if weekMenu.exists {
                 tap(weekMenu, in: app)
-                capture("Week-menu-\(language)", app)
-                tap(app.buttons["today.week.current"], in: app)
+                let currentDay = app.buttons["today.week.current"]
+                waitForStableFrame(currentDay, requireHittable: true, message: "Today's native week menu action must settle.")
+                capture("Week-menu-\(language)", app, stableSurface: currentDay)
+                currentDay.tap()
                 XCTAssertTrue(app.buttons["today.clearDateFilter"].exists)
                 tap(app.buttons["today.clearDateFilter"], in: app)
             }
@@ -2298,6 +2300,19 @@ final class PrivateMomentsUITests: XCTestCase {
            !app.buttons[homeDestination].waitForExistence(timeout: 15) {
             captureFailure("Home-action-destination-unavailable", app)
             XCTFail("A single Home action did not present its destination: \(homeDestination)")
+        }
+    }
+
+    func testTimelineSearchLayoutInBothLanguages() {
+        for language in ["en", "zh-Hans"] {
+            let app = makeApp(language: language)
+            app.launch()
+            tap(app.buttons["today.addRecord"], in: app)
+            tap(app.buttons["recap.saveToolbar"], in: app)
+            XCTAssertTrue(app.buttons["today.startMoment"].waitForExistence(timeout: 10))
+            selectTab("Timeline", "时间线", language: language, app: app)
+            checkTimelineSearch(language: language, app: app)
+            app.terminate()
         }
     }
 

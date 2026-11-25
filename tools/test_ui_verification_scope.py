@@ -101,6 +101,16 @@ class VerificationScopeTests(unittest.TestCase):
             self.assertIn('-skip-testing:' + PREFIX + CHINESE, result.stdout.splitlines())
             self.assertFalse(any(s.startswith('-only-testing:') for s in result.stdout.splitlines()))
 
+    def test_input_scope_runs_gallery_and_independent_bilingual_search(self):
+        result = self.script(PRIVATE_MOMENTS_UI_INPUT_ONLY='1')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        lines = result.stdout.splitlines()
+        method = PREFIX + 'testTimelineSearchLayoutInBothLanguages'
+        self.assertIn('-only-testing:' + PREFIX + 'testScreenGallery', lines)
+        self.assertIn('-only-testing:' + method, lines)
+        self.assertNotIn('-skip-testing:' + method, lines)
+        self.assertIn('-skip-testing:' + method, self.script().stdout.splitlines())
+
     def test_reference_selection_remains_bilingual_method(self):
         result = self.script(PRIVATE_MOMENTS_UI_ROTATION_ONLY='1', PRIVATE_MOMENTS_UI_IPAD_TESTS='1')
         self.assertEqual(result.returncode, 0, result.stderr)
