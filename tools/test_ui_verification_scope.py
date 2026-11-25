@@ -48,6 +48,18 @@ class VerificationScopeTests(unittest.TestCase):
     def script(self, start='reference', **values):
         return execute(SELECTION, dict(PRIVATE_MOMENTS_UI_ROTATION_START=start, **values))
 
+    def test_input_performance_and_rotation_diagnostics_stay_out_of_full_concurrency_group(self):
+        concurrency = WORKFLOW.split('\nconcurrency:\n', 1)[1].split('\njobs:\n', 1)[0]
+        groups = {
+            'input_smoke': "format('input-{0}', inputs.backup_smoke_profile)",
+            'performance_smoke': "'performance'",
+            'rotation_smoke': "format('rotation-{0}-{1}', inputs.backup_smoke_profile, inputs.rotation_start)",
+        }
+        for flag, group in groups.items():
+            with self.subTest(flag=flag):
+                self.assertIn(f'inputs.{flag} && {group}', concurrency)
+        self.assertIn("|| 'standard'", concurrency)
+
     def test_acceptance_gallery_runs_only_bilingual_gallery(self):
         result = self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='gallery')
         self.assertEqual(result.returncode, 0, result.stderr)
