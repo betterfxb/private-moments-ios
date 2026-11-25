@@ -1315,7 +1315,7 @@ final class PrivateMomentsUITests: XCTestCase {
         }
         XCTAssertEqual(app.staticTexts["settings.savedCount"].label, "1")
 
-        tap(app.buttons["settings.restore"], in: app)
+        tapBackupRestore(in: app)
         var cancel: XCUIElement?
         var outside: XCUICoordinate?
         let pickerReady = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
@@ -1692,9 +1692,17 @@ final class PrivateMomentsUITests: XCTestCase {
         print("Verified ready native export action. Locale: \(language); label: \(action.label); frame: \(action.frame).")
     }
 
+    private func tapBackupRestore(in app: XCUIApplication) {
+        let restore = app.buttons["settings.restore"]
+        revealFully(from: restore, through: restore, in: app)
+        waitForStableFrame(restore, requireHittable: true, message: "The visible restore action must settle before tapping.")
+        assertAboveBottomTabBar(restore, message: "The restore action must clear the tab bar.", app: app)
+        restore.tap()
+    }
+
     private func openBackup(_ filename: String, language: String = "en", app: XCUIApplication) {
         let originalCount = app.staticTexts["settings.savedCount"].label
-        tap(app.buttons["settings.restore"], in: app)
+        tapBackupRestore(in: app)
         for attempt in 0..<2 {
             let selection = selectBackupFile(filename, app: app)
             if app.buttons["backup.merge"].exists { return }
@@ -1728,7 +1736,7 @@ final class PrivateMomentsUITests: XCTestCase {
                 assertImportCancelled(language: language, in: app)
                 XCTAssertEqual(app.staticTexts["settings.savedCount"].label, originalCount)
                 print("Explicit system backup reselection \(importRecoveryCount); local record count unchanged. Reason: \(reason).")
-                tap(app.buttons["settings.restore"], in: app)
+                tapBackupRestore(in: app)
                 continue
             case .delivered: break
             }
