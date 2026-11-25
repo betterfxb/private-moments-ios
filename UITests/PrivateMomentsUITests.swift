@@ -628,11 +628,20 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertFalse(resume.exists)
             selectTab("Timeline", "时间线", language: language, app: app)
             XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, english ? "1 moment" : "1 条记录")
-            tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
+            let savedRow = app.buttons.matching(identifier: "moment.row").firstMatch
+            revealFully(from: savedRow, through: savedRow, in: app)
+            waitForStableFrame(savedRow, requireHittable: true, message: "The complete restored record is ready to open.")
+            assertAboveBottomTabBar(savedRow, message: "The saved record must clear the tab bar.", app: app)
+            savedRow.tap()
+            let edit = app.buttons["detail.editToolbar"]
+            guard edit.waitForExistence(timeout: 10) else {
+                captureFailure("Draft-saved-record-destination-unavailable-\(language)", app)
+                return XCTFail("One tap on the fully visible saved record must open its detail.")
+            }
             let savedNote = app.staticTexts["detail.note"]
             reveal(savedNote, in: app)
             XCTAssertEqual(savedNote.label, firstNote)
-            tap(app.buttons["detail.editToolbar"], in: app)
+            tap(edit, in: app)
             let calm = app.buttons["recap.mood.Calm"]
             revealFully(from: calm, through: calm, in: app)
             calm.tap()
