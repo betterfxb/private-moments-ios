@@ -69,7 +69,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ios-validation-${{ github.ref }}-${{ inputs.legacy_ios17 && 'ios17' || inputs.week_review_smoke && format('journal-{0}', inputs.backup_smoke_profile) || 'standard' }}
+  group: ios-validation-${{ github.ref }}-${{ inputs.legacy_ios17 && 'ios17' || inputs.week_review_smoke && format('journal-{0}', inputs.backup_smoke_profile) || inputs.backup_smoke && format('backup-{0}-{1}', inputs.backup_smoke_profile, inputs.backup_smoke_language) || 'standard' }}
   cancel-in-progress: true
 
 jobs:

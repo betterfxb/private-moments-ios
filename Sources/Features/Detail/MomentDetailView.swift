@@ -189,9 +189,11 @@ struct MomentDetailView: View {
 
     private func pageHeading(_ moment: Moment) -> some View {
         VStack(alignment: .leading, spacing: 11) {
-            Text(moment.occurredAt.formatted(date: .complete, time: .shortened))
-                .font(.system(.subheadline, design: .rounded))
+            Text(moment.occurredAt.formatted(date: dynamicTypeSize.isAccessibilitySize ? .abbreviated : .complete,
+                                            time: .shortened))
+                .font(.system(.footnote, design: .rounded))
                 .foregroundStyle(AppColors.secondaryText)
+                .accessibilityLabel(moment.occurredAt.formatted(date: .complete, time: .shortened))
             Text(moment.mood.displayName)
                 .font(.system(.largeTitle, design: .serif).weight(.medium))
                 .foregroundStyle(AppColors.text)

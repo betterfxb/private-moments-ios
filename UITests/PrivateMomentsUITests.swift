@@ -386,16 +386,24 @@ final class PrivateMomentsUITests: XCTestCase {
             let selectedRange = range.label
             let compare = app.buttons["review.compare"]
             XCTAssertEqual(compare.label, english ? "Compare with previous period" : "与上一周期对照")
-            tap(compare, in: app)
+            revealFully(from: compare, through: compare, in: app)
+            waitForStableFrame(compare, requireHittable: true, message: "The comparison action must be ready to open.")
+            assertToolbarTarget(compare)
+            assertAboveBottomTabBar(compare, message: "The full comparison action must clear the tab bar.", app: app)
+            compare.tap()
             let selected = app.buttons["review.selected.records"]
             let previous = app.buttons["review.previous.records"]
+            guard selected.waitForExistence(timeout: 10) else {
+                captureFailure("Review-comparison-did-not-expand-\(language)", app)
+                return XCTFail("One tap on the visible comparison action must expand the periods.")
+            }
             XCTAssertEqual(selected.label, english ? "1 moment" : "1 条记录")
             XCTAssertEqual(previous.label, english ? "2 moments" : "2 条记录")
             XCTAssertEqual(previous.value as? String, english ? "1 day with entries" : "1 天有记录")
             XCTAssertFalse(app.buttons["review.comparisonMood.selected.Connected"].exists)
             let mood = app.buttons["review.comparisonMood.previous.Calm"]
             revealFully(from: mood, through: mood, in: app)
-            XCTAssertGreaterThanOrEqual(mood.frame.height, 44)
+            assertToolbarTarget(mood)
             assertAboveBottomTabBar(mood, message: "The previous period action must clear the tab bar.", app: app)
             capture("Review-comparison-\(language)", app, stableSurface: mood)
             mood.tap()
@@ -433,7 +441,7 @@ final class PrivateMomentsUITests: XCTestCase {
             app.launch()
 
             revealFully(from: resume, through: resume, in: app)
-            XCTAssertGreaterThanOrEqual(resume.frame.height, 44)
+            assertToolbarTarget(resume)
             assertAboveBottomTabBar(resume, message: "The recovery action must clear the tab bar.", app: app)
             XCTAssertEqual(resume.label, english ? "Resume draft" : "继续草稿")
             XCTAssertFalse(app.staticTexts[firstNote].exists, "Today does not preview draft notes.")
@@ -461,11 +469,18 @@ final class PrivateMomentsUITests: XCTestCase {
             reveal(savedNote, in: app)
             XCTAssertEqual(savedNote.label, firstNote)
             tap(app.buttons["detail.editToolbar"], in: app)
-            tap(app.buttons["recap.mood.Calm"], in: app)
+            let calm = app.buttons["recap.mood.Calm"]
+            revealFully(from: calm, through: calm, in: app)
+            calm.tap()
+            XCTAssertTrue(calm.isSelected)
             app.terminate()
             app.launch()
-            tap(resume, in: app)
-            XCTAssertTrue(app.buttons["recap.mood.Calm"].isSelected)
+            revealFully(from: resume, through: resume, in: app)
+            waitForStableFrame(resume, requireHittable: true, message: "The edit-draft recovery action is ready to open.")
+            resume.tap()
+            XCTAssertTrue(app.buttons["recap.saveToolbar"].waitForExistence(timeout: 10))
+            reveal(calm, in: app)
+            XCTAssertTrue(calm.isSelected)
             tap(app.buttons["recap.cancel"], in: app)
             tap(app.buttons[english ? "Discard" : "放弃"], in: app)
             XCTAssertTrue(app.buttons["detail.editToolbar"].waitForExistence(timeout: 10))
