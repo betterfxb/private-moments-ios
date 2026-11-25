@@ -50,3 +50,17 @@
 - 补充 Intel iPad 输入专项达到 60 分钟作业上限后取消，GitHub 任务注释已确认超时。相同应用及 iPad 原生图库使用 ARM64 的通过证据有效。[Intel 超时作业](https://github.com/betterfxb/private-moments-ios/actions/runs/45702431859/job/139518645175) · [ARM64 图库通过](evidence/batch-23/45700264337/ipad-light-gallery/xctest-extract.txt)
 - `239dc06` 的 iPad Files ARM64 回退通过 9 项单测及实际系统选档往返。同一源码的 iPad 日记通过 20 项单测和 5 项原生用例。[iPad Files](evidence/batch-23/45709770041/ipad-light-files/xctest-extract.txt) · [iPad 日记](evidence/batch-23/45703419654/ipad-light-journal/xctest-extract.txt)
 - `239dc06` 的 Intel 旋转专项在点时间线后无法返回 XCTest 界面树，记录了远程辅助服务异常及 `Timed out while evaluating UI query`。同一提交已经请求 ARM64 补跑。[Intel 旋转日志](evidence/batch-23/45703417160/ipad-light-rotation/xctest-extract.txt) · [ARM64 重试](https://github.com/betterfxb/private-moments-ios/actions/runs/45718015746)
+- `239dc06` 的最大字号 Intel Files 回退通过 9 项单测及系统文件往返。ARM64 iPad 旋转复验通过中英文横竖屏往返，包含草稿、详情、计时和已保存记录读回，归档 8 张原图。[最大字号 Files](evidence/batch-23/45709822817/compact-dark-accessibility-files/xctest-extract.txt) · [iPad 旋转成功](evidence/batch-23/45718015746/ipad-light-rotation/xctest-extract.txt) · [旋转原图收据](evidence/batch-23/45718015746/ipad-light-rotation/screenshots.json)
+
+## 最终覆盖
+
+四配置的 17 个场景各有 GitHub Actions 成功记录。`160dbad` 到 `239dc06` 对应的应用源码、资源、Xcode 工程和单元测试源码经 Git 对比一致。后续提交只在本批范围调整 XCTest 的键盘采样时限、工作流并发分组和验收材料。完整矩阵曾有失败和取消，最终覆盖来自完整运行中的成功作业及隔离后的专项补跑。
+
+| 配置 | 通过范围 | 成功记录 |
+| --- | --- | --- |
+| 常规小屏浅色 | 6 项。图库、日记、日记新功能、中英文 Files、核心检查及无签名双构建 | [`160dbad` 的完整运行中六项](https://github.com/betterfxb/private-moments-ios/actions/runs/45682204734) |
+| 常规手机深色 | 3 项。图库、日记和 Files | [图库及 Files](https://github.com/betterfxb/private-moments-ios/actions/runs/45682204734) · [日记](https://github.com/betterfxb/private-moments-ios/actions/runs/45702375505) |
+| 常规 iPad 浅色 | 4 项。图库、日记、Files 和旋转 | [图库](https://github.com/betterfxb/private-moments-ios/actions/runs/45700264337) · [日记](https://github.com/betterfxb/private-moments-ios/actions/runs/45703419654) · [Files](https://github.com/betterfxb/private-moments-ios/actions/runs/45709770041) · [旋转](https://github.com/betterfxb/private-moments-ios/actions/runs/45718015746) |
+| 小屏深色最大辅助字号 | 4 项。双语图库及键盘搜索、日记、日记新功能和 Files | [图库及搜索](https://github.com/betterfxb/private-moments-ios/actions/runs/45702988930) · [日记](https://github.com/betterfxb/private-moments-ios/actions/runs/45703001499) · [日记新功能](https://github.com/betterfxb/private-moments-ios/actions/runs/45703000795) · [Files](https://github.com/betterfxb/private-moments-ios/actions/runs/45709822817) |
+
+交付前 Windows 再跑 `python -m unittest discover -s tools` 共 55 项通过。`bash -n scripts/verify-mac.sh`、`bash -n scripts/verify-ios17.sh`、本地化 282 键、Xcode 工程 113 对象、发布材料审计及差异检查通过。发布材料仍有 Bundle ID 与发布者待填写信息。真机证据另按第 26 批清单执行。[真机清单](DEVICE-AND-RECOVERY-DECISIONS.md)
