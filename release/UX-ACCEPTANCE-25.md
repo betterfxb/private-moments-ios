@@ -17,3 +17,7 @@
 两个定向运行使用相同的 `6f83cb739f487c5b5f7b6f0c599f585a2af1ad5d`。GitHub 已通过计划作业并分配设备配置。原生作业结果待查。[常规小屏](https://github.com/betterfxb/private-moments-ios/actions/runs/45626995515) · [深色最大辅助字号](https://github.com/betterfxb/private-moments-ios/actions/runs/45626988045)
 
 Windows 已通过 53 项工具测试、Bash 脚本语法、本地化 281 键、Xcode 项目 113 对象、发行材料和 Git 差异检查。Windows 上的检查覆盖工程配置、测试选择及资源完整性。原生编译、交互及视觉结果按 GitHub Actions 的实际结果另行记录。
+
+### 两套配置首轮及修订
+
+`6f83cb7` 在常规小屏和深色最大字号下均通过全部 11 项日期和周期单测。「再记一次」及月度精选的原生用例也通过。两套配置的日期组合用例均出现同一现象，选中标签后得到一条记录，点按原生日期开关再应用时仍是一条，未得到所选日期应有的空结果。`7046aa0` 将日期范围改为完整一行可点的明确动作，并在测试中确认真实的日期字段已出现后才应用，同时验证详情返回保留搜索词。已请求两套同源码复验。Windows 54 项工具测试、本地化 282 键和工程审计通过。[常规首轮](evidence/batch-25/45626995515/compact-light/xctest-extract.txt) · [最大字号首轮](evidence/batch-25/45626988045/compact-dark-accessibility/xctest-extract.txt) · [月度精选原图](evidence/batch-25/45626988045/compact-dark-accessibility/Month-highlights-zh-Hans.png) · [常规复验](https://github.com/betterfxb/private-moments-ios/actions/runs/45644956312) · [最大字号复验](https://github.com/betterfxb/private-moments-ios/actions/runs/45643950202)
