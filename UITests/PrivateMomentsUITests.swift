@@ -2325,7 +2325,9 @@ final class PrivateMomentsUITests: XCTestCase {
             if UIDevice.current.userInterfaceIdiom != .pad { return !remainingKeyboard.exists }
             return !remainingKeyboard.exists || !remainingKeyboard.isHittable
         }, object: nil)
-        let result = XCTWaiter.wait(for: [closed], timeout: 5)
+        // Hosted simulators can report a stale keyboard while UIKit completes
+        // dismissal. Keep the one tap and wait for the keyboard's final state.
+        let result = XCTWaiter.wait(for: [closed], timeout: 15)
         if result != .completed {
             // The keyboard or its Done accessory may already have vanished.
             // Capture the whole current screen/tree without querying them.
