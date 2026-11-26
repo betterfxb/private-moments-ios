@@ -217,13 +217,47 @@ final class PrivateMomentsUITests: XCTestCase {
             let count = app.staticTexts["timeline.resultCount"]
             let advanced = app.buttons["timeline.dateAndTag"]
             let apply = app.buttons["timeline.dateAndTag.apply"]
+            let tags = app.buttons["timeline.tagFilter"]
+            let connected = app.buttons["timeline.tags.option.Connected"]
+            let relaxed = app.buttons["timeline.tags.option.Relaxed"]
+            let matchAny = app.buttons["timeline.tags.mode.any"]
+            let matchAll = app.buttons["timeline.tags.mode.all"]
+            let tagsDone = app.buttons["timeline.tags.done"]
             let range = app.buttons["timeline.dateRange.enabled"]
             let startDate = app.descendants(matching: .any).matching(identifier: "timeline.dateRange.start").firstMatch
             tap(advanced, in: app)
-            tap(app.buttons["timeline.tagFilter"], in: app)
-            let tag = app.buttons[english ? "Connected" : "亲密相连"].firstMatch
-            XCTAssertTrue(tag.waitForExistence(timeout: 10))
-            tag.tap()
+            tap(tags, in: app)
+            guard matchAny.waitForExistence(timeout: 5) else {
+                captureFailure("Tag-filter-multiple-options-unavailable-\(language)", app)
+                return XCTFail("The tag filter must keep a picker open for multiple selections and expose the match mode.")
+            }
+            XCTAssertTrue(matchAll.isSelected, "Match all is the default for a new selection.")
+            tap(matchAny, in: app)
+            tap(connected, in: app)
+            tap(relaxed, in: app)
+            XCTAssertTrue(connected.isSelected && relaxed.isSelected)
+            capture("Tag-filter-options-\(language)", app, stableSurface: relaxed)
+            tap(tagsDone, in: app)
+            tap(apply, in: app)
+            XCTAssertEqual(count.label, english ? "2 moments" : "2 条记录")
+
+            tap(advanced, in: app)
+            tap(tags, in: app)
+            XCTAssertTrue(matchAny.isSelected && connected.isSelected && relaxed.isSelected)
+            tap(matchAll, in: app)
+            tap(tagsDone, in: app)
+            tap(apply, in: app)
+            XCTAssertEqual(count.label, english ? "0 moments" : "0 条记录")
+            let noMatches = app.staticTexts[english ? "No matching moments" : "没有找到匹配记录"]
+            reveal(noMatches, in: app)
+            capture("Tag-filter-no-match-\(language)", app, stableSurface: noMatches)
+
+            tap(advanced, in: app)
+            tap(tags, in: app)
+            tap(relaxed, in: app)
+            XCTAssertTrue(connected.isSelected)
+            XCTAssertFalse(relaxed.isSelected)
+            tap(tagsDone, in: app)
             tap(apply, in: app)
             XCTAssertEqual(count.label, english ? "1 moment" : "1 条记录")
 
@@ -279,6 +313,18 @@ final class PrivateMomentsUITests: XCTestCase {
             goBack(app)
             XCTAssertEqual(count.label, english ? "1 moment" : "1 条记录")
             XCTAssertEqual(revealTimelineSearch(in: app).value as? String, "Happy")
+            tap(advanced, in: app)
+            tap(tags, in: app)
+            XCTAssertTrue(matchAll.isSelected && connected.isSelected)
+            XCTAssertFalse(relaxed.isSelected)
+            tap(connected, in: app)
+            tap(tagsDone, in: app)
+            tap(app.buttons["timeline.dateAndTag.cancel"], in: app)
+            tap(advanced, in: app)
+            tap(tags, in: app)
+            XCTAssertTrue(connected.isSelected, "Dismissing the outer filter must roll back draft tag changes.")
+            tap(tagsDone, in: app)
+            tap(apply, in: app)
             tap(app.buttons["timeline.clearFilters"], in: app)
             XCTAssertEqual(count.label, english ? "2 moments" : "2 条记录")
             XCTAssertFalse(app.staticTexts["timeline.dateAndTag.summary"].exists)

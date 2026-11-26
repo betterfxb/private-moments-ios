@@ -61,7 +61,7 @@ ROTATION_START="${PRIVATE_MOMENTS_UI_ROTATION_START:-reference}"
 ACCEPTANCE_PART="${PRIVATE_MOMENTS_UI_ACCEPTANCE_PART:-}"
 GALLERY_ONLY="${PRIVATE_MOMENTS_UI_GALLERY_ONLY:-0}"
 case "$ACCEPTANCE_PART" in
-    ''|gallery|core|reading|journal-features) ;;
+    ''|gallery|core|reading|journal-features|timeline-tags) ;;
     *) fail "Unknown acceptance part: $ACCEPTANCE_PART." ;;
 esac
 [[ "$ACCEPTANCE_PART" == "" || ( "$BACKUP_ONLY" == "0" && "$INPUT_ONLY" == "0" && "$PERFORMANCE_ONLY" == "0" && "$WEEK_REVIEW_ONLY" == "0" && "$ROTATION_ONLY" == "0" && "$GALLERY_ONLY" == "0" ) ]] || fail "An acceptance part excludes other verification scopes."
@@ -158,6 +158,10 @@ elif [[ "$ACCEPTANCE_PART" == "reading" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/SemanticColorTests)
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testJournalReadingSample")
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testQuickJournalJourney")
+elif [[ "$ACCEPTANCE_PART" == "timeline-tags" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentTagTests)
+    TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testTimelineDateAndTagFiltersCombineAndSurviveNavigation")
 elif [[ "$ACCEPTANCE_PART" == "journal-features" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentTagTests)

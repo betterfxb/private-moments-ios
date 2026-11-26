@@ -85,6 +85,7 @@ on:
           - core
           - rotation
           - journal-features
+          - timeline-tags
 
 permissions:
   contents: read
@@ -249,7 +250,8 @@ jobs:
           PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments.xcresult
           PRIVATE_MOMENTS_UI_ACCEPTANCE_PART: >-
             ${{ inputs.reading_smoke && 'reading' || inputs.journal_features_smoke && 'journal-features'
-            || (matrix.suite == 'gallery' || matrix.suite == 'core' || matrix.suite == 'journal-features') && matrix.suite || '' }}
+            || (matrix.suite == 'gallery' || matrix.suite == 'core' || matrix.suite == 'journal-features'
+            || matrix.suite == 'timeline-tags') && matrix.suite || '' }}
           PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ (matrix.suite == 'files' || matrix.suite == 'files-zh' || inputs.backup_smoke) && '1' || '0' }}
           PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE: ${{ matrix.suite == 'files-zh' && 'zh-Hans' || inputs.backup_smoke_language || 'en' }}
           PRIVATE_MOMENTS_UI_INPUT_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && '1' || '0' }}

@@ -120,7 +120,7 @@ class VerificationScopeTests(unittest.TestCase):
 
     def test_acceptance_part_rejects_invalid_or_mixed_scopes(self):
         self.assertNotEqual(self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='unknown').returncode, 0)
-        for part in ['gallery', 'core', 'reading', 'journal-features']:
+        for part in ['gallery', 'core', 'reading', 'journal-features', 'timeline-tags']:
             for key in ['INPUT_ONLY', 'BACKUP_ONLY', 'PERFORMANCE_ONLY', 'WEEK_REVIEW_ONLY',
                         'ROTATION_ONLY', 'GALLERY_ONLY']:
                 with self.subTest(part=part, key=key):
