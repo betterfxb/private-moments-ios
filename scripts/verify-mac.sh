@@ -98,6 +98,9 @@ if [[ "$INPUT_ONLY" != "1" ]]; then
     # The full gallery already exercises this flow inline.
     TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testTimelineSearchLayoutInBothLanguages)
 fi
+if [[ "$ACCEPTANCE_PART" != "reading" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testQuickJournalJourney)
+fi
 UI_SUITE=PrivateMomentsUITests/PrivateMomentsUITests
 JOURNAL_METHODS=(
     testFavoriteCanBeFoundWithSearchAfterRelaunch
@@ -154,6 +157,7 @@ elif [[ "$ACCEPTANCE_PART" == "gallery" ]]; then
 elif [[ "$ACCEPTANCE_PART" == "reading" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/SemanticColorTests)
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testJournalReadingSample")
+    TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testQuickJournalJourney")
 elif [[ "$ACCEPTANCE_PART" == "journal-features" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentTagTests)

@@ -71,7 +71,8 @@ class VerificationScopeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
                          ['-only-testing:PrivateMomentsTests/SemanticColorTests',
-                          '-only-testing:' + PREFIX + 'testJournalReadingSample'])
+                          '-only-testing:' + PREFIX + 'testJournalReadingSample',
+                          '-only-testing:' + PREFIX + 'testQuickJournalJourney'])
         baseline = dict(ROTATION_START='reference', ROTATION_SMOKE='0', INPUT_SMOKE='0', BACKUP_SMOKE='0',
                         BACKUP_LANGUAGE='en', READING_SMOKE='1', SMOKE_PROFILE='compact-light')
         self.assertEqual(execute(GUARD, baseline).returncode, 0)

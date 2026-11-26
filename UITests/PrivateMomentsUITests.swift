@@ -706,6 +706,74 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testQuickJournalJourney() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let app = makeApp(language: language)
+            app.launch()
+            let quick = app.buttons["today.quickRecord"]
+            let save = app.buttons["recap.saveToolbar"]
+            let edit = app.buttons["detail.editToolbar"]
+            let addedTag = app.staticTexts["Weekend"]
+            let one = english ? "1 moment" : "1 条记录"
+            let today = Calendar.current.component(.day, from: .now)
+
+            XCTAssertTrue(quick.waitForExistence(timeout: 10))
+            XCTAssertTrue(quick.isHittable)
+            capture("Journal-journey-01-home-\(language)", app, stableSurface: quick)
+            quick.tap()
+            capture("Journal-journey-02-quick-\(language)", app, stableSurface: save)
+            tap(save, in: app)
+            XCTAssertTrue(edit.waitForExistence(timeout: 10))
+            capture("Journal-journey-03-saved-\(language)", app, stableSurface: edit)
+
+            tap(edit, in: app)
+            tap(app.buttons["recap.customTags"], in: app)
+            let field = app.textFields["recap.newTag"]
+            tap(field, in: app)
+            field.typeText("Weekend")
+            let addTag = app.buttons["recap.addTagKeyboard"].firstMatch
+            capture("Journal-journey-04-tag-\(language)", app, stableSurface: addTag)
+            tap(addTag, in: app)
+            XCTAssertTrue(app.buttons["recap.tag.Weekend"].isSelected)
+            tap(save, in: app)
+            XCTAssertTrue(addedTag.waitForExistence(timeout: 10))
+            goBack(app)
+
+            selectTab("Timeline", "时间线", language: language, app: app)
+            let search = revealTimelineSearch(in: app)
+            tap(search, in: app)
+            search.typeText("Weekend")
+            guard submitTimelineSearch(language: language, app: app) else { return }
+            let result = app.buttons.matching(identifier: "moment.row").firstMatch
+            XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, one)
+            capture("Journal-journey-05-found-\(language)", app, stableSurface: result)
+            tap(result, in: app)
+            XCTAssertTrue(addedTag.waitForExistence(timeout: 10))
+            goBack(app)
+            XCTAssertEqual(app.searchFields.firstMatch.value as? String, "Weekend")
+
+            selectTab("Review", "回顾", language: language, app: app)
+            tap(app.buttons["review.month"], in: app)
+            let choose = app.buttons["review.calendar.chooseDay"]
+            if choose.exists { tap(choose, in: app) }
+            let day = app.buttons["review.calendar.day.\(today)"]
+            reveal(day, in: app)
+            XCTAssertEqual(day.value as? String, one)
+            capture("Journal-journey-06-calendar-\(language)", app, stableSurface: day)
+            tap(day, in: app)
+            let record = app.buttons.matching(identifier: "weekReview.moment").firstMatch
+            reveal(record, in: app)
+            capture("Journal-journey-07-day-\(language)", app, stableSurface: record)
+            tap(record, in: app)
+            XCTAssertTrue(addedTag.waitForExistence(timeout: 10))
+            goBack(app)
+            XCTAssertTrue(app.buttons["review.clearMood"].exists)
+            XCTAssertTrue(record.exists)
+            app.terminate()
+        }
+    }
+
     func testMonthCalendarOpensTheDayAndUpdatesAfterDeletion() {
         for language in ["en", "zh-Hans"] {
             let english = language == "en"
