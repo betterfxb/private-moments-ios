@@ -419,13 +419,16 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(app.buttons["recap.customTags"], in: app)
             tap(tagInput, in: app)
             tagInput.typeText("Weekend")
-            let addTag = app.buttons["recap.addTag"]
-            let keyboardToolbar = app.buttons["recap.dismissKeyboard"].firstMatch
-            XCTAssertTrue(keyboardToolbar.waitForExistence(timeout: 10))
-            XCTAssertLessThanOrEqual(addTag.frame.maxY, keyboardToolbar.frame.minY,
-                "Adding a tag must remain available above the software keyboard toolbar while typing.")
+            let addTag = app.buttons["recap.addTagKeyboard"].firstMatch
+            let keyboard = app.keyboards.firstMatch
+            XCTAssertTrue(addTag.waitForExistence(timeout: 10))
+            XCTAssertTrue(keyboard.exists)
+            assertToolbarTarget(addTag)
+            XCTAssertLessThanOrEqual(addTag.frame.maxY, keyboard.frame.minY,
+                "Adding a tag must remain available above the software keys while typing.")
+            XCTAssertTrue(addTag.isHittable)
             capture("Quick-record-tag-typing-\(language)", app, stableSurface: addTag)
-            tap(addTag, in: app)
+            addTag.tap()
             let selectedTag = app.buttons["recap.tag.Weekend"]
             XCTAssertTrue(selectedTag.waitForExistence(timeout: 5))
             XCTAssertTrue(selectedTag.isSelected)

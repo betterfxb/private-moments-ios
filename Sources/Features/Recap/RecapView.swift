@@ -170,6 +170,20 @@ struct RecapView: View {
                 ToolbarItem(placement: .topBarTrailing) { toolbarSave }
             }
             ToolbarItemGroup(placement: .keyboard) {
+                if focusedField == .tag {
+                    Button { addTag(tagInput) } label: {
+                        Label("Add tag", systemImage: "plus")
+                            .labelStyle(.iconOnly)
+                            .font(.system(size: 20, weight: .semibold))
+                            .frame(width: keyboardDismissTargetSize, height: keyboardDismissTargetSize)
+                            .background(AppColors.accentWash, in: Circle())
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(AppColors.accentText)
+                    .accessibilityLabel("Add tag")
+                    .accessibilityIdentifier("recap.addTagKeyboard")
+                }
                 Spacer()
                 Button { focusedField = nil } label: {
                     Label("Done", systemImage: "keyboard.chevron.compact.down")
