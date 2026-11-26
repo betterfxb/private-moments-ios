@@ -720,6 +720,11 @@ final class PrivateMomentsUITests: XCTestCase {
 
             XCTAssertTrue(quick.waitForExistence(timeout: 10))
             XCTAssertTrue(quick.isHittable)
+            XCTAssertEqual(quick.label, english ? "Quick record" : "快捷记录")
+            assertToolbarTarget(quick)
+            let manual = app.buttons["today.addRecord"]
+            XCTAssertGreaterThan(quick.frame.minY, app.buttons["today.startMoment"].frame.minY)
+            XCTAssertGreaterThanOrEqual(manual.frame.minY, quick.frame.minY)
             capture("Journal-journey-01-home-\(language)", app, stableSurface: quick)
             quick.tap()
             capture("Journal-journey-02-quick-\(language)", app, stableSurface: save)

@@ -924,7 +924,7 @@ final class SemanticColorTests: XCTestCase {
             for (foreground, background) in [
                 (AppColors.onAccent, AppColors.accent),
                 (AppColors.onAccent, AppColors.controlTint),
-                (AppColors.homeCoverText, AppColors.homeCoverNavigation),
+                (AppColors.homeCoverText, AppColors.homeCoverGlow),
                 (AppColors.homeCoverActionText, AppColors.homeCoverAction),
                 (AppColors.onDark, AppColors.session),
                 (AppColors.onDarkSecondary, AppColors.session),

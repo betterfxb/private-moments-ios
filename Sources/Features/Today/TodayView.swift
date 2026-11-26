@@ -64,12 +64,6 @@ struct TodayView: View {
             if phase != .active { showingDatePicker = false }
         }
         .toolbar {
-            if #available(iOS 26.0, *) {
-                ToolbarItem(placement: .topBarLeading) { quickRecordAction }
-                    .sharedBackgroundVisibility(.hidden)
-            } else {
-                ToolbarItem(placement: .topBarLeading) { quickRecordAction }
-            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     dateToView = selectedDate ?? .now
@@ -84,23 +78,6 @@ struct TodayView: View {
             calendarSheet
         }
         .task { store.reload() }
-    }
-
-    private var quickRecordAction: some View {
-        Button(action: onQuickRecord) {
-            Text("Quick record")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(AppColors.homeCoverText)
-                .padding(.horizontal, 12)
-                .frame(minWidth: 44, minHeight: 44)
-                .background(AppColors.homeCoverNavigation, in: Capsule())
-                .overlay { Capsule().strokeBorder(AppColors.homeCoverSecondary.opacity(0.35)) }
-                .contentShape(Capsule())
-        }
-        .buttonStyle(.plain)
-        .disabled(!store.isStorageAvailable)
-        .accessibilityHint("Saves a moment without starting the timer")
-        .accessibilityIdentifier("today.quickRecord")
     }
 
     private var cover: some View {
@@ -135,13 +112,24 @@ struct TodayView: View {
                     ? "Starts a private session timer"
                     : "Load your journal before starting a record.")
 
-                Button { onAddRecord(min(selectedDate ?? .now, .now)) } label: {
-                    Text("Add past moment")
-                        .fixedSize(horizontal: false, vertical: true)
+                let secondaryActions = dynamicTypeSize.isAccessibilitySize
+                    ? AnyLayout(VStackLayout(spacing: 0))
+                    : AnyLayout(HStackLayout(spacing: 8))
+                secondaryActions {
+                    Button(action: onQuickRecord) {
+                        Text("Quick record").fixedSize(horizontal: false, vertical: true)
+                    }
+                    .buttonStyle(TodayCoverActionStyle(isPrimary: false))
+                    .accessibilityHint("Saves a moment without starting the timer")
+                    .accessibilityIdentifier("today.quickRecord")
+
+                    Button { onAddRecord(min(selectedDate ?? .now, .now)) } label: {
+                        Text("Add past moment").fixedSize(horizontal: false, vertical: true)
+                    }
+                    .buttonStyle(TodayCoverActionStyle(isPrimary: false))
+                    .accessibilityIdentifier("today.addRecord")
+                    .accessibilityHint("Adds a record without starting the timer")
                 }
-                .buttonStyle(TodayCoverActionStyle(isPrimary: false))
-                .accessibilityIdentifier("today.addRecord")
-                .accessibilityHint("Adds a record without starting the timer")
             }
             .frame(maxWidth: 380)
             .disabled(!store.isStorageAvailable)
