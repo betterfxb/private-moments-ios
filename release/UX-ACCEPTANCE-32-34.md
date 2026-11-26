@@ -24,3 +24,11 @@
 
 - 浅色常规字号的[中文操作对照](evidence/batch-32/compact-light-zh-Hans-capture-comparison.png)、[中文找回对照](evidence/batch-32/compact-light-zh-Hans-retrieval-comparison.png)、[英文操作对照](evidence/batch-32/compact-light-en-capture-comparison.png)、[英文找回对照](evidence/batch-32/compact-light-en-retrieval-comparison.png)与[云端结果](https://github.com/betterfxb/private-moments-ios/actions/runs/45855031957)。
 - 深色最大辅助字号的[中文操作对照](evidence/batch-32/compact-dark-accessibility-zh-Hans-capture-comparison.png)、[中文找回对照](evidence/batch-32/compact-dark-accessibility-zh-Hans-retrieval-comparison.png)、[英文操作对照](evidence/batch-32/compact-dark-accessibility-en-capture-comparison.png)、[英文找回对照](evidence/batch-32/compact-dark-accessibility-en-retrieval-comparison.png)与[云端结果](https://github.com/betterfxb/private-moments-ios/actions/runs/45855029964)。
+
+## 第 33 批 时间线多标签筛选
+
+基线 `1208ee2` 先执行新行为用例。15 项旧单测正常通过，原生流程打开单选菜单后，因找不到多选匹配方式而按预期失败。[旧界面原生截图](evidence/batch-33/45858779331/compact-light-timeline-tags/Tag-filter-multiple-options-unavailable-en.png) · [失败断言](evidence/batch-33/45858779331/compact-light-timeline-tags/xctest-extract.txt) · [云端作业](https://github.com/betterfxb/private-moments-ios/actions/runs/45858779331)
+
+「日期和标签」下进入专用标签列表。默认匹配全部，可切换为匹配任一，点选或逐项取消。返回筛选面板后，点完成应用草稿，点取消回到此前条件。日期、记录类型、收藏和文本条件独立叠加。保存的旧标签仍按既有首尾空白与大小写归一规则查询，重音差异和原始拼写继续保留。标签筛选使用当前时间线的内存状态。
+
+首次最大字号复验中，已选两项可从原图核对，重新打开列表时底部行需要滚入视口后才进入 XCTest 快照。复验逐行滚入并读取实际选中状态，取消回滚仍需独立验证。同一截图见到随字号放大的勾选符挤占文字空间，候选把勾选图标限制为 22 点并沿用暖纸色，文字继续跟随系统字号。[最大字号首轮原图](evidence/batch-33/45860474192/compact-dark-accessibility-timeline-tags/Tag-filter-options-en.png)

@@ -621,6 +621,8 @@ private struct TimelineDateAndTagSheet: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
                 Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 22, weight: .semibold))
+                    .frame(width: 26)
                     .foregroundStyle(AppColors.journalAccent)
                     .accessibilityHidden(true)
             }
@@ -628,6 +630,7 @@ private struct TimelineDateAndTagSheet: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .listRowBackground(AppColors.journalNote)
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier(identifier)
     }
