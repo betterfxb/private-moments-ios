@@ -264,7 +264,7 @@ struct MomentTimelineView: View {
             dateAndTag = TimelineDateAndTag()
             isSearchPresented = false
         } label: {
-            Text("Clear filters")
+            Text(dynamicTypeSize.isAccessibilitySize ? LocalizedStringKey("Clear") : LocalizedStringKey("Clear filters"))
                 .font(.system(.footnote, design: .rounded).weight(.semibold))
                 .padding(.horizontal, 6)
                 .frame(minWidth: 44, minHeight: 44)
@@ -272,6 +272,7 @@ struct MomentTimelineView: View {
         }
         .buttonStyle(.borderless)
         .tint(AppColors.journalAccent)
+        .accessibilityLabel("Clear filters")
         .accessibilityIdentifier("timeline.clearFilters")
     }
 
@@ -464,6 +465,7 @@ private struct TimelineDateAndTagSheet: View {
                         }
                     }
                     .pickerStyle(.menu)
+                    .tint(AppColors.journalAccent)
                     .accessibilityIdentifier("timeline.tagFilter")
                 }
             }

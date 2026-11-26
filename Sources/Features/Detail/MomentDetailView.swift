@@ -214,9 +214,16 @@ struct MomentDetailView: View {
     private func privateNote(_ moment: Moment) -> some View {
         let hasNote = !moment.privateNote.isEmpty
         return VStack(alignment: .leading, spacing: 10) {
-            Label("Private note", systemImage: "lock")
-                .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                .foregroundStyle(AppColors.journalAccent)
+            Group {
+                if dynamicTypeSize.isAccessibilitySize {
+                    Text("Private note")
+                } else {
+                    Label("Private note", systemImage: "lock")
+                }
+            }
+            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+            .foregroundStyle(AppColors.journalAccent)
+            .accessibilityAddTraits(.isHeader)
             Text(hasNote ? moment.privateNote : AppLocalization.string("No note added."))
                 .font(.system(.body, design: .serif))
                 .foregroundStyle(hasNote ? AppColors.text : AppColors.secondaryText)

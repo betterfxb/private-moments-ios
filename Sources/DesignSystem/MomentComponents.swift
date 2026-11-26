@@ -25,9 +25,9 @@ struct MomentRow: View {
             if !dynamicTypeSize.isAccessibilitySize {
                 Image(systemName: moment.kind == .together ? "person.2.fill" : "person.fill")
                     .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(AppColors.accentText)
+                    .foregroundStyle(AppColors.journalAccent)
                     .frame(width: 42, height: 46)
-                    .background(AppColors.accentWash, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .background(AppColors.journalSelection, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     .accessibilityHidden(true)
             }
 
@@ -38,7 +38,7 @@ struct MomentRow: View {
                     if moment.isFavorite {
                         Image(systemName: "bookmark.fill")
                             .font(.caption2)
-                            .foregroundStyle(AppColors.accentText)
+                            .foregroundStyle(AppColors.journalAccent)
                             .accessibilityLabel("Favorite moment")
                     }
                     if !moment.privateNote.isEmpty {
@@ -62,7 +62,7 @@ struct MomentRow: View {
             VStack(alignment: dynamicTypeSize.isAccessibilitySize ? .leading : .trailing, spacing: 6) {
                 Text(SessionClock.durationText(moment.durationSeconds))
                     .font(.system(.subheadline, design: .rounded).weight(.semibold).monospacedDigit())
-                    .foregroundStyle(AppColors.accentText)
+                    .foregroundStyle(AppColors.journalAccent)
                 Label {
                     Text(moment.rating.formatted() + "/5")
                 } icon: {
@@ -76,10 +76,10 @@ struct MomentRow: View {
         }
         .frame(maxWidth: fillsWidth ? .infinity : nil, alignment: .leading)
         .padding(16)
-        .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
+        .background(AppColors.journalNote, in: RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous)
-                .stroke(AppColors.separator.opacity(0.6), lineWidth: 0.5)
+                .stroke(AppColors.journalRule.opacity(0.8), lineWidth: 0.5)
         }
         .contentShape(RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous))
         .accessibilityElement(children: .combine)

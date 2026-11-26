@@ -353,8 +353,15 @@ final class PrivateMomentsUITests: XCTestCase {
             let firstRecord = app.buttons.matching(identifier: "moment.row").firstMatch
             XCTAssertTrue(firstRecord.waitForExistence(timeout: 5))
             XCTAssertTrue(firstRecord.isHittable, "The first record should be reachable from the top of the timeline.")
+            let window = app.windows.firstMatch.frame
+            let tabBar = app.tabBars.firstMatch
+            let contentBottom = tabBar.exists && tabBar.frame.minY > window.midY ? tabBar.frame.minY : window.maxY
+            let recordFrame = firstRecord.frame
+            let visibleTarget = min(contentBottom, recordFrame.maxY) - recordFrame.minY
+            XCTAssertGreaterThanOrEqual(visibleTarget, 44, "Show a usable 44-point area of the first record above the tab bar.")
             capture("Reading-sample-timeline-\(language)", app)
-            tap(firstRecord, in: app)
+            guard visibleTarget >= 44 else { return }
+            firstRecord.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 22 / recordFrame.height)).tap()
 
             let favorite = app.buttons["detail.favorite"]
             XCTAssertEqual(favorite.label, english ? "Remove from favorites" : "取消收藏")
