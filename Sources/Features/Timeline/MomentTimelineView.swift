@@ -47,6 +47,12 @@ struct MomentTimelineView: View {
     private var query: String { searchText.trimmingCharacters(in: .whitespacesAndNewlines) }
     private var hasActiveFilters: Bool { filter != .all || favoritesOnly || dateAndTag.isActive || !query.isEmpty }
 
+    private var showsAccessibilitySearchScope: Bool {
+        guard dynamicTypeSize.isAccessibilitySize else { return false }
+        if #available(iOS 18.0, *) { return isSearchFocused }
+        return isSearchPresented
+    }
+
     private var results: [Moment] {
         #if DEBUG
         let started = TimelinePerformance.start()
@@ -101,7 +107,7 @@ struct MomentTimelineView: View {
 
                         resultSummary(matches.count)
                             .id("timeline.results")
-                        if dynamicTypeSize.isAccessibilitySize && isSearchFocused {
+                        if showsAccessibilitySearchScope {
                             searchScope
                         }
                         if dateAndTag.isActive && !isSearchFocused {
@@ -462,7 +468,8 @@ private struct TimelineDateAndTagSheet: View {
                     .accessibilityIdentifier("timeline.tagFilter")
                 }
             }
-            .navigationTitle(dynamicTypeSize.isAccessibilitySize ? "Filters" : "Dates and tags")
+            .navigationTitle(dynamicTypeSize.isAccessibilitySize
+                ? LocalizedStringKey("Filters") : LocalizedStringKey("Dates and tags"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
