@@ -259,23 +259,36 @@ struct MomentDayRange: Equatable {
     }
 }
 
+enum MomentTagMatch: String, CaseIterable {
+    case any, all
+}
+
 struct MomentTimelineQuery {
     let kind: MomentKind?
     let favoritesOnly: Bool
     let days: MomentDayRange?
-    let tag: String?
+    let tags: Set<String>
+    let tagMatch: MomentTagMatch
     let text: String
 
     func matching(_ moments: [Moment], calendar: Calendar = .current) -> [Moment] {
-        guard kind != nil || favoritesOnly || days != nil || tag != nil || !text.isEmpty else { return moments }
-        let tagKey = tag.map(MomentTags.key(for:))
+        let tagKeys = Set(tags.map(MomentTags.key(for:)).filter { !$0.isEmpty })
+        guard kind != nil || favoritesOnly || days != nil || !tagKeys.isEmpty || !text.isEmpty else { return moments }
         let interval = days?.interval(calendar: calendar)
         guard days == nil || interval != nil else { return [] }
         return moments.filter { moment in
             if let kind, moment.kind != kind { return false }
             if favoritesOnly && !moment.isFavorite { return false }
             if let interval, !MomentDateQuery.contains(moment.occurredAt, in: interval) { return false }
-            if let tagKey, !moment.tags.contains(where: { MomentTags.key(for: $0) == tagKey }) { return false }
+            if !tagKeys.isEmpty {
+                let recordKeys = Set(moment.tags.map(MomentTags.key(for:)))
+                switch tagMatch {
+                case .any:
+                    if tagKeys.isDisjoint(with: recordKeys) { return false }
+                case .all:
+                    if !tagKeys.isSubset(of: recordKeys) { return false }
+                }
+            }
             if text.isEmpty { return true }
             let searchable = [
                 moment.occurredAt.formatted(date: .abbreviated, time: .shortened),

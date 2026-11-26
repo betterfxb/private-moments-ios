@@ -443,7 +443,8 @@ final class MomentDateQueryTests: XCTestCase {
         var anotherMood = selected
         anotherMood.mood = .relaxed
         let filters = MomentTimelineQuery(kind: .solo, favoritesOnly: true,
-                                          days: MomentDayRange(start: first, end: last), tag: "Reading", text: "Happy")
+                                          days: MomentDayRange(start: first, end: last),
+                                          tags: ["Reading"], tagMatch: .all, text: "Happy")
         XCTAssertEqual(filters.matching([nextDay, differentType, otherTag, notBookmarked, selected, anotherMood],
                                         calendar: calendar), [selected])
         XCTAssertEqual(MomentDayRange(start: first, end: last).interval(calendar: calendar)?.duration, 47 * 3_600)
@@ -452,7 +453,8 @@ final class MomentDateQueryTests: XCTestCase {
 
     func testTimelineFilterReadsImportedTagsAndRecomputesAfterAnEdit() {
         let saved = Moment(durationSeconds: 150, mood: .calm, rating: 3, tags: ["Reading"])
-        let onlyReading = MomentTimelineQuery(kind: nil, favoritesOnly: false, days: nil, tag: "Reading", text: "reading")
+        let onlyReading = MomentTimelineQuery(kind: nil, favoritesOnly: false, days: nil,
+                                              tags: ["Reading"], tagMatch: .all, text: "reading")
         XCTAssertEqual(onlyReading.matching([saved]), [saved])
         var edited = saved
         edited.tags = ["Outdoors"]
@@ -683,8 +685,30 @@ final class MomentTagTests: XCTestCase {
         let stored = Moment(durationSeconds: 30, mood: .calm, rating: 4, tags: [" Weekend "])
         let variant = Moment(durationSeconds: 45, mood: .calm, rating: 4, tags: ["weekend"])
         let other = Moment(durationSeconds: 50, mood: .calm, rating: 4, tags: ["Weekends"])
-        let query = MomentTimelineQuery(kind: nil, favoritesOnly: false, days: nil, tag: "Weekend", text: "")
+        let query = MomentTimelineQuery(kind: nil, favoritesOnly: false, days: nil,
+                                        tags: ["Weekend"], tagMatch: .all, text: "")
         XCTAssertEqual(query.matching([stored, variant, other]), [stored, variant])
+    }
+
+    func testTimelineMatchesAnyOrAllTagsWithoutChangingOtherConditions() {
+        let both = Moment(durationSeconds: 30, mood: .happy, rating: 4,
+                          tags: [" Weekend ", "CAFÉ"], favorite: true)
+        let one = Moment(durationSeconds: 40, mood: .happy, rating: 4, tags: ["weekend"], favorite: true)
+        let accentVariant = Moment(durationSeconds: 50, mood: .happy, rating: 4, tags: ["Cafe"], favorite: true)
+        let untagged = Moment(durationSeconds: 60, mood: .happy, rating: 4, tags: [], favorite: true)
+        var notFavorite = both
+        notFavorite.favorite = false
+        let records = [one, both, accentVariant, untagged, notFavorite]
+
+        func matches(_ tags: Set<String>, mode: MomentTagMatch) -> [Moment] {
+            MomentTimelineQuery(kind: nil, favoritesOnly: true, days: nil, tags: tags,
+                                tagMatch: mode, text: "Happy").matching(records)
+        }
+
+        XCTAssertEqual(matches(["WEEKEND", "weekend", " café"], mode: .all), [both])
+        XCTAssertEqual(matches(["WEEKEND", " café"], mode: .any), [one, both])
+        XCTAssertEqual(matches([], mode: .all), [one, both, accentVariant, untagged])
+        XCTAssertEqual(matches([], mode: .any), [one, both, accentVariant, untagged])
     }
 }
 

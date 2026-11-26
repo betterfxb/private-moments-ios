@@ -67,7 +67,8 @@ struct MomentTimelineView: View {
         }
         #endif
         return MomentTimelineQuery(kind: filter.kind, favoritesOnly: favoritesOnly,
-                                   days: dateAndTag.days, tag: dateAndTag.tag, text: currentQuery).matching(moments)
+                                   days: dateAndTag.days, tags: dateAndTag.tags,
+                                   tagMatch: dateAndTag.tagMatch, text: currentQuery).matching(moments)
     }
 
     private func dayGroups(for matches: [Moment]) -> [MomentDayGroup] {
@@ -389,9 +390,17 @@ struct MomentTimelineView: View {
 
 private struct TimelineDateAndTag {
     var days: MomentDayRange?
-    var tag: String?
+    var tags: Set<String> = []
+    var tagMatch: MomentTagMatch = .all
 
-    var isActive: Bool { days != nil || tag != nil }
+    var isActive: Bool { days != nil || !tags.isEmpty }
+
+    var tagSummary: String? {
+        if tags.count > 1 {
+            return AppLocalization.format("%lld selected", tags.count) + " · " + tagMatch.displayName
+        }
+        return tags.first.map(AppLocalization.localizedTag)
+    }
 
     var summary: String {
         let dateSummary = days.map { range in
@@ -400,7 +409,16 @@ private struct TimelineDateAndTag {
             let end = range.end.formatted(date: .abbreviated, time: .omitted)
             return AppLocalization.format("%@ – %@", start, end)
         }
-        return [dateSummary, tag.map(AppLocalization.localizedTag)].compactMap { $0 }.joined(separator: " · ")
+        return [dateSummary, tagSummary].compactMap { $0 }.joined(separator: " · ")
+    }
+}
+
+private extension MomentTagMatch {
+    var displayName: String {
+        switch self {
+        case .any: AppLocalization.string("Match any")
+        case .all: AppLocalization.string("Match all")
+        }
     }
 }
 
@@ -417,7 +435,9 @@ private struct TimelineDateAndTagSheet: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var dateRangeEnabled: Bool
     @State private var dateRange: MomentDayRange
-    @State private var selectedTag: String?
+    @State private var selectedTags: Set<String>
+    @State private var tagMatch: MomentTagMatch
+    @State private var showingTagOptions = false
     @State private var editingDate: DateBound?
     @State private var pendingDate = Date.now
     private let tags: [String]
@@ -427,14 +447,20 @@ private struct TimelineDateAndTagSheet: View {
         let today = Calendar.current.startOfDay(for: .now)
         _dateRangeEnabled = State(initialValue: selection.days != nil)
         _dateRange = State(initialValue: selection.days ?? MomentDayRange(start: today, end: today))
-        _selectedTag = State(initialValue: selection.tag)
-        let tags = MomentTags.distinct([selection.tag].compactMap { $0 } + moments.flatMap(\.tags))
+        _selectedTags = State(initialValue: selection.tags)
+        _tagMatch = State(initialValue: selection.tagMatch)
+        let tags = MomentTags.distinct(selection.tags.sorted() + moments.flatMap(\.tags))
         self.tags = tags.sorted { AppLocalization.localizedTag($0).localizedStandardCompare(AppLocalization.localizedTag($1)) == .orderedAscending }
         self.onApply = onApply
     }
 
     private var validDates: Bool {
         !dateRangeEnabled || dateRange.interval(calendar: .current) != nil
+    }
+
+    private var draft: TimelineDateAndTag {
+        TimelineDateAndTag(days: dateRangeEnabled ? dateRange : nil,
+                           tags: selectedTags, tagMatch: tagMatch)
     }
 
     var body: some View {
@@ -461,15 +487,29 @@ private struct TimelineDateAndTagSheet: View {
                     }
                 }
                 Section {
-                    Picker("Tags", selection: $selectedTag) {
-                        Text("All tags").tag(nil as String?)
-                        ForEach(tags, id: \.self) { tag in
-                            Text(AppLocalization.localizedTag(tag)).tag(Optional(tag))
+                    Button { showingTagOptions = true } label: {
+                        HStack(spacing: 12) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Tags").foregroundStyle(AppColors.text)
+                                Text(verbatim: draft.tagSummary ?? AppLocalization.string("All tags"))
+                                    .font(.subheadline)
+                                    .foregroundStyle(AppColors.secondaryText)
+                            }
+                            .fixedSize(horizontal: false, vertical: true)
+                            Spacer(minLength: 0)
+                            Image(systemName: "chevron.right")
+                                .font(.footnote.weight(.semibold))
+                                .foregroundStyle(AppColors.journalAccent)
+                                .accessibilityHidden(true)
                         }
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
                     }
-                    .pickerStyle(.menu)
-                    .tint(AppColors.journalAccent)
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Tags")
+                    .accessibilityValue(Text(verbatim: draft.tagSummary ?? AppLocalization.string("All tags")))
                     .accessibilityIdentifier("timeline.tagFilter")
+                    .disabled(tags.isEmpty)
                 }
             }
             .scrollContentBackground(.hidden)
@@ -477,6 +517,7 @@ private struct TimelineDateAndTagSheet: View {
             .navigationTitle(dynamicTypeSize.isAccessibilitySize
                 ? LocalizedStringKey("Filters") : LocalizedStringKey("Dates and tags"))
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(isPresented: $showingTagOptions) { tagOptions }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button { dismiss() } label: {
@@ -486,10 +527,11 @@ private struct TimelineDateAndTagSheet: View {
                             Text("Cancel")
                         }
                     }
+                    .accessibilityIdentifier("timeline.dateAndTag.cancel")
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button {
-                        onApply(TimelineDateAndTag(days: dateRangeEnabled ? dateRange : nil, tag: selectedTag))
+                        onApply(draft)
                         dismiss()
                     } label: {
                         if dynamicTypeSize.isAccessibilitySize {
@@ -533,6 +575,61 @@ private struct TimelineDateAndTagSheet: View {
                 }
             }
         }
+    }
+
+    private var tagOptions: some View {
+        Form {
+            Section("Match tags") {
+                ForEach(MomentTagMatch.allCases, id: \.self) { mode in
+                    tagChoice(mode.displayName, selected: tagMatch == mode,
+                              identifier: "timeline.tags.mode.\(mode.rawValue)") { tagMatch = mode }
+                }
+            }
+            Section("Tags") {
+                ForEach(tags, id: \.self) { tag in
+                    tagChoice(AppLocalization.localizedTag(tag), selected: selectedTags.contains(tag),
+                              identifier: "timeline.tags.option.\(tag)") {
+                        if selectedTags.remove(tag) == nil { selectedTags.insert(tag) }
+                    }
+                }
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(AppColors.homePaper)
+        .navigationTitle("Tags")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button { showingTagOptions = false } label: {
+                    if dynamicTypeSize.isAccessibilitySize {
+                        Label("Done", systemImage: "checkmark").labelStyle(.iconOnly)
+                    } else {
+                        Text("Done")
+                    }
+                }
+                .accessibilityIdentifier("timeline.tags.done")
+            }
+        }
+    }
+
+    private func tagChoice(_ title: String, selected: Bool, identifier: String,
+                           action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                Text(verbatim: title)
+                    .foregroundStyle(AppColors.text)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 0)
+                Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(AppColors.journalAccent)
+                    .accessibilityHidden(true)
+            }
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityIdentifier(identifier)
     }
 
     @ViewBuilder
