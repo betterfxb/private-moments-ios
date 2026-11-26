@@ -350,8 +350,11 @@ final class PrivateMomentsUITests: XCTestCase {
             let timeline = app.scrollViews.firstMatch
             let search = app.searchFields.firstMatch
             if !search.isHittable { timeline.swipeDown() }
+            let firstRecord = app.buttons.matching(identifier: "moment.row").firstMatch
+            XCTAssertTrue(firstRecord.waitForExistence(timeout: 5))
+            XCTAssertTrue(firstRecord.isHittable, "The first record should be reachable from the top of the timeline.")
             capture("Reading-sample-timeline-\(language)", app)
-            tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
+            tap(firstRecord, in: app)
 
             let favorite = app.buttons["detail.favorite"]
             XCTAssertEqual(favorite.label, english ? "Remove from favorites" : "取消收藏")
@@ -369,6 +372,13 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(count.label, english ? "1 moment" : "1 条记录")
             tap(app.buttons["timeline.clearFilters"], in: app)
             XCTAssertEqual(count.label, english ? "2 moments" : "2 条记录")
+            tap(app.buttons["timeline.dateAndTag"], in: app)
+            let filterHeading = app.navigationBars[english ? "Filters" : "筛选"]
+            let regularHeading = app.navigationBars[english ? "Dates and tags" : "日期和标签"]
+            let sheet = app.buttons["timeline.dateAndTag.apply"]
+            XCTAssertTrue(sheet.waitForExistence(timeout: 5))
+            XCTAssertTrue(filterHeading.exists || regularHeading.exists)
+            capture("Reading-sample-filters-\(language)", app, stableSurface: sheet)
             app.terminate()
         }
     }
@@ -2552,21 +2562,20 @@ final class PrivateMomentsUITests: XCTestCase {
         let scope = app.staticTexts["timeline.searchScope"]
         let total = app.staticTexts["timeline.resultCount"]
         let one = language == "en" ? "1 moment" : "1 条记录"
-        revealFully(from: scope, through: total, in: app)
-        XCTAssertEqual(scope.label, language == "en" ? "Date, type, mood, or tag" : "搜索日期、类型、感受或标签")
+        reveal(total, in: app)
         XCTAssertEqual(total.label, one)
-        XCTAssertGreaterThan(scope.frame.height, 0)
-        XCTAssertGreaterThanOrEqual(scope.frame.minX, app.windows.firstMatch.frame.minX)
-        XCTAssertLessThanOrEqual(scope.frame.maxX, app.windows.firstMatch.frame.maxX)
-        // A settled scroll container alone does not prove that its body has
-        // appeared. Require the actual scope/count before the first snapshot.
-        capture("Timeline-\(language)", app, stableSurface: scope)
+        capture("Timeline-\(language)", app, stableSurface: total)
 
         let search = app.searchFields.firstMatch
         reveal(search, in: app)
         XCTAssertEqual(search.placeholderValue, language == "en" ? "Search moments" : "搜索记录")
         tap(search, in: app)
         XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(scope.waitForExistence(timeout: 5))
+        XCTAssertEqual(scope.label, language == "en" ? "Date, type, mood, or tag" : "搜索日期、类型、感受或标签")
+        XCTAssertGreaterThan(scope.frame.height, 0)
+        XCTAssertGreaterThanOrEqual(scope.frame.minX, app.windows.firstMatch.frame.minX)
+        XCTAssertLessThanOrEqual(scope.frame.maxX, app.windows.firstMatch.frame.maxX)
         assertSearchCountAboveKeyboard(total, app: app)
         capture("Timeline-search-ready-\(language)", app)
 
@@ -2612,7 +2621,7 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertTrue(clearedValue == "" || clearedValue == placeholder,
             "Revealing the inactive search field must show an empty query.")
         XCTAssertFalse(app.keyboards.firstMatch.exists)
-        revealFully(from: scope, through: total, in: app)
+        reveal(total, in: app)
         capture("Timeline-search-cleared-\(language)", app)
         print("Verified short search prompt, scope, empty/matched queries and clear keyboard dismissal. Locale: \(language).")
         print("Verified visible keyboard result count and query-preserving search submission. Locale: \(language).")
@@ -2686,7 +2695,7 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(app.searchFields.firstMatch.value as? String, "Calm")
         XCTAssertLessThanOrEqual(app.buttons["timeline.clearFilters"].frame.maxY, row.frame.minY,
             "Reset controls must precede an unbounded result list, not require traversing every record.")
-        XCTAssertLessThanOrEqual(scope.frame.maxY, row.frame.minY)
+        if scope.exists { XCTAssertLessThanOrEqual(scope.frame.maxY, row.frame.minY) }
         capture("Timeline-search-match-submitted-\(language)", app)
         print("Verified submitted matching record and controls before result list. Locale: \(language).")
     }

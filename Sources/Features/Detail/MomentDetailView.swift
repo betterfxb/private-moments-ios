@@ -122,18 +122,24 @@ struct MomentDetailView: View {
 
                 pageHeading(moment)
                 privateNote(moment)
-                reflectionDetails(moment)
 
-                VStack(alignment: .leading, spacing: 7) {
-                    Label("Tags", systemImage: "tag")
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundStyle(AppColors.secondaryText)
-                    Text(moment.tags.isEmpty
-                        ? AppLocalization.string("No tags added")
-                        : moment.tags.map(AppLocalization.localizedTag).joined(separator: " · "))
-                        .font(.system(.body, design: .rounded))
-                        .foregroundStyle(AppColors.text)
-                        .fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: 12) {
+                    Rectangle()
+                        .fill(AppColors.journalRule)
+                        .frame(height: 1)
+                        .accessibilityHidden(true)
+                    reflectionDetails(moment)
+                    VStack(alignment: .leading, spacing: 7) {
+                        Label("Tags", systemImage: "tag")
+                            .font(.system(.headline, design: .rounded))
+                            .foregroundStyle(AppColors.secondaryText)
+                        Text(moment.tags.isEmpty
+                            ? AppLocalization.string("No tags added")
+                            : moment.tags.map(AppLocalization.localizedTag).joined(separator: " · "))
+                            .font(.system(.body, design: .rounded))
+                            .foregroundStyle(AppColors.text)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
 
                 if moment.isFavorite {
@@ -226,7 +232,7 @@ struct MomentDetailView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding(.horizontal, 19)
+        .padding(.horizontal, dynamicTypeSize.isAccessibilitySize ? 12 : 19)
         .padding(.vertical, AppSpacing.card)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(AppColors.journalNote, in: RoundedRectangle(cornerRadius: AppRadius.control))

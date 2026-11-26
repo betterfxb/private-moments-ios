@@ -101,7 +101,7 @@ struct MomentTimelineView: View {
 
                         resultSummary(matches.count)
                             .id("timeline.results")
-                        if dynamicTypeSize.isAccessibilitySize {
+                        if dynamicTypeSize.isAccessibilitySize && isSearchFocused {
                             searchScope
                         }
                         if dateAndTag.isActive && !isSearchFocused {
@@ -305,20 +305,18 @@ struct MomentTimelineView: View {
 
     @ViewBuilder
     private var searchControls: some View {
-        Group {
-            if dynamicTypeSize.isAccessibilitySize {
+        if dynamicTypeSize.isAccessibilitySize {
+            HStack(spacing: 12) {
                 filterPicker.pickerStyle(.menu)
-            } else {
-                filterPicker.pickerStyle(.segmented)
-            }
-        }
-        .accessibilityHint("Filters your private records by moment type")
-        .disabled(!store.isStorageAvailable)
-
-        if store.isStorageAvailable {
-            if dynamicTypeSize.isAccessibilitySize {
+                    .frame(minHeight: 44)
+                Spacer(minLength: 0)
                 favoritesButton
-            } else {
+            }
+            .tint(AppColors.journalAccent)
+        } else {
+            filterPicker.pickerStyle(.segmented)
+
+            if store.isStorageAvailable {
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 8) {
                         searchScope.fixedSize(horizontal: true, vertical: false)
@@ -344,8 +342,16 @@ struct MomentTimelineView: View {
 
     private var favoritesButton: some View {
         Button { favoritesOnly.toggle() } label: {
-            Label("Favorites only", systemImage: favoritesOnly ? "bookmark.fill" : "bookmark")
-                .font(.system(.footnote, design: .rounded).weight(.semibold))
+            let symbol = favoritesOnly ? "bookmark.fill" : "bookmark"
+            Group {
+                if dynamicTypeSize.isAccessibilitySize {
+                    Image(systemName: symbol).font(.system(size: 19, weight: .semibold))
+                        .frame(minWidth: 24)
+                } else {
+                    Label("Favorites only", systemImage: symbol)
+                        .font(.system(.footnote, design: .rounded).weight(.semibold))
+                }
+            }
                 .foregroundStyle(favoritesOnly ? AppColors.journalAccent : AppColors.secondaryText)
                 .padding(.horizontal, 10)
                 .frame(minHeight: 44)
@@ -354,6 +360,7 @@ struct MomentTimelineView: View {
                 .contentShape(Capsule())
         }
         .buttonStyle(.plain)
+        .accessibilityLabel("Favorites only")
         .accessibilityAddTraits(favoritesOnly ? .isSelected : [])
         .accessibilityIdentifier("timeline.favorites")
     }
@@ -364,6 +371,8 @@ struct MomentTimelineView: View {
                 Text(option.displayName).tag(option)
             }
         }
+        .accessibilityHint("Filters your private records by moment type")
+        .disabled(!store.isStorageAvailable)
         .accessibilityIdentifier("timeline.filter")
     }
 }
@@ -453,14 +462,28 @@ private struct TimelineDateAndTagSheet: View {
                     .accessibilityIdentifier("timeline.tagFilter")
                 }
             }
-            .navigationTitle("Dates and tags")
+            .navigationTitle(dynamicTypeSize.isAccessibilitySize ? "Filters" : "Dates and tags")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button { dismiss() } label: {
+                        if dynamicTypeSize.isAccessibilitySize {
+                            Label("Cancel", systemImage: "xmark").labelStyle(.iconOnly)
+                        } else {
+                            Text("Cancel")
+                        }
+                    }
+                }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") {
+                    Button {
                         onApply(TimelineDateAndTag(days: dateRangeEnabled ? dateRange : nil, tag: selectedTag))
                         dismiss()
+                    } label: {
+                        if dynamicTypeSize.isAccessibilitySize {
+                            Label("Done", systemImage: "checkmark").labelStyle(.iconOnly)
+                        } else {
+                            Text("Done")
+                        }
                     }
                     .disabled(!validDates)
                     .accessibilityIdentifier("timeline.dateAndTag.apply")

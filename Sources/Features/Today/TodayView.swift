@@ -80,20 +80,25 @@ struct TodayView: View {
     }
 
     private var cover: some View {
-        VStack(spacing: 10) {
-            Text(todayLabel)
-                .font(.system(.caption, design: .rounded).weight(.medium))
-                .foregroundStyle(AppColors.homeCoverSecondary)
-            Text("Private Moments")
-                .font(.system(dynamicTypeSize.isAccessibilitySize ? .title2 : .largeTitle, design: .serif).weight(.medium))
-                .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier("today.brand")
-            if !dynamicTypeSize.isAccessibilitySize && verticalSizeClass != .compact && store.isStorageAvailable {
-                Text("A moment to keep for yourself.")
-                    .font(.system(.body, design: .serif))
-                    .foregroundStyle(AppColors.homeCoverSecondary)
-                coverArtwork
+        VStack(spacing: 14) {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(todayLabel)
+                        .font(.system(.caption, design: .rounded).weight(.medium))
+                        .foregroundStyle(AppColors.homeCoverSecondary)
+                    Text("Private Moments")
+                        .font(.system(dynamicTypeSize.isAccessibilitySize ? .title2 : .largeTitle,
+                                      design: .serif).weight(.medium))
+                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityIdentifier("today.brand")
+                }
+                .multilineTextAlignment(.leading)
+                Spacer(minLength: 0)
+                if dynamicTypeSize <= .large && verticalSizeClass != .compact && store.isStorageAvailable {
+                    coverArtwork
+                }
             }
+            .frame(maxWidth: 380)
 
             VStack(spacing: 4) {
                 Button(action: onStart) {
@@ -121,8 +126,8 @@ struct TodayView: View {
         .multilineTextAlignment(.center)
         .foregroundStyle(AppColors.homeCoverText)
         .padding(.horizontal, AppSpacing.page)
-        .padding(.top, 12)
-        .padding(.bottom, 32)
+        .padding(.top, 10)
+        .padding(.bottom, 30)
         .frame(maxWidth: .infinity)
         .background {
             RadialGradient(colors: [AppColors.homeCoverGlow, AppColors.homeCover],
@@ -153,12 +158,12 @@ struct TodayView: View {
                         endPoint: index == 0 ? .trailing : .bottomTrailing
                     ))
                     .overlay { Capsule().strokeBorder(AppColors.homeCoverText.opacity(0.16)) }
-                    .frame(width: 48, height: 78)
+                    .frame(width: 28, height: 47)
                     .rotationEffect(.degrees(index == 0 ? -25 : 20))
-                    .offset(x: index == 0 ? -18 : 17, y: index == 0 ? -3 : 4)
+                    .offset(x: index == 0 ? -11 : 10, y: index == 0 ? -2 : 2)
             }
         }
-        .frame(width: 120, height: 99)
+        .frame(width: 62, height: 56)
         .accessibilityHidden(true)
     }
 
@@ -230,7 +235,7 @@ struct TodayView: View {
             }
         }
         .padding(.horizontal, AppSpacing.page)
-        .padding(.top, 22)
+        .padding(.top, 18)
         .padding(.bottom, 30)
         .frame(maxWidth: 700)
         .frame(maxWidth: .infinity)
