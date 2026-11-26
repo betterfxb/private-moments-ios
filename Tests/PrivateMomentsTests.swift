@@ -623,6 +623,39 @@ final class MomentDateQueryTests: XCTestCase {
     }
 }
 
+final class MomentTagTests: XCTestCase {
+    func testCustomTagKeepsSavedSpellingAndDoesNotDuplicateExistingSelection() throws {
+        let stored = ["Weekend", "weekend", "散步", "café", "cafe"]
+        XCTAssertEqual(MomentTags.distinct(stored), ["Weekend", "散步", "café", "cafe"])
+        XCTAssertEqual(try MomentTags.adding("  WEEKEND\n", to: [], stored: stored), ["Weekend"])
+        XCTAssertEqual(try MomentTags.adding(" weekend ", to: ["weekend"], stored: stored), ["weekend"])
+        XCTAssertEqual(try MomentTags.adding("  日记 ", to: [], stored: stored), ["日记"])
+    }
+
+    func testTagLimitsAndExistingSelectionsRemainValid() throws {
+        let full = Set((1...20).map { "Tag \($0)" })
+        XCTAssertEqual(try MomentTags.adding("tag 1", to: full, stored: []), full)
+        XCTAssertThrowsError(try MomentTags.adding("new", to: full, stored: [])) {
+            XCTAssertEqual($0 as? MomentValidationError, .tooManyTags)
+        }
+        XCTAssertThrowsError(try MomentTags.adding(" \n ", to: [], stored: [])) {
+            XCTAssertEqual($0 as? MomentValidationError, .invalidTag)
+        }
+        XCTAssertEqual(try MomentTags.adding(String(repeating: "猫", count: 64), to: [], stored: []).count, 1)
+        XCTAssertThrowsError(try MomentTags.adding(String(repeating: "猫", count: 65), to: [], stored: [])) {
+            XCTAssertEqual($0 as? MomentValidationError, .invalidTag)
+        }
+    }
+
+    func testTimelineTagFilterIncludesLegacySpellingVariants() {
+        let stored = Moment(durationSeconds: 30, mood: .calm, rating: 4, tags: [" Weekend "])
+        let variant = Moment(durationSeconds: 45, mood: .calm, rating: 4, tags: ["weekend"])
+        let other = Moment(durationSeconds: 50, mood: .calm, rating: 4, tags: ["Weekends"])
+        let query = MomentTimelineQuery(kind: nil, favoritesOnly: false, days: nil, tag: "Weekend", text: "")
+        XCTAssertEqual(query.matching([stored, variant, other]), [stored, variant])
+    }
+}
+
 final class MomentValidationTests: XCTestCase {
     func testPrivateNoteAllowsEmptyAndExactCharacterLimit() throws {
         try MomentValidator.validatePrivateNote("")

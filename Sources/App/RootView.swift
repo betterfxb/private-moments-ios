@@ -4,6 +4,7 @@ import SwiftUI
 private enum AppRoute: Hashable {
     case session
     case manual(startedAt: Date)
+    case quickRecord(startedAt: Date)
     case repeatMoment(startedAt: Date, preset: MomentRepeatPreset)
     case recap(startedAt: Date, durationSeconds: Int, editingID: UUID?)
     case recoveredRecap(RecapDraft)
@@ -80,6 +81,9 @@ struct RootView: View {
                         onOpen: { id in todayPath.append(.detail(id: id)) },
                         onAddRecord: { date in
                             startWhenDraftIsClear { todayPath.append(.manual(startedAt: date)) }
+                        },
+                        onQuickRecord: {
+                            startWhenDraftIsClear { todayPath.append(.quickRecord(startedAt: .now)) }
                         },
                         onOpenWeekReview: { todayPath.append(.weekReview) },
                         hasPendingDraft: !showsPrivacyShield && (pendingDraft != nil || drafts.readFailed),
@@ -168,6 +172,17 @@ struct RootView: View {
     @ViewBuilder
     private func destination(for route: AppRoute, path: Binding<[AppRoute]>) -> some View {
         switch route {
+        case .quickRecord(let startedAt):
+            RecapView(
+                durationSeconds: 0,
+                startedAt: startedAt,
+                isManualEntry: true,
+                isQuickRecord: true,
+                onCancel: { pop(path) },
+                onSaved: { moment in
+                    path.wrappedValue = Array(path.wrappedValue.dropLast()) + [.detail(id: moment.id)]
+                }
+            )
         case .manual(let startedAt):
             RecapView(
                 durationSeconds: 0,

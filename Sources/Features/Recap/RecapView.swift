@@ -10,6 +10,7 @@ struct RecapView: View {
     let startedAt: Date
     let existingMoment: Moment?
     let isManualEntry: Bool
+    let isQuickRecord: Bool
     let onCancel: () -> Void
     let onSaved: (Moment) -> Void
 
@@ -26,9 +27,13 @@ struct RecapView: View {
     @State private var showingDiscardConfirmation = false
     @State private var showingOccurrencePicker = false
     @State private var pendingOccurrence = Date.now
+    @State private var showsQuickDetails = false
+    @State private var showsTagEditor = false
+    @State private var tagInput = ""
+    @State private var tagMessage: String?
     private let initialReflection: ReflectionSnapshot
     private let inheritedTags: [String]
-    private enum InputField: Hashable { case note, minutes, seconds }
+    private enum InputField: Hashable { case note, minutes, seconds, tag }
     @FocusState private var focusedField: InputField?
     @ScaledMetric(relativeTo: .body) private var noteMinimumHeight: CGFloat = 112
     private let keyboardDismissTargetSize: CGFloat = 44
@@ -70,27 +75,28 @@ struct RecapView: View {
     }
 
     private var availableTags: [String] {
-        var result = ["Relaxed", "Connected", "Better sleep"]
-        for tag in inheritedTags where !result.contains(tag) {
-            result.append(tag)
-        }
-        return result
+        let visible = MomentTags.distinct(MomentTags.builtIn + inheritedTags + selectedTags.sorted())
+        // Older records can contain multiple spellings. Leave each selected
+        // spelling editable until the user chooses to remove it.
+        return visible + selectedTags.subtracting(visible).sorted()
     }
 
     init(durationSeconds: Int, startedAt: Date = .now, existingMoment: Moment? = nil,
-         isManualEntry: Bool = false, repeatPreset: MomentRepeatPreset? = nil, recoveredDraft: RecapDraft? = nil,
+         isManualEntry: Bool = false, isQuickRecord: Bool = false,
+         repeatPreset: MomentRepeatPreset? = nil, recoveredDraft: RecapDraft? = nil,
          onCancel: @escaping () -> Void, onSaved: @escaping (Moment) -> Void) {
         self.durationSeconds = durationSeconds
         self.startedAt = startedAt
         self.existingMoment = existingMoment
         self.isManualEntry = isManualEntry
+        self.isQuickRecord = isQuickRecord
         self.onCancel = onCancel
         self.onSaved = onSaved
         inheritedTags = (existingMoment?.tags ?? []) + (repeatPreset?.tags ?? []) + (recoveredDraft?.tags ?? [])
         let reflection = ReflectionSnapshot(mood: existingMoment?.mood ?? .calm,
                                             kind: existingMoment?.kind ?? repeatPreset?.kind ?? .together,
                                             rating: existingMoment?.rating ?? 4,
-                                            tags: Set(existingMoment?.tags ?? repeatPreset?.tags ?? ["Connected"]),
+                                            tags: Set(existingMoment?.tags ?? repeatPreset?.tags ?? (isQuickRecord ? [] : ["Connected"])),
                                             note: existingMoment?.privateNote ?? "")
         initialReflection = reflection
         _draftID = State(initialValue: recoveredDraft?.id ?? UUID())
@@ -112,22 +118,26 @@ struct RecapView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
-                headerSection
-                timingSection
-                VStack(alignment: .leading, spacing: 20) {
-                    moodSection
-                    Divider()
-                    kindSection
-                    Divider()
-                    ratingSection
+                if isQuickRecord && !showsQuickDetails {
+                    quickContent
+                } else {
+                    headerSection
+                    timingSection
+                    VStack(alignment: .leading, spacing: 20) {
+                        moodSection
+                        Divider()
+                        kindSection
+                        Divider()
+                        ratingSection
+                    }
+                    .modifier(JournalPanel())
+                    VStack(alignment: .leading, spacing: 20) {
+                        tagsSection
+                        Divider()
+                        noteSection
+                    }
+                    .modifier(JournalPanel())
                 }
-                .modifier(JournalPanel())
-                VStack(alignment: .leading, spacing: 20) {
-                    tagsSection
-                    Divider()
-                    noteSection
-                }
-                .modifier(JournalPanel())
                 saveSection
             }
             .padding(.horizontal, AppSpacing.page)
@@ -138,7 +148,7 @@ struct RecapView: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .background(AppColors.background.ignoresSafeArea())
-        .navigationTitle(isManualEntry ? LocalizedStringKey("Add past moment") : LocalizedStringKey("Quick recap"))
+        .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -226,6 +236,41 @@ struct RecapView: View {
                 }
             }
         }
+    }
+
+    private var navigationTitle: LocalizedStringKey {
+        if isQuickRecord { return "Quick record" }
+        return isManualEntry ? "Add past moment" : "Quick recap"
+    }
+
+    private var quickContent: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("How are you feeling?")
+                .font(.system(.title2, design: .serif).weight(.medium))
+                .foregroundStyle(AppColors.text)
+                .accessibilityAddTraits(.isHeader)
+            Picker("Feeling", selection: $mood) {
+                ForEach(MomentMood.allCases) { choice in Text(choice.displayName).tag(choice) }
+            }
+            Picker("Type", selection: $kind) {
+                ForEach(MomentKind.allCases) { choice in Text(choice.displayName).tag(choice) }
+            }
+            Text("Quick records use the current time, zero duration, and a 4/5 rating. You can edit them later.")
+                .font(.system(.footnote, design: .rounded))
+                .foregroundStyle(AppColors.secondaryText)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("recap.quickDefaults")
+            Button { showsQuickDetails = true } label: {
+                Label("Add details", systemImage: "pencil")
+                    .frame(minHeight: 44, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(AppColors.accentText)
+            .accessibilityIdentifier("recap.quickDetails")
+        }
+        .pickerStyle(.menu)
+        .tint(AppColors.accentText)
     }
 
     private var headerSection: some View {
@@ -422,9 +467,87 @@ struct RecapView: View {
     }
 
     private var tagsSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        let visible = availableTags
+        let visibleKeys = Set(visible.map(MomentTags.key(for:)))
+        let recent = Array(MomentTags.distinct(store.moments.flatMap(\.tags)).lazy
+            .filter { !visibleKeys.contains(MomentTags.key(for: $0)) }.prefix(8))
+        return VStack(alignment: .leading, spacing: 10) {
             sectionTitle("A few tags")
-            FlowTags(tags: availableTags, selection: $selectedTags)
+            FlowTags(tags: visible, selection: $selectedTags)
+            Button { showsTagEditor.toggle() } label: {
+                Label("Custom tags", systemImage: showsTagEditor ? "chevron.up" : "chevron.down")
+                    .frame(minHeight: 44, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(AppColors.accentText)
+            .accessibilityValue(showsTagEditor ? Text("Expanded") : Text("Collapsed"))
+            .accessibilityIdentifier("recap.customTags")
+            if showsTagEditor { tagEditor(recent: recent) }
+            if selectedTags.count >= MomentValidator.maximumTagCount {
+                Text("A moment can have up to 20 tags.")
+                    .font(.footnote)
+                    .foregroundStyle(AppColors.secondaryText)
+            }
+        }
+    }
+
+    private func tagEditor(recent: [String]) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            adaptiveLayout(spacing: 8).callAsFunction {
+                TextField("New tag", text: $tagInput)
+                    .textFieldStyle(.roundedBorder)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .frame(minHeight: 44)
+                    .focused($focusedField, equals: .tag)
+                    .submitLabel(.done)
+                    .onSubmit { addTag(tagInput) }
+                    .onChange(of: tagInput) { _, _ in tagMessage = nil }
+                    .accessibilityIdentifier("recap.newTag")
+                    .privacySensitive()
+                Button { addTag(tagInput) } label: {
+                    Label("Add tag", systemImage: "plus")
+                        .frame(minHeight: 44, alignment: .leading)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(AppColors.accentText)
+                .accessibilityIdentifier("recap.addTag")
+            }
+            if !recent.isEmpty {
+                Menu("Recent tags") {
+                    ForEach(recent, id: \.self) { tag in
+                        Button(AppLocalization.localizedTag(tag)) { addTag(tag) }
+                    }
+                }
+                .frame(minHeight: 44, alignment: .leading)
+                .tint(AppColors.accentText)
+                .accessibilityIdentifier("recap.recentTags")
+                .privacySensitive()
+            }
+            if let tagMessage {
+                Text(tagMessage)
+                    .font(.footnote)
+                    .foregroundStyle(AppColors.destructive)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("recap.tagError")
+            }
+        }
+    }
+
+    private func addTag(_ input: String) {
+        let identity = MomentTags.key(for: input)
+        let builtIn = MomentTags.builtIn.first { MomentTags.key(for: AppLocalization.localizedTag($0)) == identity }
+        let saved = MomentTags.builtIn + inheritedTags + store.moments.flatMap(\.tags)
+        do {
+            selectedTags = try MomentTags.adding(builtIn ?? input, to: selectedTags, stored: saved)
+            tagInput = ""
+            tagMessage = nil
+            focusedField = nil
+        } catch {
+            tagMessage = error.localizedDescription
+            focusedField = nil
         }
     }
 
@@ -582,6 +705,7 @@ private struct FlowTags: View {
 
     private func tagButton(_ tag: String) -> some View {
         let isSelected = selection.contains(tag)
+        let isDuplicate = !isSelected && selection.contains { MomentTags.key(for: $0) == MomentTags.key(for: tag) }
         return Button {
             if isSelected { selection.remove(tag) }
             else { selection.insert(tag) }
@@ -596,6 +720,7 @@ private struct FlowTags: View {
                 .overlay(Capsule().stroke(isSelected ? AppColors.accentWash : AppColors.separator, lineWidth: 1))
         }
         .buttonStyle(.plain)
+        .disabled(isDuplicate || (!isSelected && selection.count >= MomentValidator.maximumTagCount))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("recap.tag.\(tag)")
     }

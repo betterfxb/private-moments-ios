@@ -110,6 +110,7 @@ JOURNAL_FEATURE_METHODS=(
     testTimelineDateAndTagFiltersCombineAndSurviveNavigation
     testRecordAgainCopiesOnlyTypeAndTags
     testMonthHighlightsOpenFavoritesAndMatchingFeelings
+    testQuickRecordCanBeCompletedLaterAndReusesCustomTags
 )
 if [[ "$ROTATION_ONLY" == "1" ]]; then
     printf '\nFocused iPad system-window diagnostic.\n'
@@ -154,6 +155,7 @@ elif [[ "$ACCEPTANCE_PART" == "reading" ]]; then
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testJournalReadingSample")
 elif [[ "$ACCEPTANCE_PART" == "journal-features" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
+    TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentTagTests)
     for method in "${JOURNAL_FEATURE_METHODS[@]}"; do
         TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/$method")
     done

@@ -26,8 +26,7 @@ enum AppLocalization {
     }
 
     static func localizedTag(_ rawValue: String) -> String {
-        let builtInTags = ["Relaxed", "Connected", "Better sleep"]
-        guard builtInTags.contains(rawValue) else { return rawValue }
+        guard MomentTags.builtIn.contains(rawValue) else { return rawValue }
         return string(rawValue)
     }
 }

@@ -424,8 +424,7 @@ private struct TimelineDateAndTagSheet: View {
         _dateRangeEnabled = State(initialValue: selection.days != nil)
         _dateRange = State(initialValue: selection.days ?? MomentDayRange(start: today, end: today))
         _selectedTag = State(initialValue: selection.tag)
-        var tags = Set(moments.flatMap(\.tags))
-        if let tag = selection.tag { tags.insert(tag) }
+        let tags = MomentTags.distinct([selection.tag].compactMap { $0 } + moments.flatMap(\.tags))
         self.tags = tags.sorted { AppLocalization.localizedTag($0).localizedStandardCompare(AppLocalization.localizedTag($1)) == .orderedAscending }
         self.onApply = onApply
     }

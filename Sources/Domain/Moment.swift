@@ -100,6 +100,30 @@ enum MomentValidationError: LocalizedError, Equatable {
     }
 }
 
+enum MomentTags {
+    static let builtIn = ["Relaxed", "Connected", "Better sleep"]
+
+    static func key(for tag: String) -> String {
+        tag.trimmingCharacters(in: .whitespacesAndNewlines)
+            .folding(options: [.caseInsensitive], locale: Locale(identifier: "en_US_POSIX"))
+    }
+
+    static func distinct(_ tags: [String]) -> [String] {
+        var seen: Set<String> = []
+        return tags.filter { seen.insert(key(for: $0)).inserted }
+    }
+
+    static func adding(_ input: String, to selection: Set<String>, stored: [String]) throws -> Set<String> {
+        let clean = input.trimmingCharacters(in: .whitespacesAndNewlines)
+        try MomentValidator.validateTag(clean)
+        let identity = key(for: clean)
+        if selection.contains(where: { key(for: $0) == identity }) { return selection }
+        guard selection.count < MomentValidator.maximumTagCount else { throw MomentValidationError.tooManyTags }
+        let spelling = stored.first { key(for: $0) == identity } ?? clean
+        return selection.union([spelling])
+    }
+}
+
 enum MomentValidator {
     static let maximumDurationSeconds = 30 * 24 * 60 * 60
     static let maximumTagCount = 20
@@ -121,18 +145,19 @@ enum MomentValidator {
         guard moment.tags.count <= maximumTagCount else {
             throw MomentValidationError.tooManyTags
         }
-        guard moment.tags.allSatisfy({
-            let trimmed = $0.trimmingCharacters(in: .whitespacesAndNewlines)
-            return !trimmed.isEmpty
-                && trimmed.count <= maximumTagLength
-                && trimmed.utf8.count <= maximumTagLength * 4
-        }) else {
-            throw MomentValidationError.invalidTag
-        }
+        try moment.tags.forEach(validateTag)
         try validatePrivateNote(moment.privateNote)
         if let place = moment.approximatePlace,
            (place.count > maximumPlaceLength || place.utf8.count > maximumPlaceLength * 4) {
             throw MomentValidationError.placeTooLong
+        }
+    }
+
+    static func validateTag(_ tag: String) throws {
+        let trimmed = tag.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, trimmed.count <= maximumTagLength,
+              trimmed.utf8.count <= maximumTagLength * 4 else {
+            throw MomentValidationError.invalidTag
         }
     }
 
@@ -243,13 +268,14 @@ struct MomentTimelineQuery {
 
     func matching(_ moments: [Moment], calendar: Calendar = .current) -> [Moment] {
         guard kind != nil || favoritesOnly || days != nil || tag != nil || !text.isEmpty else { return moments }
+        let tagKey = tag.map(MomentTags.key(for:))
         let interval = days?.interval(calendar: calendar)
         guard days == nil || interval != nil else { return [] }
         return moments.filter { moment in
             if let kind, moment.kind != kind { return false }
             if favoritesOnly && !moment.isFavorite { return false }
             if let interval, !MomentDateQuery.contains(moment.occurredAt, in: interval) { return false }
-            if let tag, !moment.tags.contains(tag) { return false }
+            if let tagKey, !moment.tags.contains(where: { MomentTags.key(for: $0) == tagKey }) { return false }
             if text.isEmpty { return true }
             let searchable = [
                 moment.occurredAt.formatted(date: .abbreviated, time: .shortened),

@@ -10,6 +10,7 @@ struct TodayView: View {
     let onStart: () -> Void
     let onOpen: (UUID) -> Void
     let onAddRecord: (Date) -> Void
+    let onQuickRecord: () -> Void
     let onOpenWeekReview: () -> Void
     let hasPendingDraft: Bool
     let canResumeDraft: Bool
@@ -63,6 +64,19 @@ struct TodayView: View {
             if phase != .active { showingDatePicker = false }
         }
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: onQuickRecord) {
+                    if dynamicTypeSize.isAccessibilitySize {
+                        Label("Quick record", systemImage: "plus").labelStyle(.iconOnly)
+                    } else {
+                        Label("Quick record", systemImage: "plus").labelStyle(.titleAndIcon)
+                    }
+                }
+                .tint(AppColors.homeCoverAction)
+                .disabled(!store.isStorageAvailable)
+                .accessibilityHint("Saves a moment without starting the timer")
+                .accessibilityIdentifier("today.quickRecord")
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     dateToView = selectedDate ?? .now

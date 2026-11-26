@@ -84,9 +84,11 @@ class VerificationScopeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
                          ['-only-testing:PrivateMomentsTests/MomentDateQueryTests',
+                          '-only-testing:PrivateMomentsTests/MomentTagTests',
                           '-only-testing:' + PREFIX + 'testTimelineDateAndTagFiltersCombineAndSurviveNavigation',
                           '-only-testing:' + PREFIX + 'testRecordAgainCopiesOnlyTypeAndTags',
-                          '-only-testing:' + PREFIX + 'testMonthHighlightsOpenFavoritesAndMatchingFeelings'])
+                          '-only-testing:' + PREFIX + 'testMonthHighlightsOpenFavoritesAndMatchingFeelings',
+                          '-only-testing:' + PREFIX + 'testQuickRecordCanBeCompletedLaterAndReusesCustomTags'])
         baseline = dict(ROTATION_START='reference', ROTATION_SMOKE='0', INPUT_SMOKE='0', BACKUP_SMOKE='0',
                         BACKUP_LANGUAGE='en', JOURNAL_FEATURES_SMOKE='1', SMOKE_PROFILE='compact-light')
         self.assertEqual(execute(GUARD, baseline).returncode, 0)
@@ -102,6 +104,7 @@ class VerificationScopeTests(unittest.TestCase):
         for method in ['testScreenGallery', 'testFavoriteCanBeFoundWithSearchAfterRelaunch',
                        'testTimelineDateAndTagFiltersCombineAndSurviveNavigation',
                        'testRecordAgainCopiesOnlyTypeAndTags', 'testMonthHighlightsOpenFavoritesAndMatchingFeelings',
+                       'testQuickRecordCanBeCompletedLaterAndReusesCustomTags',
                        'testWeekReviewShowsLocalRecords', 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord',
                        'testReviewComparisonOpensRecordsFromPreviousMonth',
                        'testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded',

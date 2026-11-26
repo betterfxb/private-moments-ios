@@ -383,6 +383,64 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testQuickRecordCanBeCompletedLaterAndReusesCustomTags() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let app = makeApp(language: language)
+            app.launch()
+            let quick = app.buttons["today.quickRecord"]
+            let save = app.buttons["recap.saveToolbar"]
+            let edit = app.buttons["detail.editToolbar"]
+            let openingField = app.staticTexts["recap.quickDefaults"]
+
+            tap(quick, in: app)
+            XCTAssertTrue(openingField.waitForExistence(timeout: 6))
+            XCTAssertTrue(save.isHittable)
+            XCTAssertFalse(app.textFields["recap.minutes"].exists)
+            capture("Quick-record-\(language)", app, stableSurface: save)
+            tap(app.buttons["recap.cancel"], in: app)
+            selectTab("Timeline", "时间线", language: language, app: app)
+            let count = app.staticTexts["timeline.resultCount"]
+            XCTAssertEqual(count.label, english ? "0 moments" : "0 条记录")
+
+            selectTab("Today", "今天", language: language, app: app)
+            tap(quick, in: app)
+            tap(save, in: app)
+            XCTAssertTrue(edit.waitForExistence(timeout: 8))
+            tap(edit, in: app)
+            let tagInput = app.textFields["recap.newTag"]
+            tap(app.buttons["recap.customTags"], in: app)
+            tap(tagInput, in: app)
+            tagInput.typeText("Weekend")
+            tap(app.buttons["recap.addTag"], in: app)
+            let selectedTag = app.buttons["recap.tag.Weekend"]
+            XCTAssertTrue(selectedTag.waitForExistence(timeout: 5))
+            XCTAssertTrue(selectedTag.isSelected)
+            capture("Quick-record-tag-\(language)", app)
+            tap(save, in: app)
+            XCTAssertTrue(edit.waitForExistence(timeout: 8))
+            XCTAssertTrue(app.staticTexts["Weekend"].exists)
+            goBack(app)
+
+            tap(quick, in: app)
+            tap(app.buttons["recap.quickDetails"], in: app)
+            tap(app.buttons["recap.customTags"], in: app)
+            tap(tagInput, in: app)
+            tagInput.typeText("weekend\n")
+            XCTAssertTrue(selectedTag.isSelected)
+            XCTAssertFalse(app.buttons["recap.tag.weekend"].exists)
+            app.terminate()
+            app.launch()
+            tap(app.buttons["today.resumeDraft"], in: app)
+            XCTAssertTrue(selectedTag.waitForExistence(timeout: 5))
+            XCTAssertTrue(selectedTag.isSelected)
+            tap(save, in: app)
+            selectTab("Timeline", "时间线", language: language, app: app)
+            XCTAssertEqual(count.label, english ? "2 moments" : "2 条记录")
+            app.terminate()
+        }
+    }
+
     func testReviewTabBrowsesPeriodsAndOpensFilteredRecord() {
         for language in ["en", "zh-Hans"] {
             let english = language == "en"
