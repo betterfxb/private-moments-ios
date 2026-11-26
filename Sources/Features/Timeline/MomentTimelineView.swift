@@ -126,12 +126,14 @@ struct MomentTimelineView: View {
                         } else {
                             LazyVStack(spacing: 0) {
                                 ForEach(dayGroups(for: matches)) { group in
-                                    Text(group.date.formatted(date: .abbreviated, time: .omitted))
+                                    Text(group.date.formatted(date: dynamicTypeSize.isAccessibilitySize ? .numeric : .abbreviated,
+                                                              time: .omitted))
                                         .font(.system(.subheadline, design: .serif).weight(.medium))
                                         .foregroundStyle(AppColors.secondaryText)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .padding(.top, 12)
                                         .padding(.bottom, 8)
+                                        .accessibilityLabel(group.date.formatted(date: .complete, time: .omitted))
                                         .accessibilityAddTraits(.isHeader)
                                     ForEach(group.moments) { moment in
                                         Button { onOpen(moment.id) } label: {
@@ -315,6 +317,7 @@ struct MomentTimelineView: View {
         if dynamicTypeSize.isAccessibilitySize {
             HStack(spacing: 12) {
                 filterPicker.pickerStyle(.menu)
+                    .fixedSize(horizontal: true, vertical: false)
                     .frame(minHeight: 44)
                 Spacer(minLength: 0)
                 favoritesButton
@@ -469,6 +472,8 @@ private struct TimelineDateAndTagSheet: View {
                     .accessibilityIdentifier("timeline.tagFilter")
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(AppColors.homePaper)
             .navigationTitle(dynamicTypeSize.isAccessibilitySize
                 ? LocalizedStringKey("Filters") : LocalizedStringKey("Dates and tags"))
             .navigationBarTitleDisplayMode(.inline)
