@@ -133,9 +133,9 @@ struct MomentReviewView: View {
                     showRecords(matching: .day(date))
                 }
             }
-            monthHighlights(review)
+            if recordFilter?.day == nil { monthHighlights(review) }
         }
-        if showsPeriodControls,
+        if showsPeriodControls, recordFilter?.day == nil,
            let previous = MomentDateQuery.previousReview(store.moments, period: period, from: review, calendar: calendar) {
             comparison(review, previous: previous)
         }
@@ -146,7 +146,7 @@ struct MomentReviewView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("weekReview.empty")
         } else {
-            if !review.moments.isEmpty { feelings(review) }
+            if !review.moments.isEmpty, recordFilter?.day == nil { feelings(review) }
             records(review)
         }
     }

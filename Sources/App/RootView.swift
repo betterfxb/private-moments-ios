@@ -6,9 +6,9 @@ private enum AppRoute: Hashable {
     case manual(startedAt: Date)
     case quickRecord(startedAt: Date)
     case repeatMoment(startedAt: Date, preset: MomentRepeatPreset)
-    case recap(startedAt: Date, durationSeconds: Int, editingID: UUID?)
+    case recap(startedAt: Date, durationSeconds: Int, editingID: UUID?, tagsOnly: Bool = false)
     case recoveredRecap(RecapDraft)
-    case detail(id: UUID)
+    case detail(id: UUID, showsQuickSave: Bool = false)
     case weekReview
 }
 
@@ -180,7 +180,7 @@ struct RootView: View {
                 isQuickRecord: true,
                 onCancel: { pop(path) },
                 onSaved: { moment in
-                    path.wrappedValue = Array(path.wrappedValue.dropLast()) + [.detail(id: moment.id)]
+                    path.wrappedValue = Array(path.wrappedValue.dropLast()) + [.detail(id: moment.id, showsQuickSave: true)]
                 }
             )
         case .manual(let startedAt):
@@ -211,12 +211,13 @@ struct RootView: View {
                 onCancel: { pop(path) },
                 onSaved: { _ in pop(path) }
             )
-        case .recap(let startedAt, let durationSeconds, let editingID):
+        case .recap(let startedAt, let durationSeconds, let editingID, let tagsOnly):
             let existing = editingID.flatMap { id in store.moments.first { $0.id == id } }
             RecapView(
                 durationSeconds: durationSeconds,
                 startedAt: startedAt,
                 existingMoment: existing,
+                tagsOnly: tagsOnly,
                 onCancel: { finishRecap(editingID: editingID, path: path) },
                 onSaved: { _ in finishRecap(editingID: editingID, path: path, didSave: true) }
             )
@@ -236,15 +237,17 @@ struct RootView: View {
             )
         case .weekReview:
             MomentReviewView { id in path.wrappedValue.append(.detail(id: id)) }
-        case .detail(let id):
+        case .detail(let id, let showsQuickSave):
             MomentDetailView(
                 momentID: id,
-                onEdit: { moment in
+                showsQuickSave: showsQuickSave,
+                onEdit: { moment, tagsOnly in
                     startWhenDraftIsClear {
                         path.wrappedValue.append(.recap(
                             startedAt: moment.occurredAt,
                             durationSeconds: moment.durationSeconds,
-                            editingID: moment.id
+                            editingID: moment.id,
+                            tagsOnly: tagsOnly
                         ))
                     }
                 },

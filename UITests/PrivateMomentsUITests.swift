@@ -725,11 +725,16 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Journal-journey-02-quick-\(language)", app, stableSurface: save)
             tap(save, in: app)
             XCTAssertTrue(edit.waitForExistence(timeout: 10))
-            capture("Journal-journey-03-saved-\(language)", app, stableSurface: edit)
+            let addTags = app.buttons["detail.addTags"]
+            XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "detail.quickSaved").firstMatch.exists)
+            XCTAssertTrue(addTags.waitForExistence(timeout: 5) && addTags.isHittable)
+            assertToolbarTarget(addTags)
+            capture("Journal-journey-03-saved-\(language)", app, stableSurface: addTags)
 
-            tap(edit, in: app)
-            tap(app.buttons["recap.customTags"], in: app)
+            addTags.tap()
             let field = app.textFields["recap.newTag"]
+            XCTAssertTrue(field.waitForExistence(timeout: 8))
+            XCTAssertFalse(app.textFields["recap.minutes"].exists)
             tap(field, in: app)
             field.typeText("Weekend")
             let addTag = app.buttons["recap.addTagKeyboard"].firstMatch
@@ -747,6 +752,7 @@ final class PrivateMomentsUITests: XCTestCase {
             guard submitTimelineSearch(language: language, app: app) else { return }
             let result = app.buttons.matching(identifier: "moment.row").firstMatch
             XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, one)
+            XCTAssertTrue(result.label.contains("Weekend"))
             capture("Journal-journey-05-found-\(language)", app, stableSurface: result)
             tap(result, in: app)
             XCTAssertTrue(addedTag.waitForExistence(timeout: 10))
@@ -764,6 +770,7 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(day, in: app)
             let record = app.buttons.matching(identifier: "weekReview.moment").firstMatch
             reveal(record, in: app)
+            XCTAssertFalse(app.staticTexts[english ? "Feelings" : "感受分布"].exists)
             capture("Journal-journey-07-day-\(language)", app, stableSurface: record)
             tap(record, in: app)
             XCTAssertTrue(addedTag.waitForExistence(timeout: 10))

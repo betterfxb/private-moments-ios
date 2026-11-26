@@ -5,7 +5,8 @@ struct MomentDetailView: View {
     @Environment(MomentStore.self) private var store
     @Environment(RecapDraftStore.self) private var drafts
     let momentID: UUID
-    let onEdit: (Moment) -> Void
+    let showsQuickSave: Bool
+    let onEdit: (Moment, Bool) -> Void
     let onRepeat: (Moment) -> Void
     let onDeleted: () -> Void
 
@@ -77,7 +78,7 @@ struct MomentDetailView: View {
     }
 
     private func toolbarEdit(_ moment: Moment) -> some View {
-        detailToolbarButton("Edit reflection", symbol: "pencil") { onEdit(moment) }
+        detailToolbarButton("Edit reflection", symbol: "pencil") { onEdit(moment, false) }
             .accessibilityIdentifier("detail.editToolbar")
     }
 
@@ -121,6 +122,7 @@ struct MomentDetailView: View {
                 }
 
                 pageHeading(moment)
+                if showsQuickSave { quickSaveActions(moment) }
                 privateNote(moment)
 
                 VStack(alignment: .leading, spacing: 12) {
@@ -158,7 +160,7 @@ struct MomentDetailView: View {
                 }
 
                 Button {
-                    onEdit(moment)
+                    onEdit(moment, false)
                 } label: {
                     Label("Edit reflection", systemImage: "pencil")
                         .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
@@ -187,6 +189,29 @@ struct MomentDetailView: View {
             .padding(.bottom, 30)
             .frame(maxWidth: 640)
             .frame(maxWidth: .infinity)
+        }
+    }
+
+    private func quickSaveActions(_ moment: Moment) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label("Moment saved", systemImage: "checkmark.circle")
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(AppColors.journalAccent)
+                .accessibilityIdentifier("detail.quickSaved")
+            if moment.tags.isEmpty {
+                Button { onEdit(moment, true) } label: {
+                    Label("Add tags", systemImage: "tag")
+                        .font(.system(.headline, design: .rounded))
+                        .padding(.horizontal, 12)
+                        .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                        .background(AppColors.journalSelection, in: RoundedRectangle(cornerRadius: AppRadius.control))
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(AppColors.journalAccent)
+                .disabled(!store.isStorageAvailable)
+                .accessibilityIdentifier("detail.addTags")
+            }
         }
     }
 

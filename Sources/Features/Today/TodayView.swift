@@ -65,13 +65,7 @@ struct TodayView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button(action: onQuickRecord) {
-                    if dynamicTypeSize.isAccessibilitySize {
-                        Label("Quick record", systemImage: "plus").labelStyle(.iconOnly)
-                    } else {
-                        Label("Quick record", systemImage: "plus").labelStyle(.titleAndIcon)
-                    }
-                }
+                Button("Quick record", action: onQuickRecord)
                 .tint(AppColors.homeCoverAction)
                 .disabled(!store.isStorageAvailable)
                 .accessibilityHint("Saves a moment without starting the timer")

@@ -63,16 +63,23 @@ enum AppRadius {
 struct PrimaryActionButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    let fill: Color
+    let text: Color
+
+    init(fill: Color = AppColors.accent, text: Color = AppColors.onAccent) {
+        self.fill = fill
+        self.text = text
+    }
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.system(.headline, design: .rounded).weight(.semibold))
-            .foregroundStyle(AppColors.onAccent)
+            .foregroundStyle(text)
             .frame(maxWidth: .infinity)
             .padding(.horizontal, 16)
             .padding(.vertical, 15)
             .frame(minHeight: 50)
-            .background(AppColors.accent.opacity(isEnabled ? 1 : 0.55), in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+            .background(fill.opacity(isEnabled ? 1 : 0.55), in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
             .contentShape(RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
             .scaleEffect(isEnabled && configuration.isPressed && !reduceMotion ? 0.985 : 1)
             .opacity(isEnabled && configuration.isPressed ? 0.92 : 1)
@@ -82,14 +89,17 @@ struct PrimaryActionButtonStyle: ButtonStyle {
 
 /// A content surface. Navigation materials remain the system's responsibility.
 struct JournalPanel: ViewModifier {
+    var usesJournalPalette = false
+
     func body(content: Content) -> some View {
         content
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+            .background(usesJournalPalette ? AppColors.journalNote : AppColors.surface,
+                        in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous)
-                    .strokeBorder(AppColors.separator.opacity(0.6), lineWidth: 0.5)
+                    .strokeBorder((usesJournalPalette ? AppColors.journalRule : AppColors.separator).opacity(0.6), lineWidth: 0.5)
             }
     }
 }

@@ -137,7 +137,7 @@ struct MomentTimelineView: View {
                                         .accessibilityAddTraits(.isHeader)
                                     ForEach(group.moments) { moment in
                                         Button { onOpen(moment.id) } label: {
-                                            TimelineEntry(moment: moment)
+                                            TimelineEntry(moment: moment, search: query)
                                         }
                                         .buttonStyle(.plain)
                                         .accessibilityHint("Opens the private details for this moment")
@@ -567,6 +567,15 @@ private struct TimelineDateAndTagSheet: View {
 private struct TimelineEntry: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let moment: Moment
+    let search: String
+
+    private var matchingTag: String? {
+        guard !search.isEmpty else { return nil }
+        let key = MomentTags.key(for: search)
+        return moment.tags.first { tag in
+            MomentTags.key(for: tag) == key || MomentTags.key(for: AppLocalization.localizedTag(tag)) == key
+        }.map(AppLocalization.localizedTag)
+    }
 
     var body: some View {
         let layout = dynamicTypeSize.isAccessibilitySize
@@ -577,6 +586,12 @@ private struct TimelineEntry: View {
                 Text(moment.mood.displayName)
                     .font(.system(.title3, design: .serif).weight(.medium))
                     .foregroundStyle(AppColors.text)
+                if let matchingTag {
+                    Label(matchingTag, systemImage: "tag")
+                        .font(.system(.caption, design: .rounded).weight(.semibold))
+                        .foregroundStyle(AppColors.journalAccent)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
                 Text(AppLocalization.format("%@ · %@", moment.kind.displayName,
                                             moment.occurredAt.formatted(date: .omitted, time: .shortened)))
                     .font(.system(.subheadline, design: .rounded))

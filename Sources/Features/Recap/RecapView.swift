@@ -11,6 +11,7 @@ struct RecapView: View {
     let existingMoment: Moment?
     let isManualEntry: Bool
     let isQuickRecord: Bool
+    let tagsOnly: Bool
     let onCancel: () -> Void
     let onSaved: (Moment) -> Void
 
@@ -37,6 +38,9 @@ struct RecapView: View {
     @FocusState private var focusedField: InputField?
     @ScaledMetric(relativeTo: .body) private var noteMinimumHeight: CGFloat = 112
     private let keyboardDismissTargetSize: CGFloat = 44
+    private var usesJournalPalette: Bool { isQuickRecord || tagsOnly }
+    private var actionColor: Color { usesJournalPalette ? AppColors.journalAccent : AppColors.accentText }
+    private var actionBackground: Color { usesJournalPalette ? AppColors.journalSelection : AppColors.accentWash }
 
     private struct ReflectionSnapshot: Equatable {
         let mood: MomentMood
@@ -82,7 +86,7 @@ struct RecapView: View {
     }
 
     init(durationSeconds: Int, startedAt: Date = .now, existingMoment: Moment? = nil,
-         isManualEntry: Bool = false, isQuickRecord: Bool = false,
+         isManualEntry: Bool = false, isQuickRecord: Bool = false, tagsOnly: Bool = false,
          repeatPreset: MomentRepeatPreset? = nil, recoveredDraft: RecapDraft? = nil,
          onCancel: @escaping () -> Void, onSaved: @escaping (Moment) -> Void) {
         self.durationSeconds = durationSeconds
@@ -90,6 +94,7 @@ struct RecapView: View {
         self.existingMoment = existingMoment
         self.isManualEntry = isManualEntry
         self.isQuickRecord = isQuickRecord
+        self.tagsOnly = tagsOnly
         self.onCancel = onCancel
         self.onSaved = onSaved
         inheritedTags = (existingMoment?.tags ?? []) + (repeatPreset?.tags ?? []) + (recoveredDraft?.tags ?? [])
@@ -100,6 +105,7 @@ struct RecapView: View {
                                             note: existingMoment?.privateNote ?? "")
         initialReflection = reflection
         _draftID = State(initialValue: recoveredDraft?.id ?? UUID())
+        _showsTagEditor = State(initialValue: tagsOnly)
         _mood = State(initialValue: recoveredDraft?.mood ?? reflection.mood)
         _kind = State(initialValue: recoveredDraft?.kind ?? reflection.kind)
         _rating = State(initialValue: recoveredDraft?.rating ?? reflection.rating)
@@ -118,7 +124,9 @@ struct RecapView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.section) {
-                if isQuickRecord && !showsQuickDetails {
+                if tagsOnly {
+                    tagsSection.modifier(JournalPanel(usesJournalPalette: true))
+                } else if isQuickRecord && !showsQuickDetails {
                     quickContent
                 } else {
                     headerSection
@@ -147,7 +155,7 @@ struct RecapView: View {
             .frame(maxWidth: .infinity)
         }
         .scrollDismissesKeyboard(.interactively)
-        .background(AppColors.background.ignoresSafeArea())
+        .background((usesJournalPalette ? AppColors.homePaper : AppColors.background).ignoresSafeArea())
         .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -155,7 +163,7 @@ struct RecapView: View {
             ToolbarItem(placement: .topBarLeading) {
                 Button("Cancel", action: requestCancel)
                     .accessibilityIdentifier("recap.cancel")
-                    .foregroundStyle(AppColors.accentText)
+                    .foregroundStyle(actionColor)
                     .alert("Discard changes?", isPresented: $showingDiscardConfirmation) {
                         Button("Discard", role: .destructive, action: discardAndClose)
                         Button("Edit", role: .cancel) { }
@@ -176,11 +184,11 @@ struct RecapView: View {
                             .labelStyle(.iconOnly)
                             .font(.system(size: 20, weight: .semibold))
                             .frame(width: keyboardDismissTargetSize, height: keyboardDismissTargetSize)
-                            .background(AppColors.accentWash, in: Circle())
+                            .background(actionBackground, in: Circle())
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    .foregroundStyle(AppColors.accentText)
+                    .foregroundStyle(actionColor)
                     .accessibilityLabel("Add tag")
                     .accessibilityIdentifier("recap.addTagKeyboard")
                 }
@@ -190,11 +198,11 @@ struct RecapView: View {
                         .labelStyle(.iconOnly)
                         .font(.system(size: 20, weight: .semibold))
                         .frame(width: keyboardDismissTargetSize, height: keyboardDismissTargetSize)
-                        .background(AppColors.accentWash, in: Circle())
+                        .background(actionBackground, in: Circle())
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(AppColors.accentText)
+                .foregroundStyle(actionColor)
                 .accessibilityLabel("Done")
                 .accessibilityIdentifier("recap.dismissKeyboard")
             }
@@ -253,22 +261,23 @@ struct RecapView: View {
     }
 
     private var navigationTitle: LocalizedStringKey {
+        if tagsOnly { return "Edit tags" }
         if isQuickRecord { return "Quick record" }
         return isManualEntry ? "Add past moment" : "Quick recap"
     }
 
     private var quickContent: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("How are you feeling?")
-                .font(.system(.title2, design: .serif).weight(.medium))
-                .foregroundStyle(AppColors.text)
-                .accessibilityAddTraits(.isHeader)
-            Picker("Feeling", selection: $mood) {
-                ForEach(MomentMood.allCases) { choice in Text(choice.displayName).tag(choice) }
+            VStack(alignment: .leading, spacing: 12) {
+                quickChoice(AppLocalization.string("Feeling"), selection: $mood) {
+                    ForEach(MomentMood.allCases) { choice in Text(choice.displayName).tag(choice) }
+                }
+                Rectangle().fill(AppColors.journalRule).frame(height: 1).accessibilityHidden(true)
+                quickChoice(AppLocalization.string("Type"), selection: $kind) {
+                    ForEach(MomentKind.allCases) { choice in Text(choice.displayName).tag(choice) }
+                }
             }
-            Picker("Type", selection: $kind) {
-                ForEach(MomentKind.allCases) { choice in Text(choice.displayName).tag(choice) }
-            }
+            .modifier(JournalPanel(usesJournalPalette: true))
             Text("Quick records use the current time, zero duration, and a 4/5 rating. You can edit them later.")
                 .font(.system(.footnote, design: .rounded))
                 .foregroundStyle(AppColors.secondaryText)
@@ -280,11 +289,26 @@ struct RecapView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .foregroundStyle(AppColors.accentText)
+            .foregroundStyle(actionColor)
             .accessibilityIdentifier("recap.quickDetails")
         }
-        .pickerStyle(.menu)
-        .tint(AppColors.accentText)
+    }
+
+    private func quickChoice<Selection: Hashable, Options: View>(
+        _ title: String, selection: Binding<Selection>, @ViewBuilder options: () -> Options
+    ) -> some View {
+        adaptiveLayout(spacing: 4).callAsFunction {
+            Text(verbatim: title)
+                .font(.system(.headline, design: .rounded).weight(.semibold))
+                .foregroundStyle(AppColors.text)
+                .accessibilityHidden(true)
+            if !dynamicTypeSize.isAccessibilitySize { Spacer(minLength: 8) }
+            Picker(title, selection: selection, content: options)
+                .labelsHidden()
+                .pickerStyle(.menu)
+                .tint(actionColor)
+                .accessibilityLabel(Text(title))
+        }
     }
 
     private var headerSection: some View {
@@ -317,11 +341,11 @@ struct RecapView: View {
                 .labelStyle(.iconOnly)
                 .font(.body.weight(.semibold))
                 .frame(minWidth: 44, minHeight: 44)
-                .background(AppColors.accentWash, in: Circle())
+                .background(actionBackground, in: Circle())
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .foregroundStyle(isEnabled ? AppColors.accentText : AppColors.secondaryText)
+        .foregroundStyle(isEnabled ? actionColor : AppColors.secondaryText)
         .disabled(!isEnabled)
         .accessibilityIdentifier(isReloading ? "recap.reloadToolbar" : "recap.saveToolbar")
         .accessibilityHint(isReloading
@@ -494,7 +518,7 @@ struct RecapView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .foregroundStyle(AppColors.accentText)
+            .foregroundStyle(actionColor)
             .accessibilityValue(showsTagEditor ? Text("Expanded") : Text("Collapsed"))
             .accessibilityIdentifier("recap.customTags")
             if showsTagEditor { tagEditor(recent: recent) }
@@ -520,12 +544,13 @@ struct RecapView: View {
                     .onChange(of: tagInput) { _, _ in tagMessage = nil }
                     .accessibilityIdentifier("recap.newTag")
                     .privacySensitive()
+                    .tint(actionColor)
                 Button { addTag(tagInput) } label: {
                     if dynamicTypeSize.isAccessibilitySize {
                         Image(systemName: "plus")
                             .font(.system(size: 20, weight: .semibold))
                             .frame(width: 44, height: 44)
-                            .background(AppColors.accentWash, in: Circle())
+                            .background(actionBackground, in: Circle())
                             .contentShape(Rectangle())
                     } else {
                         Label("Add tag", systemImage: "plus")
@@ -535,7 +560,7 @@ struct RecapView: View {
                     }
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(AppColors.accentText)
+                .foregroundStyle(actionColor)
                 .accessibilityLabel("Add tag")
                 .accessibilityIdentifier("recap.addTag")
             }
@@ -546,7 +571,7 @@ struct RecapView: View {
                     }
                 }
                 .frame(minHeight: 44, alignment: .leading)
-                .tint(AppColors.accentText)
+                .tint(actionColor)
                 .accessibilityIdentifier("recap.recentTags")
                 .privacySensitive()
             }
@@ -633,7 +658,10 @@ struct RecapView: View {
         Button(action: saveMoment) {
             Label(existingMoment == nil ? "Save privately" : "Save changes", systemImage: "checkmark")
         }
-        .buttonStyle(PrimaryActionButtonStyle())
+        .buttonStyle(PrimaryActionButtonStyle(
+            fill: usesJournalPalette ? AppColors.homeCoverAction : AppColors.accent,
+            text: usesJournalPalette ? AppColors.homeCoverActionText : AppColors.onAccent
+        ))
         .disabled(!canSave)
         .accessibilityIdentifier("recap.save")
         .accessibilityHint(
