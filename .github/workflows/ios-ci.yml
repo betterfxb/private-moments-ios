@@ -60,6 +60,7 @@ on:
           - cold-zh-Hans
           - window-resize
           - window-resize-keyboard
+          - journal-journey
       backup_smoke_profile:
         description: Device profile for a focused diagnostic or single acceptance suite
         type: choice
@@ -159,7 +160,7 @@ jobs:
             printf 'Chinese backup language requires explicit backup smoke.\n' >&2
             exit 1
           fi
-          if [[ "$ROTATION_START" != "reference" && "$ROTATION_START" != "cold-en" && "$ROTATION_START" != "cold-zh-Hans" && "$ROTATION_START" != "window-resize" && "$ROTATION_START" != "window-resize-keyboard" ]] ||
+          if [[ "$ROTATION_START" != "reference" && "$ROTATION_START" != "cold-en" && "$ROTATION_START" != "cold-zh-Hans" && "$ROTATION_START" != "window-resize" && "$ROTATION_START" != "window-resize-keyboard" && "$ROTATION_START" != "journal-journey" ]] ||
              [[ "$ROTATION_START" != "reference" && "$ROTATION_SMOKE" != "1" ]]; then
             printf 'Cold rotation and window resizing require explicit iPad diagnostics and a supported scenario.\n' >&2
             exit 1
@@ -170,6 +171,10 @@ jobs:
           fi
           if [[ "$ROTATION_START" == "window-resize-keyboard" && "$SMOKE_PROFILE" != "ipad-dark-accessibility" ]]; then
             printf 'Keyboard window resizing requires the ipad-dark-accessibility profile.\n' >&2
+            exit 1
+          fi
+          if [[ "$ROTATION_START" == "journal-journey" && "$SMOKE_PROFILE" != "ipad-light" && "$SMOKE_PROFILE" != "ipad-dark-accessibility" ]]; then
+            printf 'Journal window verification requires an iPad Pro profile.\n' >&2
             exit 1
           fi
           python3 -m unittest discover -s tools -p 'test_ui*.py' -v

@@ -1352,6 +1352,107 @@ final class PrivateMomentsUITests: XCTestCase {
         captureSystem("Window-keyboard-saved-note", app)
     }
 
+    func testIPadQuickJournalWindowContinuity() throws {
+        guard enableIPadWindowedApps(scrollSidebar: true) else { return }
+        let app = makeApp()
+        app.launch()
+        rotateInterface(.landscapeLeft, stage: "journal-home", language: "en", app: app)
+
+        let window = app.windows.firstMatch
+        let quick = app.buttons["today.quickRecord"]
+        let save = app.buttons["recap.saveToolbar"]
+        let addTags = app.buttons["detail.addTags"]
+        let tag = "Weekend"
+        let savedTag = app.staticTexts[tag]
+        XCTAssertTrue(quick.isHittable)
+        capture("Pad-journal-01-landscape-home", app, stableSurface: quick)
+        tap(quick, in: app)
+        capture("Pad-journal-02-landscape-quick", app, stableSurface: save)
+        tap(save, in: app)
+        XCTAssertTrue(addTags.waitForExistence(timeout: 10) && addTags.isHittable)
+        tap(addTags, in: app)
+
+        rotateInterface(.portrait, stage: "journal-tag-entry", language: "en", app: app)
+        let wide = window.frame
+        XCTAssertGreaterThanOrEqual(wide.width, 700)
+        let entry = try resizeIPadWindow(app, targetWidth: wide.width * 0.61, name: "journal-input",
+                                         targetHeight: wide.height * 0.66)
+        XCTAssertLessThanOrEqual(entry.width, wide.width * 0.68)
+        let field = app.textFields["recap.newTag"]
+        tap(field, in: app)
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)
+        field.typeText(tag)
+        XCTAssertEqual(field.value as? String, tag)
+        waitForStableFrame(window, message: "The typing window must settle before the system resize.")
+        captureSystem("Pad-journal-03-typed-before-resize", app)
+
+        let narrowed = try resizeIPadWindow(app, targetWidth: wide.width * 0.49, name: "journal-narrow",
+                                         keyboard: keyboard)
+        XCTAssertGreaterThanOrEqual(entry.width - narrowed.width, 48)
+        XCTAssertLessThanOrEqual(narrowed.width, wide.width * 0.58)
+        XCTAssertEqual(field.value as? String, tag)
+        if !keyboard.isHittable { tap(field, in: app) }
+        let addTag = app.buttons["recap.addTagKeyboard"].firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)
+        XCTAssertTrue(addTag.waitForExistence(timeout: 10) && addTag.isHittable)
+        XCTAssertTrue(save.isHittable && window.frame.contains(save.frame))
+        XCTAssertFalse(save.frame.intersects(keyboard.frame))
+        capture("Pad-journal-04-narrow-keyboard", app, stableSurface: addTag)
+        addTag.tap()
+        XCTAssertTrue(app.buttons["recap.tag.Weekend"].isSelected)
+        tap(save, in: app)
+        XCTAssertTrue(savedTag.waitForExistence(timeout: 10))
+        goBack(app)
+
+        selectTab("Timeline", "时间线", app: app)
+        let search = revealTimelineSearch(in: app)
+        tap(search, in: app)
+        search.typeText(tag)
+        guard submitTimelineSearch(language: "en", app: app) else { return }
+        let result = app.buttons.matching(identifier: "moment.row").firstMatch
+        XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, "1 moment")
+        XCTAssertTrue(result.label.contains(tag))
+        reveal(result, in: app)
+        capture("Pad-journal-05-narrow-timeline", app, stableSurface: result)
+        tap(result, in: app)
+        XCTAssertTrue(savedTag.waitForExistence(timeout: 10))
+        returnFromRotatingDetail(app)
+        XCTAssertEqual(app.searchFields.firstMatch.value as? String, tag)
+        tap(app.buttons["timeline.clearFilters"], in: app)
+        tap(app.buttons["timeline.dateAndTag"], in: app)
+        tap(app.buttons["timeline.tagFilter"], in: app)
+        let tagOption = app.buttons["timeline.tags.option.Weekend"]
+        tap(tagOption, in: app)
+        XCTAssertTrue(tagOption.isSelected)
+        capture("Pad-journal-06-narrow-tags", app, stableSurface: tagOption)
+        tap(app.buttons["timeline.tags.done"], in: app)
+        tap(app.buttons["timeline.dateAndTag.apply"], in: app)
+        XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, "1 moment")
+
+        selectTab("Review", "回顾", app: app)
+        tap(app.buttons["review.month"], in: app)
+        let choose = app.buttons["review.calendar.chooseDay"]
+        if choose.exists { tap(choose, in: app) }
+        let today = Calendar.current.component(.day, from: .now)
+        let day = app.buttons["review.calendar.day.\(today)"]
+        reveal(day, in: app)
+        XCTAssertEqual(day.value as? String, "1 moment")
+        capture("Pad-journal-07-narrow-calendar", app, stableSurface: day)
+        tap(day, in: app)
+        let record = app.buttons.matching(identifier: "weekReview.moment").firstMatch
+        tap(record, in: app)
+        XCTAssertTrue(savedTag.waitForExistence(timeout: 10))
+        let expanded = try resizeIPadWindow(app, targetWidth: wide.width * 0.75, name: "journal-detail-expanded")
+        XCTAssertGreaterThanOrEqual(expanded.width - narrowed.width, 48)
+        XCTAssertTrue(savedTag.exists)
+        goBack(app)
+        XCTAssertTrue(app.buttons["review.clearMood"].waitForExistence(timeout: 10))
+        XCTAssertTrue(record.exists)
+        reveal(record, in: app)
+        capture("Pad-journal-08-expanded-day", app, stableSurface: record)
+    }
+
     private func enableIPadWindowedApps(scrollSidebar: Bool = false) -> Bool {
         XCTAssertEqual(UIDevice.current.userInterfaceIdiom, .pad)
         let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")

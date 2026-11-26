@@ -32,3 +32,11 @@
 「日期和标签」下进入专用标签列表。默认匹配全部，可切换为匹配任一，点选或逐项取消。返回筛选面板后，点完成应用草稿，点取消回到此前条件。日期、记录类型、收藏和文本条件独立叠加。保存的旧标签仍按既有首尾空白与大小写归一规则查询，重音差异和原始拼写继续保留。标签筛选使用当前时间线的内存状态。
 
 首次最大字号复验中，已选两项可从原图核对，重新打开列表时底部行需要滚入视口后才进入 XCTest 快照。复验逐行滚入并读取实际选中状态，取消回滚仍需独立验证。同一截图见到随字号放大的勾选符挤占文字空间，候选把勾选图标限制为 22 点并沿用暖纸色，文字继续跟随系统字号。[最大字号首轮原图](evidence/batch-33/45860474192/compact-dark-accessibility-timeline-tags/Tag-filter-options-en.png)
+
+首轮普通字号中，原生搜索展开会让导航栏专注搜索框。验收改为先在普通导航中走详情往返和取消，再叠加收藏、类型和搜索，核对详情返回仍保留查询。[普通字号首轮日志](evidence/batch-33/45860474167/compact-light-timeline-tags/xctest-extract.txt)
+
+最终源码 `cd62619` 两个配置各通过 16 项日期与标签单测及 1 个双语原生用例，共归档 18 张终稿原图。两条不同标签的记录在「任一」下全显示，在「全部」下显示零结果，并给出调整条件的提示。逐项去除、取消、详情返回、系统日期选择器和其他条件叠加均通过。英文最大字号标签可完整显示，中文较长的匹配方式支持换行和滚动。[普通字号选项](evidence/batch-33/45863088523/compact-light-timeline-tags/Tag-filter-options-zh-Hans.png) · [普通字号结果](https://github.com/betterfxb/private-moments-ios/actions/runs/45863088523) · [最大字号选项](evidence/batch-33/45863092123/compact-dark-accessibility-timeline-tags/Tag-filter-options-en.png) · [最大字号结果](https://github.com/betterfxb/private-moments-ios/actions/runs/45863092123)
+
+## 第 34 批 iPad 横屏与窄窗口
+
+在 iPadOS 的 Windowed Apps 模式下执行。先全宽横屏完成快记并进入标签编辑，再切回竖屏。用系统窗口拖柄缩到中等宽度、输入标签，并在键盘可见时进一步缩窄。继续用时间线和月历打开同一记录，在详情中重新扩大窗口并返回当日列表。以 XCTest 的窗口绝对尺寸、原图和真实点按结果验收。
