@@ -48,9 +48,9 @@ struct MomentTimelineView: View {
     private var hasActiveFilters: Bool { filter != .all || favoritesOnly || dateAndTag.isActive || !query.isEmpty }
 
     private var showsAccessibilitySearchScope: Bool {
-        guard dynamicTypeSize.isAccessibilitySize else { return false }
-        if #available(iOS 18.0, *) { return isSearchFocused }
-        return isSearchPresented
+        // Search submission dismisses focus before the native scroll settles.
+        // Keep the content above the results stable for the whole search.
+        dynamicTypeSize.isAccessibilitySize && isSearchPresented
     }
 
     private var results: [Moment] {
@@ -110,7 +110,7 @@ struct MomentTimelineView: View {
                         if showsAccessibilitySearchScope {
                             searchScope
                         }
-                        if dateAndTag.isActive && !isSearchFocused {
+                        if dateAndTag.isActive && !isSearchPresented {
                             Text(verbatim: dateAndTag.summary)
                                 .font(.system(.caption, design: .rounded))
                                 .foregroundStyle(AppColors.journalAccent)

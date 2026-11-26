@@ -2814,7 +2814,8 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(app.searchFields.firstMatch.value as? String, "Calm")
         XCTAssertLessThanOrEqual(app.buttons["timeline.clearFilters"].frame.maxY, row.frame.minY,
             "Reset controls must precede an unbounded result list, not require traversing every record.")
-        if scope.exists { XCTAssertLessThanOrEqual(scope.frame.maxY, row.frame.minY) }
+        XCTAssertTrue(scope.exists)
+        XCTAssertLessThanOrEqual(scope.frame.maxY, row.frame.minY)
         capture("Timeline-search-match-submitted-\(language)", app)
         print("Verified submitted matching record and controls before result list. Locale: \(language).")
     }
