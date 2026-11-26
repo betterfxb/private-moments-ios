@@ -338,6 +338,9 @@ final class PrivateMomentsUITests: XCTestCase {
                 : "傍晚回到家，我们把灯调暗了一点，坐在窗边喝茶。雨声还在，屋里很安静。我本来想趁这段空闲回消息，后来只是把手机放在一旁。\n\n聊到白天的事时，谁也没有赶着解释。茶渐渐凉了，我记得窗台上的光，也记得这一小段时间有多从容。"
             app.launchEnvironment["PM_UI_TEST_READING_NOTE"] = noteText
             app.launch()
+            let start = app.buttons["today.startMoment"]
+            XCTAssertTrue(start.waitForExistence(timeout: 15))
+            capture("Reading-sample-home-\(language)", app, stableSurface: start)
             selectTab("Timeline", "时间线", language: language, app: app)
             let favorites = app.buttons["timeline.favorites"]
             tap(favorites, in: app)
