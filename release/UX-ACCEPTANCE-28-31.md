@@ -25,6 +25,10 @@ Windows 工具测试 55 项通过，Bash 脚本语法、本地化、Xcode 工程
 
 修正后的 `b84dbdc` 在 iOS 26.2 浅色常规字号复验通过 15 项单测和 5 项原生界面用例。月历用例逐语言验证当天两条记录、详情返回保留日期、删除后计数减少、空日提示和切到空月份。单测同时覆盖不同周起始日、夏令时、月界及空月。[月历原图](evidence/batch-28-29/45825750892/compact-light-journal-features/Month-calendar-zh-Hans.png) · [空日原图](evidence/batch-28-29/45825750892/compact-light-journal-features/Month-calendar-empty-day-en.png) · [XCTest](evidence/batch-28-29/45825750892/compact-light-journal-features/xctest-extract.txt)
 
-同一源码的深色最大字号月历双语用例通过，日期以独立可点行排版，图中日期与计数完整，空日可直接返回月历。这一作业的 15 项单测和其余原生功能用例通过，旧版快捷标签测试仍复现键盘遮挡，独立交由 `4009428` 重试。[最大字号日期列表](evidence/batch-28-29/45825738892/compact-dark-accessibility-journal-features/Month-calendar-zh-Hans.png) · [XCTest](evidence/batch-28-29/45825738892/compact-dark-accessibility-journal-features/xctest-extract.txt)
+同一源码的深色最大字号月历双语用例通过，日期以独立可点行排版，图中日期与计数完整，空日可直接返回月历。这一作业的 15 项单测和其余原生功能用例通过，旧版快捷标签测试仍复现键盘遮挡。后续各字号均复验。[最大字号日期列表](evidence/batch-28-29/45825738892/compact-dark-accessibility-journal-features/Month-calendar-zh-Hans.png) · [XCTest](evidence/batch-28-29/45825738892/compact-dark-accessibility-journal-features/xctest-extract.txt)
 
 `b84dbdc` 的核心回归通过 71 项单测及 7 项原生界面用例，无签名 Debug 和 Release 均构建成功，Release 钩子排除检查通过。相同源码实际在 iOS 17.5 通过 6 项单测、4 项界面用例及该系统的 Release 钩子检查。这两组未包含后续自定义标签键盘工具栏的专项，最新功能证据另列。[核心回归](evidence/batch-28-29/45825752377/compact-light-core/xctest-extract.txt) · [iOS 17.5](evidence/batch-28-29/45826233371/ios17/xctest-extract.txt)
+
+键盘工具栏最终源码 `c01d422` 的浅色常规字号通过 15 项单测和 5 项原生用例。两种语言实际从键盘工具栏提交新标签，另用键盘提交大小写变体，随后重启恢复带标签的草稿。归档 10 张原图，含型号相同的键盘和月历。[中文键盘原图](evidence/batch-28-29/45835040434/compact-light/Quick-record-tag-typing-zh-Hans.png) · [XCTest](evidence/batch-28-29/45835040434/compact-light/xctest-extract.txt)
+
+同一源码的深色最大辅助字号也通过 15 项单测和 5 项双语原生用例。键盘上的「添加标签」在两种语言均有完整触控区并可直接点按。月历的大字日期列表、返回后保留选择、删除后重新计数和空日提示通过。该配置也归档 10 张原图。标签输入使用合成词 `Weekend`，真实拼音候选、VoiceOver、认证及 Files 真机验证按第 31 批清单开展。[最大字号键盘原图](evidence/batch-28-29/45835041631/compact-dark-accessibility/Quick-record-tag-typing-zh-Hans.png) · [日期列表原图](evidence/batch-28-29/45835041631/compact-dark-accessibility/Month-calendar-zh-Hans.png) · [XCTest](evidence/batch-28-29/45835041631/compact-dark-accessibility/xctest-extract.txt)
