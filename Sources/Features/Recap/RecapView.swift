@@ -494,7 +494,7 @@ struct RecapView: View {
 
     private func tagEditor(recent: [String]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            adaptiveLayout(spacing: 8).callAsFunction {
+            HStack(spacing: 8) {
                 TextField("New tag", text: $tagInput)
                     .textFieldStyle(.roundedBorder)
                     .textInputAutocapitalization(.never)
@@ -507,12 +507,22 @@ struct RecapView: View {
                     .accessibilityIdentifier("recap.newTag")
                     .privacySensitive()
                 Button { addTag(tagInput) } label: {
-                    Label("Add tag", systemImage: "plus")
-                        .frame(minHeight: 44, alignment: .leading)
-                        .contentShape(Rectangle())
+                    if dynamicTypeSize.isAccessibilitySize {
+                        Image(systemName: "plus")
+                            .font(.system(size: 20, weight: .semibold))
+                            .frame(width: 44, height: 44)
+                            .background(AppColors.accentWash, in: Circle())
+                            .contentShape(Rectangle())
+                    } else {
+                        Label("Add tag", systemImage: "plus")
+                            .fixedSize(horizontal: true, vertical: false)
+                            .frame(minHeight: 44, alignment: .leading)
+                            .contentShape(Rectangle())
+                    }
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(AppColors.accentText)
+                .accessibilityLabel("Add tag")
                 .accessibilityIdentifier("recap.addTag")
             }
             if !recent.isEmpty {
