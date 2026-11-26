@@ -690,6 +690,60 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testMonthCalendarOpensTheDayAndUpdatesAfterDeletion() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let app = makeApp(language: language)
+            app.launchArguments.append("-pm-ui-test-review-comparison-fixture")
+            app.launch()
+            selectTab("Review", "回顾", language: language, app: app)
+            tap(app.buttons["review.month"], in: app)
+            tap(app.buttons["review.previous"], in: app)
+            let range = app.staticTexts["weekReview.range"]
+            let previousMonth = range.label
+            let chooseDay = app.buttons["review.calendar.chooseDay"]
+            let dayOne = app.buttons["review.calendar.day.1"]
+            let dayTwo = app.buttons["review.calendar.day.2"]
+            if chooseDay.exists { tap(chooseDay, in: app) }
+            reveal(dayOne, in: app)
+            XCTAssertEqual(dayOne.value as? String, english ? "2 moments" : "2 条记录")
+            assertToolbarTarget(dayOne)
+            capture("Month-calendar-\(language)", app, stableSurface: dayOne)
+            tap(dayOne, in: app)
+
+            let records = app.buttons.matching(identifier: "weekReview.moment")
+            let clear = app.buttons["review.clearMood"]
+            XCTAssertTrue(clear.waitForExistence(timeout: 8))
+            XCTAssertEqual(records.count, 2)
+            tap(records.firstMatch, in: app)
+            XCTAssertEqual(app.staticTexts["detail.note"].label, "previous-month-second-entry")
+            goBack(app)
+            XCTAssertTrue(clear.exists)
+            XCTAssertEqual(range.label, previousMonth)
+
+            tap(records.firstMatch, in: app)
+            tap(app.buttons["detail.delete"], in: app)
+            let delete = app.buttons[english ? "Delete moment" : "删除记录"]
+            tap(delete, in: app)
+            XCTAssertTrue(clear.waitForExistence(timeout: 8))
+            XCTAssertEqual(records.count, 1)
+            tap(clear, in: app)
+            if chooseDay.exists { tap(chooseDay, in: app) }
+            XCTAssertEqual(dayOne.value as? String, english ? "1 moment" : "1 条记录")
+            tap(dayTwo, in: app)
+            let empty = app.staticTexts["review.calendar.emptyDay"]
+            XCTAssertTrue(empty.waitForExistence(timeout: 8))
+            XCTAssertEqual(empty.label, english ? "No moments on this day" : "这一天还没有记录")
+            XCTAssertEqual(records.count, 0)
+            capture("Month-calendar-empty-day-\(language)", app, stableSurface: empty)
+            tap(clear, in: app)
+            tap(app.buttons["review.previous"], in: app)
+            XCTAssertNotEqual(range.label, previousMonth)
+            XCTAssertTrue(app.staticTexts["weekReview.empty"].exists)
+            app.terminate()
+        }
+    }
+
     func testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded() {
         for language in ["en", "zh-Hans"] {
             let english = language == "en"

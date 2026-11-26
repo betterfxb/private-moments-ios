@@ -482,6 +482,38 @@ final class MomentDateQueryTests: XCTestCase {
         XCTAssertTrue(afterRemoval.dayGroups(favoritesOnly: true, calendar: calendar).isEmpty)
     }
 
+    func testMonthCalendarKeepsEmptyDaysAndWeekAlignmentAcrossDaylightSaving() throws {
+        var calendar = try calendar("America/Los_Angeles")
+        calendar.firstWeekday = 2
+        let marchStart = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 1)))
+        let beforeJump = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 8, hour: 1)))
+        let afterJump = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 8, hour: 23)))
+        let aprilStart = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 4, day: 1)))
+        let early = Moment(occurredAt: beforeJump, durationSeconds: 60, mood: .calm, rating: 4)
+        var later = early
+        later.occurredAt = afterJump
+        var nextMonth = early
+        nextMonth.occurredAt = aprilStart
+        let march = try XCTUnwrap(MomentDateQuery.review([nextMonth, later, early], period: .month,
+                                                        containing: marchStart, calendar: calendar))
+        let grid = MomentMonthCalendar(review: march, calendar: calendar)
+        XCTAssertEqual(grid.firstDayOffset, 6)
+        XCTAssertEqual(grid.days.count, 31)
+        XCTAssertEqual(grid.days[7].count, 2)
+        XCTAssertEqual(grid.days[8].count, 0)
+        XCTAssertEqual(grid.days.reduce(0) { $0 + $1.count }, 2)
+
+        calendar.firstWeekday = 1
+        XCTAssertEqual(MomentMonthCalendar(review: march, calendar: calendar).firstDayOffset, 0)
+        let edited = try XCTUnwrap(MomentDateQuery.review([nextMonth, later], period: .month,
+                                                         containing: marchStart, calendar: calendar))
+        XCTAssertEqual(MomentMonthCalendar(review: edited, calendar: calendar).days[7].count, 1)
+        let empty = try XCTUnwrap(MomentDateQuery.review([], period: .month, containing: aprilStart, calendar: calendar))
+        let emptyGrid = MomentMonthCalendar(review: empty, calendar: calendar)
+        XCTAssertEqual(emptyGrid.days.count, 30)
+        XCTAssertTrue(emptyGrid.days.allSatisfy { $0.count == 0 })
+    }
+
     func testMidnightBelongsOnlyToTheFollowingDay() throws {
         let calendar = try calendar("Asia/Tokyo")
         let day = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 11, day: 10)))

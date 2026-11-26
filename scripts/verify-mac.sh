@@ -111,6 +111,7 @@ JOURNAL_FEATURE_METHODS=(
     testRecordAgainCopiesOnlyTypeAndTags
     testMonthHighlightsOpenFavoritesAndMatchingFeelings
     testQuickRecordCanBeCompletedLaterAndReusesCustomTags
+    testMonthCalendarOpensTheDayAndUpdatesAfterDeletion
 )
 if [[ "$ROTATION_ONLY" == "1" ]]; then
     printf '\nFocused iPad system-window diagnostic.\n'

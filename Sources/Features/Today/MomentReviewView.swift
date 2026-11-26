@@ -4,16 +4,23 @@ import SwiftUI
 private enum ReviewRecordFilter: Equatable {
     case favorites
     case mood(MomentMood)
+    case day(Date)
 
     var mood: MomentMood? {
         if case .mood(let mood) = self { return mood }
         return nil
     }
 
-    var title: Text {
+    var day: Date? {
+        if case .day(let date) = self { return date }
+        return nil
+    }
+
+    func title(locale: Locale) -> Text {
         switch self {
         case .favorites: Text("Bookmarked moments")
         case .mood(let mood): Text(mood.displayName)
+        case .day(let date): Text(date.formatted(.dateTime.weekday(.wide).month(.wide).day().locale(locale)))
         }
     }
 }
@@ -24,6 +31,7 @@ struct MomentReviewView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.scenePhase) private var scenePhase
     @AccessibilityFocusState private var recordsFocused: Bool
+    @AccessibilityFocusState private var calendarFocused: Bool
     @State private var referenceDate = Date.now
     @State private var historicalDate: Date?
     @State private var period: MomentReviewPeriod = .week
@@ -32,6 +40,7 @@ struct MomentReviewView: View {
     @State private var dateToView = Date.now
     @State private var isComparing = false
     @State private var recordJumpID = UUID()
+    @State private var calendarJumpID = UUID()
 
     private let showsPeriodControls: Bool
     private let onOpen: (UUID) -> Void
@@ -76,6 +85,10 @@ struct MomentReviewView: View {
                 proxy.scrollTo("review.records", anchor: .top)
                 recordsFocused = true
             }
+            .onChange(of: calendarJumpID) { _, _ in
+                proxy.scrollTo("review.monthCalendar", anchor: .top)
+                calendarFocused = true
+            }
         }
         .background(AppColors.homePaper.ignoresSafeArea())
         .navigationTitle(showsPeriodControls ? LocalizedStringKey("Review") : LocalizedStringKey("Week in review"))
@@ -110,6 +123,16 @@ struct MomentReviewView: View {
     private func reviewContent(_ review: MomentReview) -> some View {
         overview(review)
         if showsPeriodControls, period == .month {
+            VStack(alignment: .leading, spacing: 8) {
+                sectionHeading(Text("Month calendar"))
+                    .accessibilityFocused($calendarFocused)
+                    .id("review.monthCalendar")
+                ReviewMonthCalendar(calendar: calendar, locale: locale,
+                                    month: MomentMonthCalendar(review: review, calendar: calendar),
+                                    selectedDay: recordFilter?.day) { date in
+                    showRecords(matching: .day(date))
+                }
+            }
             monthHighlights(review)
         }
         if showsPeriodControls,
@@ -474,11 +497,12 @@ struct MomentReviewView: View {
                 .accessibilityFocused($recordsFocused)
                 .id("review.records")
             if let recordFilter {
-                recordFilter.title.foregroundStyle(AppColors.secondaryText)
+                recordFilter.title(locale: locale).foregroundStyle(AppColors.secondaryText)
                 Button {
                     self.recordFilter = nil
+                    if recordFilter.day != nil { calendarJumpID = UUID() }
                 } label: {
-                    Text("Show all moments")
+                    Text(recordFilter.day == nil ? LocalizedStringKey("Show all moments") : LocalizedStringKey("Back to month calendar"))
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(AppColors.accentText)
                         .frame(minHeight: 44)
@@ -489,21 +513,31 @@ struct MomentReviewView: View {
             }
             LazyVStack(spacing: 9) {
                 if showsPeriodControls {
+                    let selectedDay = recordFilter?.day
                     let groups = review.dayGroups(matching: recordFilter?.mood,
                                                   favoritesOnly: recordFilter == .favorites, calendar: calendar)
+                        .filter { selectedDay == nil || $0.date == selectedDay }
                     if groups.isEmpty {
-                        Text(recordFilter == .favorites ? LocalizedStringKey("No favorites in this month")
-                             : LocalizedStringKey("No moments match this feeling"))
-                            .foregroundStyle(AppColors.secondaryText)
+                        if selectedDay != nil {
+                            Text("No moments on this day")
+                                .foregroundStyle(AppColors.secondaryText)
+                                .accessibilityIdentifier("review.calendar.emptyDay")
+                        } else {
+                            Text(recordFilter == .favorites ? LocalizedStringKey("No favorites in this month")
+                                 : LocalizedStringKey("No moments match this feeling"))
+                                .foregroundStyle(AppColors.secondaryText)
+                        }
                     }
                     ForEach(groups) { group in
-                        let label = group.date.formatted(.dateTime.month(.abbreviated).day().weekday(.abbreviated).locale(locale))
-                        Text(label)
-                            .font(.system(.footnote, design: .rounded).weight(.semibold))
-                            .foregroundStyle(AppColors.secondaryText)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .accessibilityAddTraits(.isHeader)
-                            .accessibilityIdentifier("review.recordDay")
+                        if selectedDay == nil {
+                            let label = group.date.formatted(.dateTime.month(.abbreviated).day().weekday(.abbreviated).locale(locale))
+                            Text(label)
+                                .font(.system(.footnote, design: .rounded).weight(.semibold))
+                                .foregroundStyle(AppColors.secondaryText)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityAddTraits(.isHeader)
+                                .accessibilityIdentifier("review.recordDay")
+                        }
                         ForEach(group.moments) { record($0, includesDate: false) }
                     }
                 } else {
@@ -551,5 +585,121 @@ struct MomentReviewView: View {
         let inCurrentYear = calendar.isDate(interval.start, equalTo: referenceDate, toGranularity: .year)
         formatter.dateTemplate = withinYear && (!showsPeriodControls || inCurrentYear) ? "MMMd" : "yMMMd"
         return formatter.string(from: interval.start, to: lastDay)
+    }
+}
+
+private struct ReviewMonthCalendar: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var showingDayList = false
+
+    let calendar: Calendar
+    let locale: Locale
+    let month: MomentMonthCalendar
+    let selectedDay: Date?
+    let onSelect: (Date) -> Void
+
+    var body: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            Button { showingDayList = true } label: {
+                Label("Choose a day", systemImage: "calendar")
+                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(AppColors.journalAccent)
+            .accessibilityIdentifier("review.calendar.chooseDay")
+            .sheet(isPresented: $showingDayList) { dayList }
+            .onChange(of: scenePhase) { _, phase in
+                if phase != .active { showingDayList = false }
+            }
+        } else {
+            grid
+        }
+    }
+
+    private var grid: some View {
+        var localizedCalendar = calendar
+        localizedCalendar.locale = locale
+        let weekdays = localizedCalendar.veryShortStandaloneWeekdaySymbols
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 2), count: 7)
+        return LazyVGrid(columns: columns, spacing: 2) {
+            ForEach(weekdays.indices, id: \.self) { offset in
+                Text(weekdays[(offset + calendar.firstWeekday - 1) % weekdays.count])
+                    .font(.system(.caption, design: .rounded).weight(.semibold))
+                    .foregroundStyle(AppColors.secondaryText)
+                    .accessibilityHidden(true)
+            }
+            ForEach(0..<month.firstDayOffset, id: \.self) { _ in Color.clear.accessibilityHidden(true) }
+            ForEach(month.days) { day in
+                dayButton(day, inList: false)
+            }
+        }
+    }
+
+    private var dayList: some View {
+        NavigationStack {
+            ScrollView {
+                LazyVStack(spacing: 4) {
+                    ForEach(month.days) { day in dayButton(day, inList: true) }
+                }
+                .padding(AppSpacing.page)
+                .frame(maxWidth: 680)
+                .frame(maxWidth: .infinity)
+            }
+            .background(AppColors.homePaper.ignoresSafeArea())
+            .navigationTitle("Choose a day")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button { showingDayList = false } label: {
+                        Label("Cancel", systemImage: "xmark").labelStyle(.iconOnly)
+                    }
+                }
+            }
+        }
+    }
+
+    private func dayButton(_ day: MomentMonthCalendar.Day, inList: Bool) -> some View {
+        let number = calendar.component(.day, from: day.date)
+        let date = day.date.formatted(.dateTime.weekday(.wide).month(.wide).day().locale(locale))
+        let count = AppLocalization.momentCount(day.count)
+        let isSelected = day.date == selectedDay
+        return Button {
+            showingDayList = false
+            onSelect(day.date)
+        } label: {
+            if inList {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(date).font(.system(.subheadline, design: .rounded).weight(.semibold))
+                    Text(count).font(.system(.caption, design: .rounded)).foregroundStyle(AppColors.secondaryText)
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 6)
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .background(isSelected ? AppColors.journalSelection : Color.clear, in: RoundedRectangle(cornerRadius: AppRadius.control))
+                .contentShape(Rectangle())
+            } else {
+                VStack(spacing: 3) {
+                    Text(number.formatted(.number.locale(locale)))
+                        .font(.system(.callout, design: .rounded).weight(day.count == 0 ? .regular : .semibold))
+                        .monospacedDigit()
+                    Circle()
+                        .fill(day.count == 0 ? Color.clear : AppColors.journalAccent)
+                        .frame(width: 4, height: 4)
+                        .accessibilityHidden(true)
+                }
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .background(isSelected ? AppColors.journalSelection : Color.clear, in: RoundedRectangle(cornerRadius: 10))
+                .contentShape(Rectangle())
+            }
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(isSelected ? AppColors.journalAccent : AppColors.text)
+        .accessibilityLabel(Text(date))
+        .accessibilityValue(Text(count))
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityIdentifier("review.calendar.day.\(number)")
     }
 }

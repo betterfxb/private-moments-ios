@@ -360,3 +360,27 @@ struct MomentReview {
         Set(moments.map { calendar.startOfDay(for: $0.occurredAt) }).count
     }
 }
+
+struct MomentMonthCalendar {
+    struct Day: Identifiable {
+        let date: Date
+        let count: Int
+        var id: Date { date }
+    }
+
+    let firstDayOffset: Int
+    let days: [Day]
+
+    init(review: MomentReview, calendar: Calendar) {
+        let start = review.interval.start
+        firstDayOffset = (calendar.component(.weekday, from: start) - calendar.firstWeekday + 7) % 7
+        let counts = Dictionary(uniqueKeysWithValues: review.dayGroups(calendar: calendar).map { ($0.date, $0.moments.count) })
+        let daysInMonth = calendar.range(of: .day, in: .month, for: start)?.count ?? 0
+        days = (0..<daysInMonth).compactMap { offset in
+            guard let date = calendar.date(byAdding: .day, value: offset, to: start),
+                  MomentDateQuery.contains(date, in: review.interval) else { return nil }
+            let day = calendar.startOfDay(for: date)
+            return Day(date: day, count: counts[day, default: 0])
+        }
+    }
+}
