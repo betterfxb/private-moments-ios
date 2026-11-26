@@ -345,11 +345,12 @@ struct MomentReviewView: View {
         let layout = dynamicTypeSize.isAccessibilitySize
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
             : AnyLayout(HStackLayout(spacing: 14))
+        let title = filter.title(locale: locale)
         return Button { showRecords(matching: filter) } label: {
             HStack(alignment: .top, spacing: 10) {
                 Image(systemName: symbol).accessibilityHidden(true)
                 layout {
-                    filter.title.fontWeight(.semibold)
+                    title.fontWeight(.semibold)
                     Text(AppLocalization.momentCount(count)).foregroundStyle(AppColors.secondaryText)
                 }
                 Spacer(minLength: 0)
@@ -364,7 +365,7 @@ struct MomentReviewView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(filter.title)
+        .accessibilityLabel(title)
         .accessibilityValue(Text(AppLocalization.momentCount(count)))
         .accessibilityAddTraits(recordFilter == filter ? .isSelected : [])
         .accessibilityIdentifier(identifier)
