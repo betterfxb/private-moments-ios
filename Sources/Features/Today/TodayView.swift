@@ -64,12 +64,11 @@ struct TodayView: View {
             if phase != .active { showingDatePicker = false }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button("Quick record", action: onQuickRecord)
-                .tint(AppColors.homeCoverAction)
-                .disabled(!store.isStorageAvailable)
-                .accessibilityHint("Saves a moment without starting the timer")
-                .accessibilityIdentifier("today.quickRecord")
+            if #available(iOS 26.0, *) {
+                ToolbarItem(placement: .topBarLeading) { quickRecordAction }
+                    .sharedBackgroundVisibility(.hidden)
+            } else {
+                ToolbarItem(placement: .topBarLeading) { quickRecordAction }
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -85,6 +84,23 @@ struct TodayView: View {
             calendarSheet
         }
         .task { store.reload() }
+    }
+
+    private var quickRecordAction: some View {
+        Button(action: onQuickRecord) {
+            Text("Quick record")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(AppColors.homeCoverText)
+                .padding(.horizontal, 12)
+                .frame(minWidth: 44, minHeight: 44)
+                .background(AppColors.homeCoverNavigation, in: Capsule())
+                .overlay { Capsule().strokeBorder(AppColors.homeCoverSecondary.opacity(0.35)) }
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .disabled(!store.isStorageAvailable)
+        .accessibilityHint("Saves a moment without starting the timer")
+        .accessibilityIdentifier("today.quickRecord")
     }
 
     private var cover: some View {

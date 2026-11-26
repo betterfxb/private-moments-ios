@@ -146,7 +146,7 @@ struct RecapView: View {
                     }
                     .modifier(JournalPanel())
                 }
-                saveSection
+                if !tagsOnly || focusedField != .tag { saveSection }
             }
             .padding(.horizontal, AppSpacing.page)
             .padding(.top, 18)
@@ -278,7 +278,7 @@ struct RecapView: View {
                 }
             }
             .modifier(JournalPanel(usesJournalPalette: true))
-            Text("Quick records use the current time, zero duration, and a 4/5 rating. You can edit them later.")
+            Text("Now · 0 min · 4/5 rating")
                 .font(.system(.footnote, design: .rounded))
                 .foregroundStyle(AppColors.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
