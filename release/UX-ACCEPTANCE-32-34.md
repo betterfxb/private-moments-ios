@@ -40,3 +40,16 @@
 ## 第 34 批 iPad 横屏与窄窗口
 
 在 iPadOS 的 Windowed Apps 模式下执行。先全宽横屏完成快记并进入标签编辑，再切回竖屏。用系统窗口拖柄缩到中等宽度、输入标签，并在键盘可见时进一步缩窄。继续用时间线和月历打开同一记录，在详情中重新扩大窗口并返回当日列表。以 XCTest 的窗口绝对尺寸、原图和真实点按结果验收。
+
+源码 `972d64d` 在 Xcode 26.2 和 iPadOS 26.2 的 iPad Pro 13 英寸（M5）模拟器通过。浅色常规与深色最大辅助字号各通过 1 个原生用例，归档 16 张终稿原图。两组实际横屏尺寸均为 1376 × 1032 点。切回竖屏后首次从 1032 点宽缩到 630 点，软件键盘可见时用右上角拖到 513 点，随后从详情扩大到 768 点。
+
+拖动未清除标签输入。键盘添加与顶部保存依旧可点，时间线用同一标签找回记录并保留查询，窄窗口可打开多标签筛选。月历在两种字号下均能选择实际有记录的一天，从详情返回时保留当日列表。iPad 本次使用英文流程，两种语言的回归在 iPhone 执行。横屏原图保留系统写入的方向元数据，查阅时按 2752 × 2064 像素显示。
+
+- 浅色常规字号的[横屏首页](evidence/batch-34/45866527394/ipad-light/Pad-journal-01-landscape-home.png)、[窄窗口月历](evidence/batch-34/45866527394/ipad-light/Pad-journal-07-narrow-calendar.png)、[窗口测量](evidence/batch-34/45866527394/ipad-light/window-geometry.txt)与[云端结果](https://github.com/betterfxb/private-moments-ios/actions/runs/45866527394)。
+- 深色最大辅助字号的[窄窗口软件键盘](evidence/batch-34/45866529866/ipad-dark-accessibility/Pad-journal-04-narrow-keyboard.png)、[扩宽后返回当日](evidence/batch-34/45866529866/ipad-dark-accessibility/Pad-journal-08-expanded-day.png)、[窗口测量](evidence/batch-34/45866529866/ipad-dark-accessibility/window-geometry.txt)与[云端结果](https://github.com/betterfxb/private-moments-ios/actions/runs/45866529866)。
+
+## 最终回归与待确认事项
+
+同一源码 `972d64d` 的 iPhone 日记回归通过 16 项单测及 5 个原生用例，覆盖月历删除更新、月度精选、快记转完整补记、自定义标签复用、再记一次、多标签和日期组合。Windows 的 `python -m unittest discover -s tools` 通过 57 项。两条 macOS 验收脚本通过 `bash -n`，本地化、Xcode 工程、发行材料自动审计和 Git 差异检查完成。发行材料仍含账号相关占位。对照起始提交 `4cb9bb8` 复查需求及项目规范，审查涵盖业务代码、测试、CI 配置和证据。[综合 XCTest](evidence/batch-34/45866647390/compact-light/xctest-extract.txt) · [云端综合回归](https://github.com/betterfxb/private-moments-ios/actions/runs/45866647390)
+
+本批原生验收环境是托管模拟器。真机旁白、外接键盘、真实中文候选和签名安装仍待验证。明文导出是否保留、备份口令遗失处理、系统终止后的计时恢复策略和真机安装路径均已记录待确认。[待确认清单](DEVICE-AND-RECOVERY-DECISIONS.md)
