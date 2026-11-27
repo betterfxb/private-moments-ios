@@ -90,7 +90,8 @@ class VerificationScopeTests(unittest.TestCase):
                           '-only-testing:' + PREFIX + 'testRecordAgainCopiesOnlyTypeAndTags',
                           '-only-testing:' + PREFIX + 'testMonthHighlightsOpenFavoritesAndMatchingFeelings',
                           '-only-testing:' + PREFIX + 'testQuickRecordCanBeCompletedLaterAndReusesCustomTags',
-                          '-only-testing:' + PREFIX + 'testMonthCalendarOpensTheDayAndUpdatesAfterDeletion'])
+                          '-only-testing:' + PREFIX + 'testMonthCalendarOpensTheDayAndUpdatesAfterDeletion',
+                          '-only-testing:' + PREFIX + 'testMonthReviewTagCountsFollowEditsAndDeletion'])
         baseline = dict(ROTATION_START='reference', ROTATION_SMOKE='0', INPUT_SMOKE='0', BACKUP_SMOKE='0',
                         BACKUP_LANGUAGE='en', JOURNAL_FEATURES_SMOKE='1', SMOKE_PROFILE='compact-light')
         self.assertEqual(execute(GUARD, baseline).returncode, 0)
@@ -107,7 +108,7 @@ class VerificationScopeTests(unittest.TestCase):
                        'testTimelineDateAndTagFiltersCombineAndSurviveNavigation',
                        'testRecordAgainCopiesOnlyTypeAndTags', 'testMonthHighlightsOpenFavoritesAndMatchingFeelings',
                        'testQuickRecordCanBeCompletedLaterAndReusesCustomTags',
-                       'testMonthCalendarOpensTheDayAndUpdatesAfterDeletion',
+                       'testMonthCalendarOpensTheDayAndUpdatesAfterDeletion', 'testMonthReviewTagCountsFollowEditsAndDeletion',
                        'testWeekReviewShowsLocalRecords', 'testReviewTabBrowsesPeriodsAndOpensFilteredRecord',
                        'testReviewComparisonOpensRecordsFromPreviousMonth',
                        'testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded',

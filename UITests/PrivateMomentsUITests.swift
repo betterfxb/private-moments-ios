@@ -1047,6 +1047,88 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testMonthReviewTagCountsFollowEditsAndDeletion() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let one = english ? "1 moment" : "1 条记录"
+            let two = english ? "2 moments" : "2 条记录"
+            let longTagName = "Quiet mornings and slow conversations"
+            let app = makeApp(language: language)
+            app.launchArguments.append("-pm-ui-test-review-comparison-fixture")
+            app.launch()
+            selectTab("Review", "回顾", language: language, app: app)
+            tap(app.buttons["review.month"], in: app)
+
+            let section = app.staticTexts["review.monthTags"]
+            guard section.waitForExistence(timeout: 5) else {
+                captureFailure("Month-calendar-tags-missing-\(language)", app)
+                return XCTFail("A month with tagged moments must offer a tag summary.")
+            }
+            let connected = app.buttons["review.tag.connected"]
+            let longTag = app.buttons["review.tag.quiet mornings and slow conversations"]
+            reveal(connected, in: app)
+            XCTAssertEqual(connected.label, english ? "Connected" : "亲密相连")
+            XCTAssertEqual(connected.value as? String, one)
+            XCTAssertFalse(longTag.exists, "The current month cannot list a historical tag.")
+
+            let range = app.staticTexts["weekReview.range"]
+            let currentMonth = range.label
+            tap(app.buttons["review.previous"], in: app)
+            let previousMonth = range.label
+            XCTAssertNotEqual(previousMonth, currentMonth)
+            revealFully(from: longTag, through: longTag, in: app)
+            XCTAssertEqual(longTag.label, longTagName)
+            XCTAssertEqual(longTag.value as? String, one)
+            XCTAssertEqual(connected.value as? String, two, "The current month's use cannot count here.")
+            assertToolbarTarget(longTag)
+            assertAboveBottomTabBar(longTag, message: "The complete tag action must clear the tab bar.", app: app)
+            capture("Month-calendar-tag-summary-\(language)", app, stableSurface: longTag)
+
+            tap(connected, in: app)
+            let clear = app.buttons["review.clearMood"]
+            let records = app.buttons.matching(identifier: "weekReview.moment")
+            XCTAssertTrue(clear.waitForExistence(timeout: 8))
+            XCTAssertEqual(records.count, 2)
+            reveal(records.firstMatch, in: app)
+            capture("Month-calendar-tag-results-\(language)", app, stableSurface: records.firstMatch)
+            tap(records.firstMatch, in: app)
+            let note = app.staticTexts["detail.note"]
+            XCTAssertEqual(note.label, "previous-month-second-entry")
+            tap(app.buttons["detail.editToolbar"], in: app)
+            let choice = app.buttons["recap.tag.Connected"]
+            reveal(choice, in: app)
+            XCTAssertTrue(choice.isSelected)
+            choice.tap()
+            XCTAssertFalse(choice.isSelected)
+            tap(app.buttons["recap.saveToolbar"], in: app)
+            XCTAssertTrue(note.waitForExistence(timeout: 8))
+            goBack(app)
+            XCTAssertTrue(clear.waitForExistence(timeout: 8))
+            XCTAssertEqual(range.label, previousMonth)
+            XCTAssertEqual(records.count, 1, "Removing a tag must update the active filter on return.")
+            tap(records.firstMatch, in: app)
+            XCTAssertEqual(note.label, "previous-month-first-entry")
+            tap(app.buttons["detail.delete"], in: app)
+            tap(app.buttons[english ? "Delete moment" : "删除记录"], in: app)
+
+            let empty = app.staticTexts["review.tag.empty"]
+            XCTAssertTrue(empty.waitForExistence(timeout: 8))
+            XCTAssertEqual(records.count, 0)
+            XCTAssertEqual(range.label, previousMonth)
+            reveal(empty, in: app)
+            capture("Month-calendar-tag-empty-\(language)", app, stableSurface: empty)
+            tap(clear, in: app)
+            reveal(longTag, in: app)
+            XCTAssertFalse(connected.exists, "The previous month no longer has this tag.")
+            XCTAssertEqual(longTag.value as? String, one)
+            tap(app.buttons["review.next"], in: app)
+            reveal(connected, in: app)
+            XCTAssertEqual(range.label, currentMonth)
+            XCTAssertEqual(connected.value as? String, one)
+            app.terminate()
+        }
+    }
+
     func testUnfinishedDraftSurvivesTerminationAndCanBeSavedOrDiscarded() {
         for language in ["en", "zh-Hans"] {
             let english = language == "en"

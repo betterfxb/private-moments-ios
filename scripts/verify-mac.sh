@@ -121,6 +121,7 @@ JOURNAL_FEATURE_METHODS=(
     testMonthHighlightsOpenFavoritesAndMatchingFeelings
     testQuickRecordCanBeCompletedLaterAndReusesCustomTags
     testMonthCalendarOpensTheDayAndUpdatesAfterDeletion
+    testMonthReviewTagCountsFollowEditsAndDeletion
 )
 if [[ "$ROTATION_ONLY" == "1" ]]; then
     printf '\nFocused iPad system-window diagnostic.\n'
@@ -172,6 +173,7 @@ elif [[ "$ACCEPTANCE_PART" == "timeline-tags" ]]; then
 elif [[ "$ACCEPTANCE_PART" == "review-calendar" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testMonthCalendarOpensTheDayAndUpdatesAfterDeletion")
+    TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testMonthReviewTagCountsFollowEditsAndDeletion")
 elif [[ "$ACCEPTANCE_PART" == "journal-features" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentTagTests)

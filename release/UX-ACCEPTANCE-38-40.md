@@ -21,3 +21,7 @@
 首轮常规字号通过 12 项日期单测及 1 个双语原生用例，归档空日动作、带入日期的表单及保存返回三组画面。[常规字号运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46080057135) · [补记表单原图](evidence/batch-38/46080057135/compact-light-review-calendar/Month-calendar-add-form-zh-Hans.png)
 
 首轮最大辅助字号能取消空表单、保存并在原日看到新增记录。英文草稿提示的辅助树显示「取消」位于屏幕高度之外，实拍同时显示正文和按钮占去多屏。缩短标题下的操作标签，删除与三个操作重复的正文。在同一用例中要求「取消」按钮完整可见且点击一次后关闭提示，原草稿仍可恢复。[首轮最大字号](https://github.com/betterfxb/private-moments-ios/actions/runs/46080062351) · [提示实拍](evidence/batch-38/46080062351/compact-dark-accessibility-review-calendar/Control-unreachable.png)
+
+修复版最大字号原图确认三个操作同时可见。XCTest 实际点击取消后返回当日并成功打开恢复表单，随后在首屏直接查询滚动区下方尚未呈现的感受选项而失败。复验保留对所选感受的断言，先正常滚动到该控件再检查。[修复版提示](evidence/batch-38/46081896957/compact-dark-accessibility-review-calendar/Month-calendar-draft-conflict-en.png) · [运行与断言位置](https://github.com/betterfxb/private-moments-ios/actions/runs/46081896957)
+
+终稿的 app 源码一致。常规字号 `e2746ff` 与最大辅助字号 `9d99133` 各通过 12 项日期单测和 1 个双语原生用例。空白日取消保持为空，保存回到原日，计数从零变一且未改变相邻日的记录数。窗口重新打开后，草稿保护提示保持同一日期，原草稿可继续，已选感受保留。[常规运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46081902337) · [最大字号运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46083464796) · [最大字号空日](evidence/batch-38/46083464796/compact-dark-accessibility-review-calendar/Month-calendar-add-empty-zh-Hans.png) · [最大字号草稿提示](evidence/batch-38/46083464796/compact-dark-accessibility-review-calendar/Month-calendar-draft-conflict-en.png)
