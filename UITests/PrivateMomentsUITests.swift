@@ -999,6 +999,23 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(dayTwo.value as? String, english ? "1 moment" : "1 条记录")
             XCTAssertEqual(dayOne.value as? String, english ? "1 moment" : "1 条记录")
             tap(dayTwo, in: app)
+            tap(add, in: app)
+            let unfinishedMood = app.buttons["recap.mood.Calm"]
+            tap(app.buttons["recap.mood.Happy"], in: app)
+            app.terminate()
+            app.launch()
+
+            selectTab("Review", "回顾", language: language, app: app)
+            tap(app.buttons["review.month"], in: app)
+            tap(app.buttons["review.previous"], in: app)
+            if usesDayList { tap(chooseDay, in: app) }
+            tap(dayTwo, in: app)
+            tap(add, in: app)
+            let conflict = app.alerts[english ? "Unfinished draft" : "未完成的草稿"]
+            XCTAssertTrue(conflict.waitForExistence(timeout: 8))
+            tap(conflict.buttons[english ? "Cancel" : "取消"], in: app)
+            XCTAssertFalse(save.exists)
+            XCTAssertEqual(records.count, 1, "Blocking a new form must preserve the day and saved records.")
             tap(clear, in: app)
             tap(app.buttons["review.previous"], in: app)
             XCTAssertNotEqual(range.label, previousMonth)
@@ -1015,6 +1032,11 @@ final class PrivateMomentsUITests: XCTestCase {
                 tap(dayOne, in: app)
                 XCTAssertTrue(empty.waitForExistence(timeout: 8))
             }
+            selectTab("Today", "今天", language: language, app: app)
+            tap(app.buttons["today.resumeDraft"], in: app)
+            XCTAssertTrue(save.waitForExistence(timeout: 8))
+            XCTAssertFalse(unfinishedMood.isSelected)
+            XCTAssertTrue(app.buttons["recap.mood.Happy"].isSelected, "The existing calendar draft must keep its changes.")
             app.terminate()
         }
     }

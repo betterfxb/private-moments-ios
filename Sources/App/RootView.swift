@@ -3,7 +3,7 @@ import SwiftUI
 
 private enum AppRoute: Hashable {
     case session
-    case manual(startedAt: Date)
+    case manual(startedAt: Date, fromReview: Bool = false)
     case quickRecord(startedAt: Date)
     case repeatMoment(startedAt: Date, preset: MomentRepeatPreset)
     case recap(startedAt: Date, durationSeconds: Int, editingID: UUID?, tagsOnly: Bool = false)
@@ -102,7 +102,9 @@ struct RootView: View {
                 .tag(AppTab.timeline)
 
                 navigationStack(path: $reviewPath) {
-                    MomentReviewView(showsPeriodControls: true) { id in
+                    MomentReviewView(showsPeriodControls: true, onAddForDay: { day in
+                        startWhenDraftIsClear { reviewPath.append(.manual(startedAt: day, fromReview: true)) }
+                    }) { id in
                         reviewPath.append(.detail(id: id))
                     }
                 }
@@ -183,15 +185,19 @@ struct RootView: View {
                     path.wrappedValue = Array(path.wrappedValue.dropLast()) + [.detail(id: moment.id, showsQuickSave: true)]
                 }
             )
-        case .manual(let startedAt):
+        case .manual(let startedAt, let fromReview):
+            let close: () -> Void = {
+                if fromReview { pop(path) }
+                else { finishRecap(editingID: nil, path: path) }
+            }
             RecapView(
                 durationSeconds: 0,
                 startedAt: startedAt,
                 isManualEntry: true,
-                onCancel: { finishRecap(editingID: nil, path: path) },
+                onCancel: close,
                 onSaved: { moment in
-                    finishRecap(editingID: nil, path: path)
-                    selectedTodayDate = moment.occurredAt
+                    close()
+                    if !fromReview { selectedTodayDate = moment.occurredAt }
                 }
             )
         case .session:

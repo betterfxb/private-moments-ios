@@ -43,10 +43,13 @@ struct MomentReviewView: View {
     @State private var calendarJumpID = UUID()
 
     private let showsPeriodControls: Bool
+    private let onAddForDay: ((Date) -> Void)?
     private let onOpen: (UUID) -> Void
 
-    init(showsPeriodControls: Bool = false, onOpen: @escaping (UUID) -> Void) {
+    init(showsPeriodControls: Bool = false, onAddForDay: ((Date) -> Void)? = nil,
+         onOpen: @escaping (UUID) -> Void) {
         self.showsPeriodControls = showsPeriodControls
+        self.onAddForDay = onAddForDay
         self.onOpen = onOpen
     }
 
@@ -499,6 +502,9 @@ struct MomentReviewView: View {
                 .id("review.records")
             if let recordFilter {
                 recordFilter.title(locale: locale).foregroundStyle(AppColors.secondaryText)
+                if let day = recordFilter.day, day <= calendar.startOfDay(for: referenceDate), let onAddForDay {
+                    calendarEntryButton(for: day, onAdd: onAddForDay)
+                }
                 Button {
                     self.recordFilter = nil
                     if recordFilter.day != nil { calendarJumpID = UUID() }
@@ -547,6 +553,27 @@ struct MomentReviewView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+    }
+
+    private func calendarEntryButton(for day: Date, onAdd: @escaping (Date) -> Void) -> some View {
+        let outline = RoundedRectangle(cornerRadius: AppRadius.control)
+        return Button { onAdd(day) } label: {
+            Label {
+                Text("Add for this day")
+                    .fixedSize(horizontal: false, vertical: true)
+            } icon: {
+                Image(systemName: "plus")
+            }
+            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+            .foregroundStyle(AppColors.journalAccent)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+            .background(AppColors.journalSelection, in: outline)
+            .contentShape(outline)
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("review.calendar.addMoment")
     }
 
     private func record(_ moment: Moment, includesDate: Bool) -> some View {

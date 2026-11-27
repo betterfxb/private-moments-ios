@@ -9,3 +9,5 @@
 | 40 · 完整流程精修 | 连贯走通月历补记、录入标签、按标签回顾与返回，复核页面层级、空状态与键盘操作 | 38、39 批均完成 | 原生测试覆盖紧凑 iPhone 的中英文、标准与最大辅助字号，iPad 窗口键盘，以及 iOS 17.5 兼容流程。按实际截图复核跳转位置、录入时保存入口和长标签换行。 |
 
 真实中文输入法、VoiceOver、iPad 外接键盘和安装签名，连同备份、计时及私密备注搜索的产品决定，见 [真机验收与恢复方案](DEVICE-AND-RECOVERY-DECISIONS.md)。
+
+先对照既有空日实拍。标准字号还有位置显示当前日期与补记动作，最大辅助字号下通用「记录」标题、日期和回月历链接已占去大部分屏幕。新入口沿用暖纸面和日记筛选的强调色，允许换行。第 40 批验收时检查具体日期和主动作之间的距离，以及回月历操作的权重。参照 [标准字号](evidence/batch-36/45998876261/compact-light-review-calendar/Month-calendar-empty-day-zh-Hans.png) 与 [最大辅助字号](evidence/batch-36/46000820677/compact-dark-accessibility-review-calendar/Month-calendar-empty-day-zh-Hans.png)。
