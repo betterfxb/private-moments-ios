@@ -124,9 +124,11 @@ struct TodayView: View {
                     .accessibilityIdentifier("today.quickRecord")
 
                     Button { onAddRecord(min(selectedDate ?? .now, .now)) } label: {
-                        Text("Add past moment").fixedSize(horizontal: false, vertical: true)
+                        Text(dynamicTypeSize.isAccessibilitySize ? LocalizedStringKey("Add past") : LocalizedStringKey("Add past moment"))
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     .buttonStyle(TodayCoverActionStyle(isPrimary: false))
+                    .accessibilityLabel("Add past moment")
                     .accessibilityIdentifier("today.addRecord")
                     .accessibilityHint("Adds a record without starting the timer")
                 }
@@ -441,6 +443,7 @@ struct TodayView: View {
 
 private struct TodayCoverActionStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let isPrimary: Bool
 
     func makeBody(configuration: Configuration) -> some View {
@@ -448,7 +451,7 @@ private struct TodayCoverActionStyle: ButtonStyle {
             .font(.system(isPrimary ? .headline : .subheadline, design: .rounded).weight(.semibold))
             .foregroundStyle(isPrimary ? AppColors.homeCoverActionText : AppColors.homeCoverText)
             .padding(.horizontal, 16)
-            .padding(.vertical, 10)
+            .padding(.vertical, !isPrimary && dynamicTypeSize.isAccessibilitySize ? 4 : 10)
             .frame(maxWidth: .infinity, minHeight: isPrimary ? 50 : 44)
             .background(isPrimary ? AppColors.homeCoverAction : .clear, in: Capsule())
             .contentShape(Rectangle())

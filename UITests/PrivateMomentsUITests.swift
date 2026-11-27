@@ -1087,7 +1087,9 @@ final class PrivateMomentsUITests: XCTestCase {
                     "The brand must not collapse into an icon-sized toolbar item.")
             }
             XCTAssertEqual(app.buttons.matching(identifier: "moment.row").count, 0, "Each locale must use an isolated empty store.")
-            for action in [start, app.buttons["today.addRecord"]] {
+            let quick = app.buttons["today.quickRecord"]
+            let add = app.buttons["today.addRecord"]
+            for action in [start, quick, add] {
                 XCTAssertGreaterThanOrEqual(action.frame.minX, app.windows.firstMatch.frame.minX, "Home action is clipped on the left.")
                 XCTAssertLessThanOrEqual(action.frame.maxX, app.windows.firstMatch.frame.maxX, "Home action is clipped on the right.")
                 XCTAssertGreaterThanOrEqual(action.frame.height, 44, "Home action needs an accessible target height.")
@@ -1098,9 +1100,11 @@ final class PrivateMomentsUITests: XCTestCase {
             let weekMenu = app.buttons["today.weekMenu"]
             let usesAccessibilityLayout = weekMenu.exists
             if usesAccessibilityLayout {
-                let add = app.buttons["today.addRecord"]
-                XCTAssertTrue(add.isHittable)
-                assertAboveBottomTabBar(add, message: "The full add-past action must fit on the first screen.", app: app)
+                XCTAssertEqual(add.label, language == "en" ? "Add past moment" : "补记")
+                for action in [start, quick, add] {
+                    XCTAssertTrue(action.isHittable)
+                    assertAboveBottomTabBar(action, message: "Each full Home action must fit on the first screen.", app: app)
+                }
             }
             capture("Today-\(language)", app)
             if weekMenu.exists {
@@ -1438,6 +1442,7 @@ final class PrivateMomentsUITests: XCTestCase {
         guard enableIPadWindowedApps(scrollSidebar: true) else { return }
         let app = makeApp()
         app.launch()
+        prepareRotationReference(language: "en", app: app)
         rotateInterface(.landscapeLeft, stage: "journal-home", language: "en", app: app)
 
         let window = app.windows.firstMatch
