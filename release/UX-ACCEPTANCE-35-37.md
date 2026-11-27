@@ -41,3 +41,13 @@
 源码 `113e204` 已通过英文首页三个操作的首屏几何断言，并通过独立的双语搜索布局用例。图库随后在滚动打开「本周」时未获得可点的日期行。图库验收改为先让本周入口的完整触控区域露出并稳定，再点按一次，滚动检查原生菜单内的日期。首页首屏几何断言继续执行。[首屏通过后图库失败作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46007718654)
 
 iOS 17 首轮成功安装并启动实际 17.5 模拟器，无签名 Release 最低版本与测试钩子排除均通过。六项单测和三个原生用例已通过，第四个用例执行中达到原有 45 分钟作业上限。将兼容作业上限调整为 65 分钟，保留全部用例和断言复验。[首轮旧系统日志](evidence/batch-37/46004504541/ios17/xctest-extract.txt) · [首轮旧系统作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46004504541)
+
+iPad 最大字号复验在 `113e204` 通过。窗口实际横屏为 1376 × 1032 点，竖屏在键盘打开时从 630 点拖到 513 点。标签、搜索词与月历日期正确保留，在详情扩大到 768 点后可返回同一天。原图可见新月历将本月有记录的日期摆在列表首位。[iPad 复验](https://github.com/betterfxb/private-moments-ios/actions/runs/46007721972) · [窄窗口日期原图](evidence/batch-37/46007721972/ipad-dark-accessibility/Pad-journal-07-narrow-calendar.png) · [窗口尺寸日志](evidence/batch-37/46007721972/ipad-dark-accessibility/window-geometry.txt)
+
+`113e204` 常规字号综合测试通过 16 项单测和 5 个原生用例，覆盖搜索中的多标签调整、月历选日和删除、月度精选、补标签和再记一次。[常规回归](https://github.com/betterfxb/private-moments-ios/actions/runs/46009337573) · [XCTest 记录](evidence/batch-37/46009337573/compact-light-journal-features/xctest-extract.txt)
+
+`b4cce9e` 的最大字号图库和独立双语搜索用例均通过。小屏的三个首页入口在常用导航之上完整可点，原生本周菜单可以打开并选择当前日期。键盘提交、搜索空态、详情及设置均通过相应回归。[英文最大字号首页](evidence/batch-37/46010742275/compact-dark-accessibility/Today-en.png) · [中文最大字号首页](evidence/batch-37/46010742275/compact-dark-accessibility/Today-zh-Hans.png) · [原生本周菜单](evidence/batch-37/46010742275/compact-dark-accessibility/Week-menu-en.png) · [图库回归](https://github.com/betterfxb/private-moments-ios/actions/runs/46010742275)
+
+`9dfa77d` 在实际 iOS 17.5 的 iPhone 15 模拟器通过 6 项单测和 5 个原生用例。包括搜索中修改日期与标签并保留查询、搜索编辑和删除、完整补记、回顾和数据迁移。无签名 Release 继续以 iOS 17.0 为最低版本并排除 Debug 测试钩子。对照 `113e204`、`b4cce9e` 与 `9dfa77d` 的 `Sources`、`Resources` 及 Xcode 工程，三者应用文件一致。不同提交记录了测试和工作流修订。[iOS 17.5 云端结果](https://github.com/betterfxb/private-moments-ios/actions/runs/46011844538) · [XCTest 记录](evidence/batch-37/46011844538/ios17/xctest-extract.txt) · [实际运行时和 Release 检查](evidence/batch-37/46011844538/ios17/runtime.txt)
+
+Windows 工具测试通过 58 项，两条验收脚本通过 `bash -n`。本地化审计通过 306 键，Xcode 工程审计通过 113 个对象，发行材料审计通过并保留已知账号及发布者占位提示。复核了本轮实际代码、CI、截图与证据链接。真机旁白、外接键盘、真实中文输入和签名安装依赖设备或发布配置，按现有清单记录。[待确认事项](DEVICE-AND-RECOVERY-DECISIONS.md)

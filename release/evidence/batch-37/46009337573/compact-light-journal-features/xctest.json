@@ -1,0 +1,138 @@
+{
+  "run": 46009337573,
+  "job": 140540771082,
+  "profile": "compact-light-journal-features",
+  "source": "113e20438d3b2ce4898b2dc56b13fb5673457e9c",
+  "testSucceeded": true,
+  "buildSuccesses": 0,
+  "ios17Runtime": false,
+  "releaseTestHooksExcluded": false,
+  "cases": [
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testComparisonUsesAdjacentLocalPeriodsAndKeepsTiedFeelings",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testDaylightSavingDaysUseCalendarBoundaries",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMidnightBelongsOnlyToTheFollowingDay",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMonthCalendarKeepsEmptyDaysAndWeekAlignmentAcrossDaylightSaving",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMonthFavoritesAndCommonFeelingsLinkToTheSelectedMonthsRecords",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMonthReviewGroupsLocalDaysAndKeepsPeriodCountsWhenFiltered",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testReviewNavigationMovesBetweenCalendarPeriodStarts",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testTimelineFilterReadsImportedTagsAndRecomputesAfterAnEdit",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testTimelineRangeAppliesEveryConditionAndIncludesTheEndDay",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testWeekReviewShowsEmptyAndSingleRecord",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testWeekReviewUsesLocalMidnightAcrossDaylightSaving",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testWeekReviewUsesLocalYearBoundaryAndCountsOnlyIncludedMoods",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testCustomTagKeepsSavedSpellingAndDoesNotDuplicateExistingSelection",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testTagLimitsAndExistingSelectionsRemainValid",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testTimelineMatchesAnyOrAllTagsWithoutChangingOtherConditions",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testTimelineTagFilterIncludesLegacySpellingVariants",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testMonthCalendarOpensTheDayAndUpdatesAfterDeletion",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testMonthHighlightsOpenFavoritesAndMatchingFeelings",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testQuickRecordCanBeCompletedLaterAndReusesCustomTags",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testRecordAgainCopiesOnlyTypeAndTags",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testTimelineDateAndTagFiltersCombineAndSurviveNavigation",
+      "result": "passed"
+    }
+  ]
+}
