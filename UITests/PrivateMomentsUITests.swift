@@ -1108,8 +1108,16 @@ final class PrivateMomentsUITests: XCTestCase {
             }
             capture("Today-\(language)", app)
             if weekMenu.exists {
-                tap(weekMenu, in: app)
-                let currentDay = app.buttons["today.week.current"]
+                revealFully(from: weekMenu, through: weekMenu, in: app)
+                waitForStableFrame(weekMenu, requireHittable: true, message: "The complete week menu trigger must settle before one tap.")
+                assertAboveBottomTabBar(weekMenu, message: "The week menu must be above the bottom tab bar.", app: app)
+                weekMenu.tap()
+                let currentDay = app.descendants(matching: .any).matching(identifier: "today.week.current").firstMatch
+                guard currentDay.waitForExistence(timeout: 8) else {
+                    captureFailure("Week-menu-current-unavailable-\(language)", app)
+                    return XCTFail("One tap must open the week menu and expose its current-day action.")
+                }
+                if !currentDay.isHittable { reveal(currentDay, in: app) }
                 waitForStableFrame(currentDay, requireHittable: true, message: "Today's native week menu action must settle.")
                 capture("Week-menu-\(language)", app, stableSurface: currentDay)
                 currentDay.tap()
