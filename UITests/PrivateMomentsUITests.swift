@@ -967,6 +967,38 @@ final class PrivateMomentsUITests: XCTestCase {
                 XCTAssertTrue(dayTwo.isSelected, "Reopening from a selected empty date must show its selection.")
                 tap(dayTwo, in: app)
             }
+            let add = app.buttons["review.calendar.addMoment"]
+            guard add.waitForExistence(timeout: 5) else {
+                captureFailure("Month-calendar-add-missing-\(language)", app)
+                return XCTFail("An empty historical calendar day must offer a way to add a moment.")
+            }
+            XCTAssertEqual(add.label, english ? "Add for this day" : "补记这一天")
+            revealFully(from: add, through: add, in: app)
+            assertToolbarTarget(add)
+            capture("Month-calendar-add-empty-\(language)", app, stableSurface: add)
+            tap(add, in: app)
+            let save = app.buttons["recap.saveToolbar"]
+            XCTAssertTrue(save.waitForExistence(timeout: 8))
+            capture("Month-calendar-add-form-\(language)", app, stableSurface: save)
+            tap(app.buttons["recap.cancel"], in: app)
+            XCTAssertTrue(empty.waitForExistence(timeout: 8))
+            XCTAssertEqual(records.count, 0, "Cancel must leave the selected day empty.")
+            XCTAssertEqual(range.label, previousMonth)
+
+            tap(add, in: app)
+            tap(app.buttons["recap.mood.Happy"], in: app)
+            tap(save, in: app)
+            XCTAssertTrue(add.waitForExistence(timeout: 8))
+            XCTAssertEqual(range.label, previousMonth)
+            XCTAssertFalse(empty.exists)
+            XCTAssertEqual(records.count, 1, "Save must return to the day that received the moment.")
+            capture("Month-calendar-added-day-\(language)", app, stableSurface: add)
+            tap(clear, in: app)
+            if usesDayList { tap(chooseDay, in: app) }
+            reveal(dayTwo, in: app)
+            XCTAssertEqual(dayTwo.value as? String, english ? "1 moment" : "1 条记录")
+            XCTAssertEqual(dayOne.value as? String, english ? "1 moment" : "1 条记录")
+            tap(dayTwo, in: app)
             tap(clear, in: app)
             tap(app.buttons["review.previous"], in: app)
             XCTAssertNotEqual(range.label, previousMonth)
