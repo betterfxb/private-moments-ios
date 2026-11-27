@@ -339,6 +339,37 @@ final class PrivateMomentsUITests: XCTestCase {
             search.typeText("Happy")
             guard submitTimelineSearch(language: language, app: app) else { return }
             XCTAssertEqual(count.label, english ? "1 moment" : "1 条记录")
+            let resultFilters = app.buttons["timeline.search.dateAndTag"]
+            guard resultFilters.waitForExistence(timeout: 5) else {
+                captureFailure("Tag-filter-search-entry-missing-\(language)", app)
+                return XCTFail("Submitted search must offer date and tag controls without clearing the query.")
+            }
+            reveal(resultFilters, in: app)
+            assertToolbarTarget(resultFilters)
+            capture("Tag-filter-search-entry-\(language)", app, stableSurface: resultFilters)
+            tap(resultFilters, in: app)
+            tap(tags, in: app)
+            tap(relaxed, in: app)
+            tap(tagsDone, in: app)
+            tap(apply, in: app)
+            XCTAssertEqual(count.label, english ? "0 moments" : "0 条记录")
+            XCTAssertEqual(revealTimelineSearch(in: app).value as? String, "Happy")
+
+            tap(resultFilters, in: app)
+            tap(tags, in: app)
+            tap(relaxed, in: app)
+            tap(tagsDone, in: app)
+            tap(app.buttons["timeline.dateAndTag.cancel"], in: app)
+            XCTAssertEqual(count.label, english ? "0 moments" : "0 条记录")
+            XCTAssertEqual(revealTimelineSearch(in: app).value as? String, "Happy")
+            capture("Tag-filter-search-conflict-\(language)", app, stableSurface: resultFilters)
+
+            tap(resultFilters, in: app)
+            tap(tags, in: app)
+            tap(relaxed, in: app)
+            tap(tagsDone, in: app)
+            tap(apply, in: app)
+            XCTAssertEqual(count.label, english ? "1 moment" : "1 条记录")
             tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
             XCTAssertEqual(app.staticTexts["detail.note"].label, "Synthetic note for timeline filtering.")
             goBack(app)
