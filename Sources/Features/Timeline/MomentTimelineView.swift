@@ -190,18 +190,7 @@ struct MomentTimelineView: View {
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button { showingDateAndTag = true } label: {
-                    Label("Dates and tags", systemImage: dateAndTag.isActive
-                          ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
-                        .labelStyle(.iconOnly)
-                        .frame(minWidth: 44, minHeight: 44)
-                        .contentShape(Rectangle())
-                }
-                .tint(AppColors.journalAccent)
-                .accessibilityValue(Text(verbatim: dateAndTag.summary))
-                .accessibilityAddTraits(dateAndTag.isActive ? .isSelected : [])
-                .accessibilityIdentifier("timeline.dateAndTag")
-                .disabled(!store.isStorageAvailable)
+                dateAndTagButton(inSearchResults: false)
             }
         }
         .sheet(isPresented: $showingDateAndTag) {
@@ -239,11 +228,11 @@ struct MomentTimelineView: View {
                 HStack(spacing: 12) {
                     countLabel.fixedSize()
                     Spacer(minLength: 0)
-                    clearButton.fixedSize()
+                    resultActions.fixedSize()
                 }
                 VStack(alignment: .leading, spacing: 2) {
                     countLabel
-                    clearButton
+                    resultActions
                 }
             }
         } else {
@@ -251,13 +240,51 @@ struct MomentTimelineView: View {
         }
     }
 
+    private var resultActions: some View {
+        HStack(spacing: 6) {
+            if isSearchPresented && !query.isEmpty {
+                dateAndTagButton(inSearchResults: true)
+                    .buttonStyle(.borderless)
+            }
+            clearButton
+        }
+    }
+
+    private func dateAndTagButton(inSearchResults: Bool) -> some View {
+        Button {
+            if isSearchPresented { dismissSearchKeyboard() }
+            showingDateAndTag = true
+        } label: {
+            let label = Label("Dates and tags", systemImage: dateAndTag.isActive
+                              ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+            Group {
+                if inSearchResults && !dynamicTypeSize.isAccessibilitySize {
+                    label.font(.system(.footnote, design: .rounded).weight(.semibold))
+                } else {
+                    label.labelStyle(.iconOnly)
+                }
+            }
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(Rectangle())
+        }
+        .tint(AppColors.journalAccent)
+        .accessibilityValue(Text(verbatim: dateAndTag.summary))
+        .accessibilityAddTraits(dateAndTag.isActive ? .isSelected : [])
+        .accessibilityIdentifier(inSearchResults ? "timeline.search.dateAndTag" : "timeline.dateAndTag")
+        .disabled(!store.isStorageAvailable)
+    }
+
+    private func dismissSearchKeyboard() {
+        isSearchFocused = false
+        if #unavailable(iOS 18.0) {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                to: nil, from: nil, for: nil)
+        }
+    }
+
     private var clearButton: some View {
         Button {
-            isSearchFocused = false
-            if #unavailable(iOS 18.0) {
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
-                    to: nil, from: nil, for: nil)
-            }
+            dismissSearchKeyboard()
             #if DEBUG
             searchTiming?.reset()
             #endif
