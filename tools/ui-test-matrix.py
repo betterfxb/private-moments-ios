@@ -44,7 +44,7 @@ def matrix(scope: str, smoke_profile: str = "compact-light", acceptance_suite: s
         raise ValueError("Unknown diagnostic profile: " + smoke_profile)
     if scope != "full":
         return {"include": selected}
-    if acceptance_suite == "timeline-tags" and selected[0]["family"] == "compact":
+    if acceptance_suite in {"timeline-tags", "review-calendar"} and selected[0]["family"] == "compact":
         return {"include": [dict(selected[0], suite=acceptance_suite,
                                  test_timeout_minutes=30, timeout_minutes=55)]}
 

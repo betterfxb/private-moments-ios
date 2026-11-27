@@ -19,3 +19,9 @@
 候选复用日期和标签面板。普通字号用文字和图标，辅助字号保留 44 点图标按钮及完整辅助名称。打开面板时只收起键盘，应用和取消沿用原有草稿语义。
 
 首轮 `300a191` 两配置各通过 16 项单测和 1 个双语原生用例。浅色能看见完整的入口名称，零结果仍可修改条件。最大字号的系统图标放大到与清除文字接近，容易被读成清除按钮的一部分。复验把图标限制为 20 点并给它独立的触控背景，保留 44 点点击面积。[基线断言](evidence/batch-35/45981730621/compact-light-timeline-tags/xctest-extract.txt) · [首次最大字号回拍](evidence/batch-35/45984227605/compact-dark-accessibility-timeline-tags/Tag-filter-search-entry-en.png)
+
+最大字号终稿 `13846be` 通过 16 项单测及同一双语原生用例。计数与两个独立动作能同时显示。零结果时仍可回到筛选，恢复同一条记录并保持搜索词。小屏最大字号的系统搜索输入会截省显示，原值由测试读取核对。[常规字号原图](evidence/batch-35/45984227607/compact-light-timeline-tags/Tag-filter-search-entry-zh-Hans.png) · [常规字号云端结果](https://github.com/betterfxb/private-moments-ios/actions/runs/45984227607) · [最大字号原图](evidence/batch-35/45993857517/compact-dark-accessibility-timeline-tags/Tag-filter-search-conflict-zh-Hans.png) · [最大字号终稿运行](https://github.com/betterfxb/private-moments-ios/actions/runs/45993857517)
+
+## 第 36 批 大字号月历选日
+
+使用同一月历夹具检查有记录、空白日期和整月无记录三种状态。大字号打开选日时先看到有记录的日子；需要查看空白日时用固定在列表上方的切换动作。若从已选中的空白日期重新打开，直接显示全部日期与当前选择。普通字号继续使用已有月历网格。定向验收复用现有 CI，按需重复月历用例和日期单测。

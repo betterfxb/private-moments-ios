@@ -68,6 +68,15 @@ class UITestMatrixTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             matrix("full", "ipad-light", "timeline-tags")
 
+    def test_review_calendar_can_be_repeated_without_expanding_the_default_matrix(self):
+        self.assertFalse(any(job["suite"] == "review-calendar" for job in matrix("full")["include"]))
+        for profile in ["compact-light", "compact-dark-accessibility"]:
+            with self.subTest(profile=profile):
+                job, = matrix("full", profile, "review-calendar")["include"]
+                self.assertEqual((job["profile"], job["suite"]), (profile, "review-calendar"))
+        with self.assertRaises(ValueError):
+            matrix("full", "ipad-light", "review-calendar")
+
     def test_unknown_scope_or_profile_fails_closed(self):
         for scope, profile in [("unknown", "compact-light"), ("input", "unknown"), ("full", "unknown")]:
             with self.subTest(scope=scope, profile=profile), self.assertRaises(ValueError):

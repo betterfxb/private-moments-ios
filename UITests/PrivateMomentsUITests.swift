@@ -896,7 +896,18 @@ final class PrivateMomentsUITests: XCTestCase {
             let chooseDay = app.buttons["review.calendar.chooseDay"]
             let dayOne = app.buttons["review.calendar.day.1"]
             let dayTwo = app.buttons["review.calendar.day.2"]
-            if chooseDay.exists { tap(chooseDay, in: app) }
+            let toggleDays = app.buttons["review.calendar.toggleDays"]
+            let usesDayList = chooseDay.exists
+            if usesDayList {
+                tap(chooseDay, in: app)
+                guard toggleDays.waitForExistence(timeout: 5) else {
+                    captureFailure("Month-calendar-recorded-days-missing-\(language)", app)
+                    return XCTFail("The accessible calendar must offer a recorded-days list with access to all dates.")
+                }
+                XCTAssertEqual(toggleDays.label, english ? "Show all days" : "显示全部日期")
+                XCTAssertFalse(dayTwo.exists, "An empty date must not occupy space in the recorded-days list.")
+                assertToolbarTarget(toggleDays)
+            }
             reveal(dayOne, in: app)
             XCTAssertEqual(dayOne.value as? String, english ? "2 moments" : "2 条记录")
             assertToolbarTarget(dayOne)
@@ -920,7 +931,17 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertTrue(clear.waitForExistence(timeout: 8))
             XCTAssertEqual(records.count, 1)
             tap(clear, in: app)
-            if chooseDay.exists { tap(chooseDay, in: app) }
+            if usesDayList {
+                tap(chooseDay, in: app)
+                XCTAssertFalse(dayTwo.exists)
+                tap(toggleDays, in: app)
+                XCTAssertEqual(toggleDays.label, english ? "Show recorded days" : "只看有记录的日期")
+                reveal(dayTwo, in: app)
+                capture("Month-calendar-all-dates-\(language)", app, stableSurface: dayTwo)
+                tap(toggleDays, in: app)
+                XCTAssertFalse(dayTwo.exists)
+                tap(toggleDays, in: app)
+            }
             XCTAssertEqual(dayOne.value as? String, english ? "1 moment" : "1 条记录")
             tap(dayTwo, in: app)
             let empty = app.staticTexts["review.calendar.emptyDay"]
@@ -928,10 +949,28 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(empty.label, english ? "No moments on this day" : "这一天还没有记录")
             XCTAssertEqual(records.count, 0)
             capture("Month-calendar-empty-day-\(language)", app, stableSurface: empty)
+            if usesDayList {
+                tap(chooseDay, in: app)
+                reveal(dayTwo, in: app)
+                XCTAssertTrue(dayTwo.isSelected, "Reopening from a selected empty date must show its selection.")
+                tap(dayTwo, in: app)
+            }
             tap(clear, in: app)
             tap(app.buttons["review.previous"], in: app)
             XCTAssertNotEqual(range.label, previousMonth)
             XCTAssertTrue(app.staticTexts["weekReview.empty"].exists)
+            if usesDayList {
+                tap(chooseDay, in: app)
+                let noRecordedDays = app.staticTexts["review.calendar.noRecordedDays"]
+                XCTAssertTrue(noRecordedDays.waitForExistence(timeout: 5))
+                XCTAssertFalse(dayOne.exists)
+                capture("Month-calendar-no-recorded-dates-\(language)", app, stableSurface: noRecordedDays)
+                tap(toggleDays, in: app)
+                reveal(dayOne, in: app)
+                XCTAssertEqual(dayOne.value as? String, english ? "0 moments" : "0 条记录")
+                tap(dayOne, in: app)
+                XCTAssertTrue(empty.waitForExistence(timeout: 8))
+            }
             app.terminate()
         }
     }
