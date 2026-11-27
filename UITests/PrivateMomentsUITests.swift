@@ -1000,8 +1000,9 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(dayOne.value as? String, english ? "1 moment" : "1 条记录")
             tap(dayTwo, in: app)
             tap(add, in: app)
-            let unfinishedMood = app.buttons["recap.mood.Calm"]
-            tap(app.buttons["recap.mood.Happy"], in: app)
+            let draftMood = app.buttons["recap.mood.Happy"]
+            tap(draftMood, in: app)
+            XCTAssertTrue(draftMood.isSelected)
             app.terminate()
             app.launch()
 
@@ -1040,8 +1041,8 @@ final class PrivateMomentsUITests: XCTestCase {
             selectTab("Today", "今天", language: language, app: app)
             tap(app.buttons["today.resumeDraft"], in: app)
             XCTAssertTrue(save.waitForExistence(timeout: 8))
-            XCTAssertFalse(unfinishedMood.isSelected)
-            XCTAssertTrue(app.buttons["recap.mood.Happy"].isSelected, "The existing calendar draft must keep its changes.")
+            reveal(draftMood, in: app)
+            XCTAssertTrue(draftMood.isSelected, "The existing calendar draft must keep its changes.")
             app.terminate()
         }
     }
