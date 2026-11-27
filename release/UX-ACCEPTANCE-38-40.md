@@ -18,4 +18,6 @@
 
 补记支持今天和过去的日期，与完整记录表单的日期范围一致。保存或取消返回原先选中的日期。表单允许用户改日期和时间，日历按最终保存日期计数。新记录入口沿用草稿冲突提示。应用重启后仍从「今天」恢复保存在设备上的草稿。
 
-首轮最大辅助字号能取消空表单、保存并在原日看到新增记录。英文草稿提示的辅助树显示「取消」位于屏幕高度之外，实拍同时显示正文和按钮占去多屏。缩短标题下的操作标签，删除与三个操作重复的正文。在同一用例中要求「取消」按钮完整可见且点击一次后关闭提示，原草稿仍可恢复。[首轮最大字号](https://github.com/betterfxb/private-moments-ios/actions/runs/46080062351)
+首轮常规字号通过 12 项日期单测及 1 个双语原生用例，归档空日动作、带入日期的表单及保存返回三组画面。[常规字号运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46080057135) · [补记表单原图](evidence/batch-38/46080057135/compact-light-review-calendar/Month-calendar-add-form-zh-Hans.png)
+
+首轮最大辅助字号能取消空表单、保存并在原日看到新增记录。英文草稿提示的辅助树显示「取消」位于屏幕高度之外，实拍同时显示正文和按钮占去多屏。缩短标题下的操作标签，删除与三个操作重复的正文。在同一用例中要求「取消」按钮完整可见且点击一次后关闭提示，原草稿仍可恢复。[首轮最大字号](https://github.com/betterfxb/private-moments-ios/actions/runs/46080062351) · [提示实拍](evidence/batch-38/46080062351/compact-dark-accessibility-review-calendar/Control-unreachable.png)
