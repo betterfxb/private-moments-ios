@@ -331,7 +331,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.legacy_ios17 }}
     name: iOS 17 compatibility
     runs-on: ${{ inputs.use_intel_runner && 'macos-15-intel' || 'macos-15' }}
-    timeout-minutes: 45
+    timeout-minutes: 65
     steps:
       - name: Reject conflicting scopes
         if: ${{ inputs.backup_smoke || inputs.input_smoke || inputs.performance_smoke || inputs.week_review_smoke || inputs.rotation_smoke || inputs.reading_smoke || inputs.journal_features_smoke || (inputs.acceptance_suite || 'all') != 'all' }}

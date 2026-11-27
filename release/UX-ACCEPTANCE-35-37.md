@@ -39,3 +39,5 @@
 扩大回归后，源码 `48acf7d` 的英文小屏最大字号首页发现补记按钮延伸到 651 点，底部标签栏开始遮挡的位置为 584 点。改用单行可见文案 `Add past`，保留完整的辅助功能名称并压缩次操作的上下内边距。验收增加三个首页入口均完整可见的检查。同一轮 iPad XCTest 请求横屏后系统方向值已改变，应用窗口仍为 1032 × 1376 点，未开始窗口业务流程。复验复用已有的系统设置横竖屏参照，再按应用真实宽度和实际拖动验收。[首页回归日志](evidence/batch-37/46004493153/compact-dark-accessibility/xctest-extract.txt) · [iPad 首轮失败](https://github.com/betterfxb/private-moments-ios/actions/runs/46004498147)
 
 源码 `113e204` 已通过英文首页三个操作的首屏几何断言，并通过独立的双语搜索布局用例。图库随后在滚动打开「本周」时未获得可点的日期行。图库验收改为先让本周入口的完整触控区域露出并稳定，再点按一次，滚动检查原生菜单内的日期。首页首屏几何断言继续执行。[首屏通过后图库失败作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46007718654)
+
+iOS 17 首轮成功安装并启动实际 17.5 模拟器，无签名 Release 最低版本与测试钩子排除均通过。六项单测和三个原生用例已通过，第四个用例执行中达到原有 45 分钟作业上限。将兼容作业上限调整为 65 分钟，保留全部用例和断言复验。[首轮旧系统日志](evidence/batch-37/46004504541/ios17/xctest-extract.txt) · [首轮旧系统作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46004504541)
