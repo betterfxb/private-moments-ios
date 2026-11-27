@@ -645,24 +645,7 @@ private struct ReviewMonthCalendar: View {
     private var dayList: some View {
         let days = showingAllDays ? month.days : month.days.filter { $0.count > 0 }
         return NavigationStack {
-            ScrollView {
-                LazyVStack(spacing: 4) {
-                    if days.isEmpty {
-                        Text("No moments in this period")
-                            .font(.subheadline)
-                            .foregroundStyle(AppColors.secondaryText)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .accessibilityIdentifier("review.calendar.noRecordedDays")
-                    }
-                    ForEach(days) { day in dayButton(day, inList: true) }
-                }
-                .padding(AppSpacing.page)
-                .frame(maxWidth: 680)
-                .frame(maxWidth: .infinity)
-            }
-            .id(showingAllDays)
-            .background(AppColors.homePaper.ignoresSafeArea())
-            .safeAreaInset(edge: .top, spacing: 0) {
+            VStack(spacing: 0) {
                 Button { showingAllDays.toggle() } label: {
                     Text(showingAllDays ? LocalizedStringKey("Show recorded days") : LocalizedStringKey("Show all days"))
                         .font(.system(.caption, design: .rounded).weight(.semibold))
@@ -674,9 +657,26 @@ private struct ReviewMonthCalendar: View {
                 .foregroundStyle(AppColors.journalAccent)
                 .padding(.horizontal, AppSpacing.page)
                 .frame(maxWidth: .infinity)
-                .background(AppColors.homePaper)
                 .accessibilityIdentifier("review.calendar.toggleDays")
+
+                ScrollView {
+                    LazyVStack(spacing: 4) {
+                        if days.isEmpty {
+                            Text("No moments in this period")
+                                .font(.subheadline)
+                                .foregroundStyle(AppColors.secondaryText)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .accessibilityIdentifier("review.calendar.noRecordedDays")
+                        }
+                        ForEach(days) { day in dayButton(day, inList: true) }
+                    }
+                    .padding(AppSpacing.page)
+                    .frame(maxWidth: 680)
+                    .frame(maxWidth: .infinity)
+                }
+                .id(showingAllDays)
             }
+            .background(AppColors.homePaper.ignoresSafeArea())
             .navigationTitle("Choose a day")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

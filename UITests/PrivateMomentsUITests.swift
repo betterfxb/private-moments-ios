@@ -897,6 +897,19 @@ final class PrivateMomentsUITests: XCTestCase {
             let dayOne = app.buttons["review.calendar.day.1"]
             let dayTwo = app.buttons["review.calendar.day.2"]
             let toggleDays = app.buttons["review.calendar.toggleDays"]
+            func switchDays(showingAll: Bool) {
+                let expected = showingAll
+                    ? (english ? "Show recorded days" : "只看有记录的日期")
+                    : (english ? "Show all days" : "显示全部日期")
+                tap(toggleDays, in: app)
+                let switched = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                    toggleDays.exists && toggleDays.label == expected
+                }, object: nil)
+                if XCTWaiter.wait(for: [switched], timeout: 5) != .completed {
+                    captureFailure("Month-calendar-toggle-did-not-change-\(language)", app)
+                    XCTFail("One tap must switch the date list and reveal the other action.")
+                }
+            }
             let usesDayList = chooseDay.exists
             if usesDayList {
                 tap(chooseDay, in: app)
@@ -934,13 +947,12 @@ final class PrivateMomentsUITests: XCTestCase {
             if usesDayList {
                 tap(chooseDay, in: app)
                 XCTAssertFalse(dayTwo.exists)
-                tap(toggleDays, in: app)
-                XCTAssertEqual(toggleDays.label, english ? "Show recorded days" : "只看有记录的日期")
+                switchDays(showingAll: true)
                 reveal(dayTwo, in: app)
                 capture("Month-calendar-all-dates-\(language)", app, stableSurface: dayTwo)
-                tap(toggleDays, in: app)
+                switchDays(showingAll: false)
                 XCTAssertFalse(dayTwo.exists)
-                tap(toggleDays, in: app)
+                switchDays(showingAll: true)
             }
             XCTAssertEqual(dayOne.value as? String, english ? "1 moment" : "1 条记录")
             tap(dayTwo, in: app)
@@ -965,7 +977,7 @@ final class PrivateMomentsUITests: XCTestCase {
                 XCTAssertTrue(noRecordedDays.waitForExistence(timeout: 5))
                 XCTAssertFalse(dayOne.exists)
                 capture("Month-calendar-no-recorded-dates-\(language)", app, stableSurface: noRecordedDays)
-                tap(toggleDays, in: app)
+                switchDays(showingAll: true)
                 reveal(dayOne, in: app)
                 XCTAssertEqual(dayOne.value as? String, english ? "0 moments" : "0 条记录")
                 tap(dayOne, in: app)
