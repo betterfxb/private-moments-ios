@@ -17,3 +17,5 @@
 先行版本 `7904a03` 在紧凑 iPhone 通过 12 项日期单测。原生用例走过选择日期、删除、检查计数和进入空白日期，随后在「空日必须提供补记入口」断言失败。[运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46078305006) · [原生截图](evidence/batch-38/46078305006/compact-light-review-calendar/Month-calendar-add-missing-en.png) · [日志](evidence/batch-38/46078305006/compact-light-review-calendar/xctest-extract.txt)
 
 补记支持今天和过去的日期，与完整记录表单的日期范围一致。保存或取消返回原先选中的日期。表单允许用户改日期和时间，日历按最终保存日期计数。新记录入口沿用草稿冲突提示。应用重启后仍从「今天」恢复保存在设备上的草稿。
+
+首轮最大辅助字号能取消空表单、保存并在原日看到新增记录。英文草稿提示的辅助树显示「取消」位于屏幕高度之外，实拍同时显示正文和按钮占去多屏。缩短标题下的操作标签，删除与三个操作重复的正文。在同一用例中要求「取消」按钮完整可见且点击一次后关闭提示，原草稿仍可恢复。[首轮最大字号](https://github.com/betterfxb/private-moments-ios/actions/runs/46080062351)

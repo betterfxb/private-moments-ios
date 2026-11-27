@@ -1013,7 +1013,12 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(add, in: app)
             let conflict = app.alerts[english ? "Unfinished draft" : "未完成的草稿"]
             XCTAssertTrue(conflict.waitForExistence(timeout: 8))
-            tap(conflict.buttons[english ? "Cancel" : "取消"], in: app)
+            let cancelConflict = conflict.buttons[english ? "Cancel" : "取消"]
+            waitForStableFrame(cancelConflict, requireHittable: true, message: "Cancel must be visible in the draft alert.")
+            XCTAssertTrue(conflict.frame.contains(cancelConflict.frame), "The alert must show the complete cancel action.")
+            capture("Month-calendar-draft-conflict-\(language)", app, stableSurface: cancelConflict)
+            cancelConflict.tap()
+            XCTAssertTrue(conflict.waitForNonExistence(timeout: 8))
             XCTAssertFalse(save.exists)
             XCTAssertEqual(records.count, 1, "Blocking a new form must preserve the day and saved records.")
             tap(clear, in: app)
@@ -2497,9 +2502,9 @@ final class PrivateMomentsUITests: XCTestCase {
             captureFailure("Draft-start-conflict-unavailable", app)
             return XCTFail("A new timer must acknowledge the preserved draft first.")
         }
-        XCTAssertTrue(unfinishedDraft.buttons["Resume draft"].exists)
+        XCTAssertTrue(unfinishedDraft.buttons["Resume"].exists)
         XCTAssertFalse(app.buttons["session.pauseResume"].exists)
-        unfinishedDraft.buttons["Discard draft"].tap()
+        unfinishedDraft.buttons["Discard"].tap()
         XCTAssertFalse(app.buttons["today.resumeDraft"].exists)
         tap(start, in: app)
         reveal(app.buttons["session.pauseResume"], in: app)

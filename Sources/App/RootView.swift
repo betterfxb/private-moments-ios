@@ -141,11 +141,9 @@ struct RootView: View {
             }
         }
         .alert("Unfinished draft", isPresented: $showingDraftConflict) {
-            if canResumeDraft { Button("Resume draft", action: resumeDraft) }
-            Button("Discard draft", role: .destructive, action: discardDraft)
+            if canResumeDraft { Button("Resume", action: resumeDraft) }
+            Button("Discard", role: .destructive, action: discardDraft)
             Button("Cancel", role: .cancel) { }
-        } message: {
-            Text("Resume or discard the unfinished draft before starting another.")
         }
         .alert("Discard draft?", isPresented: $showingDraftDiscard) {
             Button("Discard draft", role: .destructive, action: discardDraft)
