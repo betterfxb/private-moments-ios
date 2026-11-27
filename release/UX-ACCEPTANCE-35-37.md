@@ -25,3 +25,5 @@
 ## 第 36 批 大字号月历选日
 
 使用同一月历夹具检查有记录、空白日期和整月无记录三种状态。大字号打开选日时先看到有记录的日子；需要查看空白日时用固定在列表上方的切换动作。若从已选中的空白日期重新打开，直接显示全部日期与当前选择。普通字号继续使用已有月历网格。定向验收复用现有 CI，按需重复月历用例和日期单测。
+
+基线 `5d0f442` 的 12 项日期单测通过，大字号原生测试找不到有记录日期与全部日期的切换入口，按预期失败。[基线实拍](evidence/batch-36/45997299126/compact-dark-accessibility-review-calendar/Month-calendar-recorded-days-missing-en.png) · [基线日志](evidence/batch-36/45997299126/compact-dark-accessibility-review-calendar/xctest-extract.txt)
