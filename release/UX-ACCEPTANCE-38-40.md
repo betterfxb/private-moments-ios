@@ -11,3 +11,9 @@
 真实中文输入法、VoiceOver、iPad 外接键盘和安装签名，连同备份、计时及私密备注搜索的产品决定，见 [真机验收与恢复方案](DEVICE-AND-RECOVERY-DECISIONS.md)。
 
 先对照既有空日实拍。标准字号还有位置显示当前日期与补记动作，最大辅助字号下通用「记录」标题、日期和回月历链接已占去大部分屏幕。新入口沿用暖纸面和日记筛选的强调色，允许换行。第 40 批验收时检查具体日期和主动作之间的距离，以及回月历操作的权重。参照 [标准字号](evidence/batch-36/45998876261/compact-light-review-calendar/Month-calendar-empty-day-zh-Hans.png) 与 [最大辅助字号](evidence/batch-36/46000820677/compact-dark-accessibility-review-calendar/Month-calendar-empty-day-zh-Hans.png)。
+
+## 第 38 批 月历补记
+
+先行版本 `7904a03` 在紧凑 iPhone 通过 12 项日期单测。原生用例走过选择日期、删除、检查计数和进入空白日期，随后在「空日必须提供补记入口」断言失败。[运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46078305006) · [原生截图](evidence/batch-38/46078305006/compact-light-review-calendar/Month-calendar-add-missing-en.png) · [日志](evidence/batch-38/46078305006/compact-light-review-calendar/xctest-extract.txt)
+
+补记支持今天和过去的日期，与完整记录表单的日期范围一致。保存或取消返回原先选中的日期。表单允许用户改日期和时间，日历按最终保存日期计数。新记录入口沿用草稿冲突提示。应用重启后仍从「今天」恢复保存在设备上的草稿。
