@@ -258,7 +258,12 @@ struct MomentTimelineView: View {
             let label = Label("Dates and tags", systemImage: dateAndTag.isActive
                               ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
             Group {
-                if inSearchResults && !dynamicTypeSize.isAccessibilitySize {
+                if inSearchResults && dynamicTypeSize.isAccessibilitySize {
+                    label.labelStyle(.iconOnly)
+                        .font(.system(size: 20, weight: .semibold))
+                        .frame(width: 44, height: 44)
+                        .background(AppColors.journalSelection, in: Circle())
+                } else if inSearchResults {
                     label.font(.system(.footnote, design: .rounded).weight(.semibold))
                 } else {
                     label.labelStyle(.iconOnly)

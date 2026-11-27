@@ -17,3 +17,5 @@
 旧版 `24d3abc` 先跑新增原生断言。输入并提交 `Happy` 后能找到目标记录，但搜索结果内没有能保留查询的日期与标签入口，断言按预期失败。[原生基线](https://github.com/betterfxb/private-moments-ios/actions/runs/45981730621)
 
 候选复用日期和标签面板。普通字号用文字和图标，辅助字号保留 44 点图标按钮及完整辅助名称。打开面板时只收起键盘，应用和取消沿用原有草稿语义。
+
+首轮 `300a191` 两配置各通过 16 项单测和 1 个双语原生用例。浅色能看见完整的入口名称，零结果仍可修改条件。最大字号的系统图标放大到与清除文字接近，容易被读成清除按钮的一部分。复验把图标限制为 20 点并给它独立的触控背景，保留 44 点点击面积。[基线断言](evidence/batch-35/45981730621/compact-light-timeline-tags/xctest-extract.txt) · [首次最大字号回拍](evidence/batch-35/45984227605/compact-dark-accessibility-timeline-tags/Tag-filter-search-entry-en.png)
