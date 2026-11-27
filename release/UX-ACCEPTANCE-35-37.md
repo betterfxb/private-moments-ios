@@ -29,3 +29,9 @@
 基线 `5d0f442` 的 12 项日期单测通过，大字号原生测试找不到有记录日期与全部日期的切换入口，按预期失败。[基线实拍](evidence/batch-36/45997299126/compact-dark-accessibility-review-calendar/Month-calendar-recorded-days-missing-en.png) · [基线日志](evidence/batch-36/45997299126/compact-dark-accessibility-review-calendar/xctest-extract.txt)
 
 候选 `d0a5b23` 常规字号通过，大字号能打开有记录日期列表，但首轮复测点切换后仍读到旧操作名称。将切换按钮置于滚动容器上方的独立布局，复验要求只点一次，等待真实标签更新并检查日期行变化。[首轮大字号日志](evidence/batch-36/45998876369/compact-dark-accessibility-review-calendar/xctest-extract.txt)
+
+终稿 `2516601` 的最大字号通过 12 项单测和 1 个双语原生用例。原图同时覆盖有记录日期、全部日期、无记录的当日和无记录的整月。删除一条后日期计数从 2 变为 1，重新打开已选空白日期时正确保留选择；整月无记录时仍可切换到全部日期。常规字号的网格通过同一套日期单测和原生回归。[常规字号作业](https://github.com/betterfxb/private-moments-ios/actions/runs/45998876261) · [最大字号作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46000820677) · [有记录日期](evidence/batch-36/46000820677/compact-dark-accessibility-review-calendar/Month-calendar-zh-Hans.png) · [全部日期](evidence/batch-36/46000820677/compact-dark-accessibility-review-calendar/Month-calendar-all-dates-en.png) · [整月无记录](evidence/batch-36/46000820677/compact-dark-accessibility-review-calendar/Month-calendar-no-recorded-dates-zh-Hans.png)
+
+## 第 37 批 集成回归
+
+在同一源码上执行四个云端范围。iPhone 常规字体验证已有日记功能组合，最大辅助字号复验键盘输入和搜索布局，iPad 用系统窗口拖动验证跨快记到日期选择的状态，iOS 17.5 兼容范围加入同一套搜索与日期标签验收。兼容作业同时检查无签名 Release 和最低部署目标。

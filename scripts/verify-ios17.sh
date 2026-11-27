@@ -105,6 +105,7 @@ xcodebuild "${build_arguments[@]}" -configuration Debug \
     -destination "platform=iOS Simulator,id=$simulator" \
     -resultBundlePath "$result_bundle" -parallel-testing-enabled NO \
     "-only-testing:$test_target/testTimelineSearchReflectsEditAndDeletion" \
+    "-only-testing:$test_target/testTimelineDateAndTagFiltersCombineAndSurviveNavigation" \
     "-only-testing:$test_target/testManualEntryTimingDateFilterAndPersistence" \
     "-only-testing:$test_target/testReviewTabBrowsesPeriodsAndOpensFilteredRecord" \
     "-only-testing:$test_target/testReviewComparisonOpensRecordsFromPreviousMonth" \
