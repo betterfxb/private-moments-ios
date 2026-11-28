@@ -23,3 +23,15 @@
 在第 44 批同尺寸原图里，标签计数位于软件键盘工具栏，备注的 `0 / 10,000` 在键盘边缘被切断。沿用原有颜色、字阶和表单布局，把当前字段的计数放进键盘工具栏。收键盘后，计数回到各自字段下方。先在月历的正常补记入口验证计数归属、输入、保存和详情读回。[513 点基线](evidence/batch-44/46124323458/ipad-dark-accessibility/Pad-journal-09-calendar-entry-keyboard.png)
 
 先行用例 `1fcb250` 在原生 513 点窗口确认失败。标签计数可见时，备注计数仍出现在界面层级。修正复用原生键盘工具栏和同一份备注计数视图，标签和备注各在编辑期间展示自己的计数，收键盘后计数回到表单相应位置。[先行测试](https://github.com/betterfxb/private-moments-ios/actions/runs/46128932102) · [失败现场原图](evidence/batch-45/46128932102/ipad-dark-accessibility/Pad-journal-09-calendar-entry-keyboard-unrelated-note-counter.png)
+
+iPhone SE（第 3 代）标准字号用同一先行源码复现相同断言失败。该作业的四项标签单测和另外两个原生用例通过。[小屏先行作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46128931147) · [日志摘录](evidence/batch-45/46128931147/compact-light-tag-entry/xctest-extract.txt)
+
+修正版 `0d9f598` 首轮 iPad 已通过 513 点下的两个计数状态、保存和月历找回，随后系统拖柄未将详情窗口扩大。该整项作业标为失败，保留当时的实际结果，使用同一源码在新模拟器复验。[首轮作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46130514642) · [首轮备注计数原图](evidence/batch-45/46130514642/ipad-dark-accessibility/Pad-journal-09-note-keyboard.png)
+
+同一源码的小屏 iPhone 标准与最大辅助字号各通过 4 项标签单测和 3 个双语原生用例。标签和备注的计数随编辑状态切换，键盘上的备注计数完整可见，收键盘恢复表单计数，保存后详情读回正确备注。[标准字号](https://github.com/betterfxb/private-moments-ios/actions/runs/46131295917) · [最大辅助字号](https://github.com/betterfxb/private-moments-ios/actions/runs/46130514206) · [最大字号中文原图](evidence/batch-45/46130514206/compact-dark-accessibility-tag-entry/Month-calendar-journey-zh-Hans-note-keyboard.png)
+
+iPad 同一源码复跑通过。系统窗口实测 630 → 513 → 768 点，在 513 点同一表单完成标签与备注输入、保存和回顾，返回详情后完成最后一次放大。原图分别核对工具栏的 `58 / 64` 与 `13 / 10,000`。[iPad 复跑](https://github.com/betterfxb/private-moments-ios/actions/runs/46132240929) · [标签输入](evidence/batch-45/46132240929/ipad-dark-accessibility/Pad-journal-09-calendar-entry-keyboard.png) · [备注输入](evidence/batch-45/46132240929/ipad-dark-accessibility/Pad-journal-09-note-keyboard.png)
+
+## 第 46 批 集成回归与交付
+
+复用第 45 批通过的应用源码，运行 iPad 横竖屏及窄窗综合回归、小屏最大字号的原生输入图库、常规字号核心回归和实际 iOS 17.5 兼容验证。XCTest 使用独立测试库。
