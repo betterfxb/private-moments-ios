@@ -1094,7 +1094,7 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(records.count, 1)
             tap(clear, in: app)
             let tagButton = app.buttons["review.tag.\(tag.lowercased())"]
-            revealFully(from: tagButton, through: tagButton, in: app)
+            revealFully(from: tagButton, through: tagButton, in: app, settleDrag: true)
             XCTAssertEqual(tagButton.value as? String, one)
             capture("\(screenshots)-04-tags", app, stableSurface: tagButton)
             tap(tagButton, in: app)
@@ -1143,6 +1143,14 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertTrue(save.isHittable && app.windows.firstMatch.frame.contains(save.frame))
         XCTAssertFalse(save.frame.intersects(keyboard.frame))
         assertToolbarTarget(save)
+        let editorAboveAccessory = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            field.frame.minY >= app.navigationBars.firstMatch.frame.maxY &&
+                field.frame.maxY <= addTag.frame.minY + 2
+        }, object: nil)
+        if XCTWaiter.wait(for: [editorAboveAccessory], timeout: 8) != .completed {
+            captureFailure(screenshot + "-covered", app)
+            XCTFail("The expanded tag editor must remain visible above the keyboard actions.")
+        }
         capture(screenshot, app, stableSurface: addTag)
         addTag.tap()
         XCTAssertTrue(app.buttons["recap.tag.\(tag)"].isSelected)

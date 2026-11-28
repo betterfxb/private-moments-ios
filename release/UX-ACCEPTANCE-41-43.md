@@ -17,3 +17,5 @@
 `34c2500` 在两个配置上均接受完整测试文本，但输入框高度没有随内容增加，先行原生断言按预期失败。紧凑 iPhone 的四项标签单测和已有快捷记录用例通过。[iPhone 原生基线](evidence/batch-41/46106437512/compact-dark-accessibility-tag-entry/Month-calendar-journey-en-03-keyboard-single-line.png) · [iPad 原生基线](evidence/batch-41/46106458996/ipad-dark-accessibility/Pad-journal-09-calendar-entry-keyboard-single-line.png)
 
 使用原生纵向输入框，内容逐行扩展到四行，超出时在输入框内纵向滚动。添加按钮放在输入下方，键盘工具栏也保留添加入口。两处复用同一标签验证和提交操作。[Apple 原生输入行数说明](https://developer.apple.com/documentation/swiftui/view/linelimit%28_%3A%29)
+
+首轮换行版本 `0773fec` 的小屏标准字号和 iPad 窄窗测试通过。人工查看原图时发现，大字号下键盘工具栏覆盖部分输入行。小屏最大字号任务还在回顾页的长标签按钮定位处失败。第二轮在开始编辑、可见高度变化与输入换行时把字段移到可见区域，并检查字段整体位于导航栏与键盘工具栏之间。回顾页测试沿用第 40 批的慢速拖动验证超高标签按钮。[小屏标准字号任务](https://github.com/betterfxb/private-moments-ios/actions/runs/46108123370) · [小屏遮挡原图](evidence/batch-41/46108116351/compact-dark-accessibility-tag-entry/Month-calendar-journey-en-03-keyboard.png) · [iPad 遮挡原图](evidence/batch-41/46108119990/ipad-dark-accessibility/Pad-journal-09-calendar-entry-keyboard.png)

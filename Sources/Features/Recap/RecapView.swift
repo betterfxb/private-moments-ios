@@ -124,39 +124,45 @@ struct RecapView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: AppSpacing.section) {
-                if tagsOnly {
-                    tagsSection.modifier(JournalPanel(usesJournalPalette: true))
-                } else if isQuickRecord && !showsQuickDetails {
-                    quickContent
-                } else {
-                    headerSection
-                    timingSection
-                    VStack(alignment: .leading, spacing: 20) {
-                        moodSection
-                        Divider()
-                        kindSection
-                        Divider()
-                        ratingSection
+        ScrollViewReader { scroll in
+            ScrollView {
+                VStack(alignment: .leading, spacing: AppSpacing.section) {
+                    if tagsOnly {
+                        tagsSection(scrolling: scroll).modifier(JournalPanel(usesJournalPalette: true))
+                    } else if isQuickRecord && !showsQuickDetails {
+                        quickContent
+                    } else {
+                        headerSection
+                        timingSection
+                        VStack(alignment: .leading, spacing: 20) {
+                            moodSection
+                            Divider()
+                            kindSection
+                            Divider()
+                            ratingSection
+                        }
+                        .modifier(JournalPanel(usesJournalPalette: isCalendarEntry))
+                        VStack(alignment: .leading, spacing: 20) {
+                            tagsSection(scrolling: scroll)
+                            Divider()
+                            noteSection
+                        }
+                        .modifier(JournalPanel(usesJournalPalette: isCalendarEntry))
                     }
-                    .modifier(JournalPanel(usesJournalPalette: isCalendarEntry))
-                    VStack(alignment: .leading, spacing: 20) {
-                        tagsSection
-                        Divider()
-                        noteSection
-                    }
-                    .modifier(JournalPanel(usesJournalPalette: isCalendarEntry))
+                    if !tagsOnly || focusedField != .tag { saveSection }
                 }
-                if !tagsOnly || focusedField != .tag { saveSection }
+                .padding(.horizontal, AppSpacing.page)
+                .padding(.top, 18)
+                .padding(.bottom, 30 + (focusedField == .tag ? keyboardDismissTargetSize : 0))
+                .frame(maxWidth: 680)
+                .frame(maxWidth: .infinity)
             }
-            .padding(.horizontal, AppSpacing.page)
-            .padding(.top, 18)
-            .padding(.bottom, 30)
-            .frame(maxWidth: 680)
-            .frame(maxWidth: .infinity)
+            .scrollDismissesKeyboard(.interactively)
+            .onChange(of: focusedField) { _, _ in revealTagEditor(using: scroll) }
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { _ in
+                revealTagEditor(using: scroll)
+            }
         }
-        .scrollDismissesKeyboard(.interactively)
         .background((usesJournalPalette ? AppColors.homePaper : AppColors.background).ignoresSafeArea())
         .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
@@ -507,7 +513,7 @@ struct RecapView: View {
         }
     }
 
-    private var tagsSection: some View {
+    private func tagsSection(scrolling scroll: ScrollViewProxy) -> some View {
         let visible = availableTags
         let visibleKeys = Set(visible.map(MomentTags.key(for:)))
         let recent = Array(MomentTags.distinct(store.moments.flatMap(\.tags)).lazy
@@ -524,7 +530,7 @@ struct RecapView: View {
             .foregroundStyle(actionColor)
             .accessibilityValue(showsTagEditor ? Text("Expanded") : Text("Collapsed"))
             .accessibilityIdentifier("recap.customTags")
-            if showsTagEditor { tagEditor(recent: recent) }
+            if showsTagEditor { tagEditor(recent: recent, scrolling: scroll) }
             if selectedTags.count >= MomentValidator.maximumTagCount {
                 Text("A moment can have up to 20 tags.")
                     .font(.footnote)
@@ -533,7 +539,7 @@ struct RecapView: View {
         }
     }
 
-    private func tagEditor(recent: [String]) -> some View {
+    private func tagEditor(recent: [String], scrolling scroll: ScrollViewProxy) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             TextField("New tag", text: tagEditingText, axis: .vertical)
                 .textFieldStyle(.plain)
@@ -548,6 +554,10 @@ struct RecapView: View {
                 .accessibilityIdentifier("recap.newTag")
                 .privacySensitive()
                 .tint(actionColor)
+                .id(InputField.tag)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { _ in
+                    revealTagEditor(using: scroll)
+                }
             Button { addTag(tagInput) } label: {
                 Label {
                     Text("Add tag").fixedSize(horizontal: false, vertical: true)
@@ -580,6 +590,11 @@ struct RecapView: View {
                     .accessibilityIdentifier("recap.tagError")
             }
         }
+    }
+
+    private func revealTagEditor(using scroll: ScrollViewProxy) {
+        guard focusedField == .tag else { return }
+        scroll.scrollTo(InputField.tag, anchor: .top)
     }
 
     private var tagEditingText: Binding<String> {
