@@ -40,6 +40,12 @@ iPad 同一源码复跑通过。系统窗口实测 630 → 513 → 768 点，在
 
 最大字号输入图库首轮在英文首页周菜单处失败。失败原图显示菜单已打开，界面只显示周日到周三，层级另含周四、周五及两页滚动条。当天周六还未出现。测试现分别确认一次点按已打开菜单，再在原生菜单内滚动到当天，并实际选择及清除日期。此处仅调整 XCTest。首轮独立双语搜索输入用例通过。[图库首轮](https://github.com/betterfxb/private-moments-ios/actions/runs/46133659866) · [菜单原图](evidence/batch-46/46133659866/compact-dark-accessibility/Week-menu-current-unavailable-en.png)
 
+`4389698` 的最大字号输入图库与独立双语搜索均通过，原生菜单滚动后可选中当天。相同应用源码的核心作业通过 73 项应用单测、7 个原生 UI、无签名 Debug／Release 构建及 Release 测试钩子排除。[输入图库](https://github.com/betterfxb/private-moments-ios/actions/runs/46135223972) · [菜单滚动原图](evidence/batch-46/46135223972/compact-dark-accessibility/Week-menu-en.png) · [核心作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46133662915) · [核心测试收据](evidence/batch-46/46133662915/compact-light-core/xctest.json)
+
+iOS 17.5 首轮通过 6 项单测与另外 5 项原生用例，Release 编译的最低系统为 17.0。月历用例读到的标签只有 `Quiet m`，在验证备注前停止。保持输入原文与严格比对条件，在独立模拟器重新运行旧系统的完整范围。[首轮作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46133661848) · [首轮日志](evidence/batch-46/46133661848/ios17/xctest-extract.txt)
+
+第二轮无签名 Release 通过，Apple 官方 iOS 17.5 Universal 模拟器镜像下载报告停在 99.8%，作业到期时仍未进入 XCTest。为单次镜像下载设 8 分钟上限，主 Xcode 下载挂起时也能使用原有的 Xcode 16.4 备用流程。保留完整的部署目标和 XCTest 断言。[镜像超时作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46140474963)
+
 ### Windows 检查与待确认事项
 
 - `python -X utf8 -m unittest discover -s tools` 的 60 项工具测试通过。`bash -n` 的 `scripts/verify-mac.sh`、`scripts/verify-ios17.sh` 两个入口语法检查通过。

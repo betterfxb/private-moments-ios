@@ -26,6 +26,23 @@ if runtimes:
 '
 }
 
+download_ios17() {
+    python3 - "$1" <<'PY'
+import subprocess
+import sys
+
+try:
+    result = subprocess.run(
+        ['xcodebuild', '-downloadPlatform', 'iOS', '-buildVersion', '17.5', '-exportPath', sys.argv[1]],
+        timeout=8 * 60,
+    )
+except subprocess.TimeoutExpired:
+    print('The iOS 17.5 runtime download did not finish within 8 minutes.', file=sys.stderr)
+    raise SystemExit(124)
+raise SystemExit(result.returncode)
+PY
+}
+
 printf 'Inspecting the cloud runner and its installed simulator runtimes.\n'
 uname -m
 sw_vers
@@ -62,13 +79,13 @@ if [[ -z "$runtime" ]]; then
     printf '\nNo available iOS 17 runtime. Downloading iOS 17.5 from Apple.\n'
     archive_directory="$work_directory/runtime"
     mkdir -p "$archive_directory"
-    if ! xcodebuild -downloadPlatform iOS -buildVersion 17.5 -exportPath "$archive_directory"; then
+    if ! download_ios17 "$archive_directory"; then
         older_developer='/Applications/Xcode_16.4.app/Contents/Developer'
         if [[ ! -d "$older_developer" ]]; then exit 1; fi
         printf 'Retrying the official download through the installed Xcode 16.4.\n'
         archive_directory="$work_directory/runtime-xcode16"
         mkdir -p "$archive_directory"
-        DEVELOPER_DIR="$older_developer" xcodebuild -downloadPlatform iOS -buildVersion 17.5 -exportPath "$archive_directory"
+        DEVELOPER_DIR="$older_developer" download_ios17 "$archive_directory"
     fi
     shopt -s nullglob
     images=("$archive_directory"/*.dmg)
