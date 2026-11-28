@@ -9,3 +9,11 @@
 | 43 · 集成回归 | 从月历补记和详情补标签两条入口验证新编辑器，归档原图并更新项目记忆 | 41、42 分别完成 | 云端覆盖小屏 iPhone 标准及最大字号、iPad 窄窗和实际 iOS 17.5，运行适用的本地审计。验证详情找回、取消、草稿恢复及既有短标签操作。 |
 
 标签控件沿用日记的字阶、颜色和触控尺寸。长标签使用全宽输入与随字号换行，添加入口紧邻输入且可从键盘工具栏触达。真机 VoiceOver、中文输入法、外接键盘及签名验收等安排，以及备份、搜索与计时的产品选择，见[待确认清单](DEVICE-AND-RECOVERY-DECISIONS.md)。
+
+## 第 41 批 长标签输入
+
+首轮 iPad 作业在系统参照应用旋转检查时停止，未进入标签字段。增加紧凑 iPhone 的定向标签验收，同时在新 iPad 模拟器上重跑基线。[首轮系统参照作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46105099325)
+
+`34c2500` 在两个配置上均接受完整测试文本，但输入框高度没有随内容增加，先行原生断言按预期失败。紧凑 iPhone 的四项标签单测和已有快捷记录用例通过。[iPhone 原生基线](evidence/batch-41/46106437512/compact-dark-accessibility-tag-entry/Month-calendar-journey-en-03-keyboard-single-line.png) · [iPad 原生基线](evidence/batch-41/46106458996/ipad-dark-accessibility/Pad-journal-09-calendar-entry-keyboard-single-line.png)
+
+使用原生纵向输入框，内容逐行扩展到四行，超出时在输入框内纵向滚动。添加按钮放在输入下方，键盘工具栏也保留添加入口。两处复用同一标签验证和提交操作。[Apple 原生输入行数说明](https://developer.apple.com/documentation/swiftui/view/linelimit%28_%3A%29)

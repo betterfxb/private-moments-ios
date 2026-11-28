@@ -511,7 +511,7 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(save, in: app)
             XCTAssertTrue(edit.waitForExistence(timeout: 8))
             tap(edit, in: app)
-            let tagInput = app.textFields["recap.newTag"]
+            let tagInput = tagEditorField(in: app)
             tap(app.buttons["recap.customTags"], in: app)
             tap(tagInput, in: app)
             tagInput.typeText("Weekend")
@@ -833,7 +833,7 @@ final class PrivateMomentsUITests: XCTestCase {
             capture("Journal-journey-03-saved-\(language)", app, stableSurface: addTags)
 
             addTags.tap()
-            let field = app.textFields["recap.newTag"]
+            let field = tagEditorField(in: app)
             XCTAssertTrue(field.waitForExistence(timeout: 8))
             XCTAssertFalse(app.textFields["recap.minutes"].exists)
             tap(field, in: app)
@@ -1115,9 +1115,13 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    private func tagEditorField(in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any).matching(identifier: "recap.newTag").firstMatch
+    }
+
     private func enterCalendarTag(_ tag: String, screenshot: String, app: XCUIApplication) {
         tap(app.buttons["recap.customTags"], in: app)
-        let field = app.descendants(matching: .any).matching(identifier: "recap.newTag").firstMatch
+        let field = tagEditorField(in: app)
         tap(field, in: app)
         let shortFieldHeight = field.frame.height
         field.typeText(tag)
@@ -1715,7 +1719,7 @@ final class PrivateMomentsUITests: XCTestCase {
         let entry = try resizeIPadWindow(app, targetWidth: wide.width * 0.61, name: "journal-input",
                                          targetHeight: wide.height * 0.66)
         XCTAssertLessThanOrEqual(entry.width, wide.width * 0.68)
-        let field = app.textFields["recap.newTag"]
+        let field = tagEditorField(in: app)
         tap(field, in: app)
         let keyboard = app.keyboards.firstMatch
         XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)

@@ -535,38 +535,32 @@ struct RecapView: View {
 
     private func tagEditor(recent: [String]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
-                TextField("New tag", text: $tagInput)
-                    .textFieldStyle(.roundedBorder)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                    .frame(minHeight: 44)
-                    .focused($focusedField, equals: .tag)
-                    .submitLabel(.done)
-                    .onSubmit { addTag(tagInput) }
-                    .onChange(of: tagInput) { _, _ in tagMessage = nil }
-                    .accessibilityIdentifier("recap.newTag")
-                    .privacySensitive()
-                    .tint(actionColor)
-                Button { addTag(tagInput) } label: {
-                    if dynamicTypeSize.isAccessibilitySize {
-                        Image(systemName: "plus")
-                            .font(.system(size: 20, weight: .semibold))
-                            .frame(width: 44, height: 44)
-                            .background(actionBackground, in: Circle())
-                            .contentShape(Rectangle())
-                    } else {
-                        Label("Add tag", systemImage: "plus")
-                            .fixedSize(horizontal: true, vertical: false)
-                            .frame(minHeight: 44, alignment: .leading)
-                            .contentShape(Rectangle())
-                    }
+            TextField("New tag", text: tagEditingText, axis: .vertical)
+                .textFieldStyle(.plain)
+                .font(.body)
+                .lineLimit(1...4)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .focused($focusedField, equals: .tag)
+                .submitLabel(.done)
+                .onSubmit { addTag(tagInput) }
+                .modifier(JournalInput())
+                .accessibilityIdentifier("recap.newTag")
+                .privacySensitive()
+                .tint(actionColor)
+            Button { addTag(tagInput) } label: {
+                Label {
+                    Text("Add tag").fixedSize(horizontal: false, vertical: true)
+                } icon: {
+                    Image(systemName: "plus").font(.system(size: 18, weight: .semibold))
                 }
-                .buttonStyle(.plain)
-                .foregroundStyle(actionColor)
-                .accessibilityLabel("Add tag")
-                .accessibilityIdentifier("recap.addTag")
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .frame(minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
+            .foregroundStyle(actionColor)
+            .accessibilityIdentifier("recap.addTag")
             if !recent.isEmpty {
                 Menu("Recent tags") {
                     ForEach(recent, id: \.self) { tag in
@@ -586,6 +580,18 @@ struct RecapView: View {
                     .accessibilityIdentifier("recap.tagError")
             }
         }
+    }
+
+    private var tagEditingText: Binding<String> {
+        Binding(get: { tagInput }, set: { value in
+            // Some multiline keyboard implementations insert Return into the binding.
+            if value == tagInput + "\n" {
+                addTag(tagInput)
+            } else {
+                tagInput = value
+                tagMessage = nil
+            }
+        })
     }
 
     private func addTag(_ input: String) {
