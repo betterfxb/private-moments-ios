@@ -253,20 +253,23 @@ class VerificationScopeTests(unittest.TestCase):
         self.assertIn('Rotation start must be', result.stderr)
 
     def test_journal_window_journey_is_an_explicit_ipad_diagnostic(self):
-        method = PREFIX + 'testIPadQuickJournalWindowContinuity'
-        focused = self.script('journal-journey', PRIVATE_MOMENTS_UI_ROTATION_ONLY='1',
-                              PRIVATE_MOMENTS_UI_IPAD_TESTS='1')
-        self.assertEqual(focused.returncode, 0, focused.stderr)
-        self.assertEqual([line for line in focused.stdout.splitlines() if line.startswith('-only-testing:')],
-                         ['-only-testing:' + method])
-        self.assertIn('-skip-testing:' + method, self.script().stdout.splitlines())
-        self.assertNotEqual(self.script('journal-journey', PRIVATE_MOMENTS_UI_ROTATION_ONLY='1').returncode, 0)
-        for profile in ['ipad-light', 'ipad-dark-accessibility', 'compact-light']:
-            with self.subTest(profile=profile):
-                outcome = execute(GUARD, dict(ROTATION_START='journal-journey', ROTATION_SMOKE='1',
-                                               INPUT_SMOKE='0', BACKUP_SMOKE='0', BACKUP_LANGUAGE='en',
-                                               SMOKE_PROFILE=profile))
-                self.assertEqual(outcome.returncode == 0, profile.startswith('ipad'), outcome.stderr)
+        for start, method in [('journal-journey', 'testIPadQuickJournalWindowContinuity'),
+                              ('journal-tag-window', 'testIPadJournalTagEditorInPortraitWindow')]:
+            with self.subTest(start=start):
+                identifier = PREFIX + method
+                focused = self.script(start, PRIVATE_MOMENTS_UI_ROTATION_ONLY='1',
+                                      PRIVATE_MOMENTS_UI_IPAD_TESTS='1')
+                self.assertEqual(focused.returncode, 0, focused.stderr)
+                self.assertEqual([line for line in focused.stdout.splitlines() if line.startswith('-only-testing:')],
+                                 ['-only-testing:' + identifier])
+                self.assertIn('-skip-testing:' + identifier, self.script().stdout.splitlines())
+                self.assertNotEqual(self.script(start, PRIVATE_MOMENTS_UI_ROTATION_ONLY='1').returncode, 0)
+                for profile in ['ipad-light', 'ipad-dark-accessibility', 'compact-light']:
+                    with self.subTest(profile=profile):
+                        outcome = execute(GUARD, dict(ROTATION_START=start, ROTATION_SMOKE='1',
+                                                       INPUT_SMOKE='0', BACKUP_SMOKE='0', BACKUP_LANGUAGE='en',
+                                                       SMOKE_PROFILE=profile))
+                        self.assertEqual(outcome.returncode == 0, profile.startswith('ipad'), outcome.stderr)
 
     def test_gallery_input_and_backup_exclude_cold_methods(self):
         for flags in [{'PRIVATE_MOMENTS_UI_GALLERY_ONLY': '1', 'PRIVATE_MOMENTS_UI_IPAD_TESTS': '1'},

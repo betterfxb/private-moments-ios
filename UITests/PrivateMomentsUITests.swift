@@ -1777,12 +1777,9 @@ final class PrivateMomentsUITests: XCTestCase {
         prepareRotationReference(language: "en", app: app)
         rotateInterface(.landscapeLeft, stage: "journal-home", language: "en", app: app)
 
-        let window = app.windows.firstMatch
         let quick = app.buttons["today.quickRecord"]
         let save = app.buttons["recap.saveToolbar"]
         let addTags = app.buttons["detail.addTags"]
-        let tag = "Weekend"
-        let savedTag = app.staticTexts[tag]
         XCTAssertTrue(quick.isHittable)
         capture("Pad-journal-01-landscape-home", app, stableSurface: quick)
         tap(quick, in: app)
@@ -1792,6 +1789,28 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(addTags, in: app)
 
         rotateInterface(.portrait, stage: "journal-tag-entry", language: "en", app: app)
+        try verifyNarrowIPadJournal(in: app)
+    }
+
+    func testIPadJournalTagEditorInPortraitWindow() throws {
+        guard enableIPadWindowedApps(scrollSidebar: true) else { return }
+        XCUIDevice.shared.orientation = .portrait
+        let app = makeApp()
+        app.launch()
+        let window = app.windows.firstMatch
+        waitForStableFrame(window, message: "The portrait window must settle before resizing.")
+        XCTAssertGreaterThan(window.frame.height, window.frame.width)
+        tap(app.buttons["today.quickRecord"], in: app)
+        tap(app.buttons["recap.saveToolbar"], in: app)
+        tap(app.buttons["detail.addTags"], in: app)
+        try verifyNarrowIPadJournal(in: app)
+    }
+
+    private func verifyNarrowIPadJournal(in app: XCUIApplication) throws {
+        let window = app.windows.firstMatch
+        let save = app.buttons["recap.saveToolbar"]
+        let tag = "Weekend"
+        let savedTag = app.staticTexts[tag]
         let wide = window.frame
         XCTAssertGreaterThanOrEqual(wide.width, 700)
         let entry = try resizeIPadWindow(app, targetWidth: wide.width * 0.61, name: "journal-input",
@@ -1819,7 +1838,7 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertFalse(save.frame.intersects(keyboard.frame))
         capture("Pad-journal-04-narrow-keyboard", app, stableSurface: addTag)
         addTag.tap()
-        XCTAssertTrue(app.buttons["recap.tag.Weekend"].isSelected)
+        XCTAssertTrue(app.buttons["recap.tag.\(tag)"].isSelected)
         tap(save, in: app)
         XCTAssertTrue(savedTag.waitForExistence(timeout: 10))
         goBack(app)
@@ -1841,7 +1860,7 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(app.buttons["timeline.clearFilters"], in: app)
         tap(app.buttons["timeline.dateAndTag"], in: app)
         tap(app.buttons["timeline.tagFilter"], in: app)
-        let tagOption = app.buttons["timeline.tags.option.Weekend"]
+        let tagOption = app.buttons["timeline.tags.option.\(tag)"]
         tap(tagOption, in: app)
         XCTAssertTrue(tagOption.isSelected)
         capture("Pad-journal-06-narrow-tags", app, stableSurface: tagOption)

@@ -61,6 +61,7 @@ on:
           - window-resize
           - window-resize-keyboard
           - journal-journey
+          - journal-tag-window
       backup_smoke_profile:
         description: Device profile for a focused diagnostic or single acceptance suite
         type: choice
@@ -162,7 +163,7 @@ jobs:
             printf 'Chinese backup language requires explicit backup smoke.\n' >&2
             exit 1
           fi
-          if [[ "$ROTATION_START" != "reference" && "$ROTATION_START" != "cold-en" && "$ROTATION_START" != "cold-zh-Hans" && "$ROTATION_START" != "window-resize" && "$ROTATION_START" != "window-resize-keyboard" && "$ROTATION_START" != "journal-journey" ]] ||
+          if [[ "$ROTATION_START" != "reference" && "$ROTATION_START" != "cold-en" && "$ROTATION_START" != "cold-zh-Hans" && "$ROTATION_START" != "window-resize" && "$ROTATION_START" != "window-resize-keyboard" && "$ROTATION_START" != "journal-journey" && "$ROTATION_START" != "journal-tag-window" ]] ||
              [[ "$ROTATION_START" != "reference" && "$ROTATION_SMOKE" != "1" ]]; then
             printf 'Cold rotation and window resizing require explicit iPad diagnostics and a supported scenario.\n' >&2
             exit 1
@@ -175,7 +176,7 @@ jobs:
             printf 'Keyboard window resizing requires the ipad-dark-accessibility profile.\n' >&2
             exit 1
           fi
-          if [[ "$ROTATION_START" == "journal-journey" && "$SMOKE_PROFILE" != "ipad-light" && "$SMOKE_PROFILE" != "ipad-dark-accessibility" ]]; then
+          if [[ ( "$ROTATION_START" == "journal-journey" || "$ROTATION_START" == "journal-tag-window" ) && "$SMOKE_PROFILE" != "ipad-light" && "$SMOKE_PROFILE" != "ipad-dark-accessibility" ]]; then
             printf 'Journal window verification requires an iPad Pro profile.\n' >&2
             exit 1
           fi

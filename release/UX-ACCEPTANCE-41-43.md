@@ -37,3 +37,17 @@
 ## 第 43 批 云端集成回归
 
 应用源码沿用第 42 批终稿。双语标签回路增加从详情编辑取消后，重新进入确认原有记录未受到影响的断言。新用例归入常规日记功能分组，定向标签验收仍保留。随后运行 iPhone 双语标签测试、iPad 系统窄窗、实际 iOS 17.5 和核心构建回归。
+
+首轮 iPad 集成作业的系统旋转预检再次停止。设备报告横向时，独立的设置窗口仍为 1032 × 1376 点。该次未执行标签流程，用同一源码在新模拟器复跑。[首轮 iPad 作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46118378593) · [测试日志摘录](evidence/batch-43/46118378593/ipad-dark-accessibility/xctest-extract.txt)
+
+第二轮同样停在横竖屏参照。增加独立竖屏窄窗作业，从「今天」快记进入详情补标签，复用同一套实际窗口拖动、软件键盘、时间线筛选和月历长标签断言。横竖屏综合用例仍执行原有预检与断言，竖屏作业覆盖本次窄窗验收。[第二轮 iPad 作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46119414008) · [第二轮日志](evidence/batch-43/46119414008/ipad-dark-accessibility/xctest-extract.txt)
+
+`02f8b3d` 的 iPhone SE（第 3 代）标准和最大辅助字号各通过 4 项标签单测与 3 个双语用例。详情编辑选择标签后取消，原记录没有被写入该标签，重新打开仍可添加。回归也验证月历长标签找回、短标签去重、键盘确认和跨启动恢复已添加的草稿标签。[iPhone 标准字号作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46118379695) · [最大字号作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46118379567) · [取消后的详情原图](evidence/batch-43/46118379695/compact-light-tag-entry/Month-calendar-tag-limit-zh-Hans-discarded.png)
+
+同一源码通过 iPhone SE（第 3 代）核心回归，包含 73 项应用单测、7 个原生 UI 用例、无签名 Debug 与 Release 构建，以及 Release 测试钩子排除。[核心回归](https://github.com/betterfxb/private-moments-ios/actions/runs/46118379219) · [核心测试摘要](evidence/batch-43/46118379219/compact-light-core/xctest.json)
+
+## 本地验证与待确认事项
+
+- Windows 执行 `python -X utf8 -m unittest discover -s tools`，60 项通过。`bash -n` 检查 `scripts/verify-mac.sh` 和 `scripts/verify-ios17.sh` 通过。
+- `node tools/audit-localization.mjs`、`node tools/audit-xcode-project.mjs` 和 `node tools/audit-release-materials.mjs` 通过。本地化目录 311 键，Xcode 工程 113 对象。现有发布占位告警涉及 Bundle ID、隐私政策发布者信息及审核联系资料。
+- 真机待测项目包括 VoiceOver 朗读与焦点顺序、系统中文拼音候选、外接键盘和签名安装。签名、加密备份、系统终止后的计时恢复、私密备注搜索均按[待确认清单](DEVICE-AND-RECOVERY-DECISIONS.md)处理。
