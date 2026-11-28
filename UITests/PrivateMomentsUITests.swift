@@ -1119,6 +1119,7 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertEqual(records.count, 0)
             XCTAssertEqual(range.label, previousMonth)
             capture("Month-calendar-tag-empty-\(language)", app, stableSurface: empty)
+            XCTAssertEqual(clear.label, english ? "Back to tags" : "返回本月标签")
             tap(clear, in: app)
             reveal(longTag, in: app)
             XCTAssertFalse(connected.exists, "The previous month no longer has this tag.")

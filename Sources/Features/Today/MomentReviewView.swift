@@ -39,6 +39,7 @@ struct MomentReviewView: View {
     @Environment(\.scenePhase) private var scenePhase
     @AccessibilityFocusState private var recordsFocused: Bool
     @AccessibilityFocusState private var calendarFocused: Bool
+    @AccessibilityFocusState private var tagsFocused: Bool
     @State private var referenceDate = Date.now
     @State private var historicalDate: Date?
     @State private var period: MomentReviewPeriod = .week
@@ -48,6 +49,7 @@ struct MomentReviewView: View {
     @State private var isComparing = false
     @State private var recordJumpID = UUID()
     @State private var calendarJumpID = UUID()
+    @State private var tagsJumpID = UUID()
 
     private let showsPeriodControls: Bool
     private let onAddForDay: ((Date) -> Void)?
@@ -98,6 +100,10 @@ struct MomentReviewView: View {
             .onChange(of: calendarJumpID) { _, _ in
                 proxy.scrollTo("review.monthCalendar", anchor: .top)
                 calendarFocused = true
+            }
+            .onChange(of: tagsJumpID) { _, _ in
+                proxy.scrollTo("review.monthTags", anchor: .top)
+                tagsFocused = true
             }
         }
         .background(AppColors.homePaper.ignoresSafeArea())
@@ -337,6 +343,8 @@ struct MomentReviewView: View {
             VStack(alignment: .leading, spacing: 8) {
                 sectionHeading(Text("Tags this month"))
                     .accessibilityIdentifier("review.monthTags")
+                    .accessibilityFocused($tagsFocused)
+                    .id("review.monthTags")
                 LazyVStack(spacing: 6) {
                     ForEach(tags) { tag in
                         highlightLink(filter: .tag(tag.name), symbol: "tag", count: tag.count,
@@ -548,11 +556,16 @@ struct MomentReviewView: View {
                 if let day = recordFilter.day, day <= calendar.startOfDay(for: referenceDate), let onAddForDay {
                     calendarEntryButton(for: day, onAdd: onAddForDay)
                 }
+                let returnsToTags = recordFilter.tag != nil && !review.tagCounts.isEmpty
+                let returnsToCalendar = recordFilter.day != nil || (recordFilter.tag != nil && !returnsToTags)
+                let clearTitle: LocalizedStringKey = if returnsToTags { "Back to tags" }
+                    else if returnsToCalendar { "Back to month calendar" } else { "Show all moments" }
                 Button {
                     self.recordFilter = nil
-                    if recordFilter.day != nil { calendarJumpID = UUID() }
+                    if returnsToTags { tagsJumpID = UUID() }
+                    if returnsToCalendar { calendarJumpID = UUID() }
                 } label: {
-                    Text(recordFilter.day == nil ? LocalizedStringKey("Show all moments") : LocalizedStringKey("Back to month calendar"))
+                    Text(clearTitle)
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(AppColors.accentText)
                         .frame(minHeight: 44)
