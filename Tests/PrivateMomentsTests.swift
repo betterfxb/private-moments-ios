@@ -484,6 +484,28 @@ final class MomentDateQueryTests: XCTestCase {
         XCTAssertTrue(afterRemoval.dayGroups(favoritesOnly: true, calendar: calendar).isEmpty)
     }
 
+    func testMonthTagsCountRecordsOnceAndMatchTheSameNormalizedKeys() throws {
+        let calendar = try calendar("Asia/Tokyo")
+        let firstDay = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 12, day: 1)))
+        let lastDay = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 12, day: 31)))
+        let followingMonth = try XCTUnwrap(calendar.date(from: DateComponents(year: 2027, month: 1, day: 1)))
+        let first = Moment(occurredAt: firstDay, durationSeconds: 0, mood: .calm, rating: 4,
+                           tags: [" Reading ", "READING", "Café", " connected "])
+        let last = Moment(occurredAt: lastDay, durationSeconds: 0, mood: .happy, rating: 4,
+                          tags: ["reading", "Cafe"])
+        let outside = Moment(occurredAt: followingMonth, durationSeconds: 0, mood: .calm, rating: 4,
+                             tags: ["Reading", "Walk"])
+        let review = try XCTUnwrap(MomentDateQuery.review([outside, last, first], period: .month,
+                                                         containing: firstDay, calendar: calendar))
+
+        XCTAssertEqual(review.tagCounts.map(\.id), ["reading", "cafe", "café", "connected"])
+        XCTAssertEqual(review.tagCounts.map(\.count), [2, 1, 1, 1])
+        XCTAssertEqual(review.tagCounts.first(where: { $0.id == "connected" })?.name, "Connected")
+        XCTAssertEqual(review.dayGroups(tag: " READING ", calendar: calendar).flatMap(\.moments), [last, first])
+        XCTAssertEqual(review.dayGroups(tag: "cafe", calendar: calendar).flatMap(\.moments), [last])
+        XCTAssertTrue(review.dayGroups(tag: "Walk", calendar: calendar).isEmpty)
+    }
+
     func testMonthCalendarKeepsEmptyDaysAndWeekAlignmentAcrossDaylightSaving() throws {
         var calendar = try calendar("America/Los_Angeles")
         calendar.firstWeekday = 2

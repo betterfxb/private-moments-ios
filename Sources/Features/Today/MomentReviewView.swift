@@ -5,6 +5,7 @@ private enum ReviewRecordFilter: Equatable {
     case favorites
     case mood(MomentMood)
     case day(Date)
+    case tag(String)
 
     var mood: MomentMood? {
         if case .mood(let mood) = self { return mood }
@@ -16,11 +17,17 @@ private enum ReviewRecordFilter: Equatable {
         return nil
     }
 
+    var tag: String? {
+        if case .tag(let name) = self { return name }
+        return nil
+    }
+
     func title(locale: Locale) -> Text {
         switch self {
         case .favorites: Text("Bookmarked moments")
         case .mood(let mood): Text(mood.displayName)
         case .day(let date): Text(date.formatted(.dateTime.weekday(.wide).month(.wide).day().locale(locale)))
+        case .tag(let name): Text(AppLocalization.localizedTag(name))
         }
     }
 }
@@ -136,7 +143,10 @@ struct MomentReviewView: View {
                     showRecords(matching: .day(date))
                 }
             }
-            if recordFilter?.day == nil { monthHighlights(review) }
+            if recordFilter?.day == nil {
+                monthTags(review)
+                monthHighlights(review)
+            }
         }
         if showsPeriodControls, recordFilter?.day == nil,
            let previous = MomentDateQuery.previousReview(store.moments, period: period, from: review, calendar: calendar) {
@@ -321,6 +331,24 @@ struct MomentReviewView: View {
     }
 
     @ViewBuilder
+    private func monthTags(_ review: MomentReview) -> some View {
+        let tags = review.tagCounts
+        if !tags.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                sectionHeading(Text("Tags this month"))
+                    .accessibilityIdentifier("review.monthTags")
+                LazyVStack(spacing: 6) {
+                    ForEach(tags) { tag in
+                        highlightLink(filter: .tag(tag.name), symbol: "tag", count: tag.count,
+                                      identifier: "review.tag.\(tag.id)")
+                            .privacySensitive()
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
     private func monthHighlights(_ review: MomentReview) -> some View {
         let favoriteCount = review.favoriteCount
         let moods = review.commonMoods
@@ -349,11 +377,17 @@ struct MomentReviewView: View {
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
             : AnyLayout(HStackLayout(spacing: 14))
         let title = filter.title(locale: locale)
+        let isSelected: Bool
+        if let tag = filter.tag, let selectedTag = recordFilter?.tag {
+            isSelected = MomentTags.key(for: tag) == MomentTags.key(for: selectedTag)
+        } else {
+            isSelected = recordFilter == filter
+        }
         return Button { showRecords(matching: filter) } label: {
             HStack(alignment: .top, spacing: 10) {
                 Image(systemName: symbol).accessibilityHidden(true)
                 layout {
-                    title.fontWeight(.semibold)
+                    title.fontWeight(.semibold).fixedSize(horizontal: false, vertical: true)
                     Text(AppLocalization.momentCount(count)).foregroundStyle(AppColors.secondaryText)
                 }
                 Spacer(minLength: 0)
@@ -364,13 +398,14 @@ struct MomentReviewView: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-            .background(AppColors.journalNote, in: RoundedRectangle(cornerRadius: AppRadius.control))
+            .background(isSelected ? AppColors.journalSelection : AppColors.journalNote,
+                        in: RoundedRectangle(cornerRadius: AppRadius.control))
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel(title)
         .accessibilityValue(Text(AppLocalization.momentCount(count)))
-        .accessibilityAddTraits(recordFilter == filter ? .isSelected : [])
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier(identifier)
     }
 
@@ -522,13 +557,19 @@ struct MomentReviewView: View {
                 if showsPeriodControls {
                     let selectedDay = recordFilter?.day
                     let groups = review.dayGroups(matching: recordFilter?.mood,
-                                                  favoritesOnly: recordFilter == .favorites, calendar: calendar)
+                                                  favoritesOnly: recordFilter == .favorites,
+                                                  tag: recordFilter?.tag, calendar: calendar)
                         .filter { selectedDay == nil || $0.date == selectedDay }
                     if groups.isEmpty {
                         if selectedDay != nil {
                             Text("No moments on this day")
                                 .foregroundStyle(AppColors.secondaryText)
                                 .accessibilityIdentifier("review.calendar.emptyDay")
+                        } else if recordFilter?.tag != nil {
+                            Text("No moments with this tag")
+                                .foregroundStyle(AppColors.secondaryText)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityIdentifier("review.tag.empty")
                         } else {
                             Text(recordFilter == .favorites ? LocalizedStringKey("No favorites in this month")
                                  : LocalizedStringKey("No moments match this feeling"))

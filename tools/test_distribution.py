@@ -216,6 +216,7 @@ class ArchiveValidationTests(unittest.TestCase):
     def test_debug_store_hook_cannot_ship_in_release(self):
         for marker in [b"-pm-ui-test-store", b"PrivateMoments-UITests", b"-pm-ui-test-fail-save-once",
                        b"-pm-ui-test-performance-fixture", b"-pm-ui-test-review-comparison-fixture", b"PM_UI_TEST_READING_NOTE",
+                       b"PM_UI_TEST_REVIEW_LONG_TAG",
                        b"-pm-ui-test-performance-trace", b"timeline-performance"]:
             with self.subTest(marker=marker):
                 (self.app / "PrivateMoments").write_bytes(b"synthetic " + marker + b" binary")

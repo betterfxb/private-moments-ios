@@ -18,6 +18,7 @@ def validate_release_test_hooks(contents):
                                               b"-pm-ui-test-fail-save-once", b"-pm-ui-test-performance-fixture",
                                               b"-pm-ui-test-review-comparison-fixture",
                                               b"PM_UI_TEST_READING_NOTE",
+                                              b"PM_UI_TEST_REVIEW_LONG_TAG",
                                               b"-pm-ui-test-performance-trace", b"timeline-performance")):
         raise DistributionError("A Debug-only UI-test hook leaked into the Release executable.")
 

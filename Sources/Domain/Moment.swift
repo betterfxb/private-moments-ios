@@ -337,6 +337,12 @@ struct MomentReview {
         var id: MomentMood { mood }
     }
 
+    struct TagCount: Identifiable {
+        let id: String
+        let name: String
+        let count: Int
+    }
+
     struct DayGroup: Identifiable {
         let date: Date
         let moments: [Moment]
@@ -346,14 +352,35 @@ struct MomentReview {
     let interval: DateInterval
     let moments: [Moment]
 
-    func dayGroups(matching mood: MomentMood? = nil, favoritesOnly: Bool = false, calendar: Calendar) -> [DayGroup] {
-        let matches = moments.filter { (mood == nil || $0.mood == mood) && (!favoritesOnly || $0.isFavorite) }
+    func dayGroups(matching mood: MomentMood? = nil, favoritesOnly: Bool = false,
+                   tag: String? = nil, calendar: Calendar) -> [DayGroup] {
+        let tagKey = tag.map(MomentTags.key(for:))
+        let matches = moments.filter { moment in
+            guard (mood == nil || moment.mood == mood), (!favoritesOnly || moment.isFavorite) else { return false }
+            guard let tagKey else { return true }
+            return moment.tags.contains { MomentTags.key(for: $0) == tagKey }
+        }
         return Dictionary(grouping: matches, by: { calendar.startOfDay(for: $0.occurredAt) })
             .map { DayGroup(date: $0.key, moments: $0.value) }
             .sorted { $0.date > $1.date }
     }
 
     var favoriteCount: Int { moments.lazy.filter(\.isFavorite).count }
+
+    var tagCounts: [TagCount] {
+        let builtInNames = Dictionary(uniqueKeysWithValues: MomentTags.builtIn.map { (MomentTags.key(for: $0), $0) })
+        var counts: [String: (name: String, count: Int)] = [:]
+        for moment in moments {
+            for tag in MomentTags.distinct(moment.tags) {
+                let key = MomentTags.key(for: tag)
+                guard !key.isEmpty else { continue }
+                let name = builtInNames[key] ?? tag.trimmingCharacters(in: .whitespacesAndNewlines)
+                counts[key, default: (name: name, count: 0)].count += 1
+            }
+        }
+        return counts.map { TagCount(id: $0.key, name: $0.value.name, count: $0.value.count) }
+            .sorted { $0.count == $1.count ? $0.id < $1.id : $0.count > $1.count }
+    }
 
     var moods: [MoodCount] {
         var counts: [MomentMood: Int] = [:]

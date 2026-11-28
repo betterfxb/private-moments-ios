@@ -25,3 +25,11 @@
 修复版最大字号原图确认三个操作同时可见。XCTest 实际点击取消后返回当日并成功打开恢复表单，随后在首屏直接查询滚动区下方尚未呈现的感受选项而失败。复验保留对所选感受的断言，先正常滚动到该控件再检查。[修复版提示](evidence/batch-38/46081896957/compact-dark-accessibility-review-calendar/Month-calendar-draft-conflict-en.png) · [运行与断言位置](https://github.com/betterfxb/private-moments-ios/actions/runs/46081896957)
 
 终稿的 app 源码一致。常规字号 `e2746ff` 与最大辅助字号 `9d99133` 各通过 12 项日期单测和 1 个双语原生用例。空白日取消保持为空，保存回到原日，计数从零变一且未改变相邻日的记录数。窗口重新打开后，草稿保护提示保持同一日期，原草稿可继续，已选感受保留。[常规运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46081902337) · [最大字号运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46083464796) · [最大字号空日](evidence/batch-38/46083464796/compact-dark-accessibility-review-calendar/Month-calendar-add-empty-zh-Hans.png) · [最大字号草稿提示](evidence/batch-38/46083464796/compact-dark-accessibility-review-calendar/Month-calendar-draft-conflict-en.png)
+
+## 第 39 批 按标签回顾
+
+「本月标签」与月历相邻，每行显示标签名和该月记录数。点按后复用现有按日分组的记录区。以相同标签跨两个月、同月重复使用及一条记录带多标签为夹具。另用领域测试覆盖历史导入数据中的大小写和空白变体。标签只来自本机记录，使用现有标签归一化和内置标签本地化。
+
+首次先行作业在执行 XCTest 前识别到合成长标签混在应用字符串内。将它改为 Debug 测试启动参数的数据，并补齐 Release 构建禁止该测试字段的检查。该次作业用于定位夹具问题。[本地化审计拦截](https://github.com/betterfxb/private-moments-ios/actions/runs/46085468487)
+
+修正夹具后的先行版本 `318935a` 通过日期单测和第 38 批双语月历回归，随后在「有标签的月份必须提供按标签回顾入口」的断言失败。[原生基线运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46086026599) · [原图](evidence/batch-39/46086026599/compact-light-review-calendar/Month-calendar-tags-missing-en.png)
