@@ -10,6 +10,7 @@ struct RecapView: View {
     let startedAt: Date
     let existingMoment: Moment?
     let isManualEntry: Bool
+    private let isCalendarEntry: Bool
     let isQuickRecord: Bool
     let tagsOnly: Bool
     let onCancel: () -> Void
@@ -38,7 +39,7 @@ struct RecapView: View {
     @FocusState private var focusedField: InputField?
     @ScaledMetric(relativeTo: .body) private var noteMinimumHeight: CGFloat = 112
     private let keyboardDismissTargetSize: CGFloat = 44
-    private var usesJournalPalette: Bool { isQuickRecord || tagsOnly }
+    private var usesJournalPalette: Bool { isQuickRecord || tagsOnly || isCalendarEntry }
     private var actionColor: Color { usesJournalPalette ? AppColors.journalAccent : AppColors.accentText }
     private var actionBackground: Color { usesJournalPalette ? AppColors.journalSelection : AppColors.accentWash }
 
@@ -86,13 +87,14 @@ struct RecapView: View {
     }
 
     init(durationSeconds: Int, startedAt: Date = .now, existingMoment: Moment? = nil,
-         isManualEntry: Bool = false, isQuickRecord: Bool = false, tagsOnly: Bool = false,
+         isManualEntry: Bool = false, isCalendarEntry: Bool = false, isQuickRecord: Bool = false, tagsOnly: Bool = false,
          repeatPreset: MomentRepeatPreset? = nil, recoveredDraft: RecapDraft? = nil,
          onCancel: @escaping () -> Void, onSaved: @escaping (Moment) -> Void) {
         self.durationSeconds = durationSeconds
         self.startedAt = startedAt
         self.existingMoment = existingMoment
         self.isManualEntry = isManualEntry
+        self.isCalendarEntry = isCalendarEntry
         self.isQuickRecord = isQuickRecord
         self.tagsOnly = tagsOnly
         self.onCancel = onCancel
@@ -138,13 +140,13 @@ struct RecapView: View {
                         Divider()
                         ratingSection
                     }
-                    .modifier(JournalPanel())
+                    .modifier(JournalPanel(usesJournalPalette: isCalendarEntry))
                     VStack(alignment: .leading, spacing: 20) {
                         tagsSection
                         Divider()
                         noteSection
                     }
-                    .modifier(JournalPanel())
+                    .modifier(JournalPanel(usesJournalPalette: isCalendarEntry))
                 }
                 if !tagsOnly || focusedField != .tag { saveSection }
             }
@@ -359,7 +361,7 @@ struct RecapView: View {
                 .padding(.horizontal, timingContentInset)
             occurrenceDateControl
             startTimeControl
-            if isManualEntry, let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: .now) {
+            if isManualEntry, !isCalendarEntry, let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: .now) {
                 Button("Yesterday") { timing.occurredAt = yesterday }
                     .buttonStyle(.bordered)
                     .accessibilityIdentifier("recap.yesterday")
@@ -393,7 +395,8 @@ struct RecapView: View {
         }
         .padding(.horizontal, dynamicTypeSize.isAccessibilitySize ? 0 : 16)
         .padding(.vertical, 16)
-        .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+        .background(isCalendarEntry ? AppColors.journalNote : AppColors.surface,
+                    in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
     }
 
     private var timingContentInset: CGFloat { dynamicTypeSize.isAccessibilitySize ? 16 : 0 }

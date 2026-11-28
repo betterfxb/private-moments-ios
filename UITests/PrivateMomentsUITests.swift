@@ -1047,6 +1047,93 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testCalendarEntryReturnsToMonthTags() {
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let one = english ? "1 moment" : "1 条记录"
+            let app = makeApp(language: language)
+            let tag = "Slow morning notes"
+            let screenshots = "Month-calendar-journey-\(language)"
+            app.launch()
+            selectTab("Review", "回顾", language: language, app: app)
+            tap(app.buttons["review.month"], in: app)
+            tap(app.buttons["review.previous"], in: app)
+            let range = app.staticTexts["weekReview.range"]
+            let month = range.label
+            let choose = app.buttons["review.calendar.chooseDay"]
+            if choose.exists {
+                tap(choose, in: app)
+                tap(app.buttons["review.calendar.toggleDays"], in: app)
+            }
+            let day = app.buttons["review.calendar.day.2"]
+            reveal(day, in: app)
+            XCTAssertEqual(day.value as? String, english ? "0 moments" : "0 条记录")
+            tap(day, in: app)
+
+            let title = app.staticTexts["review.records.title"]
+            let add = app.buttons["review.calendar.addMoment"]
+            let clear = app.buttons["review.clearMood"]
+            XCTAssertTrue(add.waitForExistence(timeout: 8))
+            let date = title.label
+            XCTAssertNotEqual(date, english ? "Moments" : "记录")
+            revealFully(from: add, through: add, in: app)
+            assertAboveBottomTabBar(add, message: "The selected day must offer an unobstructed add action.", app: app)
+            capture("\(screenshots)-01-day", app, stableSurface: add)
+            tap(add, in: app)
+            let save = app.buttons["recap.saveToolbar"]
+            XCTAssertTrue(save.waitForExistence(timeout: 8))
+            XCTAssertFalse(app.buttons["recap.yesterday"].exists, "A preselected calendar date must keep its context.")
+            capture("\(screenshots)-02-form", app, stableSurface: save)
+            enterCalendarTag(tag, screenshot: "\(screenshots)-03-keyboard", app: app)
+            tap(save, in: app)
+
+            XCTAssertTrue(add.waitForExistence(timeout: 8))
+            XCTAssertEqual(title.label, date)
+            XCTAssertEqual(range.label, month)
+            let records = app.buttons.matching(identifier: "weekReview.moment")
+            XCTAssertEqual(records.count, 1)
+            tap(clear, in: app)
+            let tagButton = app.buttons["review.tag.slow morning notes"]
+            revealFully(from: tagButton, through: tagButton, in: app)
+            XCTAssertEqual(tagButton.value as? String, one)
+            capture("\(screenshots)-04-tags", app, stableSurface: tagButton)
+            tap(tagButton, in: app)
+            XCTAssertEqual(title.label, tag)
+            XCTAssertEqual(records.count, 1)
+            XCTAssertFalse(app.staticTexts[english ? "Feelings" : "感受分布"].exists)
+            reveal(records.firstMatch, in: app)
+            capture("\(screenshots)-05-results", app, stableSurface: records.firstMatch)
+            tap(records.firstMatch, in: app)
+            let tagText = app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", tag)).firstMatch
+            reveal(tagText, in: app)
+            capture("\(screenshots)-06-detail", app, stableSurface: tagText)
+            goBack(app)
+            XCTAssertTrue(clear.waitForExistence(timeout: 8))
+            XCTAssertEqual(title.label, tag)
+            XCTAssertEqual(range.label, month)
+            app.terminate()
+        }
+    }
+
+    private func enterCalendarTag(_ tag: String, screenshot: String, app: XCUIApplication) {
+        tap(app.buttons["recap.customTags"], in: app)
+        let field = app.textFields["recap.newTag"]
+        tap(field, in: app)
+        field.typeText(tag)
+        XCTAssertEqual(field.value as? String, tag)
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)
+        let addTag = app.buttons["recap.addTagKeyboard"].firstMatch
+        let save = app.buttons["recap.saveToolbar"]
+        XCTAssertTrue(addTag.waitForExistence(timeout: 10) && addTag.isHittable)
+        XCTAssertTrue(save.isHittable && app.windows.firstMatch.frame.contains(save.frame))
+        XCTAssertFalse(save.frame.intersects(keyboard.frame))
+        assertToolbarTarget(save)
+        capture(screenshot, app, stableSurface: addTag)
+        addTag.tap()
+        XCTAssertTrue(app.buttons["recap.tag.\(tag)"].isSelected)
+    }
+
     func testMonthReviewTagCountsFollowEditsAndDeletion() {
         for language in ["en", "zh-Hans"] {
             let english = language == "en"
@@ -1679,6 +1766,26 @@ final class PrivateMomentsUITests: XCTestCase {
         reveal(day, in: app)
         XCTAssertEqual(day.value as? String, "1 moment")
         capture("Pad-journal-07-narrow-calendar", app, stableSurface: day)
+        tap(day, in: app)
+        let calendarAdd = app.buttons["review.calendar.addMoment"]
+        tap(calendarAdd, in: app)
+        let calendarTag = "Window reflections"
+        enterCalendarTag(calendarTag, screenshot: "Pad-journal-09-calendar-entry-keyboard", app: app)
+        tap(save, in: app)
+        XCTAssertTrue(calendarAdd.waitForExistence(timeout: 8))
+        let dayRecords = app.buttons.matching(identifier: "weekReview.moment")
+        XCTAssertEqual(dayRecords.count, 2)
+        let clear = app.buttons["review.clearMood"]
+        tap(clear, in: app)
+        let monthTag = app.buttons["review.tag.window reflections"]
+        revealFully(from: monthTag, through: monthTag, in: app)
+        XCTAssertEqual(monthTag.value as? String, "1 moment")
+        tap(monthTag, in: app)
+        XCTAssertEqual(dayRecords.count, 1)
+        reveal(dayRecords.firstMatch, in: app)
+        capture("Pad-journal-10-narrow-month-tag", app, stableSurface: dayRecords.firstMatch)
+        tap(clear, in: app)
+        if choose.exists { tap(choose, in: app) }
         tap(day, in: app)
         let record = app.buttons.matching(identifier: "weekReview.moment").firstMatch
         tap(record, in: app)

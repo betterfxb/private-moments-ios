@@ -192,6 +192,7 @@ struct RootView: View {
                 durationSeconds: 0,
                 startedAt: startedAt,
                 isManualEntry: true,
+                isCalendarEntry: fromReview,
                 onCancel: close,
                 onSaved: { moment in
                     close()

@@ -64,6 +64,7 @@ struct MomentReviewView: View {
 
     private var calendar: Calendar { .current }
     private var selectedDate: Date { historicalDate ?? referenceDate }
+    private var hasFocusedRecords: Bool { recordFilter?.day != nil || recordFilter?.tag != nil }
     private var currentPeriodStart: Date {
         period.interval(containing: referenceDate, calendar: calendar)?.start ?? referenceDate
     }
@@ -149,12 +150,12 @@ struct MomentReviewView: View {
                     showRecords(matching: .day(date))
                 }
             }
-            if recordFilter?.day == nil {
+            if !hasFocusedRecords {
                 monthTags(review)
                 monthHighlights(review)
             }
         }
-        if showsPeriodControls, recordFilter?.day == nil,
+        if showsPeriodControls, !hasFocusedRecords,
            let previous = MomentDateQuery.previousReview(store.moments, period: period, from: review, calendar: calendar) {
             comparison(review, previous: previous)
         }
@@ -165,7 +166,7 @@ struct MomentReviewView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("weekReview.empty")
         } else {
-            if !review.moments.isEmpty, recordFilter?.day == nil { feelings(review) }
+            if !review.moments.isEmpty, !hasFocusedRecords { feelings(review) }
             records(review)
         }
     }
@@ -547,12 +548,21 @@ struct MomentReviewView: View {
     }
 
     private func records(_ review: MomentReview) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            sectionHeading(Text("Moments"))
+        let selectedDay = recordFilter?.day
+        let title = hasFocusedRecords ? recordFilter?.title(locale: locale) : nil
+        let groups = showsPeriodControls
+            ? review.dayGroups(matching: recordFilter?.mood, favoritesOnly: recordFilter == .favorites,
+                               tag: recordFilter?.tag, calendar: calendar).filter { selectedDay == nil || $0.date == selectedDay }
+            : []
+        return VStack(alignment: .leading, spacing: 12) {
+            sectionHeading(title ?? Text("Moments"))
+                .accessibilityIdentifier("review.records.title")
                 .accessibilityFocused($recordsFocused)
                 .id("review.records")
             if let recordFilter {
-                recordFilter.title(locale: locale).foregroundStyle(AppColors.secondaryText)
+                if !hasFocusedRecords {
+                    recordFilter.title(locale: locale).foregroundStyle(AppColors.secondaryText)
+                }
                 if let day = recordFilter.day, day <= calendar.startOfDay(for: referenceDate), let onAddForDay {
                     calendarEntryButton(for: day, onAdd: onAddForDay)
                 }
@@ -567,36 +577,18 @@ struct MomentReviewView: View {
                 } label: {
                     Text(clearTitle)
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                        .foregroundStyle(AppColors.accentText)
+                        .foregroundStyle(returnsToCalendar || returnsToTags ? AppColors.journalAccent : AppColors.accentText)
                         .frame(minHeight: 44)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("review.clearMood")
             }
-            LazyVStack(spacing: 9) {
+            if showsPeriodControls, groups.isEmpty {
+                emptyRecordResults
+            }
+            LazyVStack(alignment: .leading, spacing: 9) {
                 if showsPeriodControls {
-                    let selectedDay = recordFilter?.day
-                    let groups = review.dayGroups(matching: recordFilter?.mood,
-                                                  favoritesOnly: recordFilter == .favorites,
-                                                  tag: recordFilter?.tag, calendar: calendar)
-                        .filter { selectedDay == nil || $0.date == selectedDay }
-                    if groups.isEmpty {
-                        if selectedDay != nil {
-                            Text("No moments on this day")
-                                .foregroundStyle(AppColors.secondaryText)
-                                .accessibilityIdentifier("review.calendar.emptyDay")
-                        } else if recordFilter?.tag != nil {
-                            Text("No moments with this tag")
-                                .foregroundStyle(AppColors.secondaryText)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .accessibilityIdentifier("review.tag.empty")
-                        } else {
-                            Text(recordFilter == .favorites ? LocalizedStringKey("No favorites in this month")
-                                 : LocalizedStringKey("No moments match this feeling"))
-                                .foregroundStyle(AppColors.secondaryText)
-                        }
-                    }
                     ForEach(groups) { group in
                         if selectedDay == nil {
                             let label = group.date.formatted(.dateTime.month(.abbreviated).day().weekday(.abbreviated).locale(locale))
@@ -617,6 +609,21 @@ struct MomentReviewView: View {
         }
     }
 
+    private var emptyRecordResults: some View {
+        Group {
+            if recordFilter?.day != nil {
+                Text("No moments on this day").accessibilityIdentifier("review.calendar.emptyDay")
+            } else if recordFilter?.tag != nil {
+                Text("No moments with this tag").accessibilityIdentifier("review.tag.empty")
+            } else {
+                Text(recordFilter == .favorites ? LocalizedStringKey("No favorites in this month")
+                     : LocalizedStringKey("No moments match this feeling"))
+            }
+        }
+        .foregroundStyle(AppColors.secondaryText)
+        .fixedSize(horizontal: false, vertical: true)
+    }
+
     private func calendarEntryButton(for day: Date, onAdd: @escaping (Date) -> Void) -> some View {
         let outline = RoundedRectangle(cornerRadius: AppRadius.control)
         return Button { onAdd(day) } label: {
@@ -625,6 +632,7 @@ struct MomentReviewView: View {
                     .fixedSize(horizontal: false, vertical: true)
             } icon: {
                 Image(systemName: "plus")
+                    .font(.system(size: 18, weight: .semibold))
             }
             .font(.system(.subheadline, design: .rounded).weight(.semibold))
             .foregroundStyle(AppColors.journalAccent)

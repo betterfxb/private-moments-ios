@@ -37,3 +37,11 @@
 `b8a3c81` 标准字号通过 13 项日期单测及两个双语原生用例，包括标签跨月、编辑、删除、清除和返回。最大辅助字号通过日期单测及月历补记用例，但原生测试测得长标签行高 543 点，无法完全显示在导航与标签栏之间。实拍显示放大的装饰图标和箭头压缩了文字宽度，导致标题和计数多处断行。候选把辅助字号的标签行宽交给文字，计数使用跟随系统字号的脚注字阶，保留整行触控。[标准字号运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46087425442) · [本月标签原图](evidence/batch-39/46087425442/compact-light-review-calendar/Month-calendar-tag-summary-zh-Hans.png) · [最大字号首轮失败原图](evidence/batch-39/46087429021/compact-dark-accessibility-review-calendar/Content-not-fully-visible.png)
 `e59512b` 最大字号英文实拍的同一长标签行缩至 305.5 点，完整标签和一行计数进入同一屏。用例已走通编辑后仍保留当月筛选，再删除最后一条带标签记录。此时界面树显示当月范围和清除入口仍在，空状态位于屏幕下方，测试原先仅等待控件出现。复验改为先滚动到空状态，再核对双语文字、零条结果与月份。[修复原图](evidence/batch-39/46089926089/compact-dark-accessibility-review-calendar/Month-calendar-tag-summary-en.png) · [断言日志](evidence/batch-39/46089926089/compact-dark-accessibility-review-calendar/xctest-extract.txt)
 `19ea943` 通过英文长标签、编辑和删除后的空状态，随后在解除筛选时仍停在记录区末尾，无法顺畅找回本月标签。返回动作现在按剩余内容定位到标签区或月历，并同步更新可见与辅助读屏的动作名称。[空结果原图](evidence/batch-39/46092265935/compact-dark-accessibility-review-calendar/Month-calendar-tag-empty-en.png) · [返回位置运行日志](evidence/batch-39/46092265935/compact-dark-accessibility-review-calendar/xctest-extract.txt)
+
+终稿 `c2d3d2e` 的两个紧凑 iPhone 配置各通过 13 项日期单测和 2 个双语原生用例。长标签可以全行显示，删除后可读到空结果，返回时定位到本月标签。月份切换与编辑、删除后的结果均由用例检查。[标准字号](https://github.com/betterfxb/private-moments-ios/actions/runs/46094601218) · [最大辅助字号](https://github.com/betterfxb/private-moments-ios/actions/runs/46094597425) · [最大字号原图](evidence/batch-39/46094597425/compact-dark-accessibility-review-calendar/Month-calendar-tag-summary-en.png)
+
+## 第 40 批 完整流程精修
+
+第 38 批实拍显示，空日处的通用「记录」标题占去辅助字号下的一行，切进表单还会改变底色并显示「昨天」捷径。第 39 批的筛选截图显示，无关的整月统计出现在标签结果上方。此轮在日期或标签作为结果标题时收起月度统计，由对应标题直接承接补记或结果。空结果与清除动作对齐。月历发起的补记复用暖纸色、原生日期控件及普通表单，保留日期编辑，去掉已预选日期场景中的「昨天」捷径。
+
+从一条全新的历史补记开始输入自定义标签，检验键盘存在时保存仍可达、保存回原日、标签数增加、筛选命中和详情返回。在 iPad 的实际系统窗口复用同一路径，在 iOS 17.5 额外跑同一双语流程并保留原生截图。增加用例后给回顾定向步骤留出 45 分钟，原有时间线定向时限保持原值。

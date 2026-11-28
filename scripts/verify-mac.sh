@@ -122,6 +122,7 @@ JOURNAL_FEATURE_METHODS=(
     testQuickRecordCanBeCompletedLaterAndReusesCustomTags
     testMonthCalendarOpensTheDayAndUpdatesAfterDeletion
     testMonthReviewTagCountsFollowEditsAndDeletion
+    testCalendarEntryReturnsToMonthTags
 )
 if [[ "$ROTATION_ONLY" == "1" ]]; then
     printf '\nFocused iPad system-window diagnostic.\n'
@@ -174,6 +175,7 @@ elif [[ "$ACCEPTANCE_PART" == "review-calendar" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testMonthCalendarOpensTheDayAndUpdatesAfterDeletion")
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testMonthReviewTagCountsFollowEditsAndDeletion")
+    TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testCalendarEntryReturnsToMonthTags")
 elif [[ "$ACCEPTANCE_PART" == "journal-features" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentTagTests)

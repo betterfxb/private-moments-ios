@@ -350,6 +350,26 @@ jobs:
           PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments-iOS17.xcresult
         run: bash scripts/verify-ios17.sh
 
+      - name: Export iOS 17 XCTest screenshots
+        if: always()
+        shell: bash
+        run: |
+          result_bundle="${RUNNER_TEMP}/PrivateMoments-iOS17.xcresult"
+          if [[ -d "$result_bundle" ]]; then
+            screenshot_directory="${RUNNER_TEMP}/PrivateMoments-iOS17-Screenshots"
+            mkdir -p "$screenshot_directory"
+            xcrun xcresulttool export attachments --path "$result_bundle" --output-path "$screenshot_directory"
+          fi
+
+      - name: Upload iOS 17 XCTest screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: private-moments-ui-screenshots-ios17
+          path: ${{ runner.temp }}/PrivateMoments-iOS17-Screenshots
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Upload iOS 17 XCTest result bundle
         if: always()
         uses: actions/upload-artifact@v7

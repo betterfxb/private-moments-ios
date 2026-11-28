@@ -45,8 +45,9 @@ def matrix(scope: str, smoke_profile: str = "compact-light", acceptance_suite: s
     if scope != "full":
         return {"include": selected}
     if acceptance_suite in {"timeline-tags", "review-calendar"} and selected[0]["family"] == "compact":
+        test_timeout = 45 if acceptance_suite == "review-calendar" else 30
         return {"include": [dict(selected[0], suite=acceptance_suite,
-                                 test_timeout_minutes=30, timeout_minutes=55)]}
+                                 test_timeout_minutes=test_timeout, timeout_minutes=test_timeout + 25)]}
 
     common_suites = [("gallery", 80), ("journal", 80), ("files", 55)]
     additional_suites = {
