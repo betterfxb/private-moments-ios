@@ -199,7 +199,7 @@ struct RecapView: View {
                     .foregroundStyle(actionColor)
                     .accessibilityLabel("Add tag")
                     .accessibilityIdentifier("recap.addTagKeyboard")
-                    tagCount
+                    tagCount.fixedSize()
                 }
                 Spacer()
                 Button { focusedField = nil } label: {
@@ -562,7 +562,7 @@ struct RecapView: View {
             if focusedField != .tag {
                 tagCount.frame(maxWidth: .infinity, alignment: .trailing)
             }
-            if let tagMessage {
+            if let tagMessage, !showsTagLimitInToolbar {
                 Text(tagMessage)
                     .font(.footnote)
                     .foregroundStyle(AppColors.destructive)
@@ -599,17 +599,30 @@ struct RecapView: View {
     }
 
     private var tagCount: some View {
-        let trimmed = tagInput.trimmingCharacters(in: .whitespacesAndNewlines)
-        let length = trimmed.count
+        let length = trimmedTagInput.count
         let maximum = MomentValidator.maximumTagLength
-        let invalidLength = !trimmed.isEmpty && (try? MomentValidator.validateTag(trimmed)) == nil
-        return Text(AppLocalization.format("%lld / %lld", length, maximum))
+        let exceedsLimit = tagExceedsLengthLimit
+        let display = showsTagLimitInToolbar
+            ? AppLocalization.format("Too long · %lld / %lld", length, maximum)
+            : AppLocalization.format("%lld / %lld", length, maximum)
+        return Text(display)
             .font(.system(.caption2, design: .rounded).monospacedDigit())
-            .fontWeight(invalidLength ? .semibold : .regular)
-            .foregroundStyle(invalidLength || tagMessage != nil ? AppColors.destructive : AppColors.secondaryText)
+            .fontWeight(exceedsLimit ? .semibold : .regular)
+            .foregroundStyle(exceedsLimit || tagMessage != nil ? AppColors.destructive : AppColors.secondaryText)
             .accessibilityLabel(AppLocalization.format("Tag, %lld of %lld characters", length, maximum))
             .accessibilityValue(Text(verbatim: tagMessage ?? ""))
             .accessibilityIdentifier("recap.tagCount")
+    }
+
+    private var trimmedTagInput: String { tagInput.trimmingCharacters(in: .whitespacesAndNewlines) }
+
+    private var tagExceedsLengthLimit: Bool {
+        let tag = trimmedTagInput
+        return !tag.isEmpty && (try? MomentValidator.validateTag(tag)) == nil
+    }
+
+    private var showsTagLimitInToolbar: Bool {
+        focusedField == .tag && dynamicTypeSize.isAccessibilitySize && tagMessage != nil && tagExceedsLengthLimit
     }
 
     private func revealTagEditor(using scroll: ScrollViewProxy) {

@@ -579,8 +579,7 @@ final class PrivateMomentsUITests: XCTestCase {
             add.tap()
 
             let error = app.staticTexts["recap.tagError"]
-            XCTAssertTrue(error.waitForExistence(timeout: 10))
-            XCTAssertEqual(error.label, english ? "Each tag must contain 1 to 64 characters." : "每个标签需包含 1 到 64 个字符。")
+            let warning = english ? "Each tag must contain 1 to 64 characters." : "每个标签需包含 1 到 64 个字符。"
             if !keyboard.isHittable || !add.isHittable {
                 captureFailure("Month-calendar-tag-limit-\(language)-keyboard-dismissed", app)
                 XCTFail("Rejecting an oversized tag must keep both the keyboard and its Add action available.")
@@ -590,6 +589,8 @@ final class PrivateMomentsUITests: XCTestCase {
             let count = app.staticTexts["recap.tagCount"]
             XCTAssertTrue(count.waitForExistence(timeout: 5) && count.isHittable)
             XCTAssertEqual(count.label, english ? "Tag, 65 of 64 characters" : "标签，65 个字符，上限 64")
+            XCTAssertEqual(count.value as? String, warning)
+            if error.exists { XCTAssertEqual(error.label, warning) }
             capture("Month-calendar-tag-limit-\(language)-oversized", app, stableSurface: add)
 
             field.typeText(XCUIKeyboardKey.delete.rawValue)
@@ -597,6 +598,7 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertFalse(error.exists)
             XCTAssertTrue(count.isHittable)
             XCTAssertEqual(count.label, english ? "Tag, 64 of 64 characters" : "标签，64 个字符，上限 64")
+            XCTAssertTrue((count.value as? String ?? "").isEmpty)
             capture("Month-calendar-tag-limit-\(language)-corrected", app, stableSurface: add)
             add.tap()
             XCTAssertTrue(app.buttons["recap.tag.\(valid)"].isSelected)
