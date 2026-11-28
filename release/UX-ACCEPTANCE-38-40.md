@@ -33,3 +33,5 @@
 首次先行作业在执行 XCTest 前识别到合成长标签混在应用字符串内。将它改为 Debug 测试启动参数的数据，并补齐 Release 构建禁止该测试字段的检查。该次作业用于定位夹具问题。[本地化审计拦截](https://github.com/betterfxb/private-moments-ios/actions/runs/46085468487)
 
 修正夹具后的先行版本 `318935a` 通过日期单测和第 38 批双语月历回归，随后在「有标签的月份必须提供按标签回顾入口」的断言失败。[原生基线运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46086026599) · [原图](evidence/batch-39/46086026599/compact-light-review-calendar/Month-calendar-tags-missing-en.png)
+
+`b8a3c81` 标准字号通过 13 项日期单测及两个双语原生用例，包括标签跨月、编辑、删除、清除和返回。最大辅助字号通过日期单测及月历补记用例，但原生测试测得长标签行高 543 点，无法完全显示在导航与标签栏之间。实拍显示放大的装饰图标和箭头压缩了文字宽度，导致标题和计数多处断行。候选把辅助字号的标签行宽交给文字，计数使用跟随系统字号的脚注字阶，保留整行触控。[标准字号运行](https://github.com/betterfxb/private-moments-ios/actions/runs/46087425442) · [本月标签原图](evidence/batch-39/46087425442/compact-light-review-calendar/Month-calendar-tag-summary-zh-Hans.png) · [最大字号首轮失败原图](evidence/batch-39/46087429021/compact-dark-accessibility-review-calendar/Content-not-fully-visible.png)

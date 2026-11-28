@@ -377,6 +377,7 @@ struct MomentReviewView: View {
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
             : AnyLayout(HStackLayout(spacing: 14))
         let title = filter.title(locale: locale)
+        let prioritizesTagText = filter.tag != nil && dynamicTypeSize.isAccessibilitySize
         let isSelected: Bool
         if let tag = filter.tag, let selectedTag = recordFilter?.tag {
             isSelected = MomentTags.key(for: tag) == MomentTags.key(for: selectedTag)
@@ -385,13 +386,20 @@ struct MomentReviewView: View {
         }
         return Button { showRecords(matching: filter) } label: {
             HStack(alignment: .top, spacing: 10) {
-                Image(systemName: symbol).accessibilityHidden(true)
+                if !prioritizesTagText {
+                    Image(systemName: symbol).accessibilityHidden(true)
+                }
                 layout {
                     title.fontWeight(.semibold).fixedSize(horizontal: false, vertical: true)
-                    Text(AppLocalization.momentCount(count)).foregroundStyle(AppColors.secondaryText)
+                    Text(AppLocalization.momentCount(count))
+                        .font(.system(prioritizesTagText ? .footnote : .subheadline, design: .rounded))
+                        .foregroundStyle(AppColors.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                Spacer(minLength: 0)
-                Image(systemName: "chevron.forward").font(.caption.weight(.semibold)).accessibilityHidden(true)
+                if !prioritizesTagText {
+                    Spacer(minLength: 0)
+                    Image(systemName: "chevron.forward").font(.caption.weight(.semibold)).accessibilityHidden(true)
+                }
             }
             .font(.system(.subheadline, design: .rounded))
             .foregroundStyle(AppColors.journalAccent)
