@@ -568,6 +568,17 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(save, in: app)
             tap(detailAddTags, in: app)
 
+            let unsavedTag = app.buttons["recap.tag.Relaxed"]
+            tap(unsavedTag, in: app)
+            XCTAssertTrue(unsavedTag.isSelected)
+            tap(app.buttons["recap.cancel"], in: app)
+            tap(app.buttons[english ? "Discard" : "放弃"], in: app)
+            XCTAssertTrue(detailAddTags.waitForExistence(timeout: 10))
+            capture("Month-calendar-tag-limit-\(language)-discarded", app, stableSurface: detailAddTags)
+            tap(detailAddTags, in: app)
+            XCTAssertTrue(unsavedTag.waitForExistence(timeout: 5))
+            XCTAssertFalse(unsavedTag.isSelected)
+
             let field = tagEditorField(in: app)
             let keyboard = app.keyboards.firstMatch
             let add = app.buttons["recap.addTagKeyboard"].firstMatch

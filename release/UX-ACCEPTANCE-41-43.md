@@ -31,3 +31,9 @@
 基线 `05b8ef4` 输入完整的 65 字符后，先行断言未找到超限反馈。四项标签单测及两项既有 UI 用例通过。修正使显式提交失败保留焦点，后续实际编辑才清除错误。输入时的计数与键盘添加同处，收键盘后放回输入旁，超限用数字和颜色提示。[原生失败记录](https://github.com/betterfxb/private-moments-ios/actions/runs/46112348233)
 
 `86951ec` 的两种字号均通过四项标签单测与三个双语 UI 用例。原图仍显示工具栏数字被换成两行，小屏最大字号的完整错误还被键盘部分盖住。后续把计数固定在一行，最大辅助字号编辑时把简短的超限提示移到同一行，使用户可继续看到光标，辅助功能值保留完整错误。[首轮最大字号超限原图](evidence/batch-42/46114291448/compact-dark-accessibility-tag-entry/Month-calendar-tag-limit-en-oversized.png)
+
+终稿 `56a4e15` 两种字号各通过四项标签单测和三个双语原生用例。标准字号的完整提示位于输入下方，最大字号的短提示及计数同一行且与输入区分开。分别验证了键盘不退出、65 字符原文保留、65 字符未被添加、删去一个字符后提示清除，以及 64 字符保存后从详情完整读回。[标准字号原图](evidence/batch-42/46116216501/compact-light-tag-entry/Month-calendar-tag-limit-en-oversized.png) · [最大字号英文原图](evidence/batch-42/46116216429/compact-dark-accessibility-tag-entry/Month-calendar-tag-limit-en-oversized.png) · [最大字号简体中文原图](evidence/batch-42/46116216429/compact-dark-accessibility-tag-entry/Month-calendar-tag-limit-zh-Hans-oversized.png) · [修正后原图](evidence/batch-42/46116216429/compact-dark-accessibility-tag-entry/Month-calendar-tag-limit-zh-Hans-corrected.png)
+
+## 第 43 批 云端集成回归
+
+应用源码沿用第 42 批终稿。双语标签回路增加从详情编辑取消后，重新进入确认原有记录未受到影响的断言。新用例归入常规日记功能分组，定向标签验收仍保留。随后运行 iPhone 双语标签测试、iPad 系统窄窗、实际 iOS 17.5 和核心构建回归。
