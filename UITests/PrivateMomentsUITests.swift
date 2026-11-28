@@ -1856,6 +1856,115 @@ final class PrivateMomentsUITests: XCTestCase {
         try verifyNarrowIPadJournal(in: app)
     }
 
+    func testIPadJournalKeyboardContinuity() throws {
+        XCUIDevice.shared.orientation = .portrait
+        guard enableIPadWindowedApps(scrollSidebar: true) else { return }
+        let app = makeApp()
+        app.launch()
+        rotateInterface(.portrait, stage: "journal-keyboard-start", language: "en", app: app)
+        let wide = app.windows.firstMatch.frame
+        XCTAssertGreaterThanOrEqual(wide.width, 700)
+        tap(app.buttons["today.addRecord"], in: app)
+
+        let keyboard = app.keyboards.firstMatch
+        let note = app.textViews["recap.note"]
+        let noteCount = app.staticTexts["recap.noteCount"]
+        let tagCount = app.staticTexts["recap.tagCount"]
+        let draftNote = "A quiet first line\nThe second line stays"
+        tap(note, in: app)
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)
+        note.typeText(draftNote)
+        XCTAssertEqual(note.value as? String, draftNote)
+        captureSystem("Pad-journal-live-note-before-rotation", app)
+        rotateInterface(.landscapeLeft, stage: "journal-active-note", language: "en", app: app)
+        let rotatedNote = draftNote + "x"
+        assertLiveKeyboardInput(in: app, field: note, counter: noteCount, otherCounter: tagCount,
+                                    previous: draftNote, key: "x", screenshot: "Pad-journal-live-note-landscape")
+        app.buttons["recap.dismissKeyboard"].tap()
+
+        tap(app.buttons["recap.customTags"], in: app)
+        let tag = tagEditorField(in: app)
+        let draftTag = "A quiet walk with tea and a notebook"
+        tap(tag, in: app)
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)
+        tag.typeText(draftTag)
+        XCTAssertEqual(tag.value as? String, draftTag)
+        captureSystem("Pad-journal-live-tag-before-rotation", app)
+        rotateInterface(.portrait, stage: "journal-active-tag", language: "en", app: app)
+        let rotatedTag = draftTag + "x"
+        assertLiveKeyboardInput(in: app, field: tag, counter: tagCount, otherCounter: noteCount,
+                                    previous: draftTag, key: "x", screenshot: "Pad-journal-live-tag-portrait")
+        app.buttons["recap.dismissKeyboard"].tap()
+        let entry = try resizeIPadWindow(app, targetWidth: wide.width * 0.61, name: "journal-live-entry",
+                                         targetHeight: wide.height * 0.66)
+        XCTAssertLessThanOrEqual(entry.width, wide.width * 0.68)
+
+        tap(tag, in: app)
+        XCTAssertEqual(tag.value as? String, rotatedTag)
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)
+        let narrow = try resizeIPadWindow(app, targetWidth: wide.width * 0.49, name: "journal-live-tag",
+                                          keyboard: keyboard)
+        XCTAssertLessThanOrEqual(narrow.width, wide.width * 0.58)
+        assertLiveKeyboardInput(in: app, field: tag, counter: tagCount, otherCounter: noteCount,
+                                    previous: rotatedTag, key: "y", screenshot: "Pad-journal-live-tag-narrow")
+        let savedTag = rotatedTag + "y"
+        let addTag = app.buttons["recap.addTagKeyboard"].firstMatch
+        XCTAssertTrue(addTag.isHittable)
+        addTag.tap()
+        XCTAssertTrue(app.buttons["recap.tag.\(savedTag)"].isSelected)
+
+        tap(note, in: app)
+        XCTAssertEqual(note.value as? String, rotatedNote)
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)
+        let expanded = try resizeIPadWindow(app, targetWidth: wide.width * 0.75, name: "journal-live-note",
+                                            keyboard: keyboard)
+        XCTAssertGreaterThanOrEqual(expanded.width - narrow.width, 48)
+        assertLiveKeyboardInput(in: app, field: note, counter: noteCount, otherCounter: tagCount,
+                                    previous: rotatedNote, key: "y", screenshot: "Pad-journal-live-note-expanded")
+        let save = app.buttons["recap.saveToolbar"]
+        XCTAssertTrue(save.isEnabled && save.isHittable && expanded.contains(save.frame))
+        XCTAssertFalse(save.frame.intersects(keyboard.frame))
+        save.tap()
+
+        selectTab("Timeline", "时间线", language: "en", app: app)
+        XCTAssertEqual(app.staticTexts["timeline.resultCount"].label, "1 moment")
+        tap(app.buttons.matching(identifier: "moment.row").firstMatch, in: app)
+        XCTAssertTrue(app.staticTexts[savedTag].waitForExistence(timeout: 10))
+        let savedNote = app.staticTexts["detail.note"]
+        reveal(savedNote, in: app)
+        XCTAssertEqual(savedNote.label, rotatedNote + "y")
+        capture("Pad-journal-live-saved-record", app, stableSurface: savedNote)
+    }
+
+    private func assertLiveKeyboardInput(in app: XCUIApplication, field: XCUIElement, counter: XCUIElement,
+                                         otherCounter: XCUIElement, previous: String, key: String,
+                                         screenshot: String) {
+        let keyboard = app.keyboards.firstMatch
+        let character = keyboard.keys[key].firstMatch
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            keyboard.exists && keyboard.isHittable && character.exists && character.isHittable && counter.isHittable
+        }, object: nil)
+        if XCTWaiter.wait(for: [ready], timeout: 10) != .completed {
+            captureFailure(screenshot + "-no-live-keyboard", app)
+            XCTFail("The software keyboard and the original field's counter must remain available after the transition.")
+            return
+        }
+        XCTAssertEqual(field.value as? String, previous)
+        XCTAssertFalse(otherCounter.exists)
+        // Tap a system key without refocusing the field or using element.typeText.
+        character.tap()
+        let expected = previous + key
+        let entered = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            (field.value as? String) == expected
+        }, object: nil)
+        if XCTWaiter.wait(for: [entered], timeout: 6) != .completed {
+            captureFailure(screenshot + "-key-did-not-reach-field", app)
+            XCTFail("The original field must receive the new character at the insertion point without another tap.")
+            return
+        }
+        captureSystem(screenshot, app)
+    }
+
     private func verifyNarrowIPadJournal(in app: XCUIApplication) throws {
         let window = app.windows.firstMatch
         let save = app.buttons["recap.saveToolbar"]

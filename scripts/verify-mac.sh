@@ -78,8 +78,8 @@ esac
 [[ "$IPAD_TESTS" == "0" || "$IPAD_TESTS" == "1" ]] || fail "iPad test selection must be 0 or 1."
 [[ "$ROTATION_ONLY" != "1" || ( "$IPAD_TESTS" == "1" && "$BACKUP_ONLY" == "0" && "$INPUT_ONLY" == "0" ) ]] || fail "Rotation smoke requires iPad and excludes input/backup smoke."
 case "$ROTATION_START" in
-    reference|cold-en|cold-zh-Hans|window-resize|window-resize-keyboard|journal-journey|journal-tag-window) ;;
-    *) fail "Rotation start must be reference, cold-en, cold-zh-Hans, window-resize, window-resize-keyboard, journal-journey or journal-tag-window." ;;
+    reference|cold-en|cold-zh-Hans|window-resize|window-resize-keyboard|journal-journey|journal-tag-window|journal-keyboard-continuity) ;;
+    *) fail "Rotation start must be reference, cold-en, cold-zh-Hans, window-resize, window-resize-keyboard, journal-journey, journal-tag-window or journal-keyboard-continuity." ;;
 esac
 [[ "$ROTATION_START" == "reference" || "$ROTATION_ONLY" == "1" ]] || fail "Cold rotation and window resizing require explicit iPad diagnostics."
 if [[ "$ROTATION_START" != "window-resize" ]]; then
@@ -93,6 +93,9 @@ if [[ "$ROTATION_START" != "journal-journey" ]]; then
 fi
 if [[ "$ROTATION_START" != "journal-tag-window" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadJournalTagEditorInPortraitWindow)
+fi
+if [[ "$ROTATION_START" != "journal-keyboard-continuity" ]]; then
+    TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadJournalKeyboardContinuity)
 fi
 if [[ "$ROTATION_START" != "cold-en" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-skip-testing:PrivateMomentsUITests/PrivateMomentsUITests/testIPadColdEnglishRotationContinuity)
@@ -137,6 +140,7 @@ if [[ "$ROTATION_ONLY" == "1" ]]; then
         window-resize-keyboard) ROTATION_METHOD=testIPadWindowResizeWithKeyboard ;;
         journal-journey) ROTATION_METHOD=testIPadQuickJournalWindowContinuity ;;
         journal-tag-window) ROTATION_METHOD=testIPadJournalTagEditorInPortraitWindow ;;
+        journal-keyboard-continuity) ROTATION_METHOD=testIPadJournalKeyboardContinuity ;;
         reference) ROTATION_METHOD=testIPadRotationContinuity ;;
     esac
     printf 'Rotation start: %s; selected method: %s\n' "$ROTATION_START" "$ROTATION_METHOD"

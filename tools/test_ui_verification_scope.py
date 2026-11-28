@@ -254,7 +254,8 @@ class VerificationScopeTests(unittest.TestCase):
 
     def test_journal_window_journey_is_an_explicit_ipad_diagnostic(self):
         for start, method in [('journal-journey', 'testIPadQuickJournalWindowContinuity'),
-                              ('journal-tag-window', 'testIPadJournalTagEditorInPortraitWindow')]:
+                              ('journal-tag-window', 'testIPadJournalTagEditorInPortraitWindow'),
+                              ('journal-keyboard-continuity', 'testIPadJournalKeyboardContinuity')]:
             with self.subTest(start=start):
                 identifier = PREFIX + method
                 focused = self.script(start, PRIVATE_MOMENTS_UI_ROTATION_ONLY='1',
