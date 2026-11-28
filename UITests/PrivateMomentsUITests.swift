@@ -1052,7 +1052,7 @@ final class PrivateMomentsUITests: XCTestCase {
             let english = language == "en"
             let one = english ? "1 moment" : "1 条记录"
             let app = makeApp(language: language)
-            let tag = "Slow morning notes"
+            let tag = "Quiet morning reflections with warm tea and an open window"
             let screenshots = "Month-calendar-journey-\(language)"
             app.launch()
             selectTab("Review", "回顾", language: language, app: app)
@@ -1093,7 +1093,7 @@ final class PrivateMomentsUITests: XCTestCase {
             let records = app.buttons.matching(identifier: "weekReview.moment")
             XCTAssertEqual(records.count, 1)
             tap(clear, in: app)
-            let tagButton = app.buttons["review.tag.slow morning notes"]
+            let tagButton = app.buttons["review.tag.\(tag.lowercased())"]
             revealFully(from: tagButton, through: tagButton, in: app)
             XCTAssertEqual(tagButton.value as? String, one)
             capture("\(screenshots)-04-tags", app, stableSurface: tagButton)
@@ -1117,8 +1117,9 @@ final class PrivateMomentsUITests: XCTestCase {
 
     private func enterCalendarTag(_ tag: String, screenshot: String, app: XCUIApplication) {
         tap(app.buttons["recap.customTags"], in: app)
-        let field = app.textFields["recap.newTag"]
+        let field = app.descendants(matching: .any).matching(identifier: "recap.newTag").firstMatch
         tap(field, in: app)
+        let shortFieldHeight = field.frame.height
         field.typeText(tag)
         XCTAssertEqual(field.value as? String, tag)
         let keyboard = app.keyboards.firstMatch
@@ -1126,6 +1127,15 @@ final class PrivateMomentsUITests: XCTestCase {
         let addTag = app.buttons["recap.addTagKeyboard"].firstMatch
         let save = app.buttons["recap.saveToolbar"]
         XCTAssertTrue(addTag.waitForExistence(timeout: 10) && addTag.isHittable)
+        if app.buttons["recap.date.open"].exists {
+            let wraps = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                field.frame.height > shortFieldHeight + 20
+            }, object: nil)
+            if XCTWaiter.wait(for: [wraps], timeout: 5) != .completed {
+                captureFailure(screenshot + "-single-line", app)
+                XCTFail("The long tag must expand the editor vertically at accessibility sizes.")
+            }
+        }
         XCTAssertTrue(save.isHittable && app.windows.firstMatch.frame.contains(save.frame))
         XCTAssertFalse(save.frame.intersects(keyboard.frame))
         assertToolbarTarget(save)
@@ -1769,7 +1779,7 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(day, in: app)
         let calendarAdd = app.buttons["review.calendar.addMoment"]
         tap(calendarAdd, in: app)
-        let calendarTag = "Window reflections"
+        let calendarTag = "Quiet morning reflections with warm tea and an open window"
         enterCalendarTag(calendarTag, screenshot: "Pad-journal-09-calendar-entry-keyboard", app: app)
         tap(save, in: app)
         XCTAssertTrue(calendarAdd.waitForExistence(timeout: 8))
@@ -1777,7 +1787,7 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(dayRecords.count, 2)
         let clear = app.buttons["review.clearMood"]
         tap(clear, in: app)
-        let monthTag = app.buttons["review.tag.window reflections"]
+        let monthTag = app.buttons["review.tag.\(calendarTag.lowercased())"]
         revealFully(from: monthTag, through: monthTag, in: app)
         XCTAssertEqual(monthTag.value as? String, "1 moment")
         tap(monthTag, in: app)
