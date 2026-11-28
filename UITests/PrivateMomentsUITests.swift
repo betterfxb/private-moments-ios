@@ -553,6 +553,63 @@ final class PrivateMomentsUITests: XCTestCase {
         }
     }
 
+    func testOversizedCustomTagCanBeCorrectedWithoutLeavingTheKeyboard() {
+        let valid = "Quiet tea by the open window with a slow song and a blue journal"
+        let oversized = valid + "s"
+        XCTAssertEqual(valid.count, 64)
+
+        for language in ["en", "zh-Hans"] {
+            let english = language == "en"
+            let app = makeApp(language: language)
+            app.launch()
+            let save = app.buttons["recap.saveToolbar"]
+            let detailAddTags = app.buttons["detail.addTags"]
+            tap(app.buttons["today.quickRecord"], in: app)
+            tap(save, in: app)
+            tap(detailAddTags, in: app)
+
+            let field = tagEditorField(in: app)
+            let keyboard = app.keyboards.firstMatch
+            let add = app.buttons["recap.addTagKeyboard"].firstMatch
+            tap(field, in: app)
+            XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)
+            field.typeText(oversized)
+            XCTAssertEqual(field.value as? String, oversized)
+            XCTAssertTrue(add.waitForExistence(timeout: 10) && add.isHittable)
+            add.tap()
+
+            let error = app.staticTexts["recap.tagError"]
+            XCTAssertTrue(error.waitForExistence(timeout: 10))
+            XCTAssertEqual(error.label, english ? "Each tag must contain 1 to 64 characters." : "每个标签需包含 1 到 64 个字符。")
+            if !keyboard.isHittable || !add.isHittable {
+                captureFailure("Month-calendar-tag-limit-\(language)-keyboard-dismissed", app)
+                XCTFail("Rejecting an oversized tag must keep both the keyboard and its Add action available.")
+            }
+            XCTAssertEqual(field.value as? String, oversized)
+            XCTAssertFalse(app.buttons["recap.tag.\(oversized)"].exists)
+            let count = app.staticTexts["recap.tagCount"]
+            XCTAssertTrue(count.waitForExistence(timeout: 5) && count.isHittable)
+            XCTAssertEqual(count.label, english ? "Tag, 65 of 64 characters" : "标签，65 个字符，上限 64")
+            capture("Month-calendar-tag-limit-\(language)-oversized", app, stableSurface: add)
+
+            field.typeText(XCUIKeyboardKey.delete.rawValue)
+            XCTAssertEqual(field.value as? String, valid)
+            XCTAssertFalse(error.exists)
+            XCTAssertTrue(count.isHittable)
+            XCTAssertEqual(count.label, english ? "Tag, 64 of 64 characters" : "标签，64 个字符，上限 64")
+            capture("Month-calendar-tag-limit-\(language)-corrected", app, stableSurface: add)
+            add.tap()
+            XCTAssertTrue(app.buttons["recap.tag.\(valid)"].isSelected)
+            tap(save, in: app)
+            let saved = app.staticTexts[valid].firstMatch
+            XCTAssertTrue(saved.waitForExistence(timeout: 10))
+            reveal(saved, in: app)
+            XCTAssertEqual(saved.label, valid)
+            capture("Month-calendar-tag-limit-\(language)-saved", app, stableSurface: saved)
+            app.terminate()
+        }
+    }
+
     func testReviewTabBrowsesPeriodsAndOpensFilteredRecord() {
         for language in ["en", "zh-Hans"] {
             let english = language == "en"

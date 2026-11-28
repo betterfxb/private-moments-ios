@@ -174,6 +174,7 @@ elif [[ "$ACCEPTANCE_PART" == "timeline-tags" ]]; then
 elif [[ "$ACCEPTANCE_PART" == "tag-entry" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentTagTests)
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testCalendarEntryReturnsToMonthTags")
+    TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testOversizedCustomTagCanBeCorrectedWithoutLeavingTheKeyboard")
     TEST_SCOPE_ARGUMENTS+=("-only-testing:$UI_SUITE/testQuickRecordCanBeCompletedLaterAndReusesCustomTags")
 elif [[ "$ACCEPTANCE_PART" == "review-calendar" ]]; then
     TEST_SCOPE_ARGUMENTS+=(-only-testing:PrivateMomentsTests/MomentDateQueryTests)

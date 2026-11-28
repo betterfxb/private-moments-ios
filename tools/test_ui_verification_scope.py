@@ -127,6 +127,7 @@ class VerificationScopeTests(unittest.TestCase):
         self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
                          ['-only-testing:PrivateMomentsTests/MomentTagTests',
                           '-only-testing:' + PREFIX + 'testCalendarEntryReturnsToMonthTags',
+                          '-only-testing:' + PREFIX + 'testOversizedCustomTagCanBeCorrectedWithoutLeavingTheKeyboard',
                           '-only-testing:' + PREFIX + 'testQuickRecordCanBeCompletedLaterAndReusesCustomTags'])
 
     def test_acceptance_part_rejects_invalid_or_mixed_scopes(self):
