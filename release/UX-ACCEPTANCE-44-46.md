@@ -35,3 +35,13 @@ iPad 同一源码复跑通过。系统窗口实测 630 → 513 → 768 点，在
 ## 第 46 批 集成回归与交付
 
 复用第 45 批通过的应用源码，运行 iPad 横竖屏及窄窗综合回归、小屏最大字号的原生输入图库、常规字号核心回归和实际 iOS 17.5 兼容验证。XCTest 使用独立测试库。
+
+最终应用源码通过 iPad 横竖屏及窄窗综合流程。系统参照与产品进入横屏，再回到竖屏。键盘打开时，窗口缩至 513 点。标签与备注均完成输入、保存和找回，详情重新扩大至 768 点。[综合作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46133662438) · [横屏原图](evidence/batch-46/46133662438/ipad-dark-accessibility/Pad-journal-01-landscape-home.png) · [窄窗原图](evidence/batch-46/46133662438/ipad-dark-accessibility/Pad-journal-09-note-keyboard.png)
+
+最大字号输入图库首轮在英文首页周菜单处失败。失败原图显示菜单已打开，界面只显示周日到周三，层级另含周四、周五及两页滚动条。当天周六还未出现。测试现分别确认一次点按已打开菜单，再在原生菜单内滚动到当天，并实际选择及清除日期。此处仅调整 XCTest。首轮独立双语搜索输入用例通过。[图库首轮](https://github.com/betterfxb/private-moments-ios/actions/runs/46133659866) · [菜单原图](evidence/batch-46/46133659866/compact-dark-accessibility/Week-menu-current-unavailable-en.png)
+
+### Windows 检查与待确认事项
+
+- `python -X utf8 -m unittest discover -s tools` 的 60 项工具测试通过。`bash -n` 的 `scripts/verify-mac.sh`、`scripts/verify-ios17.sh` 两个入口语法检查通过。
+- `node tools/audit-localization.mjs`、`node tools/audit-xcode-project.mjs`、`node tools/audit-release-materials.mjs` 通过。覆盖 311 个本地化键和 113 个 Xcode 工程对象。发布审计仍提示 Bundle ID、发布者信息和审核材料有待确认字段。
+- 真机旋转、输入法候选、VoiceOver、外接键盘及签名安装保留在设备清单。备份、计时与私密搜索的产品决定沿用现有登记。[待确认事项](DEVICE-AND-RECOVERY-DECISIONS.md)

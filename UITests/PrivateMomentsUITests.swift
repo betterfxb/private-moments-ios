@@ -1470,11 +1470,28 @@ final class PrivateMomentsUITests: XCTestCase {
                 assertAboveBottomTabBar(weekMenu, message: "The week menu must be above the bottom tab bar.", app: app)
                 weekMenu.tap()
                 let currentDay = app.descendants(matching: .any).matching(identifier: "today.week.current").firstMatch
-                guard currentDay.waitForExistence(timeout: 8) else {
-                    captureFailure("Week-menu-current-unavailable-\(language)", app)
-                    return XCTFail("One tap must open the week menu and expose its current-day action.")
+                let menu = app.collectionViews.containing(.button, identifier: "today.weekday").firstMatch
+                let opened = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                    currentDay.exists || menu.exists
+                }, object: nil)
+                guard XCTWaiter.wait(for: [opened], timeout: 8) == .completed else {
+                    captureFailure("Week-menu-not-open-\(language)", app)
+                    return XCTFail("One tap must open the native week menu.")
                 }
-                if !currentDay.isHittable { reveal(currentDay, in: app) }
+                if menu.exists {
+                    // UIKit only creates the later rows after scrolling at larger text sizes.
+                    let start = menu.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.62))
+                    let end = menu.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.30))
+                    for _ in 0..<3 where !currentDay.isHittable {
+                        start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
+                    }
+                } else if !currentDay.isHittable {
+                    reveal(currentDay, in: app)
+                }
+                guard currentDay.exists && currentDay.isHittable else {
+                    captureFailure("Week-menu-current-unavailable-\(language)", app)
+                    return XCTFail("The open week menu must make its current-day action reachable.")
+                }
                 waitForStableFrame(currentDay, requireHittable: true, message: "Today's native week menu action must settle.")
                 capture("Week-menu-\(language)", app, stableSurface: currentDay)
                 currentDay.tap()
