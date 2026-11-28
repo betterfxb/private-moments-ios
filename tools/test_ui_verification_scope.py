@@ -121,9 +121,17 @@ class VerificationScopeTests(unittest.TestCase):
                        'testLargeJournalInteractionBaseline', 'testTimelineSearchReflectsEditAndDeletion']:
             self.assertNotIn('-skip-testing:' + PREFIX + method, lines)
 
+    def test_tag_entry_selects_calendar_and_quick_entry(self):
+        result = self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='tag-entry')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([line for line in result.stdout.splitlines() if line.startswith('-only-testing:')],
+                         ['-only-testing:PrivateMomentsTests/MomentTagTests',
+                          '-only-testing:' + PREFIX + 'testCalendarEntryReturnsToMonthTags',
+                          '-only-testing:' + PREFIX + 'testQuickRecordCanBeCompletedLaterAndReusesCustomTags'])
+
     def test_acceptance_part_rejects_invalid_or_mixed_scopes(self):
         self.assertNotEqual(self.script(PRIVATE_MOMENTS_UI_ACCEPTANCE_PART='unknown').returncode, 0)
-        for part in ['gallery', 'core', 'reading', 'journal-features', 'timeline-tags', 'review-calendar']:
+        for part in ['gallery', 'core', 'reading', 'journal-features', 'timeline-tags', 'review-calendar', 'tag-entry']:
             for key in ['INPUT_ONLY', 'BACKUP_ONLY', 'PERFORMANCE_ONLY', 'WEEK_REVIEW_ONLY',
                         'ROTATION_ONLY', 'GALLERY_ONLY']:
                 with self.subTest(part=part, key=key):
