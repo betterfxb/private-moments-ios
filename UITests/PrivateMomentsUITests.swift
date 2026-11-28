@@ -1877,9 +1877,8 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(note.value as? String, draftNote)
         captureSystem("Pad-journal-live-note-before-rotation", app)
         rotateInterface(.landscapeLeft, stage: "journal-active-note", language: "en", app: app)
-        let rotatedNote = draftNote + "x"
-        assertLiveKeyboardInput(in: app, field: note, counter: noteCount, otherCounter: tagCount,
-                                    previous: draftNote, key: "x", screenshot: "Pad-journal-live-note-landscape")
+        let rotatedNote = assertLiveKeyboardInput(in: app, field: note, counter: noteCount, otherCounter: tagCount,
+                                                  previous: draftNote, key: "x", screenshot: "Pad-journal-live-note-landscape")
         app.buttons["recap.dismissKeyboard"].tap()
 
         tap(app.buttons["recap.customTags"], in: app)
@@ -1891,9 +1890,8 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(tag.value as? String, draftTag)
         captureSystem("Pad-journal-live-tag-before-rotation", app)
         rotateInterface(.portrait, stage: "journal-active-tag", language: "en", app: app)
-        let rotatedTag = draftTag + "x"
-        assertLiveKeyboardInput(in: app, field: tag, counter: tagCount, otherCounter: noteCount,
-                                    previous: draftTag, key: "x", screenshot: "Pad-journal-live-tag-portrait")
+        let rotatedTag = assertLiveKeyboardInput(in: app, field: tag, counter: tagCount, otherCounter: noteCount,
+                                                 previous: draftTag, key: "x", screenshot: "Pad-journal-live-tag-portrait")
         app.buttons["recap.dismissKeyboard"].tap()
         let entry = try resizeIPadWindow(app, targetWidth: wide.width * 0.61, name: "journal-live-entry",
                                          targetHeight: wide.height * 0.66)
@@ -1905,9 +1903,8 @@ final class PrivateMomentsUITests: XCTestCase {
         let narrow = try resizeIPadWindow(app, targetWidth: wide.width * 0.49, name: "journal-live-tag",
                                           keyboard: keyboard)
         XCTAssertLessThanOrEqual(narrow.width, wide.width * 0.58)
-        assertLiveKeyboardInput(in: app, field: tag, counter: tagCount, otherCounter: noteCount,
-                                    previous: rotatedTag, key: "y", screenshot: "Pad-journal-live-tag-narrow")
-        let savedTag = rotatedTag + "y"
+        let savedTag = assertLiveKeyboardInput(in: app, field: tag, counter: tagCount, otherCounter: noteCount,
+                                               previous: rotatedTag, key: "y", screenshot: "Pad-journal-live-tag-narrow")
         let addTag = app.buttons["recap.addTagKeyboard"].firstMatch
         XCTAssertTrue(addTag.isHittable)
         addTag.tap()
@@ -1919,8 +1916,8 @@ final class PrivateMomentsUITests: XCTestCase {
         let expanded = try resizeIPadWindow(app, targetWidth: wide.width * 0.75, name: "journal-live-note",
                                             keyboard: keyboard)
         XCTAssertGreaterThanOrEqual(expanded.width - narrow.width, 48)
-        assertLiveKeyboardInput(in: app, field: note, counter: noteCount, otherCounter: tagCount,
-                                    previous: rotatedNote, key: "y", screenshot: "Pad-journal-live-note-expanded")
+        let finalNote = assertLiveKeyboardInput(in: app, field: note, counter: noteCount, otherCounter: tagCount,
+                                                previous: rotatedNote, key: "y", screenshot: "Pad-journal-live-note-expanded")
         let save = app.buttons["recap.saveToolbar"]
         XCTAssertTrue(save.isEnabled && save.isHittable && expanded.contains(save.frame))
         XCTAssertFalse(save.frame.intersects(keyboard.frame))
@@ -1932,37 +1929,40 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[savedTag].waitForExistence(timeout: 10))
         let savedNote = app.staticTexts["detail.note"]
         reveal(savedNote, in: app)
-        XCTAssertEqual(savedNote.label, rotatedNote + "y")
+        XCTAssertEqual(savedNote.label, finalNote)
         capture("Pad-journal-live-saved-record", app, stableSurface: savedNote)
     }
 
     private func assertLiveKeyboardInput(in app: XCUIApplication, field: XCUIElement, counter: XCUIElement,
                                          otherCounter: XCUIElement, previous: String, key: String,
-                                         screenshot: String) {
+                                         screenshot: String) -> String {
         let keyboard = app.keyboards.firstMatch
-        let character = keyboard.keys[key].firstMatch
+        let character = keyboard.keys.matching(NSPredicate(format: "label ==[c] %@", key)).firstMatch
         let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             keyboard.exists && keyboard.isHittable && character.exists && character.isHittable && counter.isHittable
         }, object: nil)
         if XCTWaiter.wait(for: [ready], timeout: 10) != .completed {
             captureFailure(screenshot + "-no-live-keyboard", app)
-            XCTFail("The software keyboard and the original field's counter must remain available after the transition.")
-            return
+            XCTFail("The software keyboard, the \(key) key and the original field's counter must be reachable after the transition.")
+            return previous
         }
         XCTAssertEqual(field.value as? String, previous)
         XCTAssertFalse(otherCounter.exists)
         // Tap a system key without refocusing the field or using element.typeText.
         character.tap()
-        let expected = previous + key
+        let expected = [previous + key, previous + key.uppercased()]
         let entered = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            (field.value as? String) == expected
+            guard let value = field.value as? String else { return false }
+            return expected.contains(value)
         }, object: nil)
         if XCTWaiter.wait(for: [entered], timeout: 6) != .completed {
             captureFailure(screenshot + "-key-did-not-reach-field", app)
             XCTFail("The original field must receive the new character at the insertion point without another tap.")
-            return
+            return previous
         }
         captureSystem(screenshot, app)
+        // The iPad can show uppercase keycaps even when a tap inserts lowercase.
+        return field.value as? String ?? previous
     }
 
     private func verifyNarrowIPadJournal(in app: XCUIApplication) throws {
