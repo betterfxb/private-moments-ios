@@ -1,0 +1,84 @@
+{
+  "run": 46146034752,
+  "job": 140982202811,
+  "profile": "ios17",
+  "source": "c01f2973b970dba55da162d01d67b6ee479b2cb3",
+  "testSucceeded": true,
+  "buildSuccesses": 0,
+  "ios17Runtime": true,
+  "releaseTestHooksExcluded": true,
+  "cases": [
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "FavoritePersistenceTests",
+      "name": "testFailedFavoriteSaveLeavesTheRecordUnchanged",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "FavoritePersistenceTests",
+      "name": "testFavoritePersistsAfterMigrationAndSurvivesBackupRoundTrip",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "FavoritePersistenceTests",
+      "name": "testLegacyBackupDoesNotClearLocalFavoriteDuringMerge",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "RecapDraftRecoveryTests",
+      "name": "testDraftRoundTripKeepsInvalidTimingAndPrivateTextUntilExplicitDiscard",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "RecapDraftRecoveryTests",
+      "name": "testRelaunchAfterRecordCommitDoesNotOfferTheSameDraftTwice",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "RecapDraftRecoveryTests",
+      "name": "testUnreadableDraftCannotBeOverwrittenWithoutExplicitDiscard",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testCalendarEntryReturnsToMonthTags",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testManualEntryTimingDateFilterAndPersistence",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testReviewComparisonOpensRecordsFromPreviousMonth",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testReviewTabBrowsesPeriodsAndOpensFilteredRecord",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testTimelineDateAndTagFiltersCombineAndSurviveNavigation",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testTimelineSearchReflectsEditAndDeletion",
+      "result": "passed"
+    }
+  ]
+}

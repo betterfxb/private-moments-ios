@@ -44,10 +44,13 @@ iPad 同一源码复跑通过。系统窗口实测 630 → 513 → 768 点，在
 
 iOS 17.5 首轮通过 6 项单测与另外 5 项原生用例，Release 编译的最低系统为 17.0。月历用例读到的标签只有 `Quiet m`，在验证备注前停止。保持输入原文与严格比对条件，在独立模拟器重新运行旧系统的完整范围。[首轮作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46133661848) · [首轮日志](evidence/batch-46/46133661848/ios17/xctest-extract.txt)
 
-第二轮无签名 Release 通过，Apple 官方 iOS 17.5 Universal 模拟器镜像下载报告停在 99.8%，作业到期时仍未进入 XCTest。为单次镜像下载设 8 分钟上限，主 Xcode 下载挂起时也能使用原有的 Xcode 16.4 备用流程。保留完整的部署目标和 XCTest 断言。[镜像超时作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46140474963)
+第二轮无签名 Release 通过，Apple 官方 iOS 17.5 Universal 模拟器镜像下载报告停在 99.8%，作业到期时仍未进入 XCTest。为单次镜像下载设 8 分钟上限，主 Xcode 下载挂起时也能使用原有的 Xcode 16.4 备用流程。保留完整的部署目标和 XCTest 断言。[镜像超时作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46140474963) · [下载日志摘录](evidence/batch-46/46140474963/ios17/runtime-download-extract.txt)
+
+同一应用源码 `c01f297` 在 iPhone 15 的实际 iOS 17.5 上通过 6 项单测和 6 个原生用例，包含中英文的标签与备注输入、计数切换、保存与详情读回。无签名 Release 最低部署版本为 17.0，排除了测试钩子。最终作业使用主 Xcode 完成下载，下载成功、错误及超时返回值在本地分别验证。[最终旧系统作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46146034752) · [旧系统备注键盘原图](evidence/batch-46/46146034752/ios17/Month-calendar-journey-zh-Hans-note-keyboard.png) · [测试收据](evidence/batch-46/46146034752/ios17/xctest.json)
 
 ### Windows 检查与待确认事项
 
 - `python -X utf8 -m unittest discover -s tools` 的 60 项工具测试通过。`bash -n` 的 `scripts/verify-mac.sh`、`scripts/verify-ios17.sh` 两个入口语法检查通过。
 - `node tools/audit-localization.mjs`、`node tools/audit-xcode-project.mjs`、`node tools/audit-release-materials.mjs` 通过。覆盖 311 个本地化键和 113 个 Xcode 工程对象。发布审计仍提示 Bundle ID、发布者信息和审核材料有待确认字段。
+- 核对三批 31 张原生 PNG 的 SHA-256 收据和报告相对文件链接，覆盖基线、诊断与终稿。
 - 真机旋转、输入法候选、VoiceOver、外接键盘及签名安装保留在设备清单。备份、计时与私密搜索的产品决定沿用现有登记。[待确认事项](DEVICE-AND-RECOVERY-DECISIONS.md)
