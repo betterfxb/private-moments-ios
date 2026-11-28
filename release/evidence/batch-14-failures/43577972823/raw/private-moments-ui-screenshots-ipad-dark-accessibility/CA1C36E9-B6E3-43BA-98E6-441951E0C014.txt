@@ -1,0 +1,5 @@
+Query chain:
+ →Find: Application 'com.apple.springboard'
+  ↪︎Find: Descendants matching type Button
+    ↪︎Find: Elements matching predicate 'identifier CONTAINS[c] "OrientationLock" OR (label CONTAINS[c] "Rotation" AND label CONTAINS[c] "Lock") OR (label CONTAINS[c] "Orientation" AND label CONTAINS[c] "Lock") OR label CONTAINS "锁定旋转" OR label CONTAINS "方向锁定"'
+      ↪︎Find: First Match

@@ -1,0 +1,6 @@
+# Preserve downloaded evidence bytes, including native log trailing spaces.
+# These are immutable attachments, not source files to normalize or review as diffs.
+logs/*.txt -text -diff
+hierarchies/*.txt -text -diff
+diagnostics/*.txt -text -diff
+manifest.json -text

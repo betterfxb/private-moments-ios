@@ -1,0 +1,72 @@
+{
+  "run": 45602723201,
+  "job": 139165669285,
+  "profile": "compact-light-backup",
+  "source": "17663c0c032028d2c4f4bcbc3073ce1e74ecd3a6",
+  "testSucceeded": true,
+  "buildSuccesses": 0,
+  "ios17Runtime": false,
+  "releaseTestHooksExcluded": false,
+  "cases": [
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testEmptyPreviewKeepsReplacementScopeExplicit",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderPreservesTheFullValidatedRecord",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderRejectsAnOversizedSparseFile",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderRejectsMalformedAndMissingFiles",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testImportedCopyNeverDeletesAPrefixSibling",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testImportedCopyNeverRecursivelyDeletesADirectory",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testPreviewCountsActualIDOverlapAndNotes",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testBackupFileRoundTrip",
+      "result": "passed"
+    }
+  ]
+}

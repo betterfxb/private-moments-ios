@@ -1,0 +1,46 @@
+﻿2026-11-14T01:20:20.4574380Z ##[group]Run actions/upload-artifact@v7
+2026-11-14T01:20:20.4574790Z with:
+2026-11-14T01:20:20.4575070Z   name: private-moments-xcresult-ipad-light
+2026-11-14T01:20:20.4575590Z   path: /Users/runner/work/_temp/PrivateMoments.xcresult
+2026-11-14T01:20:20.4576160Z   if-no-files-found: ignore
+2026-11-14T01:20:20.4576390Z   retention-days: 7
+2026-11-14T01:20:20.4576590Z   compression-level: 6
+2026-11-14T01:20:20.4576950Z   overwrite: false
+2026-11-14T01:20:20.4577200Z   include-hidden-files: false
+2026-11-14T01:20:20.4577460Z   archive: true
+2026-11-14T01:20:20.4577730Z env:
+2026-11-14T01:20:20.4578020Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T01:20:20.4578550Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=73C19119-B10E-4309-872E-C53EF3F0EF27
+2026-11-14T01:20:20.4578960Z ##[endgroup]
+2026-11-14T01:20:20.9371260Z With the provided path, there will be 1412 files uploaded
+2026-11-14T01:20:20.9371800Z Artifact name is valid!
+2026-11-14T01:20:20.9372020Z Root directory input is valid!
+2026-11-14T01:20:21.3893570Z Uploading artifact: private-moments-xcresult-ipad-light.zip
+2026-11-14T01:20:21.4127990Z Beginning upload of artifact content to blob storage
+2026-11-14T01:20:22.5066740Z Uploaded bytes 8388608
+2026-11-14T01:20:22.7510020Z Uploaded bytes 16777216
+2026-11-14T01:20:23.3291940Z Uploaded bytes 25165824
+2026-11-14T01:20:23.8329640Z Uploaded bytes 33554432
+2026-11-14T01:20:24.3705490Z Uploaded bytes 41943040
+2026-11-14T01:20:25.0626850Z Uploaded bytes 50331648
+2026-11-14T01:20:25.5647330Z Uploaded bytes 58720256
+2026-11-14T01:20:25.9608850Z Uploaded bytes 67108864
+2026-11-14T01:20:26.4165510Z Uploaded bytes 75497472
+2026-11-14T01:20:26.8695800Z Uploaded bytes 83886080
+2026-11-14T01:20:27.2533240Z Uploaded bytes 92274688
+2026-11-14T01:20:27.7863430Z Uploaded bytes 100663296
+2026-11-14T01:20:28.4530970Z Uploaded bytes 109051904
+2026-11-14T01:20:28.9203270Z Uploaded bytes 117440512
+2026-11-14T01:20:29.5314590Z Uploaded bytes 125829120
+2026-11-14T01:20:30.1511840Z Uploaded bytes 134217728
+2026-11-14T01:20:30.8671800Z Uploaded bytes 142606336
+2026-11-14T01:20:31.4827150Z Uploaded bytes 150994944
+2026-11-14T01:20:31.9208630Z Uploaded bytes 159383552
+2026-11-14T01:20:32.4568310Z Uploaded bytes 167772160
+2026-11-14T01:20:33.8417900Z Uploaded bytes 172429404
+2026-11-14T01:20:33.8864360Z Finished uploading artifact content to blob storage!
+2026-11-14T01:20:33.8883830Z SHA256 digest of uploaded artifact is 2cc1e78962f831459db172ef6adff869fe5594c650c622a10f76dbd28b84e680
+2026-11-14T01:20:33.8884750Z Finalizing artifact upload
+2026-11-14T01:20:34.3683670Z Artifact private-moments-xcresult-ipad-light successfully finalized. Artifact ID 14091765758
+2026-11-14T01:20:34.3684750Z Artifact private-moments-xcresult-ipad-light has been successfully uploaded! Final size is 172429404 bytes. Artifact ID is 14091765758
+2026-11-14T01:20:34.3686100Z Artifact download URL: https://github.com/betterfxb/private-moments-ios/actions/runs/43536445203/artifacts/14091765758

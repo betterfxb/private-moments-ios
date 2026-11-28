@@ -6,43 +6,194 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      use_intel_runner:
+        description: Use the standard Intel macOS runner when ARM64 capacity is unavailable
+        type: boolean
+        default: false
+      backup_smoke:
+        description: Run selected-profile backup unit and file flow (not full acceptance)
+        type: boolean
+        default: false
+      backup_smoke_language:
+        description: Language for explicit backup smoke (zh-Hans requires backup_smoke)
+        type: choice
+        default: en
+        options:
+          - en
+          - zh-Hans
+      input_smoke:
+        description: Run selected-profile input gallery and bilingual native search layout
+        type: boolean
+        default: false
+      performance_smoke:
+        description: Measure the 1,000-record timeline on the compact-light profile
+        type: boolean
+        default: false
+      legacy_ios17:
+        description: Run search and filters, manual save, Review and local migration on an actual iOS 17 simulator
+        type: boolean
+        default: false
+      week_review_smoke:
+        description: Run local journal tests and bilingual retrieval, Review and draft flows
+        type: boolean
+        default: false
+      reading_smoke:
+        description: Capture the same native timeline and long note in both languages
+        type: boolean
+        default: false
+      journal_features_smoke:
+        description: Verify native date and tag filters, recording again, and monthly highlights
+        type: boolean
+        default: false
+      rotation_smoke:
+        description: Run a focused system-window or rotation check on a supported iPad
+        type: boolean
+        default: false
+      rotation_start:
+        description: Choose reference rotation, a cold locale, or actual system window resizing
+        type: choice
+        default: reference
+        options:
+          - reference
+          - cold-en
+          - cold-zh-Hans
+          - window-resize
+          - window-resize-keyboard
+          - journal-journey
+          - journal-tag-window
+          - journal-keyboard-continuity
+      backup_smoke_profile:
+        description: Device profile for a focused diagnostic or single acceptance suite
+        type: choice
+        default: compact-light
+        options:
+          - compact-light
+          - phone-dark
+          - ipad-light
+          - compact-dark-accessibility
+          - ipad-light-accessibility
+          - ipad-mini-light
+          - ipad-dark-accessibility
+      acceptance_suite:
+        description: Repeat one acceptance suite on the selected profile or run the entire matrix
+        type: choice
+        default: all
+        options:
+          - all
+          - gallery
+          - journal
+          - files
+          - files-zh
+          - core
+          - rotation
+          - journal-features
+          - timeline-tags
+          - review-calendar
+          - tag-entry
 
 permissions:
   contents: read
 
 concurrency:
-  group: ios-validation-${{ github.ref }}
+  group: >-
+    ios-validation-${{ github.ref }}-${{ inputs.legacy_ios17 && 'ios17'
+    || inputs.reading_smoke && format('reading-{0}-{1}', inputs.backup_smoke_profile, github.sha)
+    || inputs.journal_features_smoke && format('journal-features-{0}', inputs.backup_smoke_profile)
+    || inputs.week_review_smoke && format('journal-{0}', inputs.backup_smoke_profile)
+    || inputs.backup_smoke && format('backup-{0}-{1}', inputs.backup_smoke_profile, inputs.backup_smoke_language)
+    || inputs.input_smoke && format('input-{0}', inputs.backup_smoke_profile)
+    || inputs.performance_smoke && 'performance'
+    || inputs.rotation_smoke && format('rotation-{0}-{1}', inputs.backup_smoke_profile, inputs.rotation_start)
+    || (inputs.acceptance_suite || 'all') != 'all' && format('acceptance-{0}-{1}', inputs.backup_smoke_profile, inputs.acceptance_suite)
+    || 'standard' }}
   cancel-in-progress: true
 
 jobs:
+  plan:
+    if: ${{ github.event_name != 'workflow_dispatch' || !inputs.legacy_ios17 }}
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: matrix
+        env:
+          MATRIX_SCOPE: >-
+            ${{ inputs.rotation_smoke && 'rotation'
+            || (inputs.input_smoke || inputs.performance_smoke || inputs.week_review_smoke || inputs.reading_smoke || inputs.journal_features_smoke) && 'input'
+            || inputs.backup_smoke && 'backup' || 'full' }}
+          SMOKE_PROFILE: ${{ inputs.backup_smoke_profile || 'compact-light' }}
+          ACCEPTANCE_SUITE: ${{ inputs.acceptance_suite || 'all' }}
+          INPUT_SMOKE: ${{ inputs.input_smoke && '1' || '0' }}
+          PERFORMANCE_SMOKE: ${{ inputs.performance_smoke && '1' || '0' }}
+          WEEK_REVIEW_SMOKE: ${{ inputs.week_review_smoke && '1' || '0' }}
+          READING_SMOKE: ${{ inputs.reading_smoke && '1' || '0' }}
+          JOURNAL_FEATURES_SMOKE: ${{ inputs.journal_features_smoke && '1' || '0' }}
+          BACKUP_SMOKE: ${{ inputs.backup_smoke && '1' || '0' }}
+          BACKUP_LANGUAGE: ${{ inputs.backup_smoke_language || 'en' }}
+          ROTATION_SMOKE: ${{ inputs.rotation_smoke && '1' || '0' }}
+          ROTATION_START: ${{ inputs.rotation_start || 'reference' }}
+        run: |
+          if [[ "$ROTATION_SMOKE" == "1" && ( "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then
+            printf 'Rotation, input and backup smoke modes are mutually exclusive.\n' >&2
+            exit 1
+          fi
+          if [[ "$INPUT_SMOKE" == "1" && "$BACKUP_SMOKE" == "1" ]]; then
+            printf 'Input and backup smoke modes are mutually exclusive.\n' >&2
+            exit 1
+          fi
+          if [[ "${PERFORMANCE_SMOKE:-0}" == "1" && ( "$SMOKE_PROFILE" != "compact-light" || "$ROTATION_SMOKE" == "1" || "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" ) ]]; then
+            printf 'Performance smoke requires compact-light and excludes other smoke modes.\n' >&2
+            exit 1
+          fi
+          if [[ "${WEEK_REVIEW_SMOKE:-0}" == "1" && ( "$ROTATION_SMOKE" == "1" || "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" || "${PERFORMANCE_SMOKE:-0}" == "1" ) ]]; then
+            printf 'Week in review excludes other smoke modes.\n' >&2
+            exit 1
+          fi
+          if [[ "${READING_SMOKE:-0}" == "1" && ( "$ROTATION_SMOKE" == "1" || "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" || "${PERFORMANCE_SMOKE:-0}" == "1" || "${WEEK_REVIEW_SMOKE:-0}" == "1" ) ]]; then
+            printf 'Reading sample excludes other smoke modes.\n' >&2
+            exit 1
+          fi
+          if [[ "${JOURNAL_FEATURES_SMOKE:-0}" == "1" && ( "$ROTATION_SMOKE" == "1" || "$INPUT_SMOKE" == "1" || "$BACKUP_SMOKE" == "1" || "${PERFORMANCE_SMOKE:-0}" == "1" || "${WEEK_REVIEW_SMOKE:-0}" == "1" || "${READING_SMOKE:-0}" == "1" ) ]]; then
+            printf 'Journal features exclude other smoke modes.\n' >&2
+            exit 1
+          fi
+          if [[ "$BACKUP_LANGUAGE" != "en" && "$BACKUP_LANGUAGE" != "zh-Hans" ]] ||
+             [[ "$BACKUP_LANGUAGE" == "zh-Hans" && "$BACKUP_SMOKE" != "1" ]]; then
+            printf 'Chinese backup language requires explicit backup smoke.\n' >&2
+            exit 1
+          fi
+          if [[ "$ROTATION_START" != "reference" && "$ROTATION_START" != "cold-en" && "$ROTATION_START" != "cold-zh-Hans" && "$ROTATION_START" != "window-resize" && "$ROTATION_START" != "window-resize-keyboard" && "$ROTATION_START" != "journal-journey" && "$ROTATION_START" != "journal-tag-window" && "$ROTATION_START" != "journal-keyboard-continuity" ]] ||
+             [[ "$ROTATION_START" != "reference" && "$ROTATION_SMOKE" != "1" ]]; then
+            printf 'Cold rotation and window resizing require explicit iPad diagnostics and a supported scenario.\n' >&2
+            exit 1
+          fi
+          if [[ "$ROTATION_START" == "window-resize" && "$SMOKE_PROFILE" != "ipad-light" ]]; then
+            printf 'Window resizing requires the ipad-light profile.\n' >&2
+            exit 1
+          fi
+          if [[ "$ROTATION_START" == "window-resize-keyboard" && "$SMOKE_PROFILE" != "ipad-dark-accessibility" ]]; then
+            printf 'Keyboard window resizing requires the ipad-dark-accessibility profile.\n' >&2
+            exit 1
+          fi
+          if [[ ( "$ROTATION_START" == "journal-journey" || "$ROTATION_START" == "journal-tag-window" || "$ROTATION_START" == "journal-keyboard-continuity" ) && "$SMOKE_PROFILE" != "ipad-light" && "$SMOKE_PROFILE" != "ipad-dark-accessibility" ]]; then
+            printf 'Journal window verification requires an iPad Pro profile.\n' >&2
+            exit 1
+          fi
+          python3 -m unittest discover -s tools -p 'test_ui*.py' -v
+          matrix="$(python3 tools/ui-test-matrix.py "$MATRIX_SCOPE" --smoke-profile "$SMOKE_PROFILE" --acceptance-suite "$ACCEPTANCE_SUITE")"
+          printf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"
+
   build-and-test:
-    name: ${{ matrix.profile }}
-    runs-on: macos-15
-    timeout-minutes: 45
+    needs: plan
+    name: ${{ matrix.profile }}${{ matrix.suite && format(' / {0}', matrix.suite) || '' }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.use_intel_runner && 'macos-15-intel' || 'macos-15' }}
+    timeout-minutes: ${{ matrix.timeout_minutes }}
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - profile: compact-light
-            family: compact
-            appearance: light
-            text_size: large
-            gallery_only: '0'
-          - profile: phone-dark
-            family: phone
-            appearance: dark
-            text_size: large
-            gallery_only: '1'
-          - profile: ipad-light
-            family: ipad
-            appearance: light
-            text_size: large
-            gallery_only: '1'
-          - profile: compact-dark-accessibility
-            family: compact
-            appearance: dark
-            text_size: accessibility-extra-extra-extra-large
-            gallery_only: '1'
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
 
     steps:
       - name: Check out source
@@ -54,6 +205,9 @@ jobs:
           node tools/audit-xcode-project.mjs
           node tools/audit-release-materials.mjs
 
+      - name: Select and verify pinned UI toolchain
+        run: python3 tools/distribute.py select-toolchain
+
       - name: Select and configure simulator
         shell: bash
         env:
@@ -64,17 +218,22 @@ jobs:
           destination="$(xcrun simctl list devices available --json | python3 -c '
           import json
           import os
+          import subprocess
           import sys
 
           devices_by_runtime = json.load(sys.stdin).get("devices", {})
+          sdk = subprocess.check_output(["xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"], text=True).strip()
+          expected_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + "-".join(sdk.split(".")[:2])
           for runtime in sorted(devices_by_runtime, reverse=True):
-              if ".iOS-" not in runtime:
+              if runtime != expected_runtime:
                   continue
               devices = [d for d in devices_by_runtime[runtime] if d.get("isAvailable")]
               family = os.environ["SIMULATOR_FAMILY"]
               if family == "compact":
                   preferences = ["iPhone SE (3rd generation)", "iPhone 16e", "iPhone 17e", "iPhone 16", "iPhone 17"]
                   devices = [d for name in preferences for d in devices if d["name"] == name]
+              elif family == "ipad-mini":
+                  devices = [d for d in devices if d["name"].startswith("iPad mini")]
               elif family == "ipad":
                   devices = [d for d in devices if d["name"].startswith("iPad")]
               else:
@@ -84,7 +243,7 @@ jobs:
                   print("Selected: {} ({})".format(device["name"], runtime), file=sys.stderr)
                   print("platform=iOS Simulator,id={}".format(device["udid"]))
                   raise SystemExit(0)
-          raise SystemExit("No simulator matched the required device profile.")
+          raise SystemExit("No simulator matched the pinned SDK runtime and required device profile.")
           ')"
           echo "IOS_SIMULATOR_DESTINATION=$destination" >> "$GITHUB_ENV"
           printf 'Selected simulator: %s\n' "$destination"
@@ -93,12 +252,49 @@ jobs:
           xcrun simctl ui "$simulator_id" appearance "$SIMULATOR_APPEARANCE"
           xcrun simctl ui "$simulator_id" content_size "$SIMULATOR_TEXT_SIZE"
 
-      - name: Build Debug and Release, then run XCTest
+      - name: Build and run selected XCTest scope
+        timeout-minutes: ${{ matrix.test_timeout_minutes || matrix.timeout_minutes }}
         env:
           PRIVATE_MOMENTS_DERIVED_DATA: ${{ runner.temp }}/PrivateMomentsDerivedData
           PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments.xcresult
-          PRIVATE_MOMENTS_UI_GALLERY_ONLY: ${{ matrix.gallery_only }}
+          PRIVATE_MOMENTS_UI_ACCEPTANCE_PART: >-
+            ${{ inputs.reading_smoke && 'reading' || inputs.journal_features_smoke && 'journal-features'
+            || (matrix.suite == 'gallery' || matrix.suite == 'core' || matrix.suite == 'journal-features'
+            || matrix.suite == 'timeline-tags' || matrix.suite == 'review-calendar'
+            || matrix.suite == 'tag-entry') && matrix.suite || '' }}
+          PRIVATE_MOMENTS_UI_BACKUP_ONLY: ${{ (matrix.suite == 'files' || matrix.suite == 'files-zh' || inputs.backup_smoke) && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_BACKUP_LANGUAGE: ${{ matrix.suite == 'files-zh' && 'zh-Hans' || inputs.backup_smoke_language || 'en' }}
+          PRIVATE_MOMENTS_UI_INPUT_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.input_smoke && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_PERFORMANCE_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.performance_smoke && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_WEEK_REVIEW_ONLY: ${{ (matrix.suite == 'journal' || inputs.week_review_smoke) && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_ROTATION_ONLY: ${{ (matrix.suite == 'rotation' || inputs.rotation_smoke) && '1' || '0' }}
+          PRIVATE_MOMENTS_UI_ROTATION_START: ${{ inputs.rotation_start || 'reference' }}
+          PRIVATE_MOMENTS_UI_IPAD_TESTS: ${{ startsWith(matrix.family, 'ipad') && '1' || '0' }}
         run: bash scripts/verify-mac.sh
+
+      - name: Read backup flow diagnostics
+        if: ${{ always() && env.IOS_SIMULATOR_DESTINATION != '' }}
+        run: |
+          simulator_id="${IOS_SIMULATOR_DESTINATION##*id=}"
+          xcrun simctl spawn "$simulator_id" log show --last 30m --style compact \
+            --predicate '(process == "PrivateMoments" AND subsystem != "com.apple.dt.xctest") OR subsystem BEGINSWITH "com.apple.DocumentManager"'
+
+      - name: Read compiled orientation metadata
+        if: always()
+        run: |
+          python3 - "${RUNNER_TEMP}/PrivateMomentsDerivedData/Build/Products/Debug-iphonesimulator/PrivateMoments.app/Info.plist" <<'PY'
+          import json
+          from pathlib import Path
+          import plistlib
+          import sys
+          path = Path(sys.argv[1])
+          if path.is_file():
+              data = plistlib.loads(path.read_bytes())
+              keys = ['UIDeviceFamily', 'UISupportedInterfaceOrientations', 'UISupportedInterfaceOrientations~ipad', 'UIRequiresFullScreen', 'UIApplicationSceneManifest']
+              print(json.dumps({k: data.get(k) for k in keys}, sort_keys=True))
+          else:
+              print('No compiled app orientation metadata available.')
+          PY
 
       - name: Export XCTest UI screenshots
         if: always()
@@ -121,7 +317,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: private-moments-ui-screenshots-${{ matrix.profile }}
+          name: private-moments-ui-screenshots-${{ matrix.profile }}${{ matrix.suite && format('-{0}', matrix.suite) || '' }}${{ github.run_attempt != '1' && format('-attempt-{0}', github.run_attempt) || '' }}
           path: ${{ runner.temp }}/PrivateMomentsUIScreenshots
           if-no-files-found: ignore
           retention-days: 7
@@ -130,7 +326,59 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: private-moments-xcresult-${{ matrix.profile }}
+          name: private-moments-xcresult-${{ matrix.profile }}${{ matrix.suite && format('-{0}', matrix.suite) || '' }}${{ github.run_attempt != '1' && format('-attempt-{0}', github.run_attempt) || '' }}
           path: ${{ runner.temp }}/PrivateMoments.xcresult
+          if-no-files-found: ignore
+          retention-days: 7
+
+  ios17-compatibility:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.legacy_ios17 }}
+    name: iOS 17 compatibility
+    runs-on: ${{ inputs.use_intel_runner && 'macos-15-intel' || 'macos-15' }}
+    timeout-minutes: 65
+    steps:
+      - name: Reject conflicting scopes
+        if: ${{ inputs.backup_smoke || inputs.input_smoke || inputs.performance_smoke || inputs.week_review_smoke || inputs.rotation_smoke || inputs.reading_smoke || inputs.journal_features_smoke || (inputs.acceptance_suite || 'all') != 'all' }}
+        run: |
+          printf 'The iOS 17 compatibility run excludes the other focused scopes.\n' >&2
+          exit 1
+
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Select and verify pinned UI toolchain
+        run: python3 tools/distribute.py select-toolchain
+
+      - name: Verify the deployment floor and exercise iOS 17
+        env:
+          PRIVATE_MOMENTS_RESULT_BUNDLE: ${{ runner.temp }}/PrivateMoments-iOS17.xcresult
+        run: bash scripts/verify-ios17.sh
+
+      - name: Export iOS 17 XCTest screenshots
+        if: always()
+        shell: bash
+        run: |
+          result_bundle="${RUNNER_TEMP}/PrivateMoments-iOS17.xcresult"
+          if [[ -d "$result_bundle" ]]; then
+            screenshot_directory="${RUNNER_TEMP}/PrivateMoments-iOS17-Screenshots"
+            mkdir -p "$screenshot_directory"
+            xcrun xcresulttool export attachments --path "$result_bundle" --output-path "$screenshot_directory"
+          fi
+
+      - name: Upload iOS 17 XCTest screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: private-moments-ui-screenshots-ios17
+          path: ${{ runner.temp }}/PrivateMoments-iOS17-Screenshots
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Upload iOS 17 XCTest result bundle
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: private-moments-xcresult-ios17
+          path: ${{ runner.temp }}/PrivateMoments-iOS17.xcresult
           if-no-files-found: ignore
           retention-days: 7

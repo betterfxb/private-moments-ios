@@ -120,7 +120,7 @@ function scanSwiftFiles(directory) {
             const line = text.slice(lineStart, lineEnd < 0 ? text.length : lineEnd);
             // Stable automation identifiers are never presented or translated.
             if (/\.accessibilityIdentifier\s*\(\s*$/.test(prefix)) continue;
-            if (/logger\.|Logger\(/.test(line) || /return\s+String\(format:/.test(line)) continue;
+            if (/logger\.|Logger\(|preconditionFailure\(|assertionFailure\(|fatalError\(/.test(line) || /return\s+String\(format:/.test(line)) continue;
             if (key.length < 2 || key === "[]" || key.trim() === "·" || key === "99+" || key === "—") continue;
             if (/^\\\([^)]*\)$/.test(match[1])) continue;
             if (/^[a-z]+(?:\.[a-z0-9]+)*$/.test(key) && /(?:systemImage|systemName|symbol)\s*:\s*[^,)]*$/.test(text.slice(Math.max(0, match.index - 100), match.index))) continue;

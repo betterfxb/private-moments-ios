@@ -1,0 +1,1044 @@
+{
+  "sourceCommit": "204387dbc1b2b3de135a6901a2a8907e4ad353d5",
+  "sourceVerification": {
+    "runHeadSHA": "204387dbc1b2b3de135a6901a2a8907e4ad353d5",
+    "sourceTree": "3de6d06a1fce5a1871f86225b61c194711b5c58e",
+    "checkoutCommitsByProfile": {
+      "compact-light": "204387dbc1b2b3de135a6901a2a8907e4ad353d5",
+      "phone-dark": "204387dbc1b2b3de135a6901a2a8907e4ad353d5",
+      "ipad-light": "204387dbc1b2b3de135a6901a2a8907e4ad353d5",
+      "compact-dark-accessibility": "204387dbc1b2b3de135a6901a2a8907e4ad353d5"
+    },
+    "checkoutTrees": {
+      "204387dbc1b2b3de135a6901a2a8907e4ad353d5": "3de6d06a1fce5a1871f86225b61c194711b5c58e"
+    },
+    "exactTreeMatch": true,
+    "checkoutLogEvidence": {
+      "compact-light": {
+        "path": "build\\batch-09-cloud\\43381177893\\logs\\3_compact-light.txt",
+        "sha256": "8127c3b5fc74421f4af99d3a76fdc9c7d339dc03b6add8d863e231f181f2e7c9",
+        "format": "original aggregate job log"
+      },
+      "phone-dark": {
+        "path": "build\\batch-09-cloud\\43381177893\\logs\\1_phone-dark.txt",
+        "sha256": "0331311bcdb81148d0aac345d20676700da8023fe8b6533ef3334b8c0d8a33aa",
+        "format": "original aggregate job log"
+      },
+      "ipad-light": {
+        "path": "build\\batch-09-cloud\\43381177893\\logs\\2_ipad-light.txt",
+        "sha256": "acbfd176f519afe2cbfd7c87033e895e2de45a46c499d8ab4380604dd2a6361a",
+        "format": "original aggregate job log"
+      },
+      "compact-dark-accessibility": {
+        "path": "build\\batch-09-cloud\\43381177893\\logs\\compact-dark-accessibility\\2_Check out source.txt",
+        "sha256": "7302c890134368e8da447b83ac344b2c90391a29745ebb4950856f3807212728",
+        "format": "original step log"
+      }
+    }
+  },
+  "runId": 43381177893,
+  "runAttempt": 1,
+  "runURL": "https://github.com/betterfxb/private-moments-ios/actions/runs/43381177893",
+  "toolchain": {
+    "xcode": "26.2",
+    "simulatorSDK": "26.2",
+    "runtime": "26.2"
+  },
+  "runtimeEvidence": [
+    {
+      "profile": "compact-light",
+      "jobID": 131739090553,
+      "log": "build\\batch-09-cloud\\43381177893\\logs\\3_compact-light.txt",
+      "sha256": "8127c3b5fc74421f4af99d3a76fdc9c7d339dc03b6add8d863e231f181f2e7c9",
+      "executedJobID": 131739090553,
+      "executedAttempt": 1
+    },
+    {
+      "profile": "ipad-light",
+      "jobID": 131739090562,
+      "log": "build\\batch-09-cloud\\43381177893\\logs\\2_ipad-light.txt",
+      "sha256": "acbfd176f519afe2cbfd7c87033e895e2de45a46c499d8ab4380604dd2a6361a",
+      "executedJobID": 131739090562,
+      "executedAttempt": 1
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "jobID": 131739090638,
+      "log": "build\\batch-09-cloud\\43381177893\\logs\\compact-dark-accessibility\\5_Select and configure simulator.txt",
+      "sha256": "270753f6588bc3af5de37dd1b037106d2abf8dc59fe9e847df5b5f2de25dc4ea",
+      "executedJobID": 131739090638,
+      "executedAttempt": 1
+    },
+    {
+      "profile": "phone-dark",
+      "jobID": 131739090678,
+      "log": "build\\batch-09-cloud\\43381177893\\logs\\1_phone-dark.txt",
+      "sha256": "0331311bcdb81148d0aac345d20676700da8023fe8b6533ef3334b8c0d8a33aa",
+      "executedJobID": 131739090678,
+      "executedAttempt": 1
+    }
+  ],
+  "tests": {
+    "compactLightUnitTests": 50,
+    "compactLightUITests": 5,
+    "otherProfilesUITestsEach": 2,
+    "systemFileRoundTrip": "English on all four profiles; actual exporter/importer plus visible export, cancellation and replacement feedback without a test scroll. Source-recovery events listed separately",
+    "galleryLanguages": [
+      "en",
+      "zh-Hans"
+    ],
+    "releaseSimulatorDebugHooks": "absent",
+    "noteDraftFlow": "Real bilingual UI: numeric input, multiline ASCII note, >=44pt Done, count clear of the floating keyboard action, actual keyboard dismissal, Fully visible >=44pt native confirmation actions; Edit retains exact note and minutes, real discard; gallery final count remains exactly one. Bilingual timer confirmations continue with Pause visible. Does not validate Chinese IME.",
+    "largeTextChecks": "Bilingual alert message and actions bounded; setting title/value layout with the complete lock range revealed above visible bottom navigation; foreground, unobscured, finite full-frame exporter/cancellation/replacement feedback without a test scroll"
+  },
+  "profiles": [
+    {
+      "name": "compact-light",
+      "jobID": 131739090553,
+      "jobAttempt": 1,
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 68,
+      "configuredAppearance": "light",
+      "configuredTextSize": "large",
+      "executedJobID": 131739090553,
+      "executedAttempt": 1
+    },
+    {
+      "name": "ipad-light",
+      "jobID": 131739090562,
+      "jobAttempt": 1,
+      "conclusion": "success",
+      "device": "iPad Pro 13-inch (M5)",
+      "exportedPNGCount": 65,
+      "configuredAppearance": "light",
+      "configuredTextSize": "large",
+      "executedJobID": 131739090562,
+      "executedAttempt": 1
+    },
+    {
+      "name": "compact-dark-accessibility",
+      "jobID": 131739090638,
+      "jobAttempt": 1,
+      "conclusion": "success",
+      "device": "iPhone SE (3rd generation)",
+      "exportedPNGCount": 69,
+      "configuredAppearance": "dark",
+      "configuredTextSize": "accessibility-extra-extra-extra-large",
+      "executedJobID": 131739090638,
+      "executedAttempt": 1
+    },
+    {
+      "name": "phone-dark",
+      "jobID": 131739090678,
+      "jobAttempt": 1,
+      "conclusion": "success",
+      "device": "iPhone 17 Pro",
+      "exportedPNGCount": 65,
+      "configuredAppearance": "dark",
+      "configuredTextSize": "large",
+      "executedJobID": 131739090678,
+      "executedAttempt": 1
+    }
+  ],
+  "openedCaptures": [
+    "compact-dark-accessibility/Backup-exported-en",
+    "compact-dark-accessibility/Backup-restored-en",
+    "compact-dark-accessibility/Backup-warning-en",
+    "compact-dark-accessibility/Backup-warning-zh-Hans",
+    "compact-dark-accessibility/Import-cancelled-en",
+    "compact-dark-accessibility/Lock-recovery-en",
+    "compact-dark-accessibility/Lock-recovery-zh-Hans",
+    "compact-dark-accessibility/Manual-note-confirm-en",
+    "compact-dark-accessibility/Manual-note-confirm-zh-Hans",
+    "compact-dark-accessibility/Manual-note-keyboard-en",
+    "compact-dark-accessibility/Manual-note-keyboard-zh-Hans",
+    "compact-dark-accessibility/Manual-note-retained-en",
+    "compact-dark-accessibility/Manual-note-retained-zh-Hans",
+    "compact-dark-accessibility/Save-error-en",
+    "compact-dark-accessibility/Save-error-zh-Hans",
+    "compact-dark-accessibility/Save-recovery-en",
+    "compact-dark-accessibility/Save-recovery-zh-Hans",
+    "compact-dark-accessibility/Session-discard-confirm-en",
+    "compact-dark-accessibility/Session-discard-confirm-zh-Hans",
+    "compact-dark-accessibility/Settings-values-en",
+    "compact-dark-accessibility/Settings-values-zh-Hans",
+    "compact-dark-accessibility/Settings-bottom-en",
+    "compact-dark-accessibility/Settings-bottom-zh-Hans",
+    "compact-light/Backup-exported-en",
+    "compact-light/Backup-restored-en",
+    "compact-light/Backup-warning-en",
+    "compact-light/Backup-warning-zh-Hans",
+    "compact-light/Import-cancelled-en",
+    "compact-light/Lock-recovery-en",
+    "compact-light/Lock-recovery-zh-Hans",
+    "compact-light/Manual-note-confirm-en",
+    "compact-light/Manual-note-confirm-zh-Hans",
+    "compact-light/Manual-note-keyboard-en",
+    "compact-light/Manual-note-keyboard-zh-Hans",
+    "compact-light/Manual-note-retained-en",
+    "compact-light/Manual-note-retained-zh-Hans",
+    "compact-light/Session-discard-confirm-en",
+    "compact-light/Session-discard-confirm-zh-Hans",
+    "compact-light/Settings-values-en",
+    "compact-light/Settings-values-zh-Hans",
+    "phone-dark/Backup-exported-en",
+    "phone-dark/Backup-restored-en",
+    "phone-dark/Backup-warning-en",
+    "phone-dark/Backup-warning-zh-Hans",
+    "phone-dark/Import-cancelled-en",
+    "phone-dark/Lock-recovery-en",
+    "phone-dark/Lock-recovery-zh-Hans",
+    "phone-dark/Manual-note-confirm-en",
+    "phone-dark/Manual-note-confirm-zh-Hans",
+    "phone-dark/Manual-note-keyboard-en",
+    "phone-dark/Manual-note-keyboard-zh-Hans",
+    "phone-dark/Manual-note-retained-en",
+    "phone-dark/Manual-note-retained-zh-Hans",
+    "phone-dark/Session-discard-confirm-en",
+    "phone-dark/Session-discard-confirm-zh-Hans",
+    "phone-dark/Settings-values-en",
+    "phone-dark/Settings-values-zh-Hans",
+    "ipad-light/Backup-exported-en",
+    "ipad-light/Backup-restored-en",
+    "ipad-light/Backup-warning-en",
+    "ipad-light/Backup-warning-zh-Hans",
+    "ipad-light/Import-cancelled-en",
+    "ipad-light/Import-files-en",
+    "ipad-light/Lock-recovery-en",
+    "ipad-light/Lock-recovery-zh-Hans",
+    "ipad-light/Manual-note-confirm-en",
+    "ipad-light/Manual-note-confirm-zh-Hans",
+    "ipad-light/Manual-note-keyboard-en",
+    "ipad-light/Manual-note-keyboard-zh-Hans",
+    "ipad-light/Manual-note-retained-en",
+    "ipad-light/Manual-note-retained-zh-Hans",
+    "ipad-light/Session-discard-confirm-en",
+    "ipad-light/Session-discard-confirm-zh-Hans",
+    "ipad-light/Settings-values-en",
+    "ipad-light/Settings-values-zh-Hans"
+  ],
+  "retainedUnmodifiedScreenshots": [
+    {
+      "file": "compact-light-Settings-values-en.png",
+      "title": "小屏浅色：英文名称与数量",
+      "profile": "compact-light",
+      "capture": "Settings-values-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "747dccf04ba8504b89bed7bda125f9f5927fc36ed69bb4ed4d4aa58178066ad5"
+    },
+    {
+      "file": "compact-light-Settings-values-zh-Hans.png",
+      "title": "小屏浅色：中文名称与数量",
+      "profile": "compact-light",
+      "capture": "Settings-values-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "dfaaa617d9fd645195957d2eb141df175ac642f87be659c82301f2fce58fec8c"
+    },
+    {
+      "file": "compact-light-Backup-warning-en.png",
+      "title": "小屏浅色：英文完整导出警告",
+      "profile": "compact-light",
+      "capture": "Backup-warning-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "59c0536547373616b22ba93992f72198fe0833fdbaf5e63b1584e493ab1d97bf"
+    },
+    {
+      "file": "compact-light-Backup-warning-zh-Hans.png",
+      "title": "小屏浅色：中文完整导出警告",
+      "profile": "compact-light",
+      "capture": "Backup-warning-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "5bb7f0fc8f215d79f77303b9cc9600efa0eeeb3dc18b4ae1b77a01410dfc2580"
+    },
+    {
+      "file": "compact-light-Backup-exported-en.png",
+      "title": "小屏浅色：真实导出后的可见结果",
+      "profile": "compact-light",
+      "capture": "Backup-exported-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "cca3411b3adfae78b059d1ebd04e577fd810de7b961c3702ba815089b4e18aec"
+    },
+    {
+      "file": "compact-light-Import-cancelled-en.png",
+      "title": "小屏浅色：真实取消导入后的可见反馈",
+      "profile": "compact-light",
+      "capture": "Import-cancelled-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "2856dd55be7d8c44a2b2d5299f3c7ed80a7e278d98ce252f7a13d181ab064308"
+    },
+    {
+      "file": "compact-light-Backup-restored-en.png",
+      "title": "小屏浅色：真实替换后的可见结果",
+      "profile": "compact-light",
+      "capture": "Backup-restored-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "f2155be12f964956429206f112a37d644259b35f74a386c5b0f14e9c1fd08216"
+    },
+    {
+      "file": "compact-light-Lock-recovery-zh-Hans.png",
+      "title": "小屏浅色：中文认证取消后名称与状态",
+      "profile": "compact-light",
+      "capture": "Lock-recovery-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "87e272fe3d2f9da8eeab665259b8c20f46c0db22ad45d89b114b37dd28f773ca"
+    },
+    {
+      "file": "phone-dark-Settings-values-en.png",
+      "title": "手机深色：英文名称与数量",
+      "profile": "phone-dark",
+      "capture": "Settings-values-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "0566cfeea0df1efeca3c15e803d37429c86d59f9d3ea8ca63e7a9d1d02371042"
+    },
+    {
+      "file": "phone-dark-Settings-values-zh-Hans.png",
+      "title": "手机深色：中文名称与数量",
+      "profile": "phone-dark",
+      "capture": "Settings-values-zh-Hans",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "57473f92ae1c1b9cfe44edff1a73b35d88bd3eb4cdb5b98f80dbb08a3d6997a6"
+    },
+    {
+      "file": "phone-dark-Backup-warning-en.png",
+      "title": "手机深色：英文完整导出警告",
+      "profile": "phone-dark",
+      "capture": "Backup-warning-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "1065b7b25d66ceb7a2557b22eb0beaae5b16503c8fd99c82e7d9437f28966593"
+    },
+    {
+      "file": "phone-dark-Backup-warning-zh-Hans.png",
+      "title": "手机深色：中文完整导出警告",
+      "profile": "phone-dark",
+      "capture": "Backup-warning-zh-Hans",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "1565b7561a810b05b9c7d1f6c1d2dcc8d0183b9a901e6ffedbf1081595395b9c"
+    },
+    {
+      "file": "phone-dark-Backup-exported-en.png",
+      "title": "手机深色：真实导出后的可见结果",
+      "profile": "phone-dark",
+      "capture": "Backup-exported-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "1961b20a76eb8df857c1263630ae8d01820506ef0505c0f22e66f62762cd9b4f"
+    },
+    {
+      "file": "phone-dark-Import-cancelled-en.png",
+      "title": "手机深色：真实取消导入后的可见反馈",
+      "profile": "phone-dark",
+      "capture": "Import-cancelled-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "08a7ba3a875c54d8e896a95a3704f42f94450ec7578161529a9c4c69a537ab34"
+    },
+    {
+      "file": "phone-dark-Backup-restored-en.png",
+      "title": "手机深色：真实替换后的可见结果",
+      "profile": "phone-dark",
+      "capture": "Backup-restored-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "2c1726dbebb9ff9785d22c9a3f98d7e95944839545fb2730f024873a4033638d"
+    },
+    {
+      "file": "phone-dark-Lock-recovery-zh-Hans.png",
+      "title": "手机深色：中文认证取消后名称与状态",
+      "profile": "phone-dark",
+      "capture": "Lock-recovery-zh-Hans",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "2b3d389563c8e71a710e90789355e6af993f54d52b9b8e39842fc9f38c91dc4d"
+    },
+    {
+      "file": "ipad-light-Settings-values-en.png",
+      "title": "iPad：英文名称与数量",
+      "profile": "ipad-light",
+      "capture": "Settings-values-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "264926883647f2652f298b50c0cf001d94d494d83558d940d921ce707371236a"
+    },
+    {
+      "file": "ipad-light-Settings-values-zh-Hans.png",
+      "title": "iPad：中文名称与数量",
+      "profile": "ipad-light",
+      "capture": "Settings-values-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "c580780040fdcf4dd794bb0534454a2238a7dfa5d19417a28cf2a3190b849e69"
+    },
+    {
+      "file": "ipad-light-Backup-warning-en.png",
+      "title": "iPad：英文完整导出警告",
+      "profile": "ipad-light",
+      "capture": "Backup-warning-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "37bbdf7da6834b4f17f3d249e23afa085ebded171642fb92299c7eebee77627c"
+    },
+    {
+      "file": "ipad-light-Backup-warning-zh-Hans.png",
+      "title": "iPad：中文完整导出警告",
+      "profile": "ipad-light",
+      "capture": "Backup-warning-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "fd98d5ba8e29fb6827c01104057b6c7b4f9c3ab6509bca48197b5aaaea5e20d3"
+    },
+    {
+      "file": "ipad-light-Backup-exported-en.png",
+      "title": "iPad：真实导出后的可见结果",
+      "profile": "ipad-light",
+      "capture": "Backup-exported-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "cf9ba0ee0480b3ed067f5ff4aa4708928fa16be0496c56a08ebb0908d8bf722e"
+    },
+    {
+      "file": "ipad-light-Import-cancelled-en.png",
+      "title": "iPad：真实取消导入后的可见反馈",
+      "profile": "ipad-light",
+      "capture": "Import-cancelled-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "e27aa0f9b069aae597751cd2299e3a7c10bcd0cb3a50c9cd7777b18c55d9e4e4"
+    },
+    {
+      "file": "ipad-light-Backup-restored-en.png",
+      "title": "iPad：真实替换后的可见结果",
+      "profile": "ipad-light",
+      "capture": "Backup-restored-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "8e1b18c7765629cc1b1a72329c4c606f9745a3a404380780a84f1d5f57dbf34a"
+    },
+    {
+      "file": "ipad-light-Lock-recovery-zh-Hans.png",
+      "title": "iPad：中文认证取消后名称与状态",
+      "profile": "ipad-light",
+      "capture": "Lock-recovery-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "6f6464b8b2fcb31648fcd83946cbfd4350fdfcf0935ced44b1b99860bd23f48d"
+    },
+    {
+      "file": "compact-dark-accessibility-Settings-values-en.png",
+      "title": "最大字号深色：英文名称与数量",
+      "profile": "compact-dark-accessibility",
+      "capture": "Settings-values-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "3e524ff7943818c76b1f5df62b65faf3222e3df062db2d78ebe06a85247f41d1"
+    },
+    {
+      "file": "compact-dark-accessibility-Settings-values-zh-Hans.png",
+      "title": "最大字号深色：中文名称与数量",
+      "profile": "compact-dark-accessibility",
+      "capture": "Settings-values-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "fb993655ae8fcf71556582e7ad7bb76e26833fc3af4da4effc126d467c541533"
+    },
+    {
+      "file": "compact-dark-accessibility-Backup-warning-en.png",
+      "title": "最大字号深色：英文完整导出警告",
+      "profile": "compact-dark-accessibility",
+      "capture": "Backup-warning-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "35d6956af8ef5c79cce3408382852c66fd2971f2cf4f565b95d703fe6bbf01b7"
+    },
+    {
+      "file": "compact-dark-accessibility-Backup-warning-zh-Hans.png",
+      "title": "最大字号深色：中文完整导出警告",
+      "profile": "compact-dark-accessibility",
+      "capture": "Backup-warning-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "7bbe4b544fc478e45cee2b29d783a4396a906d778a9be1df1c2c4ecca7115948"
+    },
+    {
+      "file": "compact-dark-accessibility-Backup-exported-en.png",
+      "title": "最大字号深色：真实导出后的可见结果",
+      "profile": "compact-dark-accessibility",
+      "capture": "Backup-exported-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "69b9d0fdcb121678375b118402a78849b729f4ea058e9e4bc966507a409af27d"
+    },
+    {
+      "file": "compact-dark-accessibility-Import-cancelled-en.png",
+      "title": "最大字号深色：真实取消导入后的可见反馈",
+      "profile": "compact-dark-accessibility",
+      "capture": "Import-cancelled-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "dbbace643d2be51accb3b1ae19de702b5de9fdeb4e72e214cdfdf437990cb7a4"
+    },
+    {
+      "file": "compact-dark-accessibility-Backup-restored-en.png",
+      "title": "最大字号深色：真实替换后的可见结果",
+      "profile": "compact-dark-accessibility",
+      "capture": "Backup-restored-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "e2a27813384828434026300b80a620aca57ba7ec852aed06743be29c82a889df"
+    },
+    {
+      "file": "compact-dark-accessibility-Lock-recovery-zh-Hans.png",
+      "title": "最大字号深色：中文认证取消后名称与状态",
+      "profile": "compact-dark-accessibility",
+      "capture": "Lock-recovery-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "1951990987ea35fef972ce6e4801e96591ccde4ab3f8dc05d6d5d737e53ae41e"
+    },
+    {
+      "file": "ipad-light-Import-files-en.png",
+      "title": "iPad：原生文件选择与关闭前界面",
+      "profile": "ipad-light",
+      "capture": "Import-files-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "7b5ef5c0271346ca6224163c830408678fd4766d4f81e9a399de3ae697b39e98"
+    },
+    {
+      "file": "compact-light-Manual-note-keyboard-en.png",
+      "title": "compact-light：真实备注输入与键盘完成入口（en）",
+      "profile": "compact-light",
+      "capture": "Manual-note-keyboard-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "ce3b87baa953b45db8485d505f15c966bddfefeaa2d577d3abe122d89295832c"
+    },
+    {
+      "file": "compact-light-Manual-note-retained-en.png",
+      "title": "compact-light：收键盘并继续编辑后的原备注（en）",
+      "profile": "compact-light",
+      "capture": "Manual-note-retained-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "20aa52641bb54f050cbe99d2655a4b87a880a754f8c4defdf8ee23b44200f40d"
+    },
+    {
+      "file": "compact-light-Manual-note-confirm-en.png",
+      "title": "compact-light：明确可见的继续编辑与放弃动作（en）",
+      "profile": "compact-light",
+      "capture": "Manual-note-confirm-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "9e585c4a10528ba8f3c7bf43d6b1fca0678908a441fcd8c1bbec0e44307f8d98"
+    },
+    {
+      "file": "compact-light-Session-discard-confirm-en.png",
+      "title": "compact-light：明确可见的继续计时与放弃动作（en）",
+      "profile": "compact-light",
+      "capture": "Session-discard-confirm-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "574fedee7abefefb12da384eeba0ac2e13c39e7cb5d0a91f4bb4377133d061d2"
+    },
+    {
+      "file": "compact-light-Manual-note-keyboard-zh-Hans.png",
+      "title": "compact-light：真实备注输入与键盘完成入口（zh-Hans）",
+      "profile": "compact-light",
+      "capture": "Manual-note-keyboard-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "dd3bf79528a4ff085b9d3943eed85a131a207a372bb1c96de80fc119bed2f261"
+    },
+    {
+      "file": "compact-light-Manual-note-retained-zh-Hans.png",
+      "title": "compact-light：收键盘并继续编辑后的原备注（zh-Hans）",
+      "profile": "compact-light",
+      "capture": "Manual-note-retained-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "e095a92281c6cf0cafd3c7dd2e409d51e755b0aa937e52bd259578294d55dbbf"
+    },
+    {
+      "file": "compact-light-Manual-note-confirm-zh-Hans.png",
+      "title": "compact-light：明确可见的继续编辑与放弃动作（zh-Hans）",
+      "profile": "compact-light",
+      "capture": "Manual-note-confirm-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "1eb403df9314c69fa472ca1ee05a9d4d7c7e36e7834c0e8d208569892dfd6ed9"
+    },
+    {
+      "file": "compact-light-Session-discard-confirm-zh-Hans.png",
+      "title": "compact-light：明确可见的继续计时与放弃动作（zh-Hans）",
+      "profile": "compact-light",
+      "capture": "Session-discard-confirm-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "93ea6f5bb1d393569996f79cce055b2236156d3099fc15cdc425f99c42cd2c4d"
+    },
+    {
+      "file": "phone-dark-Manual-note-keyboard-en.png",
+      "title": "phone-dark：真实备注输入与键盘完成入口（en）",
+      "profile": "phone-dark",
+      "capture": "Manual-note-keyboard-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "99cb575d829226f6d437d043d9b9027c2e61881c22eab1349e7f551ab356a3bb"
+    },
+    {
+      "file": "phone-dark-Manual-note-retained-en.png",
+      "title": "phone-dark：收键盘并继续编辑后的原备注（en）",
+      "profile": "phone-dark",
+      "capture": "Manual-note-retained-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "5b9bb6ea77e1ea4e7bca3579bd89d641d5e5f0f38b0ffd4a65aabdd608d91ed3"
+    },
+    {
+      "file": "phone-dark-Manual-note-confirm-en.png",
+      "title": "phone-dark：明确可见的继续编辑与放弃动作（en）",
+      "profile": "phone-dark",
+      "capture": "Manual-note-confirm-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "7d5becd120b5a33f508b5c7687e3b0bfa39f665f418818688a1b2b6cea59b791"
+    },
+    {
+      "file": "phone-dark-Session-discard-confirm-en.png",
+      "title": "phone-dark：明确可见的继续计时与放弃动作（en）",
+      "profile": "phone-dark",
+      "capture": "Session-discard-confirm-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "afd8540e8c0164eb8538fab15a6c2bb04e436c87b192fb1fb7534748ca29648c"
+    },
+    {
+      "file": "phone-dark-Manual-note-keyboard-zh-Hans.png",
+      "title": "phone-dark：真实备注输入与键盘完成入口（zh-Hans）",
+      "profile": "phone-dark",
+      "capture": "Manual-note-keyboard-zh-Hans",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "afc01f517a3a9ac069aab9e65ac747567f1f4c2c16bd119b3c7c2daaaeffa904"
+    },
+    {
+      "file": "phone-dark-Manual-note-retained-zh-Hans.png",
+      "title": "phone-dark：收键盘并继续编辑后的原备注（zh-Hans）",
+      "profile": "phone-dark",
+      "capture": "Manual-note-retained-zh-Hans",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "d80593ce9aa8215b813895788372cd06c3e43356d5645139c784cdd33e96ea27"
+    },
+    {
+      "file": "phone-dark-Manual-note-confirm-zh-Hans.png",
+      "title": "phone-dark：明确可见的继续编辑与放弃动作（zh-Hans）",
+      "profile": "phone-dark",
+      "capture": "Manual-note-confirm-zh-Hans",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "a4d175b7017f087d56d6b09a615fcc2c0814b793c1133d334b135ad2a7906886"
+    },
+    {
+      "file": "phone-dark-Session-discard-confirm-zh-Hans.png",
+      "title": "phone-dark：明确可见的继续计时与放弃动作（zh-Hans）",
+      "profile": "phone-dark",
+      "capture": "Session-discard-confirm-zh-Hans",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "fdbbf6ee4ec1e79fed735542735637a3e874635077ab3e7c0c2ab3b266e1a0d3"
+    },
+    {
+      "file": "ipad-light-Manual-note-keyboard-en.png",
+      "title": "ipad-light：真实备注输入与键盘完成入口（en）",
+      "profile": "ipad-light",
+      "capture": "Manual-note-keyboard-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "65488d45a4c055cc494b6ae2ad8bdda4dbc35360719a3aad3ccaeb9c418df65b"
+    },
+    {
+      "file": "ipad-light-Manual-note-retained-en.png",
+      "title": "ipad-light：收键盘并继续编辑后的原备注（en）",
+      "profile": "ipad-light",
+      "capture": "Manual-note-retained-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "e2e6c5ebca522693616009ac00c5ed4bbf649ebf24f5aef250e3eb9b35a45811"
+    },
+    {
+      "file": "ipad-light-Manual-note-confirm-en.png",
+      "title": "ipad-light：明确可见的继续编辑与放弃动作（en）",
+      "profile": "ipad-light",
+      "capture": "Manual-note-confirm-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "3bc2329dfa637f5d7bc913f2d3522deeb0001ec27a91cfc07631e93109aa9e08"
+    },
+    {
+      "file": "ipad-light-Session-discard-confirm-en.png",
+      "title": "ipad-light：明确可见的继续计时与放弃动作（en）",
+      "profile": "ipad-light",
+      "capture": "Session-discard-confirm-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "74bd251c2f7773b0da44acb4c2aaa604ad96362428a13f1625059545f8db94ef"
+    },
+    {
+      "file": "ipad-light-Manual-note-keyboard-zh-Hans.png",
+      "title": "ipad-light：真实备注输入与键盘完成入口（zh-Hans）",
+      "profile": "ipad-light",
+      "capture": "Manual-note-keyboard-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "c4af37cf9576ddd63b1d5748dfe29a908126e268a491f2bc731db4f1952b7b2b"
+    },
+    {
+      "file": "ipad-light-Manual-note-retained-zh-Hans.png",
+      "title": "ipad-light：收键盘并继续编辑后的原备注（zh-Hans）",
+      "profile": "ipad-light",
+      "capture": "Manual-note-retained-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "2e26a171a3cac71f7725f11b3d595bf0be49e50d7064369dcd61306a3bb89d6e"
+    },
+    {
+      "file": "ipad-light-Manual-note-confirm-zh-Hans.png",
+      "title": "ipad-light：明确可见的继续编辑与放弃动作（zh-Hans）",
+      "profile": "ipad-light",
+      "capture": "Manual-note-confirm-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "b5c5958b6fa23675fb3cd7f210219a4e0110aabbb7fc9dfec270c43db9eac3fd"
+    },
+    {
+      "file": "ipad-light-Session-discard-confirm-zh-Hans.png",
+      "title": "ipad-light：明确可见的继续计时与放弃动作（zh-Hans）",
+      "profile": "ipad-light",
+      "capture": "Session-discard-confirm-zh-Hans",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "8a45eb1da4cfd3c0283fb817a06dda681aec9fc2dbf56a2f63f4b999291f78a7"
+    },
+    {
+      "file": "compact-dark-accessibility-Manual-note-keyboard-en.png",
+      "title": "compact-dark-accessibility：真实备注输入与键盘完成入口（en）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Manual-note-keyboard-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "2171d8e1662a123e6e96e9bd35dbe87fc42b156bc7d3a5b024ea1604579a9429"
+    },
+    {
+      "file": "compact-dark-accessibility-Manual-note-retained-en.png",
+      "title": "compact-dark-accessibility：收键盘并继续编辑后的原备注（en）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Manual-note-retained-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "a2c35fb46a9636a1ef0a892092168ca7e7f21e71fa788e3eefd11c083e48eaf0"
+    },
+    {
+      "file": "compact-dark-accessibility-Manual-note-confirm-en.png",
+      "title": "compact-dark-accessibility：明确可见的继续编辑与放弃动作（en）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Manual-note-confirm-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "480653e96353d5e3febd78c8cf5fe05c9e42bd5630a4774ef6dd82038c3efcfc"
+    },
+    {
+      "file": "compact-dark-accessibility-Session-discard-confirm-en.png",
+      "title": "compact-dark-accessibility：明确可见的继续计时与放弃动作（en）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Session-discard-confirm-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "9b4c1f3b98becb7dba7edee6412ace2ff3ef2765fc6d024c12ca4fa5b8abb93a"
+    },
+    {
+      "file": "compact-dark-accessibility-Manual-note-keyboard-zh-Hans.png",
+      "title": "compact-dark-accessibility：真实备注输入与键盘完成入口（zh-Hans）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Manual-note-keyboard-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "1fb3c34c30e1d220737d1ae49fa7e5303534f6694525e9260c7ecfc51ddb8993"
+    },
+    {
+      "file": "compact-dark-accessibility-Manual-note-retained-zh-Hans.png",
+      "title": "compact-dark-accessibility：收键盘并继续编辑后的原备注（zh-Hans）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Manual-note-retained-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "d138c427615cc8894d5271abfaca5512ece64e9c8499ab23ca4449a8da254e17"
+    },
+    {
+      "file": "compact-dark-accessibility-Manual-note-confirm-zh-Hans.png",
+      "title": "compact-dark-accessibility：明确可见的继续编辑与放弃动作（zh-Hans）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Manual-note-confirm-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "8904c875a1cab45b9e6288166a2c9ae403cc7114bf2bfa7d4cd2dbcc74759475"
+    },
+    {
+      "file": "compact-dark-accessibility-Session-discard-confirm-zh-Hans.png",
+      "title": "compact-dark-accessibility：明确可见的继续计时与放弃动作（zh-Hans）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Session-discard-confirm-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "8a54f0c5671856d90d9ac6ad1435a0a3fdbfca974501c14d34048630690628a2"
+    },
+    {
+      "file": "compact-dark-accessibility-Save-error-en.png",
+      "title": "最大字号深色：保存失败时明确保留草稿（en）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Save-error-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "32463519918adfad825a16b452be853ff8ef05da87fa5aef26311db924f48229"
+    },
+    {
+      "file": "compact-dark-accessibility-Save-recovery-en.png",
+      "title": "最大字号深色：重新读取后的草稿与保存入口（en）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Save-recovery-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "41aeb8f7fee92eb81724d7797b8d62fdde996ce1121bb1efb9e46ab2ba710ec4"
+    },
+    {
+      "file": "compact-dark-accessibility-Save-error-zh-Hans.png",
+      "title": "最大字号深色：保存失败时明确保留草稿（zh-Hans）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Save-error-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "bf4962de77eb4405abba8270cbb0e8d60b24b92c5af3664b4d9ec7798869730b"
+    },
+    {
+      "file": "compact-dark-accessibility-Save-recovery-zh-Hans.png",
+      "title": "最大字号深色：重新读取后的草稿与保存入口（zh-Hans）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Save-recovery-zh-Hans",
+      "width": 750,
+      "height": 1334,
+      "sha256": "5a56bab4612721ec7d36ac21dc241d49e3d11bd19603117c9b319a621d8cd6e8"
+    },
+    {
+      "file": "compact-light-Lock-recovery-en.png",
+      "title": "小屏浅色：切换系统设置并真实返回后的取消恢复状态（en）",
+      "profile": "compact-light",
+      "capture": "Lock-recovery-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "152d82ea33207026d0b22630a554a5c16b53693c9f486ec81449dd8e788c5c14"
+    },
+    {
+      "file": "phone-dark-Lock-recovery-en.png",
+      "title": "手机深色：切换系统设置并真实返回后的取消恢复状态（en）",
+      "profile": "phone-dark",
+      "capture": "Lock-recovery-en",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "83ebedffcc73b89151003b74ce5571e432aa1bc65823821bd305e320f86fbd5a"
+    },
+    {
+      "file": "ipad-light-Lock-recovery-en.png",
+      "title": "iPad：切换系统设置并真实返回后的取消恢复状态（en）",
+      "profile": "ipad-light",
+      "capture": "Lock-recovery-en",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "58af3839101974e716f80f653562d3b8eb4ca2516105b923621437834082798b"
+    },
+    {
+      "file": "compact-dark-accessibility-Lock-recovery-en.png",
+      "title": "最大字号深色：切换系统设置并真实返回后的取消恢复状态（en）",
+      "profile": "compact-dark-accessibility",
+      "capture": "Lock-recovery-en",
+      "width": 750,
+      "height": 1334,
+      "sha256": "9f0be152212e0b7c5fd682b14dba37dd17d096be3bbe73b57db7e6fec32da32c"
+    }
+  ],
+  "fileRecoveryEvents": [],
+  "backgroundExitEvents": [
+    {
+      "profile": "compact-light",
+      "locale": "en",
+      "capture": "Lock-recovery-en",
+      "kind": "native-settings-activation",
+      "destinationBundleID": "com.apple.Preferences",
+      "completeLabelVisibility": "Full title/value range revealed above a visible bottom tab bar; iPad top tab is not a bottom boundary. Final originals reviewed separately.",
+      "verification": "Native system Settings actually foregrounded while the journal reached runningBackground or runningBackgroundSuspended; normal activation returned to Off/enabled. No system preference changed. Simulator policy may already have failed before handoff; this verifies post-request background/return recovery, not cancellation of a still-pending physical prompt or successful authentication."
+    },
+    {
+      "profile": "compact-light",
+      "locale": "zh-Hans",
+      "capture": "Lock-recovery-zh-Hans",
+      "kind": "native-settings-activation",
+      "destinationBundleID": "com.apple.Preferences",
+      "completeLabelVisibility": "Full title/value range revealed above a visible bottom tab bar; iPad top tab is not a bottom boundary. Final originals reviewed separately.",
+      "verification": "Native system Settings actually foregrounded while the journal reached runningBackground or runningBackgroundSuspended; normal activation returned to Off/enabled. No system preference changed. Simulator policy may already have failed before handoff; this verifies post-request background/return recovery, not cancellation of a still-pending physical prompt or successful authentication."
+    },
+    {
+      "profile": "ipad-light",
+      "locale": "en",
+      "capture": "Lock-recovery-en",
+      "kind": "native-settings-activation",
+      "destinationBundleID": "com.apple.Preferences",
+      "completeLabelVisibility": "Full title/value range revealed above a visible bottom tab bar; iPad top tab is not a bottom boundary. Final originals reviewed separately.",
+      "verification": "Native system Settings actually foregrounded while the journal reached runningBackground or runningBackgroundSuspended; normal activation returned to Off/enabled. No system preference changed. Simulator policy may already have failed before handoff; this verifies post-request background/return recovery, not cancellation of a still-pending physical prompt or successful authentication."
+    },
+    {
+      "profile": "ipad-light",
+      "locale": "zh-Hans",
+      "capture": "Lock-recovery-zh-Hans",
+      "kind": "native-settings-activation",
+      "destinationBundleID": "com.apple.Preferences",
+      "completeLabelVisibility": "Full title/value range revealed above a visible bottom tab bar; iPad top tab is not a bottom boundary. Final originals reviewed separately.",
+      "verification": "Native system Settings actually foregrounded while the journal reached runningBackground or runningBackgroundSuspended; normal activation returned to Off/enabled. No system preference changed. Simulator policy may already have failed before handoff; this verifies post-request background/return recovery, not cancellation of a still-pending physical prompt or successful authentication."
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "locale": "en",
+      "capture": "Lock-recovery-en",
+      "kind": "native-settings-activation",
+      "destinationBundleID": "com.apple.Preferences",
+      "completeLabelVisibility": "Full title/value range revealed above a visible bottom tab bar; iPad top tab is not a bottom boundary. Final originals reviewed separately.",
+      "verification": "Native system Settings actually foregrounded while the journal reached runningBackground or runningBackgroundSuspended; normal activation returned to Off/enabled. No system preference changed. Simulator policy may already have failed before handoff; this verifies post-request background/return recovery, not cancellation of a still-pending physical prompt or successful authentication."
+    },
+    {
+      "profile": "compact-dark-accessibility",
+      "locale": "zh-Hans",
+      "capture": "Lock-recovery-zh-Hans",
+      "kind": "native-settings-activation",
+      "destinationBundleID": "com.apple.Preferences",
+      "completeLabelVisibility": "Full title/value range revealed above a visible bottom tab bar; iPad top tab is not a bottom boundary. Final originals reviewed separately.",
+      "verification": "Native system Settings actually foregrounded while the journal reached runningBackground or runningBackgroundSuspended; normal activation returned to Off/enabled. No system preference changed. Simulator policy may already have failed before handoff; this verifies post-request background/return recovery, not cancellation of a still-pending physical prompt or successful authentication."
+    },
+    {
+      "profile": "phone-dark",
+      "locale": "en",
+      "capture": "Lock-recovery-en",
+      "kind": "native-settings-activation",
+      "destinationBundleID": "com.apple.Preferences",
+      "completeLabelVisibility": "Full title/value range revealed above a visible bottom tab bar; iPad top tab is not a bottom boundary. Final originals reviewed separately.",
+      "verification": "Native system Settings actually foregrounded while the journal reached runningBackground or runningBackgroundSuspended; normal activation returned to Off/enabled. No system preference changed. Simulator policy may already have failed before handoff; this verifies post-request background/return recovery, not cancellation of a still-pending physical prompt or successful authentication."
+    },
+    {
+      "profile": "phone-dark",
+      "locale": "zh-Hans",
+      "capture": "Lock-recovery-zh-Hans",
+      "kind": "native-settings-activation",
+      "destinationBundleID": "com.apple.Preferences",
+      "completeLabelVisibility": "Full title/value range revealed above a visible bottom tab bar; iPad top tab is not a bottom boundary. Final originals reviewed separately.",
+      "verification": "Native system Settings actually foregrounded while the journal reached runningBackground or runningBackgroundSuspended; normal activation returned to Off/enabled. No system preference changed. Simulator policy may already have failed before handoff; this verifies post-request background/return recovery, not cancellation of a still-pending physical prompt or successful authentication."
+    }
+  ],
+  "infrastructureRecoveries": [],
+  "carriedForwardJobs": [],
+  "limits": [
+    "Selected screenshots opened, not every exported PNG",
+    "Configured Large text on compact-light, phone-dark and iPad; accessibility XXXL on the compact dark profile. No complete intermediate-category, iPad accessibility-size, landscape or split-view acceptance.",
+    "English system-file roundtrip; bilingual gallery does not prove a full Chinese system-file roundtrip",
+    "Snapshot copy import and coordinated bounded reads; provider may materialize an entire file before URL delivery and the app size check",
+    "The picker stays alive while app-owned copies are coordinated into UUID temporary snapshots; normal completion/failure cleans only owned snapshots. Process termination or undelivered provider copies may leave temporaries until system cleanup; originals remain user-managed in Files",
+    "Authentication state-machine tests use a unit-only controlled adapter; Simulator request/background return does not establish that the authentication prompt was still pending at handoff, pending physical-prompt cancellation, or successful physical authentication",
+    "No physical VoiceOver, tactile, file-protection, external-provider or older-runtime acceptance",
+    "No 100000-record performance acceptance; SwiftData mutations remain MainActor",
+    "First-attempt provider availability is not established; all observed typed-source recovery events and explicit user reselections are retained",
+    "No signing, TestFlight upload or main merge",
+    "Note-count geometry checks horizontal clearance from the floating action. At the largest accessibility size, reading the full count may require scrolling or dismissing the keyboard; the complete form is not required to fit above it."
+  ],
+  "comparisonBaseline": {
+    "file": "../batch-08/compact-dark-accessibility-Backup-warning-en.png",
+    "sourceCommit": "d4a6a83d5ab4c2d2c650bbe9309ae3e998989779",
+    "runId": 43001370010,
+    "sha256": "8354b69a373f49897551c1b57f976b81d9b0518b014826282eaf1bc4efe32c57",
+    "opened": true,
+    "title": "上批基线：最大字号英文警告正文未在同屏完整显示（不是本轮截图）",
+    "device": "iPhone SE (3rd generation)",
+    "width": 750,
+    "height": 1334
+  },
+  "keyboardComparisonBaseline": {
+    "file": "baseline-ca34ad0-ipad-keyboard-en.png",
+    "sourceCommit": "ca34ad0f1a7f89e22cbb577a018f6b8957da3193",
+    "runId": 43280108268,
+    "sha256": "1313f00669420da6fe0e391d53c35e3e0b8887e4a1273e64a4cd605c9837f70f",
+    "device": "iPad Pro 13-inch (M5)",
+    "width": 2064,
+    "height": 2752,
+    "opened": true,
+    "title": "历史定向诊断：44pt几何通过，英文操作仍挤成D…；不是本轮截图"
+  },
+  "counterComparisonBaseline": {
+    "file": "baseline-a66bd72-phone-keyboard-en.png",
+    "sourceCommit": "a66bd72687513604dc6b8cb90d38f7abfe45aa7e",
+    "runId": 43303554708,
+    "sha256": "0fd0880be18e26d4c57ddeb98c899340497c16fe712dd9954a4c2b31eb810504",
+    "device": "iPhone 17 Pro",
+    "width": 1206,
+    "height": 2622,
+    "opened": true,
+    "title": "历史候选：计数上限末尾被浮动按钮遮挡；不是本轮原图",
+    "sourceVerification": {
+      "runHeadSHA": "a66bd72687513604dc6b8cb90d38f7abfe45aa7e",
+      "sourceTree": "144cd96e61a6703ba1aa007c0d6e617364f0a5c0",
+      "checkoutCommitsByProfile": {
+        "compact-light": "a66bd72687513604dc6b8cb90d38f7abfe45aa7e",
+        "phone-dark": "a66bd72687513604dc6b8cb90d38f7abfe45aa7e",
+        "ipad-light": "a66bd72687513604dc6b8cb90d38f7abfe45aa7e",
+        "compact-dark-accessibility": "a66bd72687513604dc6b8cb90d38f7abfe45aa7e"
+      },
+      "checkoutTrees": {
+        "a66bd72687513604dc6b8cb90d38f7abfe45aa7e": "144cd96e61a6703ba1aa007c0d6e617364f0a5c0"
+      },
+      "exactTreeMatch": true
+    }
+  },
+  "lockComparisonBaseline": {
+    "file": "baseline-07bde42-ax-lock-zh-Hans.png",
+    "sourceCommit": "07bde42ac142e60819de52f0b1675a4989c26b94",
+    "runId": 43342802103,
+    "sha256": "c3540172b4318f0c1ef5dfcbf68cf1af28d08d2604f4794b29712584f65c7dda",
+    "device": "iPhone SE (3rd generation)",
+    "width": 750,
+    "height": 1334,
+    "opened": true,
+    "sourceVerification": {
+      "runHeadSHA": "07bde42ac142e60819de52f0b1675a4989c26b94",
+      "sourceTree": "5dbb2ede84481096684fcc22db2f35aa9468e115",
+      "checkoutCommitsByProfile": {
+        "compact-light": "07bde42ac142e60819de52f0b1675a4989c26b94",
+        "phone-dark": "07bde42ac142e60819de52f0b1675a4989c26b94",
+        "ipad-light": "07bde42ac142e60819de52f0b1675a4989c26b94",
+        "compact-dark-accessibility": "07bde42ac142e60819de52f0b1675a4989c26b94"
+      },
+      "checkoutTrees": {
+        "07bde42ac142e60819de52f0b1675a4989c26b94": "5dbb2ede84481096684fcc22db2f35aa9468e115"
+      },
+      "exactTreeMatch": true
+    },
+    "title": "历史完整运行：自动化成功，但状态被底部Tab部分遮挡；不是最终原图"
+  },
+  "batch": 10,
+  "supersedesPendingBatch09Acceptance": true
+}

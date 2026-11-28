@@ -1,0 +1,72 @@
+{
+  "run": 45597971767,
+  "job": 139149177774,
+  "profile": "diagnostics-files",
+  "source": "7125c28ea404d78a61d1133338a3fad8d910cfcf",
+  "testSucceeded": false,
+  "buildSuccesses": 0,
+  "ios17Runtime": false,
+  "releaseTestHooksExcluded": false,
+  "cases": [
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testEmptyPreviewKeepsReplacementScopeExplicit",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderPreservesTheFullValidatedRecord",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderRejectsAnOversizedSparseFile",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderRejectsMalformedAndMissingFiles",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testImportedCopyNeverDeletesAPrefixSibling",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testImportedCopyNeverRecursivelyDeletesADirectory",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testPreviewCountsActualIDOverlapAndNotes",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testBackupFileRoundTrip",
+      "result": "failed"
+    }
+  ]
+}

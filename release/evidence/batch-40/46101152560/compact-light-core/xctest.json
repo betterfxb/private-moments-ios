@@ -1,0 +1,492 @@
+{
+  "run": 46101152560,
+  "job": 140843788104,
+  "profile": "compact-light-core",
+  "source": "751442532a477f9232707285bc10234787619a5b",
+  "testSucceeded": true,
+  "buildSuccesses": 2,
+  "ios17Runtime": false,
+  "releaseTestHooksExcluded": true,
+  "cases": [
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "AppLockUXTests",
+      "name": "testBackgroundDiscardsLateDisableSuccess",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "AppLockUXTests",
+      "name": "testBackgroundDiscardsLateEnableSuccess",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "AppLockUXTests",
+      "name": "testCancelledFailedAndUnavailableAuthenticationDoNotEnableLock",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "AppLockUXTests",
+      "name": "testConcurrentRequestStartsOnlyOneEvaluation",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "AppLockUXTests",
+      "name": "testFailedUnlockRemainsLocked",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "AppLockUXTests",
+      "name": "testInactivePromptDoesNotCancelButBackgroundAlwaysLocks",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "AppLockUXTests",
+      "name": "testOldCallbackCannotUnlockOrClearANewerAttempt",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "AppLockUXTests",
+      "name": "testOnlySuccessfulAuthenticationChangesPreferenceAndRelaunchLocks",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testEmptyPreviewKeepsReplacementScopeExplicit",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderPreservesTheFullValidatedRecord",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderRejectsAnOversizedSparseFile",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderRejectsMalformedAndMissingFiles",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testImportedCopyNeverDeletesAPrefixSibling",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testImportedCopyNeverRecursivelyDeletesADirectory",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testPreviewCountsActualIDOverlapAndNotes",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "FavoritePersistenceTests",
+      "name": "testFailedFavoriteSaveLeavesTheRecordUnchanged",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "FavoritePersistenceTests",
+      "name": "testFavoritePersistsAfterMigrationAndSurvivesBackupRoundTrip",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "FavoritePersistenceTests",
+      "name": "testLegacyBackupDoesNotClearLocalFavoriteDuringMerge",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "JournalPerformanceBaselineTests",
+      "name": "testSyntheticBackupCodecBaseline",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testComparisonUsesAdjacentLocalPeriodsAndKeepsTiedFeelings",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testDaylightSavingDaysUseCalendarBoundaries",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMidnightBelongsOnlyToTheFollowingDay",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMonthCalendarKeepsEmptyDaysAndWeekAlignmentAcrossDaylightSaving",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMonthFavoritesAndCommonFeelingsLinkToTheSelectedMonthsRecords",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMonthReviewGroupsLocalDaysAndKeepsPeriodCountsWhenFiltered",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMonthTagsCountRecordsOnceAndMatchTheSameNormalizedKeys",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testReviewNavigationMovesBetweenCalendarPeriodStarts",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testTimelineFilterReadsImportedTagsAndRecomputesAfterAnEdit",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testTimelineRangeAppliesEveryConditionAndIncludesTheEndDay",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testWeekReviewShowsEmptyAndSingleRecord",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testWeekReviewUsesLocalMidnightAcrossDaylightSaving",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testWeekReviewUsesLocalYearBoundaryAndCountsOnlyIncludedMoods",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentStoreImportTests",
+      "name": "testFailedReplacementLeavesExistingRecordsUnchanged",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentStoreImportTests",
+      "name": "testInvalidMergeLeavesExistingRecordsUnchanged",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentStoreImportTests",
+      "name": "testMergeAddsNewRecordsAndUpdatesMatchingIDs",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentStoreRecoveryTests",
+      "name": "testConversionFailurePreservesCachedSnapshotUntilRepair",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentStoreRecoveryTests",
+      "name": "testEachPersistenceFailurePreservesSnapshotAndRequiresReload",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentStoreRecoveryTests",
+      "name": "testFirstReadFailureBlocksAllMutationsUntilSuccessfulRetry",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentStoreRecoveryTests",
+      "name": "testReadFailureKeepsCachedRecordsReadOnly",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentStoreRecoveryTests",
+      "name": "testValidationAndDuplicateBackupErrorsDoNotDisableStorage",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testCustomTagKeepsSavedSpellingAndDoesNotDuplicateExistingSelection",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testTagLimitsAndExistingSelectionsRemainValid",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testTimelineMatchesAnyOrAllTagsWithoutChangingOtherConditions",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testTimelineTagFilterIncludesLegacySpellingVariants",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTimingDraftTests",
+      "name": "testChangedTimingParticipatesInDiscardDetection",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTimingDraftTests",
+      "name": "testFutureNewDateRejectedWithoutChangingBackupValidation",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTimingDraftTests",
+      "name": "testMalformedOverflowAndOverLimitDurationsAreRejected",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTimingDraftTests",
+      "name": "testNonFiniteDateRejectedAndExistingValuesTakePrecedence",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTimingDraftTests",
+      "name": "testUntouchedShortAndLongDurationsPreserveExactSeconds",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentValidationTests",
+      "name": "testBackupRejectsDuplicateIDsBeforeRestore",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentValidationTests",
+      "name": "testBackupRejectsFilesOverSizeLimit",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentValidationTests",
+      "name": "testBackupRejectsUnknownFormatVersion",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentValidationTests",
+      "name": "testBackupRoundTripPreservesPrivateFields",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentValidationTests",
+      "name": "testNegativeDurationIsRejected",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentValidationTests",
+      "name": "testOverlongPrivateNoteIsRejected",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentValidationTests",
+      "name": "testOversizedUnicodeNoteIsRejectedEvenWhenGraphemeCountIsSmall",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentValidationTests",
+      "name": "testPrivateNoteAllowsEmptyAndExactCharacterLimit",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentValidationTests",
+      "name": "testPrivateNoteUTF8BoundaryIsIndependentOfCharacterCount",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentValidationTests",
+      "name": "testValidMomentPassesValidation",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "RecapDraftRecoveryTests",
+      "name": "testDraftRoundTripKeepsInvalidTimingAndPrivateTextUntilExplicitDiscard",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "RecapDraftRecoveryTests",
+      "name": "testRelaunchAfterRecordCommitDoesNotOfferTheSameDraftTwice",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "RecapDraftRecoveryTests",
+      "name": "testUnreadableDraftCannotBeOverwrittenWithoutExplicitDiscard",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "SemanticColorTests",
+      "name": "testAccentAndSessionTextRemainReadableInBothAppearances",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "SemanticColorTests",
+      "name": "testBodyAndSecondaryTextContrastOnSurfaces",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "SemanticColorTests",
+      "name": "testJournalActionsRemainReadableOnPaperAndSelectedSurfaces",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "SwiftDataRecoveryTests",
+      "name": "testInsertFailureLeavesNoPhantomRecord",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "SwiftDataRecoveryTests",
+      "name": "testInvalidPersistedFieldsBlockReadAndRepairRestoresAccess",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "SwiftDataRecoveryTests",
+      "name": "testSaveFailureRollsBackEveryMutationInRealModelContext",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "UITestIsolationTests",
+      "name": "testPrivacyPreferencesAreIsolatedByTheSameStoreUUID",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "UITestIsolationTests",
+      "name": "testSaveFailureRequiresBothAnIsolatedStoreAndExplicitFlag",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "UITestIsolationTests",
+      "name": "testTestStoreRequiresAValidUUID",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testEditingFilteringDeletionAndRelaunch",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testJournalReadingSample",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testLargeJournalInteractionBaseline",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testManualEntryTimingDateFilterAndPersistence",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testSessionAndRecapDiscardConfirmations",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testTerminationPreservesOnlyExplicitlySavedRecords",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testTimelineSearchReflectsEditAndDeletion",
+      "result": "passed"
+    }
+  ]
+}

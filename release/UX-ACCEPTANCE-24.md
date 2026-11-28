@@ -1,0 +1,33 @@
+# Private Moments 第二十四批中文时间线与长备注样张
+
+样张从原生时间线进入已经收藏的长备注。采用此前选定的「沉浸扉页」暖纸色，保留 iOS 原生搜索、导航和辅助字号。现有常规小屏截图里，全宽粉色「清除筛选」的视觉权重高于唯一一条结果。旧版深色最大字号里，搜索提示、类型和收藏把记录进一步推到首屏之外。详情首屏由类型、时长和评分占去三行，英文最大字号首屏只能看到备注标题的一部分。[旧版常规小屏](evidence/batch-22/45511957307/compact-light/Favorite-timeline-zh-Hans.png) · [旧版最大字号详情](evidence/batch-22/45597952537/compact-dark-accessibility/Favorite-detail-en.png)
+
+## 原生样张设计
+
+- 时间线把清除放在结果数量旁，宽度不足时换到下一行，保留至少 44 点目标。收藏用暖纸底、填实书签和可读选中状态。日期是分组定位，感受和进入详情是记录行的首要信息。输入和辅助字号布局优先显示计数。
+- 详情按日记阅读顺序呈现日期、已有的手填地点、感受和备注。时长、类型及评分在备注之后，编辑和收藏仍在原生导航栏可操作。正文增加行间距，用薄侧线标识私密备注，宽屏阅读列最多 640 点。强调色只用于动作、收藏和局部识别。
+- 样张使用固定日期和每种语言两段的虚构内容。同一配置用相同合成记录、相同语言及同一入口采集改前和改后。样张测试数据通过仅 Debug、且已启用隔离测试库的入口注入。
+
+## 预定验收
+
+| 场景 | 可检查的结果 |
+| --- | --- |
+| iPhone SE（第三代）375 × 667 点，浅色常规字号 | 并排打开中文时间线首屏、长备注详情和滚动进入正文的画面。记录行更靠上，清除可触，书签的位置和状态明确。英文也采集相同流程。 |
+| 常规手机深色、iPad 浅色、小屏深色最大辅助字号 | 实拍核对两种主题、中文和英文。检查 iPad 阅读列、长文换行、状态和触控范围。在最大辅助字号提交真实键盘查询后，计数和结果仍能找到。 |
+| 核心操作 | 从正常入口筛出一条已收藏记录，打开并读到两段备注，返回时仍筛选为一条，清除后恢复两条。基础图库和键盘搜索覆盖其他空态、提交和错误。 |
+
+同内容基线 `16a962a` 和候选样张 `69365f7` 在 iPhone SE（第三代）、iOS 26.2、375 × 667 点上通过。两次实际运行使用相同的浅色常规字号及 Intel macOS 执行器。候选样张同时通过 3 项语义色对比度测试，含本批暖棕色在暖纸底、私密备注底及选中底上的可读性。已保留中英文的时间线、详情首屏和长备注共 12 张原图及哈希。[原生基线](https://github.com/betterfxb/private-moments-ios/actions/runs/45622949026) · [候选样张](https://github.com/betterfxb/private-moments-ios/actions/runs/45625188179) · [基线截图收据](evidence/batch-24/45622949026/compact-light/screenshots.json) · [候选截图收据](evidence/batch-24/45625188179/compact-light/screenshots.json)
+
+中文并排实拍里，时间线清除动作移入计数行，第一条记录标题向上约 50 点。详情先读感受和备注，正文首行向上约 60 点。颜色集中到书签和小型操作。内容不同高度时低优先级动作随正文滚动。上述位置由 375 点并排图估读。审美评价与三套补充配置实拍待核对。[同设备、同内容前后对照](evidence/batch-24/reading-comparison-375pt.png)
+
+补充组合使用 `85983a4`，包含新增日期与标签入口及收藏后的「再记一次」，保留同一长备注夹具。三个运行已请求。[常规手机深色](https://github.com/betterfxb/private-moments-ios/actions/runs/45635246862) · [iPad 浅色](https://github.com/betterfxb/private-moments-ios/actions/runs/45635247449) · [小屏深色最大字号](https://github.com/betterfxb/private-moments-ios/actions/runs/45635231042)
+
+iPad Pro 13 英寸（M5）在 1,032 × 1,376 点通过双语长备注与收藏往返，用例及 3 项对比度检查成功。备注保持在居中阅读列，正常字号下正文与「再记一次」在首屏可见。已归档 6 张原图。[中文详情](evidence/batch-24/45635247449/ipad-light/Reading-sample-detail-zh-Hans.png) · [截图收据](evidence/batch-24/45635247449/ipad-light/screenshots.json)
+
+iPhone 17 Pro 深色常规字号在 402 × 874 点通过相同的双语原生流程和 3 项对比度检查。正文底色与页面底色之间的层次可辨，棕色收藏和「再记一次」保持同一色系。已归档 6 张原图。[深色中文详情](evidence/batch-24/45635246862/phone-dark/Reading-sample-detail-zh-Hans.png) · [截图收据](evidence/batch-24/45635246862/phone-dark/screenshots.json)
+
+最后一套深色最大字号的 Intel 采集在 `88eb6ff` 通过。iPhone SE（第三代）375 × 667 点，原生双语用例经过筛出一条收藏记录、详情读到两段备注、返回仍保持收藏筛选以及清除后恢复两条。3 项对比度检查通过，归档并检查了 6 张原图。中英文详情首屏均有备注正文，长文随字号换行。最大字号的时间线实拍里，搜索框、结果计数、类型、收藏和说明占满首屏，第一条记录仍需向下滚动。这里保留原生可用性通过的结果，同时将首屏记录可见性记为视觉余项。[真实运行](https://github.com/betterfxb/private-moments-ios/actions/runs/45648953703) · [中文时间线](evidence/batch-24/45648953703/compact-dark-accessibility/Reading-sample-timeline-zh-Hans.png) · [中文详情](evidence/batch-24/45648953703/compact-dark-accessibility/Reading-sample-detail-zh-Hans.png) · [截图收据](evidence/batch-24/45648953703/compact-dark-accessibility/screenshots.json)
+
+稍后领取执行器的原 ARM64 采集也通过 3 项对比度检查和同一原生双语用例。至此三个补充配置均有 `85983a4` 的通过结果。[ARM64 结果](evidence/batch-24/45635231042/compact-dark-accessibility/xctest-extract.txt)
+
+`9880cb3` 将最大辅助字号的搜索说明挪到计数旁后，两种语言在 375 × 667 点实拍中均能在首屏完整读到说明。首条记录仍需滚动，筛选时收藏按钮需要稍向下滚动才能完全呈现。相同的长备注、收藏返回与清除流程及 3 项语义色对比度检查再次通过。[最新中文时间线](evidence/batch-24/45679031644/compact-dark-accessibility/Reading-sample-timeline-zh-Hans.png) · [最新英文时间线](evidence/batch-24/45679031644/compact-dark-accessibility/Reading-sample-timeline-en.png) · [XCTest 结果](evidence/batch-24/45679031644/compact-dark-accessibility/xctest-extract.txt)

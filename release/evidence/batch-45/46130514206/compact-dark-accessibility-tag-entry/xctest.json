@@ -1,0 +1,54 @@
+{
+  "run": 46130514206,
+  "job": 140934533212,
+  "profile": "compact-dark-accessibility-tag-entry",
+  "source": "0d9f598df7f415d2041ff8cdb57baa1f3c69684a",
+  "testSucceeded": true,
+  "buildSuccesses": 0,
+  "ios17Runtime": false,
+  "releaseTestHooksExcluded": false,
+  "cases": [
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testCustomTagKeepsSavedSpellingAndDoesNotDuplicateExistingSelection",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testTagLimitsAndExistingSelectionsRemainValid",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testTimelineMatchesAnyOrAllTagsWithoutChangingOtherConditions",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentTagTests",
+      "name": "testTimelineTagFilterIncludesLegacySpellingVariants",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testCalendarEntryReturnsToMonthTags",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testOversizedCustomTagCanBeCorrectedWithoutLeavingTheKeyboard",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testQuickRecordCanBeCompletedLaterAndReusesCustomTags",
+      "result": "passed"
+    }
+  ]
+}

@@ -1,0 +1,185 @@
+Attributes: Application, 0x11cad2f20, pid: 83656, label: '私密时刻'
+Element subtree:
+ →Application, 0x11cad2f20, pid: 83656, label: '私密时刻'
+    Window (Main), 0x11cae0b20, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x11cadfec0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x11cae02e0, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x11cadbbc0, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x11cae0700, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x11cae0f40, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x11cadfaa0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x11cadc0f0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x11cadf680, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x11cae1360, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x11cad1410, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x11cad8900, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x11cadee40, {{0.0, 20.0}, {375.0, 54.0}}, identifier: '补记'
+                              Other, 0x11cadf260, {{20.0, 24.0}, {64.5, 36.0}}, identifier: 'recap.cancel', label: '取消'
+                                Other, 0x11cadca80, {{20.0, 24.0}, {64.5, 36.0}}
+                                  Button, 0x11cae1fc0, {{20.0, 24.0}, {64.5, 36.0}}, identifier: 'recap.cancel', label: '取消'
+                              StaticText, 0x11cae1780, {{167.0, 29.0}, {40.5, 26.0}}, label: '补记'
+                              Other, 0x11cae1ba0, {{311.0, 20.0}, {44.0, 44.0}}, identifier: 'recap.saveToolbar', label: '私密保存'
+                                Other, 0x11cae35b0, {{311.0, 20.0}, {44.0, 44.0}}
+                                  Button, 0x11caddb60, {{311.0, 20.0}, {44.0, 44.0}}, identifier: 'recap.saveToolbar', label: '私密保存', Selected
+                            Other, 0x11caed550, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x11caed670, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x11caed790, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x11caed8b0, {{0.0, 0.0}, {375.0, 667.0}}
+                                    ScrollView, 0x11caed9d0, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x11caedaf0, {{0.0, -2711.0}, {375.0, 3306.0}}
+                                        StaticText, 0x11caedc10, {{20.0, -2693.0}, {264.5, 67.0}}, label: '记下这一刻'
+                                        StaticText, 0x11caedd30, {{20.0, -2620.0}, {308.0, 174.5}}, label: '2026年11月15日 12:59 · 1 分钟'
+                                        StaticText, 0x11caede50, {{36.0, -2405.5}, {250.5, 63.5}}, label: '日期与时长'
+                                        Button, 0x11caedf70, {{36.0, -2330.0}, {303.0, 211.0}}, identifier: 'recap.date.open', label: '发生日期、2026年11月15日'
+                                          StaticText, 0x11caee090, {{58.0, -2323.0}, {200.5, 63.5}}, label: '发生日期'
+                                          StaticText, 0x11caee1b0, {{58.0, -2251.5}, {216.0, 125.5}}, label: '2026年11月15日'
+                                        StaticText, 0x11caee2d0, {{36.0, -2107.0}, {200.5, 63.5}}, label: '开始时间'
+                                        DatePicker, 0x11caee3f0, {{36.0, -2031.5}, {165.5, 77.5}}, identifier: 'recap.time', label: '开始时间'
+                                          Button, 0x11caee510, {{36.0, -2031.5}, {165.5, 77.5}}, label: '时间选择器', value: 12:59
+                                        Button, 0x11caee630, {{36.0, -1942.0}, {144.5, 77.5}}, identifier: 'recap.yesterday', label: '昨天'
+                                        StaticText, 0x11caee750, {{36.0, -1852.5}, {100.5, 63.5}}, label: '分钟'
+                                        TextField, 0x11caee870, {{48.0, -1773.0}, {279.0, 65.0}}, identifier: 'recap.minutes', placeholderValue: '分钟', value: 1
+                                        StaticText, 0x11caee990, {{36.0, -1686.0}, {50.5, 63.5}}, label: '秒'
+                                        TextField, 0x11caeeab0, {{48.0, -1606.5}, {279.0, 65.0}}, identifier: 'recap.seconds', placeholderValue: '秒', value: 0
+                                        StaticText, 0x11caeebd0, {{36.0, -1475.5}, {200.5, 125.5}}, label: '此刻感觉如何？'
+                                        StaticText, 0x11caeecf0, {{36.0, -924.0}, {275.5, 125.5}}, identifier: 'recap.kind.title', label: '这是一段怎样的时刻？'
+                                        Button, 0x11caeee10, {{36.0, -788.5}, {303.0, 66.5}}, identifier: 'recap.kind.Together', label: '共同', Selected
+                                          Image, 0x11caeef30, {{116.5, -776.0}, {42.5, 41.5}}, identifier: 'checkmark', label: '已选择', Selected
+                                          StaticText, 0x11caef050, {{172.0, -784.5}, {92.5, 58.5}}, label: '共同'
+                                        Button, 0x11caef170, {{36.0, -713.0}, {303.0, 66.5}}, identifier: 'recap.kind.Solo', label: '独自'
+                                          Image, 0x11caef290, {{116.5, -702.0}, {42.5, 45.0}}, identifier: 'person', label: 'person'
+                                          StaticText, 0x11caef3b0, {{172.0, -709.0}, {92.5, 58.5}}, label: '独自'
+                                        StaticText, 0x11caef4d0, {{36.0, -605.5}, {300.5, 63.5}}, identifier: 'recap.rating.title', label: '记录你的感受'
+                                        StaticText, 0x11caef5f0, {{36.0, -336.0}, {300.5, 63.5}}, label: '添加几个标签'
+                                        Button, 0x11caef710, {{35.5, -263.0}, {106.5, 70.5}}, identifier: 'recap.tag.Relaxed', label: '放松'
+                                        Button, 0x11caef830, {{35.5, -185.5}, {188.0, 70.5}}, identifier: 'recap.tag.Connected', label: '亲密相连', Selected
+                                        Button, 0x11caef950, {{35.5, -108.0}, {188.0, 70.5}}, identifier: 'recap.tag.Better sleep', label: '睡得更好'
+                                        StaticText, 0x11caefa70, {{36.0, 3.0}, {200.5, 63.5}}, label: '私密备注'
+                                        StaticText, 0x11caefb90, {{36.0, 90.5}, {285.0, 51.5}}, label: '备份包含此内容'
+                                        TextView, 0x11caefcb0, {{44.0, 159.0}, {287.0, 204.0}}, identifier: 'recap.note', label: '私密备注', value: Test draft
+Keep this, Keyboard Focused
+                                          Other, 0x11caefdd0, {{44.0, 159.0}, {0.0, 0.0}}, identifier: '_UITextSelectionRangeAdjustmentContainerView'
+                                            Other, 0x11caefef0, {{44.0, 159.0}, {0.0, 0.0}}, identifier: 'com.apple.text.grabber.leading'
+                                              Other, 0x11caf0010, {{36.8, 145.5}, {16.5, 16.5}}
+                                              Other, 0x11caf0130, {{44.0, 159.0}, {2.0, 0.0}}
+                                            Other, 0x11caf0250, {{44.0, 159.0}, {0.0, 0.0}}, identifier: 'com.apple.text.grabber.leading'
+                                              Other, 0x11caf0370, {{36.8, 145.5}, {16.5, 16.5}}
+                                              Other, 0x11caf0490, {{44.0, 159.0}, {2.0, 0.0}}
+                                          Other, 0x11caf05b0, {{298.0, 159.0}, {30.0, 204.0}}, label: '垂直滚动条, 1页', value: 0%
+                                            Other, 0x11caf06d0, {{325.0, 286.0}, {3.0, 74.0}}
+                                        StaticText, 0x11caf07f0, {{50.0, 380.0}, {229.0, 51.5}}, identifier: 'recap.noteCount', label: '私密备注，已输入 20 个字符，共 10,000 个字符'
+                                        Button, 0x11caf0910, {{20.0, 471.5}, {335.0, 93.5}}, identifier: 'recap.save', label: '私密保存'
+                                          Image, 0x11caf0a30, {{60.0, 496.0}, {47.0, 45.5}}, identifier: 'checkmark', label: '已选择', Selected
+                                          StaticText, 0x11caf0b50, {{20.0, 471.5}, {335.0, 93.5}}, label: '私密保存'
+                                        Other, 0x11caf0c70, {{0.0, 0.0}, {0.0, 0.0}}
+                                        Other, 0x11caf0d90, {{0.0, 0.0}, {0.0, 0.0}}
+                                      Other, 0x11caf1200, {{0.0, 0.0}, {375.0, 667.0}}
+                                        Other, 0x11caf1320, {{0.0, 0.0}, {375.0, 128.8}}
+                                      Other, 0x11caf1440, {{0.0, 0.0}, {375.0, 667.0}}
+                                        Other, 0x11caf1560, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Image, 0x11caf1680, {{-120.0, -124.0}, {615.0, 248.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x11caf17a0, {{0.0, 0.0}, {375.0, 64.0}}
+                                          Other, 0x11caf18c0, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x11caf19e0, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Other, 0x11caf1b00, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x11caf1c20, {{0.0, 0.0}, {375.0, 128.8}}
+                                          Other, 0x11caf1d40, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x11cc094e0, {{0.0, 0.0}, {375.0, 128.8}}
+                                            Other, 0x11c9ef9e0, {{0.0, 0.0}, {375.0, 128.8}}
+                                      Other, 0x11cc0b410, {{342.0, 74.0}, {30.0, 285.0}}, label: '垂直滚动条, 12页', value: 92%
+                                        Other, 0x11cc0ba50, {{369.0, 287.5}, {3.0, 50.5}}
+                                      Other, 0x11cc0bb70, {{342.0, 74.0}, {30.0, 285.0}}, label: '垂直滚动条, 12页', value: 92%
+                                        Other, 0x11caf1ed0, {{369.0, 287.5}, {3.0, 50.5}}
+                            Other, 0x11caf1ff0, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x11caf2110, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x11caf2230, {{0.0, 584.0}, {375.0, 83.0}}
+                  Other, 0x11caf2350, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x11caf2470, {{0.0, 584.0}, {375.0, 83.0}}
+    Window, 0x11caf2590, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x11caf26b0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x11caf27d0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x11caf28f0, {{0.0, 359.0}, {375.0, 308.0}}
+          Other, 0x11caf2a10, {{0.0, 359.0}, {375.0, 48.0}}
+            Other, 0x11caf2b30, {{0.0, 359.0}, {375.0, 48.0}}
+              Other, 0x11caf2c50, {{0.0, 359.0}, {375.0, 48.0}}
+                Toolbar, 0x11caf2d70, {{0.0, 359.0}, {375.0, 48.0}}, identifier: 'Toolbar', label: '工具栏'
+                  Other, 0x11caf2e90, {{0.0, 359.0}, {375.0, 48.0}}
+                    Other, 0x11caf2fb0, {{16.0, 359.0}, {343.0, 48.0}}
+                      Other, 0x11caf30d0, {{16.0, 359.0}, {343.0, 48.0}}
+                        Other, 0x11caf31f0, {{16.0, 359.0}, {0.0, 0.0}}
+                          Other, 0x11caf3310, {{305.0, 356.0}, {54.0, 54.0}}
+                            Other, 0x11caf3430, {{305.0, 356.0}, {54.0, 54.0}}
+                              Other, 0x11caf3550, {{310.0, 361.0}, {44.0, 44.0}}
+                                Other, 0x11caf3670, {{310.0, 361.0}, {44.0, 44.0}}
+                                  Other, 0x11caf3790, {{310.0, 361.0}, {44.0, 44.0}}, identifier: 'recap.dismissKeyboard', label: '完成'
+                                    Other, 0x11caf38b0, {{310.0, 361.0}, {44.0, 44.0}}
+                                      Button, 0x11caf39d0, {{310.0, 361.0}, {44.0, 44.0}}, identifier: 'recap.dismissKeyboard', label: '完成'
+          Other, 0x11caf3af0, {{0.0, 407.0}, {375.0, 260.0}}, identifier: 'inputView'
+    Window, 0x11caf3c10, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x11caf3d30, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x11caf3e50, {{0.0, 359.0}, {375.0, 308.0}}
+          Other, 0x11caf3f70, {{0.0, 359.0}, {375.0, 48.0}}
+          Other, 0x11caf4090, {{0.0, 407.0}, {375.0, 44.0}}, identifier: 'SystemInputAssistantView'
+            Other, 0x11caf41b0, {{0.0, 407.0}, {375.0, 44.0}}
+              Other, 0x11caf42d0, {{0.0, 407.0}, {375.0, 44.0}}, identifier: 'CenterPageView'
+                Other, 0x11caf43f0, {{0.0, -193.0}, {375.0, 1244.0}}
+                  ScrollView, 0x11caf4510, {{0.0, 407.0}, {375.0, 44.0}}
+                Other, 0x11caf4630, {{0.0, 407.0}, {375.0, 44.0}}
+                  Other, 0x11caf4750, {{0.0, 407.0}, {375.0, 44.0}}
+                    Other, 0x11caf4870, {{0.0, 407.0}, {375.0, 54.0}}
+                      Other, 0x11caf4990, {{0.0, 407.0}, {375.0, 54.0}}
+                        Other, 0x11caf4ab0, {{0.0, 407.0}, {375.0, 54.0}}
+                          CollectionView, 0x11caf4bd0, {{0.0, 407.0}, {375.0, 54.0}}
+          Other, 0x11caf4cf0, {{0.0, 407.0}, {375.0, 260.0}}
+            Other, 0x11caf4e10, {{0.0, 407.0}, {375.0, 260.0}}
+              Other, 0x11caf4f30, {{0.0, 407.0}, {375.0, 260.0}}
+          Other, 0x11caf5050, {{0.0, 451.0}, {375.0, 216.0}}
+            Keyboard, 0x11caf5170, {{0.0, 451.0}, {375.0, 216.0}}
+              Other, 0x11caf5290, {{0.0, 451.0}, {375.0, 216.0}}
+                Other, 0x11caf53b0, {{0.0, 451.0}, {375.0, 216.0}}, identifier: 'UIKeyboardLayoutStar Preview'
+                  Key, 0x11caf54d0, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x11caf55f0, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x11caf5710, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x11caf5830, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x11caf5950, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x11caf5a70, {{0.0, 451.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x11caf5b90, {{4.5, 458.0}, {37.0, 54.0}}, label: 'q'
+                  Key, 0x11caf5cb0, {{41.5, 458.0}, {36.5, 54.0}}, label: 'w'
+                  Key, 0x11caf5dd0, {{78.0, 458.0}, {37.0, 54.0}}, label: 'e'
+                  Key, 0x11caf5ef0, {{115.0, 458.0}, {36.5, 54.0}}, label: 'r'
+                  Key, 0x11caf6010, {{151.5, 458.0}, {37.0, 54.0}}, label: 't'
+                  Key, 0x11caf6130, {{188.5, 458.0}, {37.0, 54.0}}, label: 'y'
+                  Key, 0x11caf6250, {{225.5, 458.0}, {36.5, 54.0}}, label: 'u'
+                  Key, 0x11caf6370, {{262.0, 458.0}, {37.0, 54.0}}, label: 'i'
+                  Key, 0x11caf6490, {{299.0, 458.0}, {36.5, 54.0}}, label: 'o'
+                  Key, 0x11caf65b0, {{335.5, 458.0}, {37.0, 54.0}}, label: 'p'
+                  Key, 0x11caf66d0, {{23.0, 512.0}, {36.5, 54.0}}, label: 'a'
+                  Key, 0x11caf67f0, {{59.5, 512.0}, {37.0, 54.0}}, label: 's'
+                  Key, 0x11caf6910, {{96.5, 512.0}, {37.0, 54.0}}, label: 'd'
+                  Key, 0x11caf6a30, {{133.5, 512.0}, {36.5, 54.0}}, label: 'f'
+                  Key, 0x11caf6b50, {{170.0, 512.0}, {37.0, 54.0}}, label: 'g'
+                  Key, 0x11caf6c70, {{207.0, 512.0}, {36.5, 54.0}}, label: 'h'
+                  Key, 0x11caf6d90, {{243.5, 512.0}, {37.0, 54.0}}, label: 'j'
+                  Key, 0x11caf6eb0, {{280.5, 512.0}, {37.0, 54.0}}, label: 'k'
+                  Key, 0x11caf6fd0, {{317.5, 512.0}, {36.5, 54.0}}, label: 'l'
+                  Button, 0x11caf70f0, {{4.5, 566.0}, {48.0, 54.0}}, identifier: 'shift', label: 'shift'
+                  Key, 0x11caf7210, {{59.5, 566.0}, {37.0, 54.0}}, label: 'z'
+                  Key, 0x11caf7480, {{96.5, 566.0}, {37.0, 54.0}}, label: 'x'
+                  Key, 0x11caf75a0, {{133.5, 566.0}, {36.5, 54.0}}, label: 'c'
+                  Key, 0x11caf76c0, {{170.0, 566.0}, {37.0, 54.0}}, label: 'v'
+                  Key, 0x11caf77e0, {{207.0, 566.0}, {36.5, 54.0}}, label: 'b'
+                  Key, 0x11caf7900, {{243.5, 566.0}, {37.0, 54.0}}, label: 'n'
+                  Key, 0x11caf7a20, {{280.5, 566.0}, {37.0, 54.0}}, label: 'm'
+                  Key, 0x11caf7b40, {{324.5, 566.0}, {48.0, 54.0}}, identifier: 'delete', label: '删除'
+                  Key, 0x11caf7c60, {{4.5, 620.0}, {46.0, 54.0}}, identifier: 'more', label: '数字'
+                  Button, 0x11caf7d80, {{50.5, 620.0}, {46.0, 54.0}}, identifier: 'emoji', label: '下一个键盘', value: English (US)
+                  Button, 0x11caf7ea0, {{96.5, 620.0}, {37.0, 54.0}}, identifier: 'dictation', label: '听写'
+                  Key, 0x11caf7fc0, {{133.5, 620.0}, {147.0, 54.0}}, identifier: 'space', label: ' '
+                  Button, 0x11caf80e0, {{280.5, 620.0}, {92.0, 54.0}}, identifier: 'Return', label: '换行'
+Path to element:
+ →Application, 0x11cad2f20, pid: 83656, label: '私密时刻'
+Query chain:
+ →Find: Target Application 'com.example.PrivateMoments'
+  Output: {
+    Application, 0x11cb6ef40, pid: 83656, label: '私密时刻'
+  }

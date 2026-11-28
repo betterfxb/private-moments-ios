@@ -1,0 +1,72 @@
+{
+  "run": 45821741503,
+  "job": 139915477578,
+  "profile": "ios17",
+  "source": "55a7f1abdf2b740cfed1ba00a8fd96802ae7fc7e",
+  "testSucceeded": true,
+  "buildSuccesses": 0,
+  "ios17Runtime": true,
+  "releaseTestHooksExcluded": true,
+  "cases": [
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "FavoritePersistenceTests",
+      "name": "testFailedFavoriteSaveLeavesTheRecordUnchanged",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "FavoritePersistenceTests",
+      "name": "testFavoritePersistsAfterMigrationAndSurvivesBackupRoundTrip",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "FavoritePersistenceTests",
+      "name": "testLegacyBackupDoesNotClearLocalFavoriteDuringMerge",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "RecapDraftRecoveryTests",
+      "name": "testDraftRoundTripKeepsInvalidTimingAndPrivateTextUntilExplicitDiscard",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "RecapDraftRecoveryTests",
+      "name": "testRelaunchAfterRecordCommitDoesNotOfferTheSameDraftTwice",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "RecapDraftRecoveryTests",
+      "name": "testUnreadableDraftCannotBeOverwrittenWithoutExplicitDiscard",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testManualEntryTimingDateFilterAndPersistence",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testReviewComparisonOpensRecordsFromPreviousMonth",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testReviewTabBrowsesPeriodsAndOpensFilteredRecord",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testTimelineSearchReflectsEditAndDeletion",
+      "result": "passed"
+    }
+  ]
+}

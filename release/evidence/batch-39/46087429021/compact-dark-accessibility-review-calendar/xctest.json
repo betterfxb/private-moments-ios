@@ -1,0 +1,102 @@
+{
+  "run": 46087429021,
+  "job": 140800324308,
+  "profile": "compact-dark-accessibility-review-calendar",
+  "source": "b8a3c812143d3c95d531d0460be46af1cf411594",
+  "testSucceeded": false,
+  "buildSuccesses": 0,
+  "ios17Runtime": false,
+  "releaseTestHooksExcluded": false,
+  "cases": [
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testComparisonUsesAdjacentLocalPeriodsAndKeepsTiedFeelings",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testDaylightSavingDaysUseCalendarBoundaries",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMidnightBelongsOnlyToTheFollowingDay",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMonthCalendarKeepsEmptyDaysAndWeekAlignmentAcrossDaylightSaving",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMonthFavoritesAndCommonFeelingsLinkToTheSelectedMonthsRecords",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMonthReviewGroupsLocalDaysAndKeepsPeriodCountsWhenFiltered",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testMonthTagsCountRecordsOnceAndMatchTheSameNormalizedKeys",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testReviewNavigationMovesBetweenCalendarPeriodStarts",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testTimelineFilterReadsImportedTagsAndRecomputesAfterAnEdit",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testTimelineRangeAppliesEveryConditionAndIncludesTheEndDay",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testWeekReviewShowsEmptyAndSingleRecord",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testWeekReviewUsesLocalMidnightAcrossDaylightSaving",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "MomentDateQueryTests",
+      "name": "testWeekReviewUsesLocalYearBoundaryAndCountsOnlyIncludedMoods",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testMonthCalendarOpensTheDayAndUpdatesAfterDeletion",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testMonthReviewTagCountsFollowEditsAndDeletion",
+      "result": "failed"
+    }
+  ]
+}

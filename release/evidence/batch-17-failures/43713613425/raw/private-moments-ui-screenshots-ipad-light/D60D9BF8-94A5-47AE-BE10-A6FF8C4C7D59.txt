@@ -1,0 +1,36 @@
+Failed to synthesize event: Neither element nor any descendant has keyboard focus. Event dispatch snapshot: SearchField, {{778.0, 32.0}, {240.0, 44.0}}, label: 'Search moments', placeholderValue: 'Search moments', value: Search moments
+Element debug description:
+Attributes: SearchField, 0x10a3e0d00, {{778.0, 32.0}, {240.0, 44.0}}, label: 'Search moments', placeholderValue: 'Search moments'
+Element subtree:
+ →SearchField, 0x10a3e0d00, {{778.0, 32.0}, {240.0, 44.0}}, label: 'Search moments', placeholderValue: 'Search moments'
+    Image, 0x10a3e0e20, {{790.0, 44.5}, {20.5, 18.5}}, identifier: 'magnifyingglass', label: 'Search'
+Path to element:
+ →Application, 0x10a5bac40, pid: 44559, label: 'Private Moments'
+  ↳Window (Main), 0x1166b5af0, {{0.0, 0.0}, {1032.0, 1376.0}}
+   ↳Other, 0x10a69efa0, {{0.0, 0.0}, {1032.0, 1376.0}}
+    ↳Other, 0x10a3c14b0, {{0.0, 0.0}, {1032.0, 1376.0}}
+     ↳Other, 0x10a3c2550, {{0.0, 0.0}, {1032.0, 1376.0}}
+      ↳Other, 0x10a3c1090, {{0.0, 0.0}, {1032.0, 1376.0}}
+       ↳Other, 0x10a368100, {{0.0, 0.0}, {1032.0, 1376.0}}
+        ↳Other, 0x10a894460, {{0.0, 0.0}, {1032.0, 1376.0}}
+         ↳Other, 0x11685a0d0, {{0.0, 0.0}, {1032.0, 1376.0}}
+          ↳Other, 0x11685b670, {{0.0, 0.0}, {1032.0, 1376.0}}
+           ↳Other, 0x11685b790, {{0.0, 0.0}, {1032.0, 1376.0}}
+            ↳Other, 0x11685ac10, {{0.0, 0.0}, {1032.0, 1376.0}}
+             ↳Other, 0x11685ad30, {{0.0, 0.0}, {1032.0, 1376.0}}
+              ↳Other, 0x10a3e0ac0, {{0.0, 0.0}, {1032.0, 1376.0}}
+               ↳NavigationBar, 0x10a3e0be0, {{0.0, 32.0}, {1032.0, 54.0}}, identifier: 'Your moments'
+                ↳SearchField, 0x10a3e0d00, {{778.0, 32.0}, {240.0, 44.0}}, label: 'Search moments', placeholderValue: 'Search moments'
+Query chain:
+ →Find: Target Application 'com.example.PrivateMoments'
+  Output: {
+    Application, 0x116859df0, pid: 44559, label: 'Private Moments'
+  }
+  ↪︎Find: Descendants matching type SearchField
+    Output: {
+      SearchField, 0x10a611ff0, {{778.0, 32.0}, {240.0, 44.0}}, label: 'Search moments', placeholderValue: 'Search moments'
+    }
+    ↪︎Find: First Match
+      Output: {
+        SearchField, 0x10a5d5990, {{778.0, 32.0}, {240.0, 44.0}}, label: 'Search moments', placeholderValue: 'Search moments'
+      }

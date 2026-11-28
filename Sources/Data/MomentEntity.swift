@@ -20,6 +20,7 @@ final class MomentEntity {
     private var tagsJSON: String
     var privateNote: String
     var approximatePlace: String?
+    var favorite: Bool?
 
     init(moment: Moment) throws {
         let encodedTags = try Self.encodeTags(moment.tags)
@@ -32,6 +33,7 @@ final class MomentEntity {
         tagsJSON = encodedTags
         privateNote = moment.privateNote
         approximatePlace = moment.approximatePlace
+        favorite = moment.favorite
     }
 
     func makeDomainValue() throws -> Moment {
@@ -55,7 +57,8 @@ final class MomentEntity {
             rating: rating,
             tags: try Self.decodeTags(tagsJSON),
             privateNote: privateNote,
-            approximatePlace: approximatePlace
+            approximatePlace: approximatePlace,
+            favorite: favorite
         )
 
         do {
@@ -76,6 +79,7 @@ final class MomentEntity {
         tagsJSON = encodedTags
         privateNote = moment.privateNote
         approximatePlace = moment.approximatePlace
+        favorite = moment.favorite
     }
 
     private static func encodeTags(_ tags: [String]) throws -> String {

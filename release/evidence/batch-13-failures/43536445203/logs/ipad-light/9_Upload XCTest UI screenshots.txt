@@ -1,0 +1,28 @@
+﻿2026-11-14T01:20:16.6008460Z ##[group]Run actions/upload-artifact@v7
+2026-11-14T01:20:16.6009280Z with:
+2026-11-14T01:20:16.6009900Z   name: private-moments-ui-screenshots-ipad-light
+2026-11-14T01:20:16.6010850Z   path: /Users/runner/work/_temp/PrivateMomentsUIScreenshots
+2026-11-14T01:20:16.6011740Z   if-no-files-found: ignore
+2026-11-14T01:20:16.6012410Z   retention-days: 7
+2026-11-14T01:20:16.6013010Z   compression-level: 6
+2026-11-14T01:20:16.6013650Z   overwrite: false
+2026-11-14T01:20:16.6014310Z   include-hidden-files: false
+2026-11-14T01:20:16.6015030Z   archive: true
+2026-11-14T01:20:16.6015440Z env:
+2026-11-14T01:20:16.6016090Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T01:20:16.6017370Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=73C19119-B10E-4309-872E-C53EF3F0EF27
+2026-11-14T01:20:16.6018690Z ##[endgroup]
+2026-11-14T01:20:17.5760380Z With the provided path, there will be 98 files uploaded
+2026-11-14T01:20:17.5760830Z Artifact name is valid!
+2026-11-14T01:20:17.5761010Z Root directory input is valid!
+2026-11-14T01:20:18.0059830Z Uploading artifact: private-moments-ui-screenshots-ipad-light.zip
+2026-11-14T01:20:18.0067420Z Beginning upload of artifact content to blob storage
+2026-11-14T01:20:19.2038450Z Uploaded bytes 8388608
+2026-11-14T01:20:19.8119240Z Uploaded bytes 16777216
+2026-11-14T01:20:19.9520100Z Uploaded bytes 19938087
+2026-11-14T01:20:19.9995730Z Finished uploading artifact content to blob storage!
+2026-11-14T01:20:19.9998830Z SHA256 digest of uploaded artifact is b592971e15721c0d409530bdde4550d81ab24b409932fb4bb1fbd2ccf79d2365
+2026-11-14T01:20:20.0003250Z Finalizing artifact upload
+2026-11-14T01:20:20.4241000Z Artifact private-moments-ui-screenshots-ipad-light successfully finalized. Artifact ID 14091955419
+2026-11-14T01:20:20.4242090Z Artifact private-moments-ui-screenshots-ipad-light has been successfully uploaded! Final size is 19938087 bytes. Artifact ID is 14091955419
+2026-11-14T01:20:20.4249010Z Artifact download URL: https://github.com/betterfxb/private-moments-ios/actions/runs/43536445203/artifacts/14091955419

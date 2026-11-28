@@ -1,0 +1,38 @@
+﻿2026-11-14T08:12:06.4995000Z ##[group]Run result_bundle="${RUNNER_TEMP}/PrivateMoments.xcresult"
+2026-11-14T08:12:06.4995230Z [36;1mresult_bundle="${RUNNER_TEMP}/PrivateMoments.xcresult"[0m
+2026-11-14T08:12:06.4995390Z [36;1mscreenshot_directory="${RUNNER_TEMP}/PrivateMomentsUIScreenshots"[0m
+2026-11-14T08:12:06.4995480Z [36;1mif [[ ! -d "$result_bundle" ]]; then[0m
+2026-11-14T08:12:06.4995680Z [36;1m  printf 'No XCTest result bundle was produced; skipping screenshot export.\n'[0m
+2026-11-14T08:12:06.4995760Z [36;1m  exit 0[0m
+2026-11-14T08:12:06.4995820Z [36;1mfi[0m
+2026-11-14T08:12:06.4995890Z [36;1mmkdir -p "$screenshot_directory"[0m
+2026-11-14T08:12:06.4995990Z [36;1mxcrun xcresulttool export attachments \[0m
+2026-11-14T08:12:06.4996060Z [36;1m  --path "$result_bundle" \[0m
+2026-11-14T08:12:06.4996160Z [36;1m  --output-path "$screenshot_directory"[0m
+2026-11-14T08:12:06.4996410Z [36;1mscreenshot_count="$(find "$screenshot_directory" -type f -iname '*.png' | wc -l | tr -d ' ')"[0m
+2026-11-14T08:12:06.4996560Z [36;1mprintf 'Exported %s PNG attachment(s).\n' "$screenshot_count"[0m
+2026-11-14T08:12:06.5496980Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T08:12:06.5497070Z env:
+2026-11-14T08:12:06.5497230Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T08:12:06.5497450Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=73C19119-B10E-4309-872E-C53EF3F0EF27
+2026-11-14T08:12:06.5497510Z ##[endgroup]
+2026-11-14T08:12:11.2261010Z Exported 16 attachments for: PrivateMomentsUITests/testIPadRotationContinuity():
+2026-11-14T08:12:11.2262800Z File: B1753597-0F54-4902-BCE6-038D7465C50A.txt, suggested name: "Rotation-interface-unavailable-draft-en-hierarchy_0_C37232C1-D3E0-434B-B588-27AB02CB24F1.txt"
+2026-11-14T08:12:11.2263750Z File: 23965389-D8EE-4631-8E39-071DD7A969DA.png, suggested name: "Rotation-interface-unavailable-draft-en_0_3AFFC031-C8DE-483F-9765-4D19BAC9EB42.png"
+2026-11-14T08:12:11.2264610Z File: C767BEC9-B933-4E34-8DF2-F7479BE0B434, suggested name: "Synthesized Event 2026-11-14 at 08.10.41 AM"
+2026-11-14T08:12:11.2265500Z File: 3AFE079A-2C05-452E-9746-D02B8211B165, suggested name: "Synthesized Event 2026-11-14 at 08.10.39 AM"
+2026-11-14T08:12:11.2266180Z File: 37F1F9BB-37CC-4FD9-A546-22F9410F861E, suggested name: "Synthesized Event 2026-11-14 at 08.10.37 AM"
+2026-11-14T08:12:11.2266950Z File: 7481E4AA-4079-4C9D-9234-678C6455E1F8, suggested name: "Synthesized Event 2026-11-14 at 08.10.34 AM"
+2026-11-14T08:12:11.2267670Z File: 9041215E-58C9-4083-8A16-9D36E8BEF16C, suggested name: "Synthesized Event 2026-11-14 at 08.10.30 AM"
+2026-11-14T08:12:11.2269130Z File: D1496762-611F-4BEB-A1DC-D8F38B94E480, suggested name: "Synthesized Event 2026-11-14 at 08.10.25 AM"
+2026-11-14T08:12:11.2272730Z File: 28EE8E19-A94B-4C07-B605-19931842E820, suggested name: "Synthesized Event 2026-11-14 at 08.10.18 AM"
+2026-11-14T08:12:11.2273640Z File: A16D8353-A42E-4071-B978-A8DA24084CCD, suggested name: "Synthesized Event 2026-11-14 at 08.10.16 AM"
+2026-11-14T08:12:11.2274420Z File: 2123C2ED-6A2D-46D0-8039-79E2DD374170, suggested name: "Synthesized Event 2026-11-14 at 08.10.12 AM"
+2026-11-14T08:12:11.2275220Z File: 37D5E712-F5E5-4BB2-A1CE-BC15138F25B8, suggested name: "Synthesized Event 2026-11-14 at 08.10.05 AM"
+2026-11-14T08:12:11.2276040Z File: FFC4DDF5-9521-4180-9EA0-B3D3F8C0BA0B, suggested name: "Synthesized Event 2026-11-14 at 08.10.02 AM"
+2026-11-14T08:12:11.2276700Z File: 368A3853-ED3C-40E4-B786-65F7414BAE46, suggested name: "Synthesized Event 2026-11-14 at 08.09.54 AM"
+2026-11-14T08:12:11.2329220Z File: F1A7D2B9-199E-4740-A1E5-8238EBB8DA72, suggested name: "Synthesized Event 2026-11-14 at 08.09.48 AM"
+2026-11-14T08:12:11.2331780Z File: B62CA8A8-2AEF-4B73-B8B7-6E50E110BE38.mp4, suggested name: "Screen Recording 2026-11-14 at 08.09.03 AM.mp4"
+2026-11-14T08:12:11.2333050Z 
+2026-11-14T08:12:11.2335270Z Generated manifest file with attachment details: /Users/runner/work/_temp/PrivateMomentsUIScreenshots/manifest.json
+2026-11-14T08:12:11.3537730Z Exported 1 PNG attachment(s).

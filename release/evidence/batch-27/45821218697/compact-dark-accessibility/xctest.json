@@ -1,0 +1,36 @@
+{
+  "run": 45821218697,
+  "job": 139913853510,
+  "profile": "compact-dark-accessibility",
+  "source": "3adf798e64d5ce2942cb3295d2752c436f0be783",
+  "testSucceeded": true,
+  "buildSuccesses": 0,
+  "ios17Runtime": false,
+  "releaseTestHooksExcluded": false,
+  "cases": [
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "SemanticColorTests",
+      "name": "testAccentAndSessionTextRemainReadableInBothAppearances",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "SemanticColorTests",
+      "name": "testBodyAndSecondaryTextContrastOnSurfaces",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "SemanticColorTests",
+      "name": "testJournalActionsRemainReadableOnPaperAndSelectedSurfaces",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testJournalReadingSample",
+      "result": "passed"
+    }
+  ]
+}

@@ -71,6 +71,13 @@ final class MomentStore {
     }
 
     @discardableResult
+    func toggleFavorite(id: UUID) -> Bool {
+        guard var moment = moments.first(where: { $0.id == id }) else { return false }
+        moment.favorite = !moment.isFavorite
+        return add(moment)
+    }
+
+    @discardableResult
     func delete(id: UUID) -> Bool {
         guard ensureStorageAvailable() else { return false }
         do {
@@ -110,13 +117,18 @@ final class MomentStore {
             guard Set(importedMoments.map(\.id)).count == importedMoments.count else {
                 throw MomentBackupError.duplicateRecordID
             }
-            let existingIDs = Set(moments.map(\.id))
-            try repository.mergeAll(importedMoments)
-            let importedIDs = Set(importedMoments.map(\.id))
-            moments = sorted(moments.filter { !importedIDs.contains($0.id) } + importedMoments)
+            let existingByID = Dictionary(uniqueKeysWithValues: moments.map { ($0.id, $0) })
+            let resolved = importedMoments.map { imported in
+                var moment = imported
+                if moment.favorite == nil { moment.favorite = existingByID[moment.id]?.favorite }
+                return moment
+            }
+            try repository.mergeAll(resolved)
+            let importedIDs = Set(resolved.map(\.id))
+            moments = sorted(moments.filter { !importedIDs.contains($0.id) } + resolved)
             errorMessage = nil
             return importedMoments.reduce(into: 0) { count, moment in
-                if !existingIDs.contains(moment.id) { count += 1 }
+                if existingByID[moment.id] == nil { count += 1 }
             }
         } catch {
             logger.error("Failed to merge a local backup: \(String(describing: error), privacy: .private)")

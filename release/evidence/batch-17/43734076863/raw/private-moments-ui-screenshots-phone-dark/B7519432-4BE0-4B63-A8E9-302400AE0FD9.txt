@@ -1,0 +1,123 @@
+Attributes: Application, 0x1188c3af0, pid: 47119, label: '私密时刻'
+Element subtree:
+ →Application, 0x1188c3af0, pid: 47119, label: '私密时刻'
+    Window (Main), 0x1188ac630, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1188b78c0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1188c4770, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x11888f010, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x11889f900, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x1188c4890, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1188c49b0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1188c4ad0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x1188c4bf0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x1188c4d10, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x1188c4e30, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x1188c4f50, {{0.0, 0.0}, {402.0, 874.0}}
+                            NavigationBar, 0x1188c5070, {{0.0, 62.0}, {402.0, 54.0}}, identifier: '设置'
+                              StaticText, 0x118966bc0, {{184.0, 73.7}, {34.0, 20.7}}, label: '设置'
+                            Other, 0x118965da0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x1187fea40, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x1187ff1c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x118a059a0, {{0.0, 0.0}, {402.0, 874.0}}
+                                    ScrollView, 0x1187fa0c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'settings.scroll'
+                                      Other, 0x118a048e0, {{0.0, -207.3}, {402.0, 1155.3}}
+                                        StaticText, 0x118a09920, {{21.7, -185.3}, {90.0, 14.3}}, label: '默认保持私密'
+                                        StaticText, 0x118a09500, {{20.0, -158.9}, {200.0, 26.3}}, label: '你的空间，由你做主。'
+                                        StaticText, 0x118a042a0, {{20.0, -124.6}, {320.7, 18.0}}, label: '记录保存在这台设备上。在这里管理隐私和备份。'
+                                        StaticText, 0x118a090e0, {{36.0, -66.6}, {36.0, 14.3}}, label: '此设备'
+                                        StaticText, 0x118a08cc0, {{38.7, -39.3}, {80.0, 18.0}}, label: '本地日记'
+                                        StaticText, 0x1187fb950, {{38.0, 5.1}, {113.0, 18.0}}, identifier: 'settings.savedCountTitle', label: '已保存的记录'
+                                        StaticText, 0x1187fcb70, {{358.7, 5.1}, {7.3, 18.0}}, identifier: 'settings.savedCount', label: '1'
+                                        StaticText, 0x1187fa5e0, {{37.3, 49.4}, {117.3, 18.0}}, label: '未设置云同步'
+                                        StaticText, 0x1187fc750, {{38.0, 94.8}, {184.0, 18.0}}, label: '设备锁定时保护本地文件'
+                                        StaticText, 0x118a09f60, {{36.0, 125.8}, {310.3, 30.3}}, label: '应用会请求将数据排除在设备备份之外。如需迁移记录，请使用下方 JSON 备份功能。'
+                                        StaticText, 0x118a0a080, {{36.0, 212.1}, {48.0, 14.3}}, label: '数据管理'
+                                        StaticText, 0x118a0a1a0, {{36.0, 239.4}, {241.7, 15.7}}, label: '创建 JSON 备份，或恢复之前导出的记录。'
+                                        Button, 0x118a0a2c0, {{36.0, 268.0}, {330.0, 58.0}}, identifier: 'settings.export', label: '导出私密备份'
+                                          Image, 0x118a0a3e0, {{145.7, 288.0}, {13.3, 17.7}}, identifier: 'square.and.arrow.up', label: '共享'
+                                          StaticText, 0x118a0a500, {{36.0, 268.0}, {330.0, 58.0}}, label: '导出私密备份'
+                                        Button, 0x118a0a620, {{36.0, 339.0}, {330.0, 57.7}}, identifier: 'settings.restore', label: '从 JSON 恢复'
+                                          Image, 0x118a0a740, {{144.7, 359.0}, {13.3, 17.3}}, identifier: 'square.and.arrow.down', label: '下载'
+                                          StaticText, 0x118a0a860, {{36.0, 339.0}, {330.0, 57.7}}, label: '从 JSON 恢复'
+                                        StaticText, 0x118a0a980, {{36.0, 409.7}, {316.3, 14.3}}, label: '备份文件包含私密备注，请将它保存在只有你能访问的位置。'
+                                        StaticText, 0x118a0ab90, {{36.0, 480.0}, {36.0, 14.3}}, label: '应用锁'
+                                        StaticText, 0x118a0acb0, {{36.0, 507.3}, {307.7, 33.7}}, label: '打开日记前，使用此设备的 Face ID、Touch ID 或密码进行验证。'
+                                        Button, 0x118a0add0, {{36.0, 554.0}, {330.0, 44.0}}, identifier: 'settings.lock', label: '锁定日记、关闭'
+                                          Image, 0x118a0aef0, {{38.0, 568.3}, {10.0, 14.7}}, identifier: 'settings.lockTitle', label: '锁定'
+                                          StaticText, 0x118a0b010, {{38.0, 567.0}, {79.7, 18.0}}, identifier: 'settings.lockTitle', label: '锁定日记'
+                                          StaticText, 0x118a0b130, {{336.0, 567.0}, {30.0, 18.0}}, label: '关闭'
+                                        StaticText, 0x118a0b250, {{36.0, 611.0}, {304.3, 14.3}}, label: '验证过程仅在此设备上进行，应用不会获取生物识别数据。'
+                                        StaticText, 0x118a0b370, {{36.0, 681.3}, {24.0, 14.3}}, label: '隐私'
+                                        StaticText, 0x118a0b490, {{36.0, 708.7}, {323.0, 33.7}}, label: '了解哪些内容保存在本机、设备验证如何工作，以及备份包含哪些内容。'
+                                        Button, 0x118a0b5b0, {{39.7, 763.3}, {82.0, 18.0}}, label: '隐私信息'
+                                          Image, 0x118a0b6d0, {{39.7, 764.3}, {12.0, 15.7}}, identifier: 'hand.raised.fill', label: '阻止'
+                                          StaticText, 0x118a0b7f0, {{39.7, 763.3}, {82.0, 18.0}}, label: '隐私信息'
+                                        Button, 0x118a0b910, {{113.0, 844.0}, {177.3, 20.3}}, identifier: 'settings.deleteAll', label: '删除本机的所有记录'
+                                          Image, 0x118a0ba30, {{113.0, 844.3}, {16.3, 18.7}}, identifier: 'trash', label: '删除'
+                                          StaticText, 0x118a0bb50, {{113.0, 844.0}, {177.3, 20.3}}, label: '删除本机的所有记录'
+                                        StaticText, 0x118a0bc70, {{20.0, 902.3}, {303.7, 15.7}}, identifier: 'settings.footer', label: '备份可能包含私密笔记，请将它保存在你信任的位置。'
+                                      Other, 0x118a0bd90, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x118a0beb0, {{0.0, 0.0}, {402.0, 170.8}}
+                                        Other, 0x118a0bfd0, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x118a0c0f0, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x118a0c210, {{0.0, 0.0}, {402.0, 170.8}}
+                                          Other, 0x118a0c330, {{0.0, 0.0}, {402.0, 94.3}}
+                                          Other, 0x118a0c450, {{0.0, 0.0}, {402.0, 170.8}}
+                                            Other, 0x118a0c570, {{0.0, 0.0}, {402.0, 170.8}}
+                                          Other, 0x118a0c690, {{0.0, 0.0}, {402.0, 170.8}}
+                                            Other, 0x118a0c7b0, {{0.0, 0.0}, {402.0, 170.8}}
+                                          Other, 0x118a0c8d0, {{0.0, 0.0}, {402.0, 170.8}}
+                                            Other, 0x118a0c9f0, {{0.0, 0.0}, {402.0, 170.8}}
+                                            Other, 0x118a0cb10, {{0.0, 0.0}, {402.0, 170.8}}
+                                        Other, 0x118a0cc30, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Image, 0x118a0cd50, {{-120.0, 731.0}, {642.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x118a0ce70, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x118a0cf90, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x118a0d0b0, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x118a0d1d0, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x118a0d2f0, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x118a0d410, {{369.0, 116.0}, {30.0, 675.0}}, label: '垂直滚动条, 2页', value: 67%
+                                        Other, 0x118a0d530, {{396.0, 278.7}, {3.0, 431.7}}
+                                      Other, 0x118a0d650, {{369.0, 116.0}, {30.0, 675.0}}, label: '垂直滚动条, 2页', value: 67%
+                                        Other, 0x118a0d770, {{396.0, 278.7}, {3.0, 431.7}}
+                            Other, 0x118a0d890, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x118a0d9b0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x118a0dad0, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x118a0dbf0, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x118a0dd10, {{0.0, 791.0}, {402.0, 83.0}}, label: '标签页栏'
+                      Other, 0x118a0de30, {{64.0, 791.0}, {274.0, 62.0}}
+                        Other, 0x118a0df50, {{64.0, 791.0}, {94.0, 54.0}}
+                        Other, 0x118a0e070, {{64.0, 791.0}, {274.0, 62.0}}
+                          Button, 0x118a0e190, {{68.0, 795.0}, {94.0, 54.0}}, identifier: 'heart.text.square', label: '今天'
+                            Image, 0x118a0e2b0, {{102.0, 802.3}, {27.0, 25.0}}, identifier: 'heart.text.square.fill', label: 'heart.text.square.fill'
+                          Button, 0x118a0e3d0, {{154.0, 795.0}, {94.0, 54.0}}, identifier: 'calendar', label: '时间线'
+                            Image, 0x118a0e4f0, {{187.0, 802.3}, {29.0, 25.0}}, identifier: 'calendar', label: '日历'
+                          Button, 0x118a0e610, {{240.0, 795.0}, {94.0, 54.0}}, identifier: 'slider.horizontal.3', label: '设置', Selected
+                            Image, 0x118a0e730, {{272.0, 802.7}, {29.3, 24.0}}, identifier: 'slider.horizontal.3', label: '编辑'
+                        Other, 0x118a0e850, {{240.0, 795.0}, {94.0, 54.0}}
+                          Other, 0x118a0e970, {{240.0, 795.0}, {94.0, 54.0}}
+                            Other, 0x118a0ea90, {{240.0, 795.0}, {94.0, 54.0}}
+                            Other, 0x118a0ebb0, {{240.0, 795.0}, {94.0, 54.0}}
+                              Other, 0x118a0ecd0, {{240.0, 795.0}, {94.0, 54.0}}
+                                Other, 0x118a0edf0, {{240.0, 795.0}, {94.0, 54.0}}
+                                  Other, 0x118a0ef10, {{240.0, 795.0}, {94.0, 54.0}}
+                                Other, 0x118a0f030, {{240.0, 795.0}, {94.0, 54.0}}
+                              Other, 0x118a0f150, {{240.0, 795.0}, {94.0, 54.0}}
+                  Other, 0x118a0f270, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x118a0f390, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x118a0f4b0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x118a0f5d0, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x118a0f6f0, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x118a0f810, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x118a0f930, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x118a0fa50, {{0.0, 791.0}, {402.0, 83.0}}
+    Window, 0x118a0fb70, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x118a0fc90, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x118a0fdb0, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x1188c3af0, pid: 47119, label: '私密时刻'
+Query chain:
+ →Find: Target Application 'com.example.PrivateMoments'
+  Output: {
+    Application, 0x11895c690, pid: 47119, label: '私密时刻'
+  }

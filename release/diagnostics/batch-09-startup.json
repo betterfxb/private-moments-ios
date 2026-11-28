@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "purpose": "startup diagnostics only; not an acceptance receipt",
+  "nativeSourceCommit": "adf8545674c35e4c4bde4f3c492b843ab2f14ee6",
+  "nativeAcceptanceComplete": false,
+  "lastFullyAcceptedSource": "d4a6a83d5ab4c2d2c650bbe9309ae3e998989779",
+  "workflow": {
+    "path": ".github/workflows/ios-ci.yml",
+    "blob": "f161e5c04043a8864b205b4a94068d89dca4441c",
+    "unchangedFromSource": "bd04e743613f4f1fcb586089c6d27c67c6b14e36"
+  },
+  "runs": [
+    {
+      "id": 43095343649,
+      "url": "https://github.com/betterfxb/private-moments-ios/actions/runs/43095343649",
+      "sourceCommit": "f41ec37ce06c8d0409d731164880edce4a58a9ae",
+      "mode": "ipad-light backup smoke",
+      "event": "workflow_dispatch",
+      "status": "completed",
+      "conclusion": "startup_failure",
+      "createdAtUTC": "2026-11-11T20:19:34Z",
+      "updatedAtUTC": "2026-11-11T20:34:16Z",
+      "jobCount": 0,
+      "checkRunCount": 0,
+      "executedTestCount": 0
+    },
+    {
+      "id": 43096661743,
+      "url": "https://github.com/betterfxb/private-moments-ios/actions/runs/43096661743",
+      "sourceCommit": "adf8545674c35e4c4bde4f3c492b843ab2f14ee6",
+      "mode": "ipad-light backup smoke",
+      "event": "workflow_dispatch",
+      "status": "completed",
+      "conclusion": "startup_failure",
+      "createdAtUTC": "2026-11-11T20:32:30Z",
+      "updatedAtUTC": "2026-11-11T20:38:30Z",
+      "jobCount": 0,
+      "checkRunCount": 0,
+      "executedTestCount": 0
+    },
+    {
+      "id": 43097719619,
+      "url": "https://github.com/betterfxb/private-moments-ios/actions/runs/43097719619",
+      "sourceCommit": "adf8545674c35e4c4bde4f3c492b843ab2f14ee6",
+      "mode": "full",
+      "event": "workflow_dispatch",
+      "status": "completed",
+      "conclusion": "startup_failure",
+      "createdAtUTC": "2026-11-11T20:43:22Z",
+      "updatedAtUTC": "2026-11-11T20:47:20Z",
+      "jobCount": 0,
+      "checkRunCount": 0,
+      "executedTestCount": 0
+    }
+  ],
+  "diagnosis": "All three runs ended before any job/check was created. Specific platform cause is unknown; no Swift compilation or UI assertion result exists for these runs.",
+  "standardCancel": {
+    "runId": 43095343649,
+    "httpStatus": 409,
+    "accepted": false
+  },
+  "forceCancelSent": false,
+  "supportMessageSent": false,
+  "localChecks": {
+    "localizationKeys": 232,
+    "languages": [
+      "en",
+      "zh-Hans"
+    ],
+    "xcodeObjects": 109,
+    "releaseMaterialsAudit": "pass with existing publisher/review placeholders",
+    "matrixOutputs": [
+      "full four profiles",
+      "backup ipad-light"
+    ],
+    "swiftCompilationVerified": false
+  },
+  "remaining": [
+    "Restore GitHub Actions startup; exact cause is unconfirmed.",
+    "Run the full four-profile suite on the final native source.",
+    "Verify all original captures, hashes and checkout trees; open selected final originals.",
+    "Publish acceptance only after all required checks pass."
+  ]
+}

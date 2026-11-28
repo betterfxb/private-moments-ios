@@ -1,0 +1,147 @@
+{
+  "run": 45179488037,
+  "appSamples": [
+    {
+      "appPID": 11272,
+      "firstToFinalInputMs": 321.347,
+      "firstInputToCountLayoutMs": 51.81825,
+      "firstInputToUniqueRowLayoutMs": 52.140958,
+      "firstInputToDisplayCallbackMs": 106.977042,
+      "finalInputToSwiftUIUpdateMs": 12.284958,
+      "finalInputToDisplayCallbackMs": 110.31325,
+      "finalSwiftUIUpdateToDisplayCallbackMs": 98.028292,
+      "fullQueryFilterAndGroupMs": 6.734,
+      "firstScrollToIdleMs": 2491.293125,
+      "firstScrollDecelerationMs": 2314.325958,
+      "firstScrollBeforeDecelerationMs": 176.967
+    },
+    {
+      "appPID": 12137,
+      "firstToFinalInputMs": 268.024,
+      "firstInputToCountLayoutMs": 39.844917,
+      "firstInputToUniqueRowLayoutMs": 51.568583,
+      "firstInputToDisplayCallbackMs": 299.298417,
+      "finalInputToSwiftUIUpdateMs": 9.40875,
+      "finalInputToDisplayCallbackMs": 31.274708,
+      "finalSwiftUIUpdateToDisplayCallbackMs": 21.865958,
+      "fullQueryFilterAndGroupMs": 5.872,
+      "firstScrollToIdleMs": 2481.5085,
+      "firstScrollDecelerationMs": 2295.121292,
+      "firstScrollBeforeDecelerationMs": 186.387
+    },
+    {
+      "appPID": 13937,
+      "firstToFinalInputMs": 254.688,
+      "firstInputToCountLayoutMs": 38.023833,
+      "firstInputToUniqueRowLayoutMs": 38.466333,
+      "firstInputToDisplayCallbackMs": 255.646,
+      "finalInputToSwiftUIUpdateMs": 13.360667,
+      "finalInputToDisplayCallbackMs": 89.49725,
+      "finalSwiftUIUpdateToDisplayCallbackMs": 76.136583,
+      "fullQueryFilterAndGroupMs": 8.485,
+      "firstScrollToIdleMs": 2500.132458,
+      "firstScrollDecelerationMs": 2329.639208,
+      "firstScrollBeforeDecelerationMs": 170.493
+    }
+  ],
+  "appSummary": {
+    "firstToFinalInputMs": {
+      "min": 254.688,
+      "median": 268.024,
+      "max": 321.347
+    },
+    "firstInputToCountLayoutMs": {
+      "min": 38.024,
+      "median": 39.845,
+      "max": 51.818
+    },
+    "firstInputToUniqueRowLayoutMs": {
+      "min": 38.466,
+      "median": 51.569,
+      "max": 52.141
+    },
+    "firstInputToDisplayCallbackMs": {
+      "min": 106.977,
+      "median": 255.646,
+      "max": 299.298
+    },
+    "finalInputToSwiftUIUpdateMs": {
+      "min": 9.409,
+      "median": 12.285,
+      "max": 13.361
+    },
+    "finalInputToDisplayCallbackMs": {
+      "min": 31.275,
+      "median": 89.497,
+      "max": 110.313
+    },
+    "finalSwiftUIUpdateToDisplayCallbackMs": {
+      "min": 21.866,
+      "median": 76.137,
+      "max": 98.028
+    },
+    "fullQueryFilterAndGroupMs": {
+      "min": 5.872,
+      "median": 6.734,
+      "max": 8.485
+    },
+    "firstScrollToIdleMs": {
+      "min": 2481.508,
+      "median": 2491.293,
+      "max": 2500.132
+    },
+    "firstScrollDecelerationMs": {
+      "min": 2295.121,
+      "median": 2314.326,
+      "max": 2329.639
+    },
+    "firstScrollBeforeDecelerationMs": {
+      "min": 170.493,
+      "median": 176.967,
+      "max": 186.387
+    }
+  },
+  "xctestSamples": {
+    "1": {
+      "launchReadySeconds": 5.7211505416666455,
+      "scrollGestureSeconds": 3.6578065000000493,
+      "searchTypingToMatchSeconds": 2.5627600833333304,
+      "searchSubmitToRowSeconds": 2.669981874999962
+    },
+    "2": {
+      "launchReadySeconds": 6.237229874999969,
+      "scrollGestureSeconds": 3.5920320416666414,
+      "searchTypingToMatchSeconds": 2.5063072083332827,
+      "searchSubmitToRowSeconds": 2.291131333333283
+    },
+    "3": {
+      "launchReadySeconds": 4.892823333333354,
+      "scrollGestureSeconds": 3.5656073333333325,
+      "searchTypingToMatchSeconds": 2.6504304999999704,
+      "searchSubmitToRowSeconds": 2.65996558333336
+    }
+  },
+  "xctestSummary": {
+    "launchReadySeconds": {
+      "min": 4.893,
+      "median": 5.721,
+      "max": 6.237
+    },
+    "scrollGestureSeconds": {
+      "min": 3.566,
+      "median": 3.592,
+      "max": 3.658
+    },
+    "searchTypingToMatchSeconds": {
+      "min": 2.506,
+      "median": 2.563,
+      "max": 2.65
+    },
+    "searchSubmitToRowSeconds": {
+      "min": 2.291,
+      "median": 2.66,
+      "max": 2.67
+    }
+  },
+  "limits": "The first input changes the visible result geometry. Later keys can retain the same result, measured at the SwiftUI update boundary. A display callback measures a refresh opportunity. XCTest separately checks keyboard dismissal and a hittable result."
+}

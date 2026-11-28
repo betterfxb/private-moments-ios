@@ -1,0 +1,22 @@
+2026-11-23T13:12:52.2585470Z Inspecting the cloud runner and its installed simulator runtimes.
+2026-11-23T13:12:59.9475280Z iOS 18.5 (18.5 - 22F77) - com.apple.CoreSimulator.SimRuntime.iOS-18-5
+2026-11-23T13:12:59.9513090Z iOS 18.6 (18.6 - 22G86) - com.apple.CoreSimulator.SimRuntime.iOS-18-6
+2026-11-23T13:12:59.9613270Z iOS 26.0 (26.0.1 - 23A8464) - com.apple.CoreSimulator.SimRuntime.iOS-26-0
+2026-11-23T13:12:59.9644090Z iOS 26.1 (26.1 - 23B86) - com.apple.CoreSimulator.SimRuntime.iOS-26-1
+2026-11-23T13:12:59.9645120Z iOS 26.2 (26.2 - 23C54) - com.apple.CoreSimulator.SimRuntime.iOS-26-2
+2026-11-23T13:13:00.5018550Z Verifying the unsigned Release simulator product and deployment floor.
+2026-11-23T13:13:56.4569510Z Compiled minimum iOS version: 17.0
+2026-11-23T13:13:56.7770000Z Unsigned Release excludes the Debug test and timeline trace hooks.
+2026-11-23T13:15:49.0931880Z Exported 'com.apple.CoreSimulator.SimRuntime.iOS-17-5' to /Users/runner/work/_temp/private-moments-ios17.KUI2NM/runtime/iphonesimulator_17.5_21F79.dmg
+2026-11-23T13:15:49.1121780Z iOS 17.5 (21F79) - 51A840C5-6EA7-4C55-BD5C-3130AF1D4FFB
+2026-11-23T13:16:39.7437500Z iOS 17.5 (17.5 - 21F79) - com.apple.CoreSimulator.SimRuntime.iOS-17-5
+2026-11-23T13:16:39.7442250Z iOS 18.5 (18.5 - 22F77) - com.apple.CoreSimulator.SimRuntime.iOS-18-5
+2026-11-23T13:16:39.7444840Z iOS 18.6 (18.6 - 22G86) - com.apple.CoreSimulator.SimRuntime.iOS-18-6
+2026-11-23T13:16:39.7450480Z iOS 26.0 (26.0.1 - 23A8464) - com.apple.CoreSimulator.SimRuntime.iOS-26-0
+2026-11-23T13:16:39.7450980Z iOS 26.1 (26.1 - 23B86) - com.apple.CoreSimulator.SimRuntime.iOS-26-1
+2026-11-23T13:16:39.7482030Z iOS 26.2 (26.2 - 23C54) - com.apple.CoreSimulator.SimRuntime.iOS-26-2
+2026-11-23T13:16:42.3375410Z Testing the actual runtime com.apple.CoreSimulator.SimRuntime.iOS-17-5 on a disposable iPhone 15 (6BEFCE83-65C6-4A9C-A0A3-E67E4650579F).
+2026-11-23T13:25:12.8147900Z /Users/runner/work/private-moments-ios/private-moments-ios/UITests/PrivateMomentsUITests.swift:2253: error: -[PrivateMomentsUITests.PrivateMomentsUITests testManualEntryTimingDateFilterAndPersistence] : XCTAssertTrue failed - Confirmation must appear before cancellation.
+2026-11-23T13:25:15.3724090Z Test Case '-[PrivateMomentsUITests.PrivateMomentsUITests testManualEntryTimingDateFilterAndPersistence]' failed (48.860 seconds).
+2026-11-23T13:26:28.1496730Z Test Case '-[PrivateMomentsUITests.PrivateMomentsUITests testTimelineSearchReflectsEditAndDeletion]' passed (72.787 seconds).
+2026-11-23T13:27:26.7430890Z ** TEST FAILED **

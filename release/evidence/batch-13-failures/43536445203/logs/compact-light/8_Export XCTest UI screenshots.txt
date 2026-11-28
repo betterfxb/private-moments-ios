@@ -1,0 +1,407 @@
+﻿2026-11-14T01:32:09.3212930Z ##[group]Run result_bundle="${RUNNER_TEMP}/PrivateMoments.xcresult"
+2026-11-14T01:32:09.3213360Z [36;1mresult_bundle="${RUNNER_TEMP}/PrivateMoments.xcresult"[0m
+2026-11-14T01:32:09.3213730Z [36;1mscreenshot_directory="${RUNNER_TEMP}/PrivateMomentsUIScreenshots"[0m
+2026-11-14T01:32:09.3214060Z [36;1mif [[ ! -d "$result_bundle" ]]; then[0m
+2026-11-14T01:32:09.3214570Z [36;1m  printf 'No XCTest result bundle was produced; skipping screenshot export.\n'[0m
+2026-11-14T01:32:09.3214900Z [36;1m  exit 0[0m
+2026-11-14T01:32:09.3215030Z [36;1mfi[0m
+2026-11-14T01:32:09.3215190Z [36;1mmkdir -p "$screenshot_directory"[0m
+2026-11-14T01:32:09.3215440Z [36;1mxcrun xcresulttool export attachments \[0m
+2026-11-14T01:32:09.3215680Z [36;1m  --path "$result_bundle" \[0m
+2026-11-14T01:32:09.3216070Z [36;1m  --output-path "$screenshot_directory"[0m
+2026-11-14T01:32:09.3216510Z [36;1mscreenshot_count="$(find "$screenshot_directory" -type f -iname '*.png' | wc -l | tr -d ' ')"[0m
+2026-11-14T01:32:09.3216970Z [36;1mprintf 'Exported %s PNG attachment(s).\n' "$screenshot_count"[0m
+2026-11-14T01:32:09.3453260Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T01:32:09.3453540Z env:
+2026-11-14T01:32:09.3453760Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T01:32:09.3454180Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=A1285399-F2F4-46E9-8CF2-4AA227FF7EF3
+2026-11-14T01:32:09.3454520Z ##[endgroup]
+2026-11-14T01:32:13.9936120Z Skipped export for AppLockUXTests/testBackgroundDiscardsLateDisableSuccess(): no matching attachments
+2026-11-14T01:32:13.9943540Z 
+2026-11-14T01:32:14.0044940Z Skipped export for AppLockUXTests/testBackgroundDiscardsLateEnableSuccess(): no matching attachments
+2026-11-14T01:32:14.0147770Z 
+2026-11-14T01:32:14.0249370Z Skipped export for AppLockUXTests/testCancelledFailedAndUnavailableAuthenticationDoNotEnableLock(): no matching attachments
+2026-11-14T01:32:14.0350430Z 
+2026-11-14T01:32:14.0451580Z Skipped export for AppLockUXTests/testConcurrentRequestStartsOnlyOneEvaluation(): no matching attachments
+2026-11-14T01:32:14.0552430Z 
+2026-11-14T01:32:14.0655860Z Skipped export for AppLockUXTests/testFailedUnlockRemainsLocked(): no matching attachments
+2026-11-14T01:32:14.0756590Z 
+2026-11-14T01:32:14.0858500Z Skipped export for AppLockUXTests/testInactivePromptDoesNotCancelButBackgroundAlwaysLocks(): no matching attachments
+2026-11-14T01:32:14.0959850Z 
+2026-11-14T01:32:14.1060930Z Skipped export for AppLockUXTests/testOldCallbackCannotUnlockOrClearANewerAttempt(): no matching attachments
+2026-11-14T01:32:14.1161870Z 
+2026-11-14T01:32:14.1263630Z Skipped export for AppLockUXTests/testOnlySuccessfulAuthenticationChangesPreferenceAndRelaunchLocks(): no matching attachments
+2026-11-14T01:32:14.1532760Z 
+2026-11-14T01:32:14.1680210Z Skipped export for BackupUXTests/testEmptyPreviewKeepsReplacementScopeExplicit(): no matching attachments
+2026-11-14T01:32:14.1781690Z 
+2026-11-14T01:32:14.1883750Z Skipped export for BackupUXTests/testFileReaderPreservesTheFullValidatedRecord(): no matching attachments
+2026-11-14T01:32:14.1986450Z 
+2026-11-14T01:32:14.2089880Z Skipped export for BackupUXTests/testFileReaderRejectsAnOversizedSparseFile(): no matching attachments
+2026-11-14T01:32:14.2191900Z 
+2026-11-14T01:32:14.3144720Z Skipped export for BackupUXTests/testFileReaderRejectsMalformedAndMissingFiles(): no matching attachments
+2026-11-14T01:32:14.3284210Z 
+2026-11-14T01:32:14.3440480Z Skipped export for BackupUXTests/testImportedCopyNeverDeletesAPrefixSibling(): no matching attachments
+2026-11-14T01:32:14.3557070Z 
+2026-11-14T01:32:14.3658770Z Skipped export for BackupUXTests/testImportedCopyNeverRecursivelyDeletesADirectory(): no matching attachments
+2026-11-14T01:32:14.3773830Z 
+2026-11-14T01:32:14.3875220Z Skipped export for BackupUXTests/testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError(): no matching attachments
+2026-11-14T01:32:14.4268050Z 
+2026-11-14T01:32:14.4377210Z Skipped export for BackupUXTests/testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames(): no matching attachments
+2026-11-14T01:32:14.4505190Z 
+2026-11-14T01:32:14.4621370Z Skipped export for BackupUXTests/testPreviewCountsActualIDOverlapAndNotes(): no matching attachments
+2026-11-14T01:32:14.4751230Z 
+2026-11-14T01:32:14.4855370Z Skipped export for MomentDateQueryTests/testDaylightSavingDaysUseCalendarBoundaries(): no matching attachments
+2026-11-14T01:32:14.5022910Z 
+2026-11-14T01:32:14.5189760Z Skipped export for MomentDateQueryTests/testMidnightBelongsOnlyToTheFollowingDay(): no matching attachments
+2026-11-14T01:32:14.5291230Z 
+2026-11-14T01:32:14.5393400Z Skipped export for MomentStoreImportTests/testFailedReplacementLeavesExistingRecordsUnchanged(): no matching attachments
+2026-11-14T01:32:14.6044720Z 
+2026-11-14T01:32:14.6147940Z Skipped export for MomentStoreImportTests/testInvalidMergeLeavesExistingRecordsUnchanged(): no matching attachments
+2026-11-14T01:32:14.6249380Z 
+2026-11-14T01:32:14.6351350Z Skipped export for MomentStoreImportTests/testMergeAddsNewRecordsAndUpdatesMatchingIDs(): no matching attachments
+2026-11-14T01:32:14.6453260Z 
+2026-11-14T01:32:14.6555780Z Skipped export for MomentStoreRecoveryTests/testConversionFailurePreservesCachedSnapshotUntilRepair(): no matching attachments
+2026-11-14T01:32:14.6657950Z 
+2026-11-14T01:32:14.6760400Z Skipped export for MomentStoreRecoveryTests/testEachPersistenceFailurePreservesSnapshotAndRequiresReload(): no matching attachments
+2026-11-14T01:32:14.6862480Z 
+2026-11-14T01:32:14.6963730Z Skipped export for MomentStoreRecoveryTests/testFirstReadFailureBlocksAllMutationsUntilSuccessfulRetry(): no matching attachments
+2026-11-14T01:32:14.7065520Z 
+2026-11-14T01:32:14.7167900Z Skipped export for MomentStoreRecoveryTests/testReadFailureKeepsCachedRecordsReadOnly(): no matching attachments
+2026-11-14T01:32:14.7284270Z 
+2026-11-14T01:32:14.7624910Z Skipped export for MomentStoreRecoveryTests/testValidationAndDuplicateBackupErrorsDoNotDisableStorage(): no matching attachments
+2026-11-14T01:32:14.7730790Z 
+2026-11-14T01:32:14.7832350Z Skipped export for MomentTimingDraftTests/testChangedTimingParticipatesInDiscardDetection(): no matching attachments
+2026-11-14T01:32:14.7949280Z 
+2026-11-14T01:32:14.8052920Z Skipped export for MomentTimingDraftTests/testFutureNewDateRejectedWithoutChangingBackupValidation(): no matching attachments
+2026-11-14T01:32:14.8153880Z 
+2026-11-14T01:32:14.8285720Z Skipped export for MomentTimingDraftTests/testMalformedOverflowAndOverLimitDurationsAreRejected(): no matching attachments
+2026-11-14T01:32:14.8286980Z 
+2026-11-14T01:32:14.8306010Z Skipped export for MomentTimingDraftTests/testNonFiniteDateRejectedAndExistingValuesTakePrecedence(): no matching attachments
+2026-11-14T01:32:14.8308330Z 
+2026-11-14T01:32:14.8309430Z Skipped export for MomentTimingDraftTests/testUntouchedShortAndLongDurationsPreserveExactSeconds(): no matching attachments
+2026-11-14T01:32:14.8310680Z 
+2026-11-14T01:32:14.8311450Z Skipped export for MomentValidationTests/testBackupRejectsDuplicateIDsBeforeRestore(): no matching attachments
+2026-11-14T01:32:14.8312500Z 
+2026-11-14T01:32:14.8313200Z Skipped export for MomentValidationTests/testBackupRejectsFilesOverSizeLimit(): no matching attachments
+2026-11-14T01:32:14.8314110Z 
+2026-11-14T01:32:14.8314810Z Skipped export for MomentValidationTests/testBackupRejectsUnknownFormatVersion(): no matching attachments
+2026-11-14T01:32:14.8315890Z 
+2026-11-14T01:32:14.8316920Z Skipped export for MomentValidationTests/testBackupRoundTripPreservesPrivateFields(): no matching attachments
+2026-11-14T01:32:14.8418380Z 
+2026-11-14T01:32:14.8520670Z Skipped export for MomentValidationTests/testNegativeDurationIsRejected(): no matching attachments
+2026-11-14T01:32:14.8622440Z 
+2026-11-14T01:32:14.8724620Z Skipped export for MomentValidationTests/testOverlongPrivateNoteIsRejected(): no matching attachments
+2026-11-14T01:32:14.8826530Z 
+2026-11-14T01:32:14.8931590Z Skipped export for MomentValidationTests/testOversizedUnicodeNoteIsRejectedEvenWhenGraphemeCountIsSmall(): no matching attachments
+2026-11-14T01:32:14.9063440Z 
+2026-11-14T01:32:14.9316260Z Skipped export for MomentValidationTests/testPrivateNoteAllowsEmptyAndExactCharacterLimit(): no matching attachments
+2026-11-14T01:32:14.9418980Z 
+2026-11-14T01:32:14.9522200Z Skipped export for MomentValidationTests/testPrivateNoteUTF8BoundaryIsIndependentOfCharacterCount(): no matching attachments
+2026-11-14T01:32:14.9624450Z 
+2026-11-14T01:32:14.9725740Z Skipped export for MomentValidationTests/testValidMomentPassesValidation(): no matching attachments
+2026-11-14T01:32:14.9826840Z 
+2026-11-14T01:32:14.9928020Z Skipped export for SemanticColorTests/testAccentAndSessionTextRemainReadableInBothAppearances(): no matching attachments
+2026-11-14T01:32:15.0028890Z 
+2026-11-14T01:32:15.0131120Z Skipped export for SemanticColorTests/testBodyAndSecondaryTextContrastOnSurfaces(): no matching attachments
+2026-11-14T01:32:15.0232770Z 
+2026-11-14T01:32:15.0333790Z Skipped export for SwiftDataRecoveryTests/testInsertFailureLeavesNoPhantomRecord(): no matching attachments
+2026-11-14T01:32:15.0434870Z 
+2026-11-14T01:32:15.0536170Z Skipped export for SwiftDataRecoveryTests/testInvalidPersistedFieldsBlockReadAndRepairRestoresAccess(): no matching attachments
+2026-11-14T01:32:15.0637170Z 
+2026-11-14T01:32:15.0939270Z Skipped export for SwiftDataRecoveryTests/testSaveFailureRollsBackEveryMutationInRealModelContext(): no matching attachments
+2026-11-14T01:32:15.1040630Z 
+2026-11-14T01:32:15.1144580Z Skipped export for UITestIsolationTests/testPrivacyPreferencesAreIsolatedByTheSameStoreUUID(): no matching attachments
+2026-11-14T01:32:15.1247070Z 
+2026-11-14T01:32:15.1348300Z Skipped export for UITestIsolationTests/testSaveFailureRequiresBothAnIsolatedStoreAndExplicitFlag(): no matching attachments
+2026-11-14T01:32:15.1348890Z 
+2026-11-14T01:32:15.1349200Z Skipped export for UITestIsolationTests/testTestStoreRequiresAValidUUID(): no matching attachments
+2026-11-14T01:32:15.1451120Z 
+2026-11-14T01:32:15.1552710Z Exported 13 attachments for: PrivateMomentsUITests/testBackupFileRoundTrip():
+2026-11-14T01:32:15.1655270Z File: 20A4737D-EDA4-4619-83D4-1AFFFA6FA8F7.png, suggested name: "Backup-restored-en_0_CFA31859-0D6A-474D-A5ED-C68FBCA17481.png"
+2026-11-14T01:32:15.1756680Z File: 7D069348-8A71-46F7-BD8F-E986F0CCD512.txt, suggested name: "Import-recovery-1-en-hierarchy_0_10335751-EEA0-44F3-BB61-C25AAAE848B9.txt"
+2026-11-14T01:32:15.1858110Z File: C267A7AB-C31C-45C4-BC95-2BC3C09B0D5A.png, suggested name: "Import-recovery-1-en_0_9426941F-35F3-45B6-A27F-15E388215A44.png"
+2026-11-14T01:32:15.1959520Z File: D7E1684B-B278-466F-8DAE-33D81C1DE651.png, suggested name: "Backup-replace-en_0_26B13852-75EF-4928-A255-BD74DE8AABE4.png"
+2026-11-14T01:32:15.2061790Z File: FB0E462E-6C9D-409A-8314-0D6767736C6C.png, suggested name: "Replace-review-en_0_5F4789B7-ED73-4CF1-82DA-B142FB24E8D1.png"
+2026-11-14T01:32:15.2163430Z File: D10D2FBB-2238-46B5-B237-9C96E6CE3D81.png, suggested name: "Backup-review-controls-en_0_0E9A565C-E5D6-4E82-9BA9-191190AF0950.png"
+2026-11-14T01:32:15.2265470Z File: 691FC515-2A3C-48CE-9541-E45233D84A7B.png, suggested name: "Backup-review-en_0_AA98241A-070D-404A-AEE1-72C651BBD078.png"
+2026-11-14T01:32:15.2502250Z File: C29CFA34-0DB2-49FC-95B6-ACA89790458D.png, suggested name: "Import-cancelled-en_0_C3AF3508-E3A2-41C6-AC96-1D407EB01936.png"
+2026-11-14T01:32:15.2605040Z File: EE349C12-75B5-4B7C-BE4A-2A797862EDDF.txt, suggested name: "Import-files-en-hierarchy_0_4CDA79E1-6781-4248-B0D9-3A93E739B95D.txt"
+2026-11-14T01:32:15.2606100Z File: FBE0762D-FEBF-4748-995B-2F45690F1986.png, suggested name: "Import-files-en_0_B5CEF96E-4DD8-4743-BEB8-BD388B3706E7.png"
+2026-11-14T01:32:15.2607670Z File: B64B6E36-347A-4949-81FB-25EA59B20557.png, suggested name: "Backup-exported-en_0_86632B0C-9605-4F59-869B-1425810EF5B6.png"
+2026-11-14T01:32:15.2608510Z File: 966085A1-599D-4135-8CC0-9A38DA80B144.txt, suggested name: "Export-files-en-hierarchy_0_F66DB536-91AE-4885-BD87-9C4826BB2F70.txt"
+2026-11-14T01:32:15.2609350Z File: 481C858B-F245-4048-BD28-3AD670A6BE34.png, suggested name: "Export-files-en_0_4862114A-D80E-47FC-BC57-31992F1B6FD7.png"
+2026-11-14T01:32:15.2713710Z 
+2026-11-14T01:32:15.2815810Z Exported 195 attachments for: PrivateMomentsUITests/testChineseBackupFileRoundTrip():
+2026-11-14T01:32:15.2919000Z File: AAF9EB44-CE3F-45CE-BFEF-40E9BDEEA0A0.txt, suggested name: "Import-file-unavailable-hierarchy_0_C9881CA2-607A-49AB-8E11-F41A335ED24B.txt"
+2026-11-14T01:32:15.3024270Z File: D7EA188D-6A17-4924-B76D-2693205FE0AF.png, suggested name: "Import-file-unavailable_0_D3A65930-130B-4068-92AE-C165D9F84706.png"
+2026-11-14T01:32:15.3127500Z File: 14BF8DAA-F228-43C0-8793-F3C60B03BDEE.txt, suggested name: "App UI hierarchy for com.example_0_0E138B79-895A-407F-9EEF-1796D7B7ECE0.PrivateMoments"
+2026-11-14T01:32:15.3230670Z File: 92547420-A3A6-499F-8D80-A5ED12F575D8, suggested name: "UI Snapshot 2026-11-14 at 01.10.23 AM"
+2026-11-14T01:32:15.3332050Z File: 3C50D23C-5C18-4794-AA7E-DD6CBFDBA08F.txt, suggested name: "Debug description for `"File View" CollectionView`_0_196B9543-6D6B-45C8-8A6A-995E19000B36.txt"
+2026-11-14T01:32:15.3435800Z File: 1690E2B7-9F89-4081-BB24-9625F6893B15.txt, suggested name: "Debug description for `"File View" CollectionView`_0_84F1248C-153E-4A00-80D5-1445A93251CA.txt"
+2026-11-14T01:32:15.3538540Z File: 8EF40B9D-48F5-450D-BA79-0BFAC9DF4390.txt, suggested name: "Debug description for `"File View" CollectionView`_0_3EAE8892-4460-4C79-AA07-44A32384B67E.txt"
+2026-11-14T01:32:15.3640180Z File: 70F2D44B-6C9A-47F2-8E68-C9B2A715F585.txt, suggested name: "Debug description for `"File View" CollectionView`_0_9F63F749-2E08-47F6-A468-EC9518BAA684.txt"
+2026-11-14T01:32:15.3743480Z File: AE4FD538-5ABD-48C2-8830-7823039EC9CC.txt, suggested name: "Debug description for `"File View" CollectionView`_0_9817C605-143B-4DFC-B352-6B07AA1066AB.txt"
+2026-11-14T01:32:15.3847400Z File: 98993728-9D27-44EF-86CE-D20794EB72BB.txt, suggested name: "Debug description for `"File View" CollectionView`_0_8EC4E92C-3293-43D0-AB1D-61890AFD8A1B.txt"
+2026-11-14T01:32:15.3956780Z File: D80F3EDF-83FD-42C0-938D-B73DD1CE9E4A.txt, suggested name: "Debug description for `"File View" CollectionView`_0_1B16690E-E563-4BFC-BD45-2DDD8F842A5A.txt"
+2026-11-14T01:32:15.4164090Z File: C63E6268-859B-40DE-ADAC-CD2D24EA3E37.txt, suggested name: "Debug description for `"File View" CollectionView`_0_202E6CC3-0704-4EEF-A399-4ECBE33C2F29.txt"
+2026-11-14T01:32:15.4270650Z File: 49C87CC4-4705-4217-8276-083E24C87BB5.txt, suggested name: "Debug description for `"File View" CollectionView`_0_8A1115C4-B0E5-4AC2-907B-FFCC99D38152.txt"
+2026-11-14T01:32:15.4374760Z File: F063A3AA-F828-4892-A583-CFB469110781.txt, suggested name: "Debug description for `"File View" CollectionView`_0_4BE1267A-0E25-4C7E-A8BE-0990DF3EBC06.txt"
+2026-11-14T01:32:15.4478450Z File: E50C0887-D2B3-45EC-BA20-ED699EA239AD.txt, suggested name: "Debug description for `"File View" CollectionView`_0_374A4891-4CA0-4FC0-A8E0-EDF0047EFF3D.txt"
+2026-11-14T01:32:15.4581770Z File: 655189A8-8E81-4FB3-B958-D507CD6A17D5.txt, suggested name: "Debug description for `"File View" CollectionView`_0_74CEFACA-E6CF-4325-99B8-BF1A916B0122.txt"
+2026-11-14T01:32:15.4684850Z File: CF62DF29-D196-4174-ADA9-18157140FF9E.txt, suggested name: "Debug description for `"File View" CollectionView`_0_951768D0-441E-4E59-BD88-0571FA97F2FC.txt"
+2026-11-14T01:32:15.4792640Z File: F4F3BD70-74DD-49CA-99B8-D7F35F8295BB.txt, suggested name: "Debug description for `"File View" CollectionView`_0_5A355BDE-9008-427D-B742-F446F613A480.txt"
+2026-11-14T01:32:15.4897800Z File: 727050A0-26F0-41B8-995C-CA16A9462C68.txt, suggested name: "Debug description for `"File View" CollectionView`_0_6460C214-1047-4087-A2C5-2CB3F15684C2.txt"
+2026-11-14T01:32:15.5000290Z File: 6DFF48A5-A5EE-4249-8176-3EAE246EA135.txt, suggested name: "Debug description for `"File View" CollectionView`_0_3B65E901-CCB1-4A99-B33A-E1B99421DF57.txt"
+2026-11-14T01:32:15.5103450Z File: 45871EEE-1DCD-4424-A56E-6416D28E65E9.txt, suggested name: "Debug description for `"File View" CollectionView`_0_EEC47DDC-8B36-4C6D-ACA9-11FC9C4C7E00.txt"
+2026-11-14T01:32:15.5205510Z File: 0C30EEE4-FDB5-406F-84F7-3FE2A6954F78.txt, suggested name: "Debug description for `"File View" CollectionView`_0_70648CA4-197E-4F59-961E-86CB3D5D4A41.txt"
+2026-11-14T01:32:15.5309610Z File: B282F05A-201C-4DBC-A5D4-8D84E0046768.txt, suggested name: "Debug description for `"File View" CollectionView`_0_F988BE53-907E-440E-B456-BD6B19F2121A.txt"
+2026-11-14T01:32:15.5424040Z File: 3B8867D1-A6BE-4C8D-B11E-36138C8D74A3.txt, suggested name: "Debug description for `"File View" CollectionView`_0_D6B07AA6-BA2E-48ED-956C-5AB0FE8552C3.txt"
+2026-11-14T01:32:15.5527830Z File: F37F9243-0E57-475C-AB2F-90F529A8AF9B.txt, suggested name: "Debug description for `"File View" CollectionView`_0_B6C1F022-1990-4843-8692-527E2110820C.txt"
+2026-11-14T01:32:15.5646140Z File: 069CA571-DF89-4D79-877B-ECC1026745EA.txt, suggested name: "Debug description for `"File View" CollectionView`_0_1E9A1186-D88C-4C6C-AAE3-7FB5EEA6CC6C.txt"
+2026-11-14T01:32:15.5863900Z File: 2366386C-0C97-4B60-B7A2-396872929F5F.txt, suggested name: "Debug description for `"File View" CollectionView`_0_9751664F-6A0A-4E32-9D04-FF8DD73B57E5.txt"
+2026-11-14T01:32:15.5972600Z File: 7EF058F8-E82F-4973-B720-B3559E7D96A2.txt, suggested name: "Debug description for `"File View" CollectionView`_0_019E8EAB-ACEE-499A-910F-EB54BE2BA880.txt"
+2026-11-14T01:32:15.6075270Z File: B6425806-A538-4119-BC72-2ADB878B7D0D.txt, suggested name: "Debug description for `"File View" CollectionView`_0_F76F36C2-A873-4C12-B1BC-72880314BFDC.txt"
+2026-11-14T01:32:15.6177200Z File: B82B830F-0E2E-4002-B1EC-D3ED9CD6D6FF.txt, suggested name: "Debug description for `"File View" CollectionView`_0_FF20FDCD-F143-47FE-8370-F98ACD3D9220.txt"
+2026-11-14T01:32:15.6283260Z File: 69CAF209-4A39-4F64-B492-02F1BD5FEE39.txt, suggested name: "Debug description for `"File View" CollectionView`_0_CC18B7F6-DC1F-4B45-A107-659B5F3DEC1A.txt"
+2026-11-14T01:32:15.6390940Z File: 0B17D4D5-8C64-45D5-B5B6-8F7E3D90714D.txt, suggested name: "Debug description for `"File View" CollectionView`_0_2DA3B676-F344-430E-9F4D-A3C6377B0564.txt"
+2026-11-14T01:32:15.6494900Z File: B13EFFDD-7EB5-48B8-B0E2-71ADD577A108.txt, suggested name: "Debug description for `"File View" CollectionView`_0_9DCB4553-9396-4F6E-8544-807ED30F8709.txt"
+2026-11-14T01:32:15.6605880Z File: 8B255C0C-28FC-4C11-B0AC-CBD1F6D9B586.txt, suggested name: "Debug description for `"File View" CollectionView`_0_F85A1745-0544-4113-9060-EB331A20C7E8.txt"
+2026-11-14T01:32:15.6709120Z File: 5412D269-DC6C-4CAF-BD17-4ADDD92F6CCE.txt, suggested name: "Debug description for `"File View" CollectionView`_0_2D71E1A7-95A3-4033-9FF1-ECD92CFD2695.txt"
+2026-11-14T01:32:15.6813150Z File: 5DD877DB-5FBF-48E3-936D-B08751C18C14.txt, suggested name: "Debug description for `"File View" CollectionView`_0_99A9E574-9B8C-4928-8958-161C685705DE.txt"
+2026-11-14T01:32:15.6917970Z File: 83AF8F03-C501-475C-8EB6-90A0D156B08B.txt, suggested name: "Debug description for `"File View" CollectionView`_0_9080E1E6-9B21-4270-8D5A-5F4EBA28B1E6.txt"
+2026-11-14T01:32:15.6938390Z File: 41F15A9F-259B-401B-9667-89F2BF6CFADB.txt, suggested name: "Debug description for `"File View" CollectionView`_0_9BCC7A2F-518F-4079-8056-9369077924A9.txt"
+2026-11-14T01:32:15.6967710Z File: 45AD43C8-6534-4F55-87AE-7FEBDDEB7C9B.txt, suggested name: "Debug description for `"File View" CollectionView`_0_EB1A34B3-EA08-4FC0-960E-89A1F656C753.txt"
+2026-11-14T01:32:15.7011730Z File: DD14A0D6-F13F-4F1F-8536-24886338C99D.txt, suggested name: "Debug description for `"File View" CollectionView`_0_06A6A630-97B3-4CC6-97FE-660673F4D0C8.txt"
+2026-11-14T01:32:15.7087600Z File: 44833ED3-C20A-41C1-ACB4-76F437E6E347.txt, suggested name: "Debug description for `"File View" CollectionView`_0_9C35E0B3-BAE9-4E16-A851-C74580810501.txt"
+2026-11-14T01:32:15.7099800Z File: 459F2E52-159E-41CF-B08F-4A82A552090B.txt, suggested name: "Debug description for `"File View" CollectionView`_0_EB51DE7F-05DE-4F15-AB52-14FAFB0B6ECA.txt"
+2026-11-14T01:32:15.7121620Z File: 4C6CFA44-507E-48AA-AA8E-E56FD12F0889.txt, suggested name: "Debug description for `"File View" CollectionView`_0_B844B89E-4629-4990-BF84-EE09BF2BAED1.txt"
+2026-11-14T01:32:15.7139010Z File: C35F529D-BE05-4FCA-B091-5E6426591DE2.txt, suggested name: "Debug description for `"File View" CollectionView`_0_9C9FED7C-9EB4-44F1-A13E-F73A4B131AD2.txt"
+2026-11-14T01:32:15.7160560Z File: D78F9338-E02D-403A-9D5F-66624B004669.txt, suggested name: "Debug description for `"File View" CollectionView`_0_F3D85A2E-25BA-4871-89BF-535BE0D1260A.txt"
+2026-11-14T01:32:15.7178960Z File: 51D48F5A-B7F6-4F99-9CCE-FEB23503E2E5.txt, suggested name: "Debug description for `"File View" CollectionView`_0_A4082DC7-52DF-4C6B-9A1C-4FD0FB648BB8.txt"
+2026-11-14T01:32:15.7197370Z File: FFB5F8A4-5974-469D-AB30-FDF6F72B11E7.txt, suggested name: "Debug description for `"File View" CollectionView`_0_6DFA2176-FA9B-4E2D-8933-7AC9EBEBCC55.txt"
+2026-11-14T01:32:15.7243640Z File: 62D63AA9-3AF1-4DDA-B06F-A780A4DC75F6.txt, suggested name: "Debug description for `"File View" CollectionView`_0_5C02252E-ED1D-4674-A40A-7EB1850163A0.txt"
+2026-11-14T01:32:15.7455100Z File: DC6929F4-8F1C-4856-9C41-36E031F7E1AB.txt, suggested name: "Debug description for `"File View" CollectionView`_0_C79D9DAB-5FF8-4D48-8898-C194629CAC98.txt"
+2026-11-14T01:32:15.7582660Z File: 7648D555-9B3D-417B-B8E4-40F1B9059707.txt, suggested name: "Debug description for `"File View" CollectionView`_0_17AE4AA9-F0EC-43E2-89EB-929C584D7677.txt"
+2026-11-14T01:32:15.7584270Z File: 956D7F46-C6C4-45FD-8C0D-2CB845D0E01B.txt, suggested name: "Debug description for `"File View" CollectionView`_0_C104707D-889F-489A-925F-1545FC652F0D.txt"
+2026-11-14T01:32:15.7585330Z File: 5CB44D5F-6BBF-4E33-978E-307EF526E807.txt, suggested name: "Debug description for `"File View" CollectionView`_0_D3711C8E-0621-42A2-BE01-277346A957CF.txt"
+2026-11-14T01:32:15.7586340Z File: E41E872A-9695-422C-9BAC-DFDB1A48E2F7.txt, suggested name: "Debug description for `"File View" CollectionView`_0_B3F0FF2E-812C-4D48-9757-442488DBBC3B.txt"
+2026-11-14T01:32:15.7587390Z File: 57E286FA-16A4-44B3-A396-F5712046B202.txt, suggested name: "Debug description for `"File View" CollectionView`_0_068EBA57-070C-4502-A9A8-A612033A4028.txt"
+2026-11-14T01:32:15.7589350Z File: 1A6E0C69-1FDA-496E-9444-D886011519C0.txt, suggested name: "Debug description for `"File View" CollectionView`_0_E654E09F-9B1E-44A2-BF9A-1F07BD81104B.txt"
+2026-11-14T01:32:15.7590470Z File: 0A98C75C-8447-4D8C-A01F-12598A14721F.txt, suggested name: "Debug description for `"File View" CollectionView`_0_965ABEBA-40C0-4F88-B654-5708368BAD19.txt"
+2026-11-14T01:32:15.7592580Z File: 74E0F30C-941E-4EB6-AFA9-EF9C11BF7EC1.txt, suggested name: "Debug description for `"File View" CollectionView`_0_044AEA1C-6E49-4441-9BDC-844DC968B381.txt"
+2026-11-14T01:32:15.7629660Z File: DF54EC6A-A9AB-4696-9865-8C648F3DD3B7.txt, suggested name: "Debug description for `"File View" CollectionView`_0_C0AA0384-360A-41BB-88CF-41C013B030BB.txt"
+2026-11-14T01:32:15.7641850Z File: E79DA9D0-F0BB-43C4-9897-9F763E07B5F2.txt, suggested name: "Debug description for `"File View" CollectionView`_0_BD5589AE-74C1-4107-862D-A95AA91EFF92.txt"
+2026-11-14T01:32:15.7672760Z File: E66AC5DE-7ECC-4986-96CC-656951E66F7C.txt, suggested name: "Debug description for `"File View" CollectionView`_0_2016C020-04C5-4D46-881E-07B721690948.txt"
+2026-11-14T01:32:15.7691460Z File: F36744CF-79E1-4C64-AAB0-625445B1EC69.txt, suggested name: "Debug description for `"File View" CollectionView`_0_26DCB46A-306E-458E-A25A-35766756069A.txt"
+2026-11-14T01:32:15.7712750Z File: D05EFB70-49E6-40A2-8BDB-486720FAA9E2.txt, suggested name: "Debug description for `"File View" CollectionView`_0_CD6236B7-565C-44DF-BCB9-C166B2697586.txt"
+2026-11-14T01:32:15.7745590Z File: 13457486-D86E-4752-AF09-E02FE4800692.txt, suggested name: "Debug description for `"File View" CollectionView`_0_F41F1A5C-8C9C-43A3-B837-2FBCB56FE0CC.txt"
+2026-11-14T01:32:15.7771830Z File: EA40810A-E968-472D-8B20-EB4FBC76F9C1.txt, suggested name: "Debug description for `"File View" CollectionView`_0_8C7CFF61-3D71-458C-8818-9F7502EB207C.txt"
+2026-11-14T01:32:15.7793610Z File: D2EDBC32-D13D-410F-9675-6B200197AD86.txt, suggested name: "Debug description for `"File View" CollectionView`_0_F3D4BFBB-F04C-4827-A88D-EDA8D494610C.txt"
+2026-11-14T01:32:15.7819020Z File: 2ECB4E3B-441F-407E-837B-9704887598E9.txt, suggested name: "Debug description for `"File View" CollectionView`_0_4DE6C32F-0F38-4D35-8314-B3781867351F.txt"
+2026-11-14T01:32:15.7844620Z File: BBBA5C7A-88BF-48CB-9F75-BC4245845CE9.txt, suggested name: "Debug description for `"File View" CollectionView`_0_D0D8711F-6721-442D-80D2-8C79FECB6DF6.txt"
+2026-11-14T01:32:15.7864900Z File: A32B8A2A-4524-45BA-8F53-781AB2DBBF39.txt, suggested name: "Debug description for `"File View" CollectionView`_0_3B352266-04E2-4548-80C3-2C6E97A45CEE.txt"
+2026-11-14T01:32:15.7880830Z File: 5CF49285-6C39-4E73-9FE1-D11C1A2D7860.txt, suggested name: "Debug description for `"File View" CollectionView`_0_FFD5F12B-BBEE-4186-B7A2-D7CF979EA715.txt"
+2026-11-14T01:32:15.7884760Z File: 528755C0-E6DB-44AD-AFCF-4772804C38AE.txt, suggested name: "Debug description for `"File View" CollectionView`_0_D506E062-581A-4C30-91A0-7397B8140F05.txt"
+2026-11-14T01:32:15.7894270Z File: 19050CBF-5167-4BA3-8080-033BF6614F17.txt, suggested name: "Debug description for `"File View" CollectionView`_0_3AA5DFCA-B96C-4FB1-A6CD-DEECCDA9A898.txt"
+2026-11-14T01:32:15.8459710Z File: 641329D6-5178-43F9-A45A-BA3841D5DA8C.txt, suggested name: "Debug description for `"File View" CollectionView`_0_D7F45AFF-E3A1-4954-99C2-E334A18B9616.txt"
+2026-11-14T01:32:15.8570860Z File: 4A435C68-B80D-4490-AFE7-8E9D90AD2F4A.txt, suggested name: "Debug description for `"File View" CollectionView`_0_BC142A81-5C4C-427B-8500-45827F72739D.txt"
+2026-11-14T01:32:15.8725840Z File: 93B0C3BF-D73A-468C-8AD8-C2673B5E6AA5.txt, suggested name: "Debug description for `"File View" CollectionView`_0_D3E04F85-31F2-49EF-AE8C-D6DD584A421B.txt"
+2026-11-14T01:32:15.8879700Z File: EE609BB7-281A-46B2-A629-9B9864B8EF0F.txt, suggested name: "Debug description for `"File View" CollectionView`_0_FFF3EDD4-936F-42D9-B82B-282D1E2B2A75.txt"
+2026-11-14T01:32:15.8881120Z File: 4E0E98A0-C62A-4DFE-9540-AAE3B419E458.txt, suggested name: "Debug description for `"File View" CollectionView`_0_353858C4-69A2-4100-934F-F357E2A5C021.txt"
+2026-11-14T01:32:15.9029480Z File: 3EF9C5CA-50F0-4424-98F3-47693CB9DAF2.txt, suggested name: "Debug description for `"File View" CollectionView`_0_AAB8D540-BA06-4902-B9EA-F2BD45EC1669.txt"
+2026-11-14T01:32:15.9473460Z File: 037EB750-9907-4785-80D6-7787DA018A49.txt, suggested name: "Debug description for `"File View" CollectionView`_0_D4A877F6-6CDA-42AF-A507-2EEE42E619E4.txt"
+2026-11-14T01:32:15.9585820Z File: E538DF50-1CDE-4623-B93E-88A0742D117E.txt, suggested name: "Debug description for `"File View" CollectionView`_0_9B11F536-24A6-4BAF-81DF-419EA71F7E7D.txt"
+2026-11-14T01:32:15.9689300Z File: C7CFE3B6-7CF3-4E42-AC53-4E27B8A16FD5.txt, suggested name: "Debug description for `"File View" CollectionView`_0_03CA4B56-83AF-4EA7-8244-9F70CA834E13.txt"
+2026-11-14T01:32:15.9837520Z File: AF2CE942-E28B-4048-8FA0-92F0D0DB3FDA.txt, suggested name: "Debug description for `"File View" CollectionView`_0_728EFB8F-7DE6-4A24-A63D-3A92260C15E0.txt"
+2026-11-14T01:32:15.9962320Z File: 9C3A4E73-A89F-47D4-BDB1-051BF197A28F.txt, suggested name: "Debug description for `"File View" CollectionView`_0_A5B45A93-B653-4E10-82D6-059B5332C4D7.txt"
+2026-11-14T01:32:16.0073870Z File: 8C317E32-3181-446D-8305-27EFDA264E6A.txt, suggested name: "Debug description for `"File View" CollectionView`_0_796D101A-2194-4164-83FC-95A8B735B562.txt"
+2026-11-14T01:32:16.0265760Z File: F66AB4DB-0735-450E-A328-03C65184F920.txt, suggested name: "Debug description for `"File View" CollectionView`_0_C4ABE5D5-45D1-4CE4-A6D4-8DF9451E0CC4.txt"
+2026-11-14T01:32:16.0369700Z File: CCEB00A4-4E02-4139-9D75-4FDA06FD13F6.txt, suggested name: "Debug description for `"File View" CollectionView`_0_533F7828-5560-469D-BE33-FDD2866D8A71.txt"
+2026-11-14T01:32:16.0474310Z File: 1B0C941E-B503-4AE1-A256-1FE7E9673756.txt, suggested name: "Debug description for `"File View" CollectionView`_0_F68AB756-53F1-4444-9A0E-D26272905E76.txt"
+2026-11-14T01:32:16.0578700Z File: 2E6093CC-1DC9-4B1F-BF85-D44441AFD17E.txt, suggested name: "Debug description for `"File View" CollectionView`_0_3A293EC0-F9C4-44F0-BE41-12053C352FE1.txt"
+2026-11-14T01:32:16.0776910Z File: 2A63FDFE-7E54-4691-9EAA-427D21C17628.txt, suggested name: "Debug description for `"File View" CollectionView`_0_A68DB600-1A98-4B7A-BE19-347E6D22A10A.txt"
+2026-11-14T01:32:16.0890150Z File: 88A23780-72AD-48D6-85C1-7A33EB3197E3.txt, suggested name: "Debug description for `"File View" CollectionView`_0_A2315F0D-6270-42BC-81E3-B363ACE575BB.txt"
+2026-11-14T01:32:16.1213160Z File: 196D7A78-4340-45DE-9297-7D5039C65769.txt, suggested name: "Debug description for `"File View" CollectionView`_0_444D0B17-6891-422D-A3DB-4A6549D1AB46.txt"
+2026-11-14T01:32:16.1316510Z File: D711D1F4-6274-4579-8889-59E063FB7BB3.txt, suggested name: "Debug description for `"File View" CollectionView`_0_C4A6BE2F-7702-4F5C-B292-B4299CDB7E23.txt"
+2026-11-14T01:32:16.1423910Z File: 44DF3844-F96B-4596-99E8-518280C7EEF7.txt, suggested name: "Debug description for `"File View" CollectionView`_0_71B2494E-94E8-4411-9787-208EB40C23AA.txt"
+2026-11-14T01:32:16.1534880Z File: C1BF6B0C-100D-4853-9A2F-CC45B03ADF1A.txt, suggested name: "Debug description for `"File View" CollectionView`_0_5225FDE8-5187-4A17-B667-C2F733521224.txt"
+2026-11-14T01:32:16.1657550Z File: 21B048FA-28AB-4511-98B3-CC5F2C94CFC9.txt, suggested name: "Debug description for `"File View" CollectionView`_0_D64968F4-6DCB-4A0A-B33A-6C93952BB89A.txt"
+2026-11-14T01:32:16.1762370Z File: C057A29E-4958-4CCB-995E-4392DDE04CC4, suggested name: "UI Snapshot 2026-11-14 at 01.08.50 AM"
+2026-11-14T01:32:16.1866170Z File: B868BABD-714D-4DD2-B145-5908C2DEAFD4, suggested name: "Synthesized Event 2026-11-14 at 01.08.50 AM"
+2026-11-14T01:32:16.1967470Z File: 4A80232D-32B1-4213-BEC8-43BFA3250B9B, suggested name: "UI Snapshot 2026-11-14 at 01.08.44 AM"
+2026-11-14T01:32:16.2075260Z File: FF10E29C-50B4-4485-A6B2-3190BCFB8B35, suggested name: "Synthesized Event 2026-11-14 at 01.08.45 AM"
+2026-11-14T01:32:16.2223970Z File: 65C76311-CEAD-4447-8344-E69425BD124A, suggested name: "UI Snapshot 2026-11-14 at 01.08.41 AM"
+2026-11-14T01:32:16.2328020Z File: FCA5C097-421D-4107-A95E-EECA06BBF014, suggested name: "Synthesized Event 2026-11-14 at 01.08.41 AM"
+2026-11-14T01:32:16.2432880Z File: A6E36A9A-1F56-4384-8384-34754B77A707, suggested name: "UI Snapshot 2026-11-14 at 01.08.37 AM"
+2026-11-14T01:32:16.2535520Z File: CBA44D17-3BF5-40A2-AFB1-6EFC7B984A7F, suggested name: "Synthesized Event 2026-11-14 at 01.08.38 AM"
+2026-11-14T01:32:16.2659880Z File: A0347541-3C98-476C-8546-563832EABAC6.png, suggested name: "Backup-replace-zh-Hans_0_5DF0130B-B3DB-4C87-8469-F85F85E02E29.png"
+2026-11-14T01:32:16.2912320Z File: 8A9445E5-0B8D-405D-9456-06B84C4EECBA, suggested name: "UI Snapshot 2026-11-14 at 01.08.31 AM"
+2026-11-14T01:32:16.3015400Z File: AAC8C1E2-AE43-422D-B01F-80650D00E758, suggested name: "Synthesized Event 2026-11-14 at 01.08.32 AM"
+2026-11-14T01:32:16.3016140Z File: DF3145B6-5896-432A-BF4B-247D7BE05316, suggested name: "UI Snapshot 2026-11-14 at 01.08.28 AM"
+2026-11-14T01:32:16.3118720Z File: 29D9B441-FE48-4E36-BFC1-19CE1A26F67C, suggested name: "Synthesized Event 2026-11-14 at 01.08.29 AM"
+2026-11-14T01:32:16.3218470Z File: C4F2D246-C961-40F7-8BD4-385C7D91F56F.png, suggested name: "Replace-review-zh-Hans_0_0F2D3D8A-69D6-4597-96B6-4B504C7677DB.png"
+2026-11-14T01:32:16.3321910Z File: 05032403-A5F1-4847-BC34-AFDE2B4A0025, suggested name: "UI Snapshot 2026-11-14 at 01.08.13 AM"
+2026-11-14T01:32:16.3422130Z File: 0CDCB658-F769-41FB-9B4D-5A44EC04D72D, suggested name: "Synthesized Event 2026-11-14 at 01.08.15 AM"
+2026-11-14T01:32:16.3525780Z File: 7AA9D251-569A-4ED4-94E2-6CBF58C278BE.txt, suggested name: "Debug description for `"File View" CollectionView`_0_D3953D8F-375B-4385-87CF-C1D1D647A921.txt"
+2026-11-14T01:32:16.3627540Z File: DD72F4D0-D452-47EB-91C7-D4787F509161, suggested name: "UI Snapshot 2026-11-14 at 01.08.03 AM"
+2026-11-14T01:32:16.3730040Z File: 8E7CCE4A-6C3D-41FE-AE21-5CB8D2CEA1A2, suggested name: "Synthesized Event 2026-11-14 at 01.08.03 AM"
+2026-11-14T01:32:16.3832410Z File: 755C19CE-CCA3-496C-BF70-62D301A01DDB, suggested name: "UI Snapshot 2026-11-14 at 01.07.58 AM"
+2026-11-14T01:32:16.3933070Z File: 0D043751-11A8-475A-B110-D397C91B3242, suggested name: "Synthesized Event 2026-11-14 at 01.07.59 AM"
+2026-11-14T01:32:16.4035800Z File: 5EAA2888-E99B-4E9D-B616-FC0054924473, suggested name: "UI Snapshot 2026-11-14 at 01.07.50 AM"
+2026-11-14T01:32:16.4131450Z File: 131944EA-F9F4-44C9-AF13-39198BB83E83, suggested name: "Synthesized Event 2026-11-14 at 01.07.51 AM"
+2026-11-14T01:32:16.4143400Z File: 7F20B152-3DF4-42F0-8083-B7959C294A26, suggested name: "UI Snapshot 2026-11-14 at 01.07.48 AM"
+2026-11-14T01:32:16.4245660Z File: 3BFC45C4-F252-47CE-9758-E3756907AB47, suggested name: "Synthesized Event 2026-11-14 at 01.07.48 AM"
+2026-11-14T01:32:16.4292270Z File: F5BE5E58-2F5F-4FB2-9446-0FC97EC150ED, suggested name: "UI Snapshot 2026-11-14 at 01.07.44 AM"
+2026-11-14T01:32:16.4422940Z File: 6DB43BD6-6720-49B8-81B6-36C32B18FF89, suggested name: "Synthesized Event 2026-11-14 at 01.07.45 AM"
+2026-11-14T01:32:16.4634630Z File: 28F94CD9-5346-43C4-AE3E-918358BA204C, suggested name: "UI Snapshot 2026-11-14 at 01.07.40 AM"
+2026-11-14T01:32:16.4664820Z File: 4F1311ED-9971-4E9A-BD34-CE259B75A7DC, suggested name: "Synthesized Event 2026-11-14 at 01.07.40 AM"
+2026-11-14T01:32:16.4685050Z File: 99235BDE-BE33-4213-A660-D09347C8B3FE, suggested name: "UI Snapshot 2026-11-14 at 01.07.34 AM"
+2026-11-14T01:32:16.4686230Z File: 9F9A0F36-D622-4D2B-A0F4-DB106901AEC4, suggested name: "Synthesized Event 2026-11-14 at 01.07.35 AM"
+2026-11-14T01:32:16.4689490Z File: 3467FB2F-5E46-4448-B669-20B9EE872AC5, suggested name: "UI Snapshot 2026-11-14 at 01.07.30 AM"
+2026-11-14T01:32:16.4692120Z File: 19DBF40E-B8EA-4B30-871E-F18A48665A2D, suggested name: "Synthesized Event 2026-11-14 at 01.07.31 AM"
+2026-11-14T01:32:16.4718590Z File: 486C53AB-5137-43CB-8F82-532ED7165B96, suggested name: "UI Snapshot 2026-11-14 at 01.07.28 AM"
+2026-11-14T01:32:16.4746340Z File: A0E127E5-09CC-4966-9762-E209FA82690A, suggested name: "Synthesized Event 2026-11-14 at 01.07.29 AM"
+2026-11-14T01:32:16.4757610Z File: 095CFB45-717A-40F3-BCA5-2A80FDF0D45A.txt, suggested name: "Debug description for `"backup.merge" Button`_0_C9E546C8-17B7-42DD-A0F7-EF2514E2E418.txt"
+2026-11-14T01:32:16.4759190Z File: D7ECDE1B-6928-44B1-88DC-2DFF923F3143, suggested name: "UI Snapshot 2026-11-14 at 01.07.21 AM"
+2026-11-14T01:32:16.4760060Z File: 0F88C000-C7E9-43EC-8DBD-4D1C90E047E3, suggested name: "Synthesized Event 2026-11-14 at 01.07.22 AM"
+2026-11-14T01:32:16.4760970Z File: 4462EB7C-8ACF-4631-B152-74722D272332.txt, suggested name: "Debug description for `"File View" CollectionView`_0_B9931516-79B2-47D0-B41C-864AFB8E5FB4.txt"
+2026-11-14T01:32:16.4762250Z File: E9394D0B-31E7-451B-B47A-18DCAD77B239, suggested name: "UI Snapshot 2026-11-14 at 01.07.10 AM"
+2026-11-14T01:32:16.4762980Z File: F7C4429D-6D10-4B49-A941-7212C80FCCCD, suggested name: "Synthesized Event 2026-11-14 at 01.07.11 AM"
+2026-11-14T01:32:16.4763670Z File: 759E30DD-6D33-4657-9332-B13278C8C2C5, suggested name: "UI Snapshot 2026-11-14 at 01.07.06 AM"
+2026-11-14T01:32:16.4764550Z File: 73A5DE6E-424C-43F7-BFF7-FA176EBC3FAA, suggested name: "Synthesized Event 2026-11-14 at 01.07.07 AM"
+2026-11-14T01:32:16.4765280Z File: FE1C69EE-40E3-4B5D-B1DB-EF469A759DA9, suggested name: "UI Snapshot 2026-11-14 at 01.07.00 AM"
+2026-11-14T01:32:16.4817450Z File: 79271954-D982-4C30-9792-90BE0B5E8782, suggested name: "Synthesized Event 2026-11-14 at 01.07.01 AM"
+2026-11-14T01:32:16.4820100Z File: B7A6CAFA-D15F-4359-BB6F-D5F61D38BA5A, suggested name: "UI Snapshot 2026-11-14 at 01.06.57 AM"
+2026-11-14T01:32:16.4826560Z File: 0AC4AD4A-8EAB-4531-8FD6-8C3AAC44616F, suggested name: "Synthesized Event 2026-11-14 at 01.06.57 AM"
+2026-11-14T01:32:16.4827410Z File: 4F4BC5A7-D248-46B1-BA57-B70943B7D033.png, suggested name: "Backup-review-controls-zh-Hans_0_A19A49EB-4B2C-456E-8A8C-7A2BDE207A85.png"
+2026-11-14T01:32:16.4849640Z File: 5F6D2E32-BEED-474A-9CD2-49C993341838, suggested name: "UI Snapshot 2026-11-14 at 01.06.41 AM"
+2026-11-14T01:32:16.4876490Z File: A25E265B-3579-4FEE-B389-F0525809B09F, suggested name: "Synthesized Event 2026-11-14 at 01.06.42 AM"
+2026-11-14T01:32:16.4885130Z File: AA628C6F-291D-46DF-BAC0-B7D6A467314E.png, suggested name: "Backup-review-zh-Hans_0_35D7C630-B9D5-4139-AE6B-3128015FD5F2.png"
+2026-11-14T01:32:16.4891650Z File: F926DF33-7DC5-46B8-BE5F-A69CD3BC4888, suggested name: "UI Snapshot 2026-11-14 at 01.06.28 AM"
+2026-11-14T01:32:16.4892900Z File: AAEE3038-98CD-45BD-AB9A-A8EDE6F47671, suggested name: "Synthesized Event 2026-11-14 at 01.06.28 AM"
+2026-11-14T01:32:16.4893920Z File: 1832FE94-D23D-4C8F-9D17-3EF6C81B39CE, suggested name: "UI Snapshot 2026-11-14 at 01.06.20 AM"
+2026-11-14T01:32:16.4910110Z File: 9D22A23C-AF89-4CDA-A47F-30E1438B51D9, suggested name: "Synthesized Event 2026-11-14 at 01.06.20 AM"
+2026-11-14T01:32:16.4916290Z File: 845C82AB-7C9B-4096-949E-E7C5273908A4, suggested name: "UI Snapshot 2026-11-14 at 01.06.16 AM"
+2026-11-14T01:32:16.4950380Z File: A940201B-F408-4F4F-98C2-5C8FBA6CBE9B, suggested name: "Synthesized Event 2026-11-14 at 01.06.17 AM"
+2026-11-14T01:32:16.4951140Z File: 5739F706-D53C-458A-8E47-E54414221FD4, suggested name: "UI Snapshot 2026-11-14 at 01.06.11 AM"
+2026-11-14T01:32:16.4951850Z File: 95211B77-5195-457D-9359-5CC6EBBD2E70, suggested name: "Synthesized Event 2026-11-14 at 01.06.12 AM"
+2026-11-14T01:32:16.4952560Z File: 936D0133-9EF6-42AB-A92A-FA4B022F1CDD, suggested name: "UI Snapshot 2026-11-14 at 01.06.06 AM"
+2026-11-14T01:32:16.4953270Z File: E26AE50D-8E28-4C96-ACF3-74ABC76A8BC1, suggested name: "Synthesized Event 2026-11-14 at 01.06.07 AM"
+2026-11-14T01:32:16.4954490Z File: 84DD55DB-C781-4391-A38E-021E4CD68293, suggested name: "UI Snapshot 2026-11-14 at 01.06.03 AM"
+2026-11-14T01:32:16.4958390Z File: AE8551B7-6266-43DD-A8D0-87394EB46AED, suggested name: "Synthesized Event 2026-11-14 at 01.06.03 AM"
+2026-11-14T01:32:16.4963600Z File: 06D7BB93-3BEB-47F9-B35D-2AF18BE0CAA6, suggested name: "UI Snapshot 2026-11-14 at 01.06.01 AM"
+2026-11-14T01:32:16.4967270Z File: 92D657CD-43AC-4149-BF39-F7D2D30B6F3B, suggested name: "Synthesized Event 2026-11-14 at 01.06.01 AM"
+2026-11-14T01:32:16.4969180Z File: 059FEEEB-C36F-4A0C-B489-BC250AE00857, suggested name: "UI Snapshot 2026-11-14 at 01.05.56 AM"
+2026-11-14T01:32:16.4970020Z File: 637FB0AB-0831-4587-A64B-74100FBBBF93, suggested name: "Synthesized Event 2026-11-14 at 01.05.57 AM"
+2026-11-14T01:32:16.4970740Z File: C54FFB1B-68FE-4583-A53C-01ED3FBC69C5.png, suggested name: "Import-cancelled-zh-Hans_0_FCB6C885-B3F6-4F77-890F-29749711CBE2.png"
+2026-11-14T01:32:16.4971450Z File: BCE97F7D-BBC1-44FE-9561-264E3E47EBFB, suggested name: "UI Snapshot 2026-11-14 at 01.05.48 AM"
+2026-11-14T01:32:16.4972030Z File: 7C0129E3-DB1B-46AC-9DEB-907B0A8BEE7C, suggested name: "Synthesized Event 2026-11-14 at 01.05.48 AM"
+2026-11-14T01:32:16.4972930Z File: 84D26134-88E0-40EC-8B10-C77D166B343D.txt, suggested name: "Import-files-zh-Hans-hierarchy_0_69DEAABC-D598-467C-90B6-5CA31598E599.txt"
+2026-11-14T01:32:16.4973730Z File: 34116A58-AF51-4E9D-9484-F6414344CCD9.png, suggested name: "Import-files-zh-Hans_0_A9E47379-63FF-44F3-928D-2CB6B06F714F.png"
+2026-11-14T01:32:16.4974350Z File: 6C502D53-FD9C-46E8-B36F-4BE769145A68, suggested name: "UI Snapshot 2026-11-14 at 01.05.38 AM"
+2026-11-14T01:32:16.4974950Z File: E4480B53-CB4E-4946-8B07-25F73A3E0140, suggested name: "Synthesized Event 2026-11-14 at 01.05.38 AM"
+2026-11-14T01:32:16.4975520Z File: BE466599-5DB0-4299-868E-D07DBFB8147C, suggested name: "UI Snapshot 2026-11-14 at 01.05.34 AM"
+2026-11-14T01:32:16.4976140Z File: 36C22391-ED6B-440B-8A40-0FB8F99A6F48, suggested name: "Synthesized Event 2026-11-14 at 01.05.35 AM"
+2026-11-14T01:32:16.4976760Z File: 8D6F95A6-CBBA-46EF-93C5-933487D83C65, suggested name: "UI Snapshot 2026-11-14 at 01.05.31 AM"
+2026-11-14T01:32:16.4977390Z File: 786DB445-E4C5-4614-8C3C-01A41A450069, suggested name: "Synthesized Event 2026-11-14 at 01.05.32 AM"
+2026-11-14T01:32:16.4978230Z File: 91F33606-0FF6-404A-9DBC-BF207F48FABE.png, suggested name: "Backup-exported-zh-Hans_0_208C5331-3F10-4593-825E-661CECA085AC.png"
+2026-11-14T01:32:16.5031110Z File: 7F37D092-5420-41E8-9F1F-2F7A935D0E36.txt, suggested name: "Debug description for `"备份已保存。" StaticText`_0_A71EC97E-663B-480F-849D-F6747CB1B3D9.txt"
+2026-11-14T01:32:16.5033980Z File: 325CD853-CD5A-4C53-B5B7-CF12936F26E0, suggested name: "UI Snapshot 2026-11-14 at 01.05.24 AM"
+2026-11-14T01:32:16.5034530Z File: 1BE04B5F-985B-41D7-BE12-E539329EC4F9, suggested name: "Synthesized Event 2026-11-14 at 01.05.24 AM"
+2026-11-14T01:32:16.5035270Z File: 2708046E-CC45-43D1-BCE2-A1E8238E44D7.txt, suggested name: "Export-files-zh-Hans-hierarchy_0_4F045C29-126E-4EEE-B132-877EB38F5997.txt"
+2026-11-14T01:32:16.5036190Z File: 8DED5E43-6C56-4E51-B7E5-5D3C660AFEFF.png, suggested name: "Export-files-zh-Hans_0_EB0D4AA8-E823-4911-9A36-BE097E5046E1.png"
+2026-11-14T01:32:16.5036930Z File: 04702BEC-E5C9-4F2A-9DEB-A2798E441F17, suggested name: "Synthesized Event 2026-11-14 at 01.04.57 AM"
+2026-11-14T01:32:16.5037530Z File: FEF343E4-E2B5-4D38-AAE2-396A37958A85, suggested name: "Synthesized Event 2026-11-14 at 01.04.52 AM"
+2026-11-14T01:32:16.5038170Z File: 6983C2B9-3979-458C-BD8E-E1DB92E5AB76, suggested name: "Synthesized Event 2026-11-14 at 01.04.46 AM"
+2026-11-14T01:32:16.5038810Z File: 97A2FDBE-39FB-424A-9C5A-A02510F8AF3C, suggested name: "Synthesized Event 2026-11-14 at 01.04.44 AM"
+2026-11-14T01:32:16.5039440Z File: 2CDB8E80-27F5-45E3-A95E-E5C98F9AC668, suggested name: "Synthesized Event 2026-11-14 at 01.04.40 AM"
+2026-11-14T01:32:16.5039980Z File: 5511CB47-77A6-43A4-B3BC-A38B6545DE6E, suggested name: "Synthesized Event 2026-11-14 at 01.04.37 AM"
+2026-11-14T01:32:16.5040550Z File: 1C1E6687-3BA2-4763-8258-376B432A6ECD, suggested name: "Synthesized Event 2026-11-14 at 01.04.35 AM"
+2026-11-14T01:32:16.5041160Z File: DD69C712-0DF7-4A9B-BEAC-2CB0354DB415, suggested name: "Synthesized Event 2026-11-14 at 01.04.32 AM"
+2026-11-14T01:32:16.5041740Z File: 2E8E54D7-5053-46E7-A820-1453A5AF5C39, suggested name: "Synthesized Event 2026-11-14 at 01.04.26 AM"
+2026-11-14T01:32:19.1680480Z File: D2F4BDB9-7551-4450-B2DC-C504F8E9E163, suggested name: "Synthesized Event 2026-11-14 at 01.04.21 AM"
+2026-11-14T01:32:19.1683740Z File: D6E839FC-18E9-4EDC-B5B8-3D6AE01F8036, suggested name: "Synthesized Event 2026-11-14 at 01.04.18 AM"
+2026-11-14T01:32:19.1685730Z File: E992107E-0FAE-40CE-8815-245386DEA7A5, suggested name: "Synthesized Event 2026-11-14 at 01.04.17 AM"
+2026-11-14T01:32:19.1687340Z File: 3D41B531-AE9E-48D2-8DD1-FD4AE73E01B1, suggested name: "Synthesized Event 2026-11-14 at 01.04.13 AM"
+2026-11-14T01:32:19.1690010Z File: CB618D5A-BA30-4B99-B2E8-76B2951065A0, suggested name: "Synthesized Event 2026-11-14 at 01.04.09 AM"
+2026-11-14T01:32:19.1696090Z File: C9F295AD-D75D-4A4D-B63B-8FB10BD743A6, suggested name: "Synthesized Event 2026-11-14 at 01.04.06 AM"
+2026-11-14T01:32:19.1698630Z File: 8B16414A-2836-4995-97F7-7A82C8C49562, suggested name: "Synthesized Event 2026-11-14 at 01.04.03 AM"
+2026-11-14T01:32:19.1700320Z File: 723F24A2-AFD7-4715-AF94-98306B591B8A.mp4, suggested name: "Screen Recording 2026-11-14 at 01.03.56 AM.mp4"
+2026-11-14T01:32:19.1701830Z 
+2026-11-14T01:32:19.1702510Z Skipped export for PrivateMomentsUITests/testEditingFilteringDeletionAndRelaunch(): no matching attachments
+2026-11-14T01:32:19.1703080Z 
+2026-11-14T01:32:19.1703400Z Exported 3 attachments for: PrivateMomentsUITests/testManualEntryTimingDateFilterAndPersistence():
+2026-11-14T01:32:19.1704390Z File: E24DEDFD-CDF2-46B6-907D-DF6D5A778354.png, suggested name: "Long-detail-top-en_0_33FBFD40-E873-4E9B-A928-B6E12DD2EB76.png"
+2026-11-14T01:32:19.1705500Z File: 07F04DD4-254E-42FC-A1CB-652CB44362E3.png, suggested name: "Today-filter-empty-en_0_A12479A1-F893-43B0-BFD4-FE3BEA9CD0FA.png"
+2026-11-14T01:32:19.1706330Z File: 08A622F1-A7EE-497B-8149-3F54C4650106.png, suggested name: "Manual-entered-en_0_3729E68A-4446-410C-86E2-E494E6BD61AA.png"
+2026-11-14T01:32:19.1706790Z 
+2026-11-14T01:32:19.1706990Z Exported 64 attachments for: PrivateMomentsUITests/testScreenGallery():
+2026-11-14T01:32:19.1707680Z File: 2C756C0B-4560-4E74-BD3B-4AA5B55FADD7.txt, suggested name: "Lock-recovery-zh-Hans-hierarchy_0_121CFD75-54CC-4279-B733-2F5E01D209A4.txt"
+2026-11-14T01:32:19.1709020Z File: 900A77D0-CB2B-4143-95F0-06568714C6CB.png, suggested name: "Lock-recovery-zh-Hans_0_F44F0E62-30E1-47DD-AF2C-058AA592C793.png"
+2026-11-14T01:32:19.1709850Z File: 13A08955-4ED5-4389-AA62-505496F9225E.png, suggested name: "Backup-warning-zh-Hans_0_6B10081B-7A53-4171-9BAC-F6A2B70FB698.png"
+2026-11-14T01:32:19.1710690Z File: 5B46232B-3246-4979-8A17-91EC8321EBC0.png, suggested name: "Settings-bottom-zh-Hans_0_DD3D4903-544D-4904-9EEC-4765F0DB845B.png"
+2026-11-14T01:32:19.1711490Z File: 8E6BE550-64D5-45F3-85DE-93190ED0CBD6.png, suggested name: "Settings-values-zh-Hans_0_8494903E-0DE8-4B25-83BF-47D17A0CBDDB.png"
+2026-11-14T01:32:19.1712850Z File: 619E9D39-B6CD-484E-AD08-CB1F833C9ABF.png, suggested name: "Settings-top-zh-Hans_0_11165BDD-6329-4E63-8087-A062503587A8.png"
+2026-11-14T01:32:19.1714320Z File: 2F46A1EA-AEE8-4423-96C9-1909C6DDBE1B.png, suggested name: "Detail-controls-zh-Hans_0_537CC019-B683-4E39-AC40-A760BD8BC07B.png"
+2026-11-14T01:32:19.1715140Z File: 3A9F9F0B-9DDE-4BEB-AB65-A148D870295E.png, suggested name: "Detail-top-zh-Hans_0_48F5693D-32BA-4E66-BC5F-44736306F7BA.png"
+2026-11-14T01:32:19.1716170Z File: 7E5A1399-EC4A-4DD6-AF09-C1579E46D3B8.png, suggested name: "Timeline-filter-empty-zh-Hans_0_D9CC3824-156E-495C-BF67-EA185E0D6532.png"
+2026-11-14T01:32:19.1717550Z File: CA13669D-AF0F-4129-8842-B3A486D96F21.png, suggested name: "Timeline-zh-Hans_0_655FF023-87A9-48FA-8A0D-9219204593BE.png"
+2026-11-14T01:32:19.1718480Z File: 9E58CB1E-D0DD-4690-87B5-FE81C7277914.png, suggested name: "Today-summary-zh-Hans_0_610C186C-43A5-4704-87C2-06A619768152.png"
+2026-11-14T01:32:19.1720320Z File: 0565EC2F-E7CE-49E1-BCAD-F7E2A2844AEA.png, suggested name: "Today-filtered-zh-Hans_0_21FEE993-A2E1-4F2C-B44A-4153DED4B74F.png"
+2026-11-14T01:32:19.1721210Z File: 125E61DB-CE95-4D54-9F92-6895D7DF27AB.png, suggested name: "Calendar-zh-Hans_0_CCADE98C-486F-4C60-B6E1-BA41E62F03C6.png"
+2026-11-14T01:32:19.1721980Z File: A150C2FF-C3D9-4FD1-9B2C-3E00ED1CA1D2.png, suggested name: "Today-saved-zh-Hans_0_422FEE49-8DED-4FF9-A7FA-BED6BA6C2F34.png"
+2026-11-14T01:32:19.1723160Z File: CB4B8749-86D4-4E89-B2B8-23CB9B0DC5DC.png, suggested name: "Save-recovery-zh-Hans_0_C59020CC-DF07-49C4-89FF-CE240C71DDD1.png"
+2026-11-14T01:32:19.1723980Z File: EFB10E85-17E8-46FB-A45B-68F169EE8345.png, suggested name: "Save-error-zh-Hans_0_34909868-EE30-426E-978D-EEA66A230DB8.png"
+2026-11-14T01:32:19.1724810Z File: 07094212-5941-4619-9275-5BA7E11968EA.png, suggested name: "Recap-controls-zh-Hans_0_8CDFAA54-32A5-4AA4-90C3-89B3C2B2D853.png"
+2026-11-14T01:32:19.1725720Z File: 134089D0-B15E-4B8E-9425-CCDD014291A9.png, suggested name: "Recap-rating-zh-Hans_0_72102E74-5066-4F0A-B7CD-239D3BFA09D0.png"
+2026-11-14T01:32:19.1733380Z File: 5D98FBA3-32FD-4285-A96C-CC61D48F5B4E.png, suggested name: "Recap-kind-zh-Hans_0_BC77CFD2-3A53-4B4E-A389-89DA20B56127.png"
+2026-11-14T01:32:19.1735730Z File: AB24EA58-B356-407D-A37C-B61E5E91111A.png, suggested name: "Recap-top-zh-Hans_0_AD415941-9F18-4095-9448-8E7D05A9FD60.png"
+2026-11-14T01:32:19.1738340Z File: 379B6EFE-FE02-4BA0-8166-51E8361DAA68.txt, suggested name: "Session-discard-confirm-zh-Hans-hierarchy_0_2B8EE490-2CDE-4930-8DCB-97C028722F81.txt"
+2026-11-14T01:32:19.1740870Z File: 563ED06A-8FF8-40FC-AF98-DBAD3BB69A7F.png, suggested name: "Session-discard-confirm-zh-Hans_0_2AB7A015-A93F-4FC6-AB83-0BC134686C56.png"
+2026-11-14T01:32:19.1743770Z File: B5FAB77E-C07F-4B0F-B008-0B44DBD3644D.png, suggested name: "Session-controls-zh-Hans_0_0059F54C-FD15-4D81-8C7F-D8524431A4F6.png"
+2026-11-14T01:32:19.1745870Z File: 189044C4-007B-40E4-9EB1-04F13F26DCA3.png, suggested name: "Session-zh-Hans_0_B54893B7-1B60-4960-AFDE-333D9E7EF3E6.png"
+2026-11-14T01:32:19.1748030Z File: BA2A9966-0913-4010-A921-1C7706BFE236.png, suggested name: "Manual-note-retained-zh-Hans_0_02E81669-8874-4748-9EC7-33B860AD2993.png"
+2026-11-14T01:32:19.1749660Z File: 2D3F5CA7-ECCB-41C3-A3C9-F4C2EB562F4D.txt, suggested name: "Manual-note-confirm-zh-Hans-hierarchy_0_5A763A51-272B-43D1-AECB-D0ED4F80C6CB.txt"
+2026-11-14T01:32:19.1752930Z File: 43757DD5-C43E-436A-A171-63593351C8B6.png, suggested name: "Manual-note-confirm-zh-Hans_0_133BCD73-7D0D-41D1-8197-15462000879A.png"
+2026-11-14T01:32:19.1753970Z File: 55B95492-FB59-40C8-BEA2-D95C2EB2C636.txt, suggested name: "Manual-note-keyboard-zh-Hans-hierarchy_0_F121B06A-65B2-4365-B709-1400A37E7D9A.txt"
+2026-11-14T01:32:19.1755360Z File: AB1F0A99-B4D4-4F86-8431-27EA53E09089.png, suggested name: "Manual-note-keyboard-zh-Hans_0_866956DC-6E04-43E4-A205-271CBBF2E74C.png"
+2026-11-14T01:32:19.1756200Z File: 95771C28-DC1E-4E58-9BF5-0E7D1B814242.png, suggested name: "Manual-duration-zh-Hans_0_30D39461-04D5-4685-B794-06DE1E5A12FA.png"
+2026-11-14T01:32:19.1757100Z File: D3901C6A-05CC-46C2-8A78-A5B438DFEADB.png, suggested name: "Manual-top-zh-Hans_0_260A8FE8-650E-4441-9A3D-3AADA01A70A9.png"
+2026-11-14T01:32:19.1759640Z File: BF46C2C7-2A7D-4B54-A160-35104D6F4AAD.png, suggested name: "Today-zh-Hans_0_F559AFC0-9CFF-4F47-871F-B1C2E92FF1AB.png"
+2026-11-14T01:32:19.1764170Z File: CD251604-3F16-4E6E-8877-A8D90E57EA6C.txt, suggested name: "Lock-recovery-en-hierarchy_0_214BD3A3-F88A-4A6E-954B-B0133B803102.txt"
+2026-11-14T01:32:19.1766720Z File: 4E3894CF-5AA1-4739-AFEC-E7D97A125B2C.png, suggested name: "Lock-recovery-en_0_7512FAA1-5B24-481A-9784-9898F7A85307.png"
+2026-11-14T01:32:19.1768850Z File: 0193E881-5BBD-4DC4-A580-BC67BA59B0AC.png, suggested name: "Backup-warning-en_0_E370B77D-7516-402F-98A4-F7EA71D46AC6.png"
+2026-11-14T01:32:19.1771700Z File: 0855A229-7CFF-443E-9107-DB2614E7DB06.png, suggested name: "Settings-bottom-en_0_A0C8EA4C-8942-4C23-B058-C50E2E3AFACF.png"
+2026-11-14T01:32:19.1773100Z File: A64E8DDE-A0CE-43CB-884F-07102E650A17.png, suggested name: "Settings-values-en_0_5280000E-E1EC-413E-9D41-1F01CD32DB26.png"
+2026-11-14T01:32:19.1774620Z File: D1C883D4-AEB2-4F66-B1AD-4293B5857FB6.png, suggested name: "Settings-top-en_0_3300DCCC-605F-4835-BA5D-D5C56EFE7310.png"
+2026-11-14T01:32:19.1776160Z File: 561D3B06-E827-4E5F-B8C9-BFF0F348D506.png, suggested name: "Detail-controls-en_0_424F7458-EBCD-4832-BA31-49275863E8AD.png"
+2026-11-14T01:32:19.1777600Z File: B7EC4D36-2EE6-4980-B146-D02486813E1C.png, suggested name: "Detail-top-en_0_5047374C-4751-4844-AD88-DF6E4A79AC6F.png"
+2026-11-14T01:32:19.1778320Z File: 368AF42C-E043-4C77-8463-F6F218EBD2F1.png, suggested name: "Timeline-filter-empty-en_0_37C5F004-3BE2-4BE2-B280-028000FB9ABB.png"
+2026-11-14T01:32:19.1779060Z File: ECC85A37-F5A0-41CD-B8EB-2773D23C1795.png, suggested name: "Timeline-en_0_9D8BF1BA-4662-4EDC-ACA9-0BDF6908782B.png"
+2026-11-14T01:32:19.1781090Z File: 4FD32886-4FD2-466C-9F7B-B63F9A2E6B3F.png, suggested name: "Today-summary-en_0_3530034C-E8B4-44EA-BAEB-77BEA9CE4FA3.png"
+2026-11-14T01:32:19.1783760Z File: B22AFF2E-138E-4EB7-BC34-83B4B0F4C1D2.png, suggested name: "Today-filtered-en_0_B3427ED5-7ACC-4250-AED1-DDBCFCBBB41F.png"
+2026-11-14T01:32:19.1785730Z File: E8C423EF-EB26-4A28-82C0-9526D9E48956.png, suggested name: "Calendar-en_0_D7B94B82-E387-4B29-A73B-3E205753AC20.png"
+2026-11-14T01:32:19.1787610Z File: 0A305E18-83D8-4659-AA95-D2D6B41960D6.png, suggested name: "Today-saved-en_0_6E078EBD-CF9E-4DDA-B4FA-71BFDB060BFC.png"
+2026-11-14T01:32:19.1789690Z File: F1508AFD-7FD0-4518-904E-C6B322884862.png, suggested name: "Save-recovery-en_0_7BAABC93-B5B3-4642-B135-6C68FCF7F187.png"
+2026-11-14T01:32:19.1791690Z File: EA9638D6-B10A-4978-AACA-445FEC4DDB02.png, suggested name: "Save-error-en_0_19C022A9-3D63-4B6C-8106-6CD1E8889644.png"
+2026-11-14T01:32:19.1797230Z File: D86578D0-765B-48CB-96D2-B309CBF37E3B.png, suggested name: "Recap-controls-en_0_EC46CDFF-CD59-44B9-8E5C-17A13225FB0E.png"
+2026-11-14T01:32:19.1799850Z File: 8CAE840A-27C6-46B6-8116-15EC0B363036.png, suggested name: "Recap-rating-en_0_F266F002-D095-4163-B07A-B92D2B83DB9F.png"
+2026-11-14T01:32:19.1801730Z File: 2BFC85F4-7285-400A-930C-8C2664885B4A.png, suggested name: "Recap-kind-en_0_8E3693A6-64F3-41F0-9402-909EB8587983.png"
+2026-11-14T01:32:19.1803490Z File: F4C2B4C6-1926-43DA-B6E1-7D530D330762.png, suggested name: "Recap-top-en_0_181AB08C-1F6E-4897-9421-072DA47336F0.png"
+2026-11-14T01:32:19.1806530Z File: 2458F376-7492-4391-9CCA-BFABEFA472E1.txt, suggested name: "Session-discard-confirm-en-hierarchy_0_F1D9EB30-E147-4BB8-B60C-479C053B1891.txt"
+2026-11-14T01:32:19.1808760Z File: F2D505CB-D725-4FF2-9A32-04B63FFCFC60.png, suggested name: "Session-discard-confirm-en_0_B2A8C31E-73F6-44DA-AD39-9C7FC886B2D4.png"
+2026-11-14T01:32:19.1810890Z File: 4C963F27-114B-4CB0-9980-3EB2C348ED02.png, suggested name: "Session-controls-en_0_AD047DEF-F932-45DD-B4F4-62EDB956DCA0.png"
+2026-11-14T01:32:19.1812970Z File: A6953C5B-A81A-4D40-B878-80CAF4AAA5E4.png, suggested name: "Session-en_0_B2B8F4A7-D545-454C-83DF-A3B9F9A72521.png"
+2026-11-14T01:32:19.1814890Z File: 868AEE15-25DE-497A-83F3-BAC608D74C9C.png, suggested name: "Manual-note-retained-en_0_30F44C4A-7B4D-45D2-A0B9-2120E93F1D46.png"
+2026-11-14T01:32:19.1816950Z File: 6C918701-8980-487A-A9C8-ED5E49D945C5.txt, suggested name: "Manual-note-confirm-en-hierarchy_0_A1F503F3-69C1-443A-8AC9-87655E107720.txt"
+2026-11-14T01:32:19.1819060Z File: 12CBCED7-49DD-40DC-B25B-CCEEC6521CAE.png, suggested name: "Manual-note-confirm-en_0_00388EE0-3804-4B06-9654-B03414DAB5B0.png"
+2026-11-14T01:32:19.1821200Z File: 53FE971B-6054-4A74-8DA3-74E16D039918.txt, suggested name: "Manual-note-keyboard-en-hierarchy_0_AA43CE5A-7EDF-49F2-8419-9FFCBBEF65BD.txt"
+2026-11-14T01:32:19.1823340Z File: CF84DFDF-43ED-4CB9-A381-75D6345DECE5.png, suggested name: "Manual-note-keyboard-en_0_5CF67BFD-5C56-4A80-B579-BB787D9141ED.png"
+2026-11-14T01:32:19.1825380Z File: 790A8CC4-878E-4FC5-8A71-FA9391009CA8.png, suggested name: "Manual-duration-en_0_5E0C7677-70EA-41F8-92C7-6D3514437833.png"
+2026-11-14T01:32:19.1827260Z File: 5ADE9AD9-0F69-4F91-8E1A-6864EC3CA9C3.png, suggested name: "Manual-top-en_0_A1561E0F-25F9-492D-B8C0-5247F24EC44B.png"
+2026-11-14T01:32:19.1829010Z File: 81E6B4F1-366D-4767-80F3-F796BF90CE14.png, suggested name: "Today-en_0_D9D37892-F386-49FD-B3C3-983DB4EC9A38.png"
+2026-11-14T01:32:19.1830000Z 
+2026-11-14T01:32:19.1830820Z Skipped export for PrivateMomentsUITests/testSessionAndRecapDiscardConfirmations(): no matching attachments
+2026-11-14T01:32:19.1832480Z 
+2026-11-14T01:32:19.1833270Z Generated manifest file with attachment details: /Users/runner/work/_temp/PrivateMomentsUIScreenshots/manifest.json
+2026-11-14T01:32:19.2177780Z Exported 78 PNG attachment(s).

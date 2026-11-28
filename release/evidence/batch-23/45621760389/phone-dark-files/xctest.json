@@ -1,0 +1,72 @@
+{
+  "run": 45621760389,
+  "job": 139231708845,
+  "profile": "phone-dark-files",
+  "source": "a171c7e1bdb307cc2c7433cce8b48374f2fb0a78",
+  "testSucceeded": true,
+  "buildSuccesses": 0,
+  "ios17Runtime": false,
+  "releaseTestHooksExcluded": false,
+  "cases": [
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testEmptyPreviewKeepsReplacementScopeExplicit",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderPreservesTheFullValidatedRecord",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderRejectsAnOversizedSparseFile",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testFileReaderRejectsMalformedAndMissingFiles",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testImportedCopyNeverDeletesAPrefixSibling",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testImportedCopyNeverRecursivelyDeletesADirectory",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testInvalidPickerSnapshotCleansStagingWithoutHidingValidationError",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testPickerSnapshotsReadFreshContentFromRepeatedTemporaryNames",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsTests",
+      "suite": "BackupUXTests",
+      "name": "testPreviewCountsActualIDOverlapAndNotes",
+      "result": "passed"
+    },
+    {
+      "target": "PrivateMomentsUITests",
+      "suite": "PrivateMomentsUITests",
+      "name": "testBackupFileRoundTrip",
+      "result": "passed"
+    }
+  ]
+}

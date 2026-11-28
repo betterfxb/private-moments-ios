@@ -1,0 +1,30 @@
+﻿2026-11-14T08:12:11.3828680Z ##[group]Run actions/upload-artifact@v7
+2026-11-14T08:12:11.3828960Z with:
+2026-11-14T08:12:11.3829330Z   name: private-moments-ui-screenshots-ipad-dark-accessibility
+2026-11-14T08:12:11.3829750Z   path: /Users/runner/work/_temp/PrivateMomentsUIScreenshots
+2026-11-14T08:12:11.3830140Z   if-no-files-found: ignore
+2026-11-14T08:12:11.3830360Z   retention-days: 7
+2026-11-14T08:12:11.3830680Z   compression-level: 6
+2026-11-14T08:12:11.3830890Z   overwrite: false
+2026-11-14T08:12:11.3831210Z   include-hidden-files: false
+2026-11-14T08:12:11.3831520Z   archive: true
+2026-11-14T08:12:11.3831700Z env:
+2026-11-14T08:12:11.3832010Z   DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+2026-11-14T08:12:11.3832480Z   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,id=73C19119-B10E-4309-872E-C53EF3F0EF27
+2026-11-14T08:12:11.3832930Z ##[endgroup]
+2026-11-14T08:12:12.5919110Z With the provided path, there will be 17 files uploaded
+2026-11-14T08:12:12.5923540Z Artifact name is valid!
+2026-11-14T08:12:12.5925080Z Root directory input is valid!
+2026-11-14T08:12:12.9326590Z Uploading artifact: private-moments-ui-screenshots-ipad-dark-accessibility.zip
+2026-11-14T08:12:12.9362800Z Beginning upload of artifact content to blob storage
+2026-11-14T08:12:13.8387560Z Uploaded bytes 8388608
+2026-11-14T08:12:14.5028120Z Uploaded bytes 16777216
+2026-11-14T08:12:14.9110900Z Uploaded bytes 25165824
+2026-11-14T08:12:15.6423730Z Uploaded bytes 33554432
+2026-11-14T08:12:15.7084500Z Uploaded bytes 34722320
+2026-11-14T08:12:15.7228410Z Finished uploading artifact content to blob storage!
+2026-11-14T08:12:15.7244860Z SHA256 digest of uploaded artifact is d13f547e42f4e0b42cfca237baab6e5b254357eade5fff87c52b77ecad8e5da8
+2026-11-14T08:12:15.7245870Z Finalizing artifact upload
+2026-11-14T08:12:16.0854340Z Artifact private-moments-ui-screenshots-ipad-dark-accessibility successfully finalized. Artifact ID 14105328174
+2026-11-14T08:12:16.0874240Z Artifact private-moments-ui-screenshots-ipad-dark-accessibility has been successfully uploaded! Final size is 34722320 bytes. Artifact ID is 14105328174
+2026-11-14T08:12:16.0925540Z Artifact download URL: https://github.com/betterfxb/private-moments-ios/actions/runs/43573470233/artifacts/14105328174

@@ -6,17 +6,18 @@ import OSLog
 @MainActor
 struct PrivateMomentsApp: App {
     private static let logger = Logger(subsystem: "com.example.PrivateMoments", category: "startup")
-    @State private var modelContainer: ModelContainer?
+    @State private var journal: (container: ModelContainer, drafts: RecapDraftStore)?
     @State private var startupMessage: String?
     @State private var isRetryingStorage = false
-    @State private var privacyLock = AppLockController()
+    @State private var privacyLock: AppLockController
 
     init() {
+        _privacyLock = State(initialValue: AppLockController(defaults: PrivateStoreFactory.makePreferences()))
         do {
-            _modelContainer = State(initialValue: try PrivateStoreFactory.makeContainer())
+            _journal = State(initialValue: try PrivateStoreFactory.makeJournal())
             _startupMessage = State(initialValue: nil)
         } catch {
-            _modelContainer = State(initialValue: nil)
+            _journal = State(initialValue: nil)
             Self.logger.error("Could not create the local SwiftData container: \(String(describing: error), privacy: .private)")
             _startupMessage = State(initialValue: Self.startupFailureMessage)
         }
@@ -24,9 +25,10 @@ struct PrivateMomentsApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if let modelContainer {
-                RootView(modelContext: modelContainer.mainContext)
-                    .modelContainer(modelContainer)
+            if let journal {
+                RootView(modelContext: journal.container.mainContext)
+                    .modelContainer(journal.container)
+                    .environment(journal.drafts)
                     .environment(privacyLock)
             } else {
                 StorageUnavailableView(
@@ -45,7 +47,7 @@ struct PrivateMomentsApp: App {
             await Task.yield()
             defer { isRetryingStorage = false }
             do {
-                modelContainer = try PrivateStoreFactory.makeContainer()
+                journal = try PrivateStoreFactory.makeJournal()
                 startupMessage = nil
             } catch {
                 Self.logger.error("Could not open the local SwiftData container on retry: \(String(describing: error), privacy: .private)")
@@ -86,6 +88,6 @@ private struct StorageUnavailableView: View {
             .buttonStyle(.borderedProminent)
             .disabled(isRetrying)
         }
-        .tint(AppColors.terracotta)
+        .tint(AppColors.accent)
     }
 }

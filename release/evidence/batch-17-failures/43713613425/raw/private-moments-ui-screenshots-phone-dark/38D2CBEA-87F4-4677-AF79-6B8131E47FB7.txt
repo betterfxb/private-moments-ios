@@ -1,0 +1,169 @@
+Attributes: Application, 0x11a03ea80, pid: 48834, label: '私密时刻'
+Element subtree:
+ →Application, 0x11a03ea80, pid: 48834, label: '私密时刻'
+    Window (Main), 0x11a0417c0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x11a052ef0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11a054850, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x11a052ad0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x11a040130, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x11a054970, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x11a054a90, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x11a054bb0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x11a054cd0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x11a054df0, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x11a054f10, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x11a055030, {{0.0, 0.0}, {402.0, 874.0}}
+                            NavigationBar, 0x11a055150, {{0.0, 62.0}, {402.0, 54.0}}, identifier: '补记'
+                              Other, 0x11a055270, {{20.0, 66.0}, {58.0, 36.0}}, identifier: 'recap.cancel', label: '取消'
+                                Other, 0x11a055390, {{20.0, 66.0}, {58.0, 36.0}}
+                                  Button, 0x11a0554b0, {{20.0, 66.0}, {58.0, 36.0}}, identifier: 'recap.cancel', label: '取消'
+                              StaticText, 0x11a0555d0, {{184.0, 73.7}, {34.0, 20.7}}, label: '补记'
+                              Other, 0x11a0556f0, {{338.0, 62.0}, {44.0, 44.0}}, identifier: 'recap.saveToolbar', label: '私密保存'
+                                Other, 0x11a055810, {{338.0, 62.0}, {44.0, 44.0}}
+                                  Button, 0x11a055930, {{338.0, 62.0}, {44.0, 44.0}}, identifier: 'recap.saveToolbar', label: '私密保存', Selected
+                            Other, 0x11a055a50, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x11a055b70, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x11a055c90, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x11a055db0, {{0.0, 0.0}, {402.0, 874.0}}
+                                    ScrollView, 0x11a055ed0, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x11a055ff0, {{0.0, -466.3}, {402.0, 1306.3}}
+                                        StaticText, 0x11a056110, {{20.0, -448.3}, {105.0, 26.3}}, label: '记下这一刻'
+                                        StaticText, 0x11a056230, {{20.0, -416.0}, {215.0, 18.0}}, label: '2026年11月15日 12:44 · 1 分钟'
+                                        StaticText, 0x11a056350, {{36.0, -358.0}, {84.3, 20.3}}, label: '日期与时长'
+                                        StaticText, 0x11a056470, {{36.0, -318.7}, {67.7, 20.3}}, label: '发生日期'
+                                        DatePicker, 0x11a056590, {{212.3, -325.7}, {153.7, 34.3}}, identifier: 'recap.date'
+                                          Button, 0x11a0566b0, {{212.3, -325.7}, {153.7, 34.3}}, label: '日期选择器', value: 2026年11月15日
+                                        StaticText, 0x11a0567d0, {{36.0, -271.3}, {67.7, 20.3}}, label: '开始时间'
+                                        DatePicker, 0x11a0568f0, {{296.0, -279.3}, {70.0, 36.3}}, identifier: 'recap.time'
+                                          Button, 0x11a056a10, {{296.0, -279.3}, {70.0, 36.3}}, label: '时间选择器', value: 12:44
+                                        Button, 0x11a056b30, {{36.0, -231.0}, {58.0, 34.3}}, identifier: 'recap.yesterday', label: '昨天'
+                                        StaticText, 0x11a056c50, {{36.0, -184.7}, {34.0, 20.3}}, label: '分钟'
+                                        StaticText, 0x11a056d70, {{207.0, -184.7}, {17.0, 20.3}}, label: '秒'
+                                        TextField, 0x11a056e90, {{48.0, -147.3}, {135.0, 22.0}}, identifier: 'recap.minutes', placeholderValue: '分钟', value: 1
+                                        TextField, 0x11a056fb0, {{219.0, -147.3}, {135.0, 22.0}}, identifier: 'recap.seconds', placeholderValue: '秒', value: 0
+                                        StaticText, 0x11a0570d0, {{36.0, -58.3}, {110.0, 20.3}}, label: '此刻感觉如何？'
+                                        Other, 0x11a0571f0, {{36.0, -26.0}, {330.0, 174.0}}
+                                          Button, 0x11a057310, {{36.0, -26.0}, {161.0, 52.0}}, identifier: 'recap.mood.Calm', label: '平静', Selected
+                                            Image, 0x11a057430, {{91.7, -6.3}, {13.0, 13.0}}, identifier: 'checkmark', label: '已选择', Selected
+                                            StaticText, 0x11a057550, {{113.5, -9.0}, {30.0, 18.0}}, label: '平静'
+                                          Button, 0x11a057670, {{205.0, -26.0}, {161.0, 52.0}}, identifier: 'recap.mood.Connected', label: '亲密相连'
+                                            Image, 0x11a057790, {{244.7, -7.0}, {15.0, 14.0}}, identifier: 'heart', label: '喜欢'
+                                            StaticText, 0x11a0578b0, {{268.7, -9.0}, {59.7, 18.0}}, label: '亲密相连'
+                                          Button, 0x11a0579d0, {{36.0, 35.0}, {161.0, 52.0}}, identifier: 'recap.mood.Joyful', label: '喜悦'
+                                            Image, 0x11a057af0, {{91.0, 52.3}, {14.0, 17.0}}, identifier: 'sparkles', label: '闪光'
+                                            StaticText, 0x11a057c10, {{113.3, 52.0}, {30.0, 18.0}}, label: '喜悦'
+                                          Button, 0x11a057d30, {{205.0, 35.0}, {161.0, 52.0}}, identifier: 'recap.mood.Relaxed', label: '放松'
+                                            Image, 0x11a057e50, {{259.7, 53.3}, {15.0, 15.3}}, identifier: 'moon', label: '勿扰模式'
+                                            StaticText, 0x11a057f70, {{282.7, 52.0}, {30.0, 18.0}}, label: '放松'
+                                          Button, 0x11a058090, {{36.0, 96.0}, {161.0, 52.0}}, identifier: 'recap.mood.Happy', label: '愉悦'
+                                            Image, 0x11a0581b0, {{90.3, 114.3}, {15.3, 15.3}}, identifier: 'face.smiling', label: 'face.smiling'
+                                            StaticText, 0x11a0582d0, {{114.0, 113.0}, {30.0, 18.0}}, label: '愉悦'
+                                        StaticText, 0x11a0583f0, {{36.0, 188.3}, {160.3, 20.3}}, identifier: 'recap.kind.title', label: '这是一段怎样的时刻？'
+                                        Button, 0x11a058510, {{36.0, 218.7}, {160.7, 52.0}}, identifier: 'recap.kind.Together', label: '共同', Selected
+                                          Image, 0x11a058630, {{91.3, 238.3}, {13.0, 13.0}}, identifier: 'checkmark', label: '已选择', Selected
+                                          StaticText, 0x11a058750, {{113.2, 235.7}, {30.0, 18.0}}, label: '共同'
+                                        Button, 0x11a058870, {{205.7, 218.7}, {160.3, 52.0}}, identifier: 'recap.kind.Solo', label: '独自'
+                                          Image, 0x11a058990, {{260.7, 237.7}, {13.0, 14.0}}, identifier: 'person', label: 'person'
+                                          StaticText, 0x11a058ab0, {{282.8, 235.7}, {30.0, 18.0}}, label: '独自'
+                                        StaticText, 0x11a058bd0, {{36.0, 311.0}, {101.3, 20.3}}, identifier: 'recap.rating.title', label: '记录你的感受'
+                                        Other, 0x11a058cf0, {{53.7, 351.0}, {294.7, 23.0}}
+                                          Button, 0x11a058e10, {{53.7, 351.0}, {24.3, 23.0}}, identifier: 'recap.rating.1', label: '评分 1 / 5 星'
+                                          Button, 0x11a058f30, {{121.3, 351.0}, {24.3, 23.0}}, identifier: 'recap.rating.2', label: '评分 2 / 5 星'
+                                          Button, 0x11a059050, {{189.0, 351.0}, {24.3, 23.0}}, identifier: 'recap.rating.3', label: '评分 3 / 5 星'
+                                          Button, 0x11a059170, {{256.3, 351.0}, {24.3, 23.0}}, identifier: 'recap.rating.4', label: '评分 4 / 5 星', Selected
+                                          Button, 0x11a059290, {{324.0, 351.0}, {24.3, 23.0}}, identifier: 'recap.rating.5', label: '评分 5 / 5 星'
+                                        StaticText, 0x11a0593b0, {{36.0, 440.3}, {101.3, 20.3}}, label: '添加几个标签'
+                                        Button, 0x11a0594d0, {{35.5, 470.2}, {49.0, 45.0}}, identifier: 'recap.tag.Relaxed', label: '放松'
+                                        Button, 0x11a0595f0, {{91.5, 470.2}, {73.0, 45.0}}, identifier: 'recap.tag.Connected', label: '亲密相连', Selected
+                                        Button, 0x11a059710, {{171.5, 470.2}, {73.0, 45.0}}, identifier: 'recap.tag.Better sleep', label: '睡得更好'
+                                        StaticText, 0x11a059830, {{36.0, 555.0}, {67.7, 20.3}}, label: '私密备注'
+                                        StaticText, 0x11a059950, {{282.3, 558.0}, {83.7, 14.3}}, label: '备份包含此内容'
+                                        TextView, 0x11a059a70, {{44.0, 592.3}, {314.0, 96.0}}, identifier: 'recap.note', label: '私密备注', value: Test draft
+Keep this
+                                          Other, 0x11a059b90, {{44.0, 592.3}, {0.0, 0.0}}, identifier: '_UITextSelectionRangeAdjustmentContainerView'
+                                            Other, 0x11a059cb0, {{44.0, 592.3}, {0.0, 0.0}}, identifier: 'com.apple.text.grabber.leading'
+                                              Other, 0x11a059dd0, {{36.8, 578.8}, {16.5, 16.5}}
+                                              Other, 0x11a059ef0, {{44.0, 592.3}, {2.0, 0.0}}
+                                            Other, 0x11a05a010, {{44.0, 592.3}, {0.0, 0.0}}, identifier: 'com.apple.text.grabber.leading'
+                                              Other, 0x11a05a130, {{36.8, 578.8}, {16.5, 16.5}}
+                                              Other, 0x11a05a250, {{44.0, 592.3}, {2.0, 0.0}}
+                                          Other, 0x11a05a370, {{325.0, 592.3}, {30.0, 96.0}}, label: '垂直滚动条, 1页', value: 0%
+                                            Other, 0x11a05a490, {{352.0, 652.3}, {3.0, 33.0}}
+                                        StaticText, 0x11a05a5b0, {{297.3, 705.3}, {68.7, 14.3}}, identifier: 'recap.noteCount', label: '私密备注，已输入 20 个字符，共 10,000 个字符'
+                                        Button, 0x11a05a820, {{20.0, 759.7}, {362.0, 50.3}}, identifier: 'recap.save', label: '私密保存'
+                                          Image, 0x11a05a940, {{155.7, 777.7}, {15.0, 14.7}}, identifier: 'checkmark', label: '已选择', Selected
+                                          StaticText, 0x11a05aa60, {{20.0, 759.7}, {362.0, 50.3}}, label: '私密保存'
+                                      Other, 0x11a05ad80, {{0.0, -0.0}, {402.0, 874.0}}
+                                        Other, 0x11a05aea0, {{0.0, 0.0}, {402.0, 170.8}}
+                                      Other, 0x11a05afc0, {{0.0, -0.0}, {402.0, 874.0}}
+                                        Other, 0x11a05b0e0, {{0.0, 0.0}, {402.0, 170.8}}
+                                          Image, 0x11a05b200, {{-120.0, -166.0}, {642.0, 332.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x11a05b320, {{0.0, 0.0}, {402.0, 106.0}}
+                                          Other, 0x11a05b440, {{0.0, 0.0}, {402.0, 170.8}}
+                                            Other, 0x11a05b560, {{0.0, 0.0}, {402.0, 170.8}}
+                                          Other, 0x11a05b680, {{0.0, 0.0}, {402.0, 170.8}}
+                                            Other, 0x11a05b7a0, {{0.0, 0.0}, {402.0, 170.8}}
+                                          Other, 0x11a05b8c0, {{0.0, 0.0}, {402.0, 170.8}}
+                                            Other, 0x11a05b9e0, {{0.0, 0.0}, {402.0, 170.8}}
+                                            Other, 0x11a05bb00, {{0.0, 0.0}, {402.0, 170.8}}
+                                      Other, 0x11a05bc20, {{369.0, 116.0}, {30.0, 696.0}}, label: '垂直滚动条, 2页', value: 100%
+                                        Other, 0x11a05bd40, {{396.0, 395.0}, {3.0, 414.0}}
+                                      Other, 0x11a05be60, {{369.0, 116.0}, {30.0, 696.0}}, label: '垂直滚动条, 2页', value: 100%
+                                        Other, 0x11a05bf80, {{396.0, 395.0}, {3.0, 414.0}}
+                            Other, 0x11a05c0a0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x11a05c1c0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x11a05c2e0, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x11a05c400, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x11a05c520, {{0.0, 791.0}, {402.0, 83.0}}
+      Other, 0x11a05c640, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11a05c760, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11a05c880, {{0.0, 0.0}, {402.0, 874.0}}
+        Alert, 0x11a05c9a0, {{41.0, 375.0}, {320.0, 152.0}}, label: '放弃修改？'
+          Other, 0x11a05cac0, {{41.0, 375.0}, {320.0, 152.0}}
+            Other, 0x11a05cbe0, {{41.0, 375.0}, {320.0, 152.0}}
+              Other, 0x11a05cd00, {{41.0, 375.0}, {320.0, 152.0}}
+              Other, 0x11a05ce20, {{41.0, 375.0}, {320.0, 152.0}}
+                ScrollView, 0x11a05cf40, {{41.0, 375.0}, {320.0, 72.0}}
+                  Other, 0x11a05d060, {{41.0, 375.0}, {320.0, 72.0}}
+                    StaticText, 0x11a05d180, {{71.0, 397.0}, {260.0, 20.3}}, label: '放弃修改？'
+                    StaticText, 0x11a05d2a0, {{71.0, 424.7}, {260.0, 18.0}}, label: '未保存的修改将丢失。'
+                  Other, 0x11a05d3c0, {{41.0, 445.0}, {320.0, 2.0}}
+                  Other, 0x11a05d4e0, {{328.0, 375.0}, {30.0, 72.0}}, label: '垂直滚动条, 2页', value: 0%
+                    Other, 0x11a05d600, {{355.0, 336.0}, {3.0, 36.0}}
+                  Other, 0x11a05d720, {{41.0, 414.0}, {320.0, 30.0}}, label: '水平滚动条, 1页', value: 0%
+                    Other, 0x11a05d840, {{2.0, 441.0}, {36.0, 3.0}}
+                  Other, 0x11a05d960, {{328.0, 375.0}, {30.0, 72.0}}, label: '垂直滚动条, 2页', value: 0%
+                    Other, 0x11a05da80, {{355.0, 336.0}, {3.0, 36.0}}
+                  Other, 0x11a05dba0, {{41.0, 414.0}, {320.0, 30.0}}, label: '水平滚动条, 1页', value: 0%
+                    Other, 0x11a05dcc0, {{2.0, 441.0}, {36.0, 3.0}}
+                ScrollView, 0x11a05dde0, {{41.0, 447.0}, {320.0, 80.0}}
+                  Other, 0x11a05df00, {{41.0, 447.0}, {320.0, 80.0}}
+                    Other, 0x11a05e020, {{57.0, 463.0}, {288.0, 48.0}}
+                      Button, 0x11a05e140, {{57.0, 463.0}, {140.0, 48.0}}, label: '继续编辑'
+                      Button, 0x11a05e260, {{205.0, 463.0}, {140.0, 48.0}}, label: '放弃'
+                  Other, 0x11a05e380, {{328.0, 447.0}, {30.0, 80.0}}, label: '垂直滚动条, 1页', value: 0%
+                    Other, 0x11a05e4a0, {{355.0, 537.0}, {3.0, 7.0}}
+                  Other, 0x11a05e5c0, {{41.0, 494.0}, {320.0, 30.0}}, label: '水平滚动条, 1页', value: 0%
+                    Other, 0x11a05e6e0, {{131.0, 521.0}, {7.0, 3.0}}
+                  Other, 0x11a05e800, {{328.0, 447.0}, {30.0, 80.0}}, label: '垂直滚动条, 1页', value: 0%
+                    Other, 0x11a05e920, {{355.0, 537.0}, {3.0, 7.0}}
+                  Other, 0x11a05ea40, {{41.0, 494.0}, {320.0, 30.0}}, label: '水平滚动条, 1页', value: 0%
+                    Other, 0x11a05eb60, {{131.0, 521.0}, {7.0, 3.0}}
+          Other, 0x11a05ec80, {{41.0, 375.0}, {320.0, 152.0}}
+            Other, 0x11a05eda0, {{41.0, 375.0}, {320.0, 152.0}}
+              Other, 0x11a05eec0, {{41.0, 375.0}, {320.0, 152.0}}
+                Other, 0x11a05efe0, {{41.0, 375.0}, {320.0, 152.0}}
+                  Other, 0x11a05f100, {{41.0, 375.0}, {320.0, 152.0}}
+                    Other, 0x11a05f220, {{41.0, 375.0}, {402.0, 874.0}}
+                Other, 0x11a05f340, {{41.0, 375.0}, {320.0, 152.0}}
+                  Other, 0x11a05f460, {{41.0, 375.0}, {402.0, 874.0}}
+    Window, 0x11a05f580, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x11a05f6a0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11a05f7c0, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x11a03ea80, pid: 48834, label: '私密时刻'
+Query chain:
+ →Find: Target Application 'com.example.PrivateMoments'
+  Output: {
+    Application, 0x11a019b00, pid: 48834, label: '私密时刻'
+  }
