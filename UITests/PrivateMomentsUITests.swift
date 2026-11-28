@@ -1164,7 +1164,7 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(app.buttons["review.previous"], in: app)
             let previousMonth = range.label
             XCTAssertNotEqual(previousMonth, currentMonth)
-            revealFully(from: longTag, through: longTag, in: app)
+            revealFully(from: longTag, through: longTag, in: app, settleDrag: true)
             XCTAssertEqual(longTag.label, longTagName)
             XCTAssertEqual(longTag.value as? String, one)
             XCTAssertEqual(connected.value as? String, two, "The current month's use cannot count here.")
@@ -3564,7 +3564,8 @@ final class PrivateMomentsUITests: XCTestCase {
         XCTAssertEqual(result, .completed, "Confirmation did not dismiss.")
     }
 
-    private func revealFully(from first: XCUIElement, through last: XCUIElement, in app: XCUIApplication) {
+    private func revealFully(from first: XCUIElement, through last: XCUIElement, in app: XCUIApplication,
+                             settleDrag: Bool = false) {
         reveal(last, in: app)
         let scroll = scrollSurface(containing: last, in: app)
         // A hittable element may be only partly visible. Fit the complete range
@@ -3594,7 +3595,12 @@ final class PrivateMomentsUITests: XCTestCase {
             let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             let distance = max(24, min(200, abs(delta))) * (delta < 0 ? -1 : 1)
             let end = start.withOffset(CGVector(dx: 0, dy: distance))
-            start.press(forDuration: 0.05, thenDragTo: end)
+            if settleDrag {
+                // Stop the scroll before sampling a tall row near the tab bar.
+                start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
+            } else {
+                start.press(forDuration: 0.05, thenDragTo: end)
+            }
         }
         captureFailure("Content-not-fully-visible", app)
         XCTFail("Content is not fully visible: \(first), \(last)")
