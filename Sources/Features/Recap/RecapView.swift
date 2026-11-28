@@ -199,6 +199,7 @@ struct RecapView: View {
                     .foregroundStyle(actionColor)
                     .accessibilityLabel("Add tag")
                     .accessibilityIdentifier("recap.addTagKeyboard")
+                    tagCount
                 }
                 Spacer()
                 Button { focusedField = nil } label: {
@@ -558,19 +559,31 @@ struct RecapView: View {
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { _ in
                     revealTagEditor(using: scroll)
                 }
-            Button { addTag(tagInput) } label: {
-                Label {
-                    Text("Add tag").fixedSize(horizontal: false, vertical: true)
-                } icon: {
-                    Image(systemName: "plus").font(.system(size: 18, weight: .semibold))
-                }
-                .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                .frame(minHeight: 44, alignment: .leading)
-                .contentShape(Rectangle())
+            if focusedField != .tag {
+                tagCount.frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .buttonStyle(.plain)
-            .foregroundStyle(actionColor)
-            .accessibilityIdentifier("recap.addTag")
+            if let tagMessage {
+                Text(tagMessage)
+                    .font(.footnote)
+                    .foregroundStyle(AppColors.destructive)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("recap.tagError")
+            }
+            if focusedField != .tag || !dynamicTypeSize.isAccessibilitySize {
+                Button { addTag(tagInput) } label: {
+                    Label {
+                        Text("Add tag").fixedSize(horizontal: false, vertical: true)
+                    } icon: {
+                        Image(systemName: "plus").font(.system(size: 18, weight: .semibold))
+                    }
+                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                    .frame(minHeight: 44, alignment: .leading)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(actionColor)
+                .accessibilityIdentifier("recap.addTag")
+            }
             if !recent.isEmpty {
                 Menu("Recent tags") {
                     ForEach(recent, id: \.self) { tag in
@@ -582,14 +595,21 @@ struct RecapView: View {
                 .accessibilityIdentifier("recap.recentTags")
                 .privacySensitive()
             }
-            if let tagMessage {
-                Text(tagMessage)
-                    .font(.footnote)
-                    .foregroundStyle(AppColors.destructive)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("recap.tagError")
-            }
         }
+    }
+
+    private var tagCount: some View {
+        let trimmed = tagInput.trimmingCharacters(in: .whitespacesAndNewlines)
+        let length = trimmed.count
+        let maximum = MomentValidator.maximumTagLength
+        let invalidLength = !trimmed.isEmpty && (try? MomentValidator.validateTag(trimmed)) == nil
+        return Text(AppLocalization.format("%lld / %lld", length, maximum))
+            .font(.system(.caption2, design: .rounded).monospacedDigit())
+            .fontWeight(invalidLength ? .semibold : .regular)
+            .foregroundStyle(invalidLength || tagMessage != nil ? AppColors.destructive : AppColors.secondaryText)
+            .accessibilityLabel(AppLocalization.format("Tag, %lld of %lld characters", length, maximum))
+            .accessibilityValue(Text(verbatim: tagMessage ?? ""))
+            .accessibilityIdentifier("recap.tagCount")
     }
 
     private func revealTagEditor(using scroll: ScrollViewProxy) {
@@ -602,7 +622,7 @@ struct RecapView: View {
             // Some multiline keyboard implementations insert Return into the binding.
             if value == tagInput + "\n" {
                 addTag(tagInput)
-            } else {
+            } else if value != tagInput {
                 tagInput = value
                 tagMessage = nil
             }
@@ -620,7 +640,6 @@ struct RecapView: View {
             focusedField = nil
         } catch {
             tagMessage = error.localizedDescription
-            focusedField = nil
         }
     }
 
