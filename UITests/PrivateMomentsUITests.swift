@@ -1055,6 +1055,7 @@ final class PrivateMomentsUITests: XCTestCase {
             let longTagName = "Quiet mornings and slow conversations"
             let app = makeApp(language: language)
             app.launchArguments.append("-pm-ui-test-review-comparison-fixture")
+            app.launchEnvironment["PM_UI_TEST_REVIEW_LONG_TAG"] = longTagName
             app.launch()
             selectTab("Review", "回顾", language: language, app: app)
             tap(app.buttons["review.month"], in: app)

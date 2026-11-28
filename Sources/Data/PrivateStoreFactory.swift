@@ -179,12 +179,16 @@ enum PrivateStoreFactory {
         guard let prior = MomentReviewPeriod.month.date(byMoving: -1, from: now, calendar: calendar) else {
             throw CocoaError(.coderInvalidValue)
         }
+        var recentTags = ["Connected"]
+        if let tag = ProcessInfo.processInfo.environment["PM_UI_TEST_REVIEW_LONG_TAG"] {
+            recentTags.append(tag)
+        }
         let moments = [
             Moment(occurredAt: now, durationSeconds: 80, mood: .connected, rating: 4, tags: ["Connected"]),
             Moment(occurredAt: prior, durationSeconds: 90, mood: .calm, rating: 3,
                    tags: ["Connected"], privateNote: "previous-month-first-entry", favorite: true),
             Moment(occurredAt: prior.addingTimeInterval(90), durationSeconds: 120, mood: .calm, rating: 5,
-                   tags: ["Connected", "Quiet mornings and slow conversations"], privateNote: "previous-month-second-entry")
+                   tags: recentTags, privateNote: "previous-month-second-entry")
         ]
         try SwiftDataMomentRepository(modelContext: context).mergeAll(moments)
     }
