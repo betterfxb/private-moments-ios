@@ -46,8 +46,13 @@
 
 同一源码通过 iPhone SE（第 3 代）核心回归，包含 73 项应用单测、7 个原生 UI 用例、无签名 Debug 与 Release 构建，以及 Release 测试钩子排除。[核心回归](https://github.com/betterfxb/private-moments-ios/actions/runs/46118379219) · [核心测试摘要](evidence/batch-43/46118379219/compact-light-core/xctest.json)
 
+`02f8b3d` 在 iPhone 15 的实际 iOS 17.5 上通过 6 项单测和 6 个原生用例。双语月历补记能录入、换行、保存并再次找回长标签。无签名 Release 最低系统实测为 17.0，测试和时间线追踪钩子排除。旧系统的迁移单测日志记录一条 SQLite 临时库文件仍在使用时被移除的警告，该用例的迁移、回读与备份断言均通过。[iOS 17.5 作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46118375368) · [旧系统中文原图](evidence/batch-43/46118375368/ios17/Month-calendar-journey-zh-Hans-03-keyboard.png) · [旧系统测试日志](evidence/batch-43/46118375368/ios17/xctest-extract.txt)
+
+同一应用源码的独立竖屏作业 `70bbc55` 通过。iPad Pro 13 英寸（M5）最大辅助字号下，系统拖柄将窗口从 1032 点缩至 630 点，键盘打开时再缩到 513 点，详情打开后扩大到 768 点。513 点原图中，58 字符的长标签四行完整，添加、字符计数和保存均可见。时间线筛选、月历找回及恢复窗口后的详情保留已通过。横竖屏综合预检的间歇性异常继续记录，窄窗验收采用这次竖屏实测。[竖屏作业](https://github.com/betterfxb/private-moments-ios/actions/runs/46120906952) · [513 点键盘原图](evidence/batch-43/46120906952/ipad-dark-accessibility/Pad-journal-09-calendar-entry-keyboard.png) · [按标签找回](evidence/batch-43/46120906952/ipad-dark-accessibility/Pad-journal-10-narrow-month-tag.png) · [原生测试日志](evidence/batch-43/46120906952/ipad-dark-accessibility/xctest-extract.txt)
+
 ## 本地验证与待确认事项
 
 - Windows 执行 `python -X utf8 -m unittest discover -s tools`，60 项通过。`bash -n` 检查 `scripts/verify-mac.sh` 和 `scripts/verify-ios17.sh` 通过。
 - `node tools/audit-localization.mjs`、`node tools/audit-xcode-project.mjs` 和 `node tools/audit-release-materials.mjs` 通过。本地化目录 311 键，Xcode 工程 113 对象。现有发布占位告警涉及 Bundle ID、隐私政策发布者信息及审核联系资料。
+- 复核三批归档的 48 张原生 PNG 与 SHA-256 收据，其中包含基线、诊断与最终状态。第 43 批五项通过的原生作业收据和报告中的相对文件链接均已核对。
 - 真机待测项目包括 VoiceOver 朗读与焦点顺序、系统中文拼音候选、外接键盘和签名安装。签名、加密备份、系统终止后的计时恢复、私密备注搜索均按[待确认清单](DEVICE-AND-RECOVERY-DECISIONS.md)处理。
