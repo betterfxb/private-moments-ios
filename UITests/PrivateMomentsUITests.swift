@@ -1113,10 +1113,11 @@ final class PrivateMomentsUITests: XCTestCase {
             tap(app.buttons[english ? "Delete moment" : "删除记录"], in: app)
 
             let empty = app.staticTexts["review.tag.empty"]
-            XCTAssertTrue(empty.waitForExistence(timeout: 8))
+            XCTAssertTrue(clear.waitForExistence(timeout: 8))
+            revealFully(from: empty, through: empty, in: app)
+            XCTAssertEqual(empty.label, english ? "No moments with this tag" : "没有带这个标签的记录")
             XCTAssertEqual(records.count, 0)
             XCTAssertEqual(range.label, previousMonth)
-            reveal(empty, in: app)
             capture("Month-calendar-tag-empty-\(language)", app, stableSurface: empty)
             tap(clear, in: app)
             reveal(longTag, in: app)
