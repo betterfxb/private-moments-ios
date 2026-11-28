@@ -200,6 +200,8 @@ struct RecapView: View {
                     .accessibilityLabel("Add tag")
                     .accessibilityIdentifier("recap.addTagKeyboard")
                     tagCount.fixedSize()
+                } else if focusedField == .note {
+                    noteCount.fixedSize()
                 }
                 Spacer()
                 Button { focusedField = nil } label: {
@@ -559,7 +561,7 @@ struct RecapView: View {
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { _ in
                     revealTagEditor(using: scroll)
                 }
-            if focusedField != .tag {
+            if showsInlineFieldCounts {
                 tagCount.frame(maxWidth: .infinity, alignment: .trailing)
             }
             if let tagMessage, !showsTagLimitInToolbar {
@@ -656,6 +658,16 @@ struct RecapView: View {
         }
     }
 
+    private var showsInlineFieldCounts: Bool { focusedField != .tag && focusedField != .note }
+
+    private var noteCount: some View {
+        Text(AppLocalization.format("%lld / %lld", privateNote.count, MomentValidator.maximumNoteLength))
+            .font(.system(.caption, design: .rounded).monospacedDigit())
+            .foregroundStyle(noteValidationMessage != nil ? AppColors.accentText : AppColors.secondaryText)
+            .accessibilityLabel(AppLocalization.format("Private note, %lld of %lld characters", privateNote.count, MomentValidator.maximumNoteLength))
+            .accessibilityIdentifier("recap.noteCount")
+    }
+
     private var noteSection: some View {
         VStack(alignment: .leading, spacing: 9) {
             adaptiveLayout(spacing: 8).callAsFunction {
@@ -677,23 +689,12 @@ struct RecapView: View {
                 .accessibilityIdentifier("recap.note")
                 .autocorrectionDisabled()
                 .privacySensitive()
-            HStack {
-                Spacer()
-                Text(AppLocalization.format("%lld / %lld", privateNote.count, MomentValidator.maximumNoteLength))
-                    .font(.system(.caption, design: .rounded).monospacedDigit())
-                    .foregroundStyle(
-                        noteValidationMessage != nil
-                            ? AppColors.accentText
-                            : AppColors.secondaryText
-                    )
-                    .accessibilityLabel(AppLocalization.format("Private note, %lld of %lld characters", privateNote.count, MomentValidator.maximumNoteLength))
-                    .accessibilityIdentifier("recap.noteCount")
+            if showsInlineFieldCounts {
+                noteCount
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.trailing, focusedField != nil && horizontalSizeClass == .compact
+                        ? keyboardDismissTargetSize + AppSpacing.card : 0)
             }
-            // The native keyboard accessory floats over the trailing edge.
-            // Keep metadata clear of its target without reducing text size.
-            .padding(.trailing,
-                focusedField != nil && horizontalSizeClass == .compact
-                    ? keyboardDismissTargetSize + AppSpacing.card : 0)
             if let noteValidationMessage {
                 ErrorNotice(message: noteValidationMessage)
             }

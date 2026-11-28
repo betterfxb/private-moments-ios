@@ -21,3 +21,5 @@
 ## 第 45 批 编辑时聚焦当前字段
 
 在第 44 批同尺寸原图里，标签计数位于软件键盘工具栏，备注的 `0 / 10,000` 在键盘边缘被切断。沿用原有颜色、字阶和表单布局，把当前字段的计数放进键盘工具栏。收键盘后，计数回到各自字段下方。先在月历的正常补记入口验证计数归属、输入、保存和详情读回。[513 点基线](evidence/batch-44/46124323458/ipad-dark-accessibility/Pad-journal-09-calendar-entry-keyboard.png)
+
+先行用例 `1fcb250` 在原生 513 点窗口确认失败。标签计数可见时，备注计数仍出现在界面层级。修正复用原生键盘工具栏和同一份备注计数视图，标签和备注各在编辑期间展示自己的计数，收键盘后计数回到表单相应位置。[先行测试](https://github.com/betterfxb/private-moments-ios/actions/runs/46128932102) · [失败现场原图](evidence/batch-45/46128932102/ipad-dark-accessibility/Pad-journal-09-calendar-entry-keyboard-unrelated-note-counter.png)
