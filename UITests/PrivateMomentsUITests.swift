@@ -1123,6 +1123,7 @@ final class PrivateMomentsUITests: XCTestCase {
             let one = english ? "1 moment" : "1 条记录"
             let app = makeApp(language: language)
             let tag = "Quiet morning reflections with warm tea and an open window"
+            let note = "A quiet entry"
             let screenshots = "Month-calendar-journey-\(language)"
             app.launch()
             selectTab("Review", "回顾", language: language, app: app)
@@ -1155,6 +1156,7 @@ final class PrivateMomentsUITests: XCTestCase {
             XCTAssertFalse(app.buttons["recap.yesterday"].exists, "A preselected calendar date must keep its context.")
             capture("\(screenshots)-02-form", app, stableSurface: save)
             enterCalendarTag(tag, screenshot: "\(screenshots)-03-keyboard", app: app)
+            enterCalendarNote(note, language: language, screenshot: "\(screenshots)-note-keyboard", app: app)
             tap(save, in: app)
 
             XCTAssertTrue(add.waitForExistence(timeout: 8))
@@ -1177,6 +1179,9 @@ final class PrivateMomentsUITests: XCTestCase {
             let tagText = app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", tag)).firstMatch
             reveal(tagText, in: app)
             capture("\(screenshots)-06-detail", app, stableSurface: tagText)
+            let savedNote = app.staticTexts["detail.note"]
+            reveal(savedNote, in: app)
+            XCTAssertEqual(savedNote.label, note)
             goBack(app)
             XCTAssertTrue(clear.waitForExistence(timeout: 8))
             XCTAssertEqual(title.label, tag)
@@ -1221,9 +1226,37 @@ final class PrivateMomentsUITests: XCTestCase {
             captureFailure(screenshot + "-covered", app)
             XCTFail("The expanded tag editor must remain visible above the keyboard actions.")
         }
+        XCTAssertTrue(app.staticTexts["recap.tagCount"].isHittable)
+        if app.staticTexts["recap.noteCount"].exists {
+            captureFailure(screenshot + "-unrelated-note-counter", app)
+            XCTFail("The note counter must not appear while the tag editor owns the keyboard.")
+        }
         capture(screenshot, app, stableSurface: addTag)
         addTag.tap()
         XCTAssertTrue(app.buttons["recap.tag.\(tag)"].isSelected)
+    }
+
+    private func enterCalendarNote(_ text: String, language: String, screenshot: String, app: XCUIApplication) {
+        let note = app.textViews["recap.note"]
+        tap(note, in: app)
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 10) && keyboard.isHittable)
+        note.typeText(text)
+        let count = app.staticTexts["recap.noteCount"]
+        let done = app.buttons["recap.dismissKeyboard"]
+        waitForStableFrame(count, requireHittable: true, message: "The note counter must stay visible while typing.")
+        let expected = language == "en" ? "Private note, \(text.count) of 10,000 characters"
+            : "私密备注，已输入 \(text.count) 个字符，共 10,000 个字符"
+        XCTAssertEqual(count.label, expected)
+        XCTAssertFalse(app.staticTexts["recap.tagCount"].exists)
+        XCTAssertTrue(done.isHittable)
+        XCTAssertLessThanOrEqual(count.frame.maxY, keyboard.frame.minY + 2)
+        XCTAssertFalse(count.frame.intersects(done.frame))
+        capture(screenshot, app, stableSurface: count)
+        dismissRecapKeyboard(language: language, app: app)
+        XCTAssertEqual(note.value as? String, text)
+        reveal(count, in: app)
+        XCTAssertEqual(count.label, expected)
     }
 
     func testMonthReviewTagCountsFollowEditsAndDeletion() {
@@ -1882,6 +1915,7 @@ final class PrivateMomentsUITests: XCTestCase {
         tap(calendarAdd, in: app)
         let calendarTag = "Quiet morning reflections with warm tea and an open window"
         enterCalendarTag(calendarTag, screenshot: "Pad-journal-09-calendar-entry-keyboard", app: app)
+        enterCalendarNote("A quiet entry", language: "en", screenshot: "Pad-journal-09-note-keyboard", app: app)
         tap(save, in: app)
         XCTAssertTrue(calendarAdd.waitForExistence(timeout: 8))
         let dayRecords = app.buttons.matching(identifier: "weekReview.moment")
